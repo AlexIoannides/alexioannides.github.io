@@ -10,53 +10,65 @@
 
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
 
-    <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
+    <link href="./static/custom.css" rel="stylesheet">
 
+    <link href="https://alexioannides.github.io/feeds/all-atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
 
+    <link href="https://alexioannides.github.io/feeds/all-rss.xml" type="application/rss+xml" rel="alternate" title="Dr Alex Ioannides RSS">
 
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
 
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+  ga('create', 'UA-125604661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
 
-<meta name="author" content="Alex Ioannides" />
-<meta name="description" content="That type annotations and mypy are great for data scientists as well as day-to-day developers - e.g., def circle_area(radius: float) -&gt; float: pi = 3.141 return pi * (r ** 2) Makes it so much easier to understand how to use functions and methods as well as providing extra piece of mind …" />
+<meta name="author" content="Dr Alex Ioannides" />
+<meta name="description" content="… I should get back into writing/blogging things that come to mind. For example, that type annotations and type-checking with mypy are great tools for data scientists as well as day-to-day developers - e.g., def circle_area(radius: float) -&gt; float: pi = 3.141 return pi * (r ** 2) Makes it so much …" />
 <meta name="keywords" content="musings">
 
-<meta property="og:site_name" content="Alex Ioannides"/>
-<meta property="og:title" content="It Recently Occurred to Me"/>
-<meta property="og:description" content="That type annotations and mypy are great for data scientists as well as day-to-day developers - e.g., def circle_area(radius: float) -&gt; float: pi = 3.141 return pi * (r ** 2) Makes it so much easier to understand how to use functions and methods as well as providing extra piece of mind …"/>
+<meta property="og:site_name" content="Dr Alex Ioannides"/>
+<meta property="og:title" content="It Recently Occurred to Me…"/>
+<meta property="og:description" content="… I should get back into writing/blogging things that come to mind. For example, that type annotations and type-checking with mypy are great tools for data scientists as well as day-to-day developers - e.g., def circle_area(radius: float) -&gt; float: pi = 3.141 return pi * (r ** 2) Makes it so much …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://alexioannides.github.io/it-recently-occurred-to-me.html"/>
+<meta property="og:url" content="./it-recently-occurred-to-me.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2018-09-09 00:00:00+01:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://alexioannides.github.io/author/alex-ioannides.html">
+<meta property="article:author" content="./author/dr-alex-ioannides.html">
 <meta property="article:section" content="data_science"/>
 <meta property="article:tag" content="musings"/>
 <meta property="og:image" content="//avatars1.githubusercontent.com/u/5968486?s=460&v=4">
 
-  <title>Alex Ioannides &ndash; It Recently Occurred to Me</title>
+  <title>Dr Alex Ioannides &ndash; It Recently Occurred to Me…</title>
 
 </head>
 <body>
   <aside>
     <div>
-      <a href="https://alexioannides.github.io">
-        <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Alex Ioannides" title="Alex Ioannides">
+      <a href=".">
+        <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
-      <h1><a href="https://alexioannides.github.io">Alex Ioannides</a></h1>
+      <h1><a href=".">Dr Alex Ioannides</a></h1>
 
-<p>Financial engineer, (data) scientist, PhD in Computational Neuroscience/AI and habitual coder</p>
+<p>Financial engineer - (data) scientist - habitual coder</p>
       <nav>
         <ul class="list">
-          <li><a href="https://alexioannides.github.io/pages/about-this-blog.html#about-this-blog">About this&nbsp;Blog</a></li>
-          <li><a href="https://alexioannides.github.io/pages/about-me.html#about-me">About&nbsp;Me</a></li>
+          <li><a href="./pages/about-this-blog.html#about-this-blog">About this&nbsp;Blog</a></li>
+          <li><a href="./pages/about-me.html#about-me">About&nbsp;Me</a></li>
 
         </ul>
       </nav>
@@ -74,22 +86,26 @@
   <main>
 
     <nav>
-      <a href="https://alexioannides.github.io">    Home
+      <a href=".">    Home
 </a>
 
-      <a href="/archives.html">Archives</a>
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
+      <a href="/archives.html">Archives</a>
 
+      <a href="https://alexioannides.github.io/feeds/all-atom.xml">    Atom
+</a>
 
+      <a href="https://alexioannides.github.io/feeds/all-rss.xml">    RSS
+</a>
     </nav>
 
 <article class="single">
   <header>
       
-    <h1 id="it-recently-occurred-to-me">It Recently Occurred to&nbsp;Me</h1>
+    <h1 id="it-recently-occurred-to-me">It Recently Occurred to&nbsp;Me&#8230;</h1>
     <p>
-          Posted on Sun 09 September 2018 in <a href="https://alexioannides.github.io/category/data_science.html">data_science</a>
+          Posted on Sun 09 September 2018 in <a href="./category/data_science.html">data_science</a>
 
 
     </p>
@@ -97,7 +113,7 @@
 
 
   <div>
-    <p>That type annotations and <code>mypy</code> are great for data scientists as well as day-to-day developers -&nbsp;e.g.,</p>
+    <p>&#8230; I should get back into writing/blogging things that come to mind. For example, that type annotations and type-checking with <code>mypy</code> are great tools for data scientists as well as day-to-day developers -&nbsp;e.g.,</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">circle_area</span><span class="p">(</span><span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="n">pi</span> <span class="o">=</span> <span class="mf">3.141</span>
     <span class="k">return</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
@@ -108,7 +124,7 @@
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="https://alexioannides.github.io/tag/musings.html">musings</a>
+      <a href="./tag/musings.html">musings</a>
     </p>
   </div>
 
@@ -116,6 +132,21 @@
 
 
 
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'alexioannides';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
 </article>
 
     <footer>
@@ -131,8 +162,8 @@
 {
   "@context" : "http://schema.org",
   "@type" : "Blog",
-  "name": " Alex Ioannides ",
-  "url" : "https://alexioannides.github.io",
+  "name": " Dr Alex Ioannides ",
+  "url" : ".",
   "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
   "description": ""
 }

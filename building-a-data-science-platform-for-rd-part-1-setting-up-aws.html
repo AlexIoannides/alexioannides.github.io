@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="./static/custom.css" rel="stylesheet">
+
+    <link href="https://alexioannides.github.io/feeds/all-atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
+
+    <link href="https://alexioannides.github.io/feeds/all-rss.xml" type="application/rss+xml" rel="alternate" title="Dr Alex Ioannides RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-125604661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+<meta name="author" content="Dr Alex Ioannides" />
+<meta name="description" content="Here’s my vision: I get into the office and switch-on my laptop; then I start-up my Spark cluster; I interact with it via RStudio to exploring a new dataset a client uploaded overnight; after getting a handle on what I want to do with it, I prototype an ETL …" />
+<meta name="keywords" content="big data, AWS, data processing">
+
+<meta property="og:site_name" content="Dr Alex Ioannides"/>
+<meta property="og:title" content="Building a Data Science Platform for R&amp;D, Part 1 - Setting-Up AWS"/>
+<meta property="og:description" content="Here’s my vision: I get into the office and switch-on my laptop; then I start-up my Spark cluster; I interact with it via RStudio to exploring a new dataset a client uploaded overnight; after getting a handle on what I want to do with it, I prototype an ETL …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="./building-a-data-science-platform-for-rd-part-1-setting-up-aws.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2016-08-16 00:00:00+01:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="./author/dr-alex-ioannides.html">
+<meta property="article:section" content="data_science"/>
+<meta property="article:tag" content="big data"/>
+<meta property="article:tag" content="AWS"/>
+<meta property="article:tag" content="data processing"/>
+<meta property="og:image" content="//avatars1.githubusercontent.com/u/5968486?s=460&v=4">
+
+  <title>Dr Alex Ioannides &ndash; Building a Data Science Platform for R&amp;D, Part 1 - Setting-Up AWS</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href=".">
+        <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
+      </a>
+      <h1><a href=".">Dr Alex Ioannides</a></h1>
+
+<p>Financial engineer - (data) scientist - habitual coder</p>
+      <nav>
+        <ul class="list">
+          <li><a href="./pages/about-this-blog.html#about-this-blog">About this&nbsp;Blog</a></li>
+          <li><a href="./pages/about-me.html#about-me">About&nbsp;Me</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-github" href="https://github.com/alexioannides" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank"><i class="fa fa-soundcloud"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href=".">    Home
+</a>
+
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+      <a href="/archives.html">Archives</a>
+
+      <a href="https://alexioannides.github.io/feeds/all-atom.xml">    Atom
+</a>
+
+      <a href="https://alexioannides.github.io/feeds/all-rss.xml">    RSS
+</a>
+    </nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="building-a-data-science-platform-for-rd-part-1-setting-up-aws">Building a Data Science Platform for R&D, Part 1 - Setting-Up <span class="caps">AWS</span></h1>
+    <p>
+          Posted on Tue 16 August 2016 in <a href="./category/data_science.html">data_science</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><img alt="Alt" src="./images/data_science/data_science_platform_pt1/aws.png" title="AWS"></p>
+<p>Here&#8217;s my vision: I get into the office and switch-on my laptop; then I start-up my <a href="https://spark.apache.org">Spark</a> cluster; I interact with it via <a href="https://www.rstudio.com">RStudio</a> to exploring a new dataset a client uploaded overnight; after getting a handle on what I want to do with it, I prototype an <span class="caps">ETL</span> and/or model-building process in <a href="http://www.scala-lang.org">Scala</a> by using <a href="http://zeppelin.apache.org">Zeppelin</a> and I might even ask it to run every hour to see how it&nbsp;fairs.</p>
+<p>In all likelihood this is going to be more than one day&#8217;s work, but you get the idea - I want a workspace that lets me use production-scale technologies to test ideas and processes that are a small step away from being handed-over to someone who can put them into&nbsp;production.</p>
+<p>This series of posts is about how to setup and configure what I&#8217;m going to refer to as the &#8216;Data Science R&amp;D platform&#8217;. I&#8217;m intending to cover the&nbsp;following:</p>
+<ul>
+<li>
+<p>setting-up Amazon Web Services (<span class="caps">AWS</span>) with some respect for security, and loading data to <span class="caps">AWS</span>&#8217;s S3 file system (where I&#8217;m assuming all static data will&nbsp;live);</p>
+</li>
+<li>
+<p>launching, connecting-to and controlling an Apache Spark cluster on <span class="caps">AWS</span>, from my laptop, with the ability to start and stop it at&nbsp;will,</p>
+</li>
+<li>
+<p>installing R and RStudio Server on my Spark cluster&#8217;s master node and then configuring <a href="https://spark.apache.org/docs/latest/sparkr.html">SparkR</a> and <a href="http://spark.rstudio.com/index.html">Sparklyr</a> to connect to Spark and <span class="caps">AWS</span>&nbsp;S3,</p>
+</li>
+<li>
+<p>installing and configuring Apache Zeppelin for Scala and <span class="caps">SQL</span> based Spark interaction, and for automating basic <span class="caps">ETL</span>/model-building&nbsp;processes.</p>
+</li>
+</ul>
+<p>I&#8217;m running on Mac <span class="caps">OS</span> X so this will be my frame of reference, but the Unix/Linux terminal-based parts of these posts should play nicely with all Linux distributions. I have no idea about&nbsp;Windows.</p>
+<p>You might be wondering why I don&#8217;t use <span class="caps">AWS</span>&#8217;s <a href="https://aws.amazon.com/emr/">Elastic Map Reduce</a> (<span class="caps">EMR</span>) service that can also run a Spark cluster with Zeppelin. I did try, but I found that it wasn&#8217;t really suited to ad hoc R&amp;D - I couldn&#8217;t configure it with all my favorite tools (e.g. RStudio) and then easily &#8216;pause&#8217; the cluster when I&#8217;m done for the day. I&#8217;d be forced to stop the cluster and re-install my tools when I start another cluster up. <span class="caps">EMR</span> clusters appear to be better suited to being programmatically brought up and down as and when required, or for long-running clusters - excellent for a production environment. Not quite so good for R&amp;D. Costs more too, which is the main reason <a href="https://databricks.com/">Databricks</a> doesn&#8217;t work for me&nbsp;either.</p>
+<h2>Sign-Up for an <span class="caps">AWS</span>&nbsp;Account!</h2>
+<p>This is obvious, but nevertheless for completeness head over to <a href="https://aws.amazon.com/">aws.amazon.com</a> and create an&nbsp;account:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt1/1_aws_create_account.png" title="AWS"></p>
+<p>Once you&#8217;ve entered your credentials and payment details you&#8217;ll be brought to the main <span class="caps">AWS</span> Management Console that lists all the services at your disposal. The <a href="https://aws.amazon.com/documentation"><span class="caps">AWS</span> documentation</a> is excellent and a great way to get an understanding of what everything is and how you might use&nbsp;it.</p>
+<p>This is also a good point to choose the region you want your services to be created in. I live in the <span class="caps">UK</span> so it makes sense for me to choose Ireland (aka&nbsp;eu-west-1):</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt1/0_region.png" title="Region"></p>
+<h2>Setup Users and Grant them&nbsp;Roles</h2>
+<p>It is considered bad practice to login to <span class="caps">AWS</span> as the root user (i.e. the one that opened the account). So it&#8217;s worth knowing how to setup users, restrict their access to the platform and assign them credentials. This is also easy to&nbsp;to.</p>
+<p>For now I&#8217;m just going to create an &#8216;admin&#8217; user that has more-or-less the same privileges as the root user, but is unable to delete the account or change the billing details,&nbsp;etc.</p>
+<p>To begin with, login to the <span class="caps">AWS</span> console as the root user and navigate to Identity and Access Management (<span class="caps">IAM</span>) under Security and Identity. Click on the Users tab and then Create New User. Enter a new user name and then Create. You should then see the following confirmation together with new users&#8217;&nbsp;credentials:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt1/3_user_credentials.png" title="User Credentials"></p>
+<p>Make a note of these - or even better download them in <span class="caps">CSV</span> format using the &#8216;Download Credentials&#8217; button. Close the window and then select the new user again on the Users tab. Next, find the Permissions tab and Attach&nbsp;Policy:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt1/4_attach_policy.png" title="AttachPolicy"></p>
+<p>Choose AdministratorAccess for our admin&nbsp;user:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt1/5_admin_rights_policy.png" title="AdminAccess"></p>
+<p>There are an enormous amount of policies you could apply depending on what your users need to access. For example, we could just as easily have created a user that can only access Amazon&#8217;s <span class="caps">EMR</span> service with read-only permission on&nbsp;S3.</p>
+<p>Finally, because we&#8217;d like our admin user to be able to able to login to the <span class="caps">AWS</span> Management Console, we need to given them a password by navigating to the Security Credentials tab to Manage&nbsp;Password.</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt1/6_create_user_password.png" title="Password"></p>
+<p>Note, that non-root users need to login via a difference <span class="caps">URL</span> that can be found at the top of the <span class="caps">IAM</span>&nbsp;Dashboard:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt1/7_user_login_link.png" title="UserLogin"></p>
+<p>Log out of the console and then back in again using this link, as your new admin user. It&#8217;s worth noting that the <span class="caps">IAM</span> Dashboard encourages you to follow a series of steps for securing your platform. The steps above represent a sub-set of what is required to get the &#8216;green light&#8217; and I recommend that you work your way through all of them once you know your way around. For example, Multi-Factor Authentication (<span class="caps">MFA</span>) for the root user makes a lot of&nbsp;sense.</p>
+<h2>Generate <span class="caps">EC2</span> Key&nbsp;Pairs</h2>
+<p>In order for you to remotely access <span class="caps">AWS</span> services - e.g. data in in S3 and virtual machines on <span class="caps">EC2</span> from the comfort of your laptop - you will need to authenticate yourself. This is achieved using Key Pairs. Cryptography has never been a strong point, so if you want to know more about how this works I suggest taking a look <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">here</a>. To generate our Key Pair and download the private key we use for authentication, start by navigating from the main console page to the <span class="caps">EC2</span> dashboard under Compute, and then to Key Pairs under Network <span class="amp">&amp;</span> Security. Once there, Create Key Pair and name it (e.g. &#8216;spark_cluster&#8217;). The file containing your private key will be automatically downloaded. Stash it somewhere safe like your home directory ,or even better in a hidden folder like <code>~/.ssh</code>. We will ultimately assign these Key Pairs to Virtual Machines (VMs) and other services we want to setup and access&nbsp;remotely.</p>
+<h2>Install the <span class="caps">AWS</span> <span class="caps">CLI</span>&nbsp;Tools</h2>
+<p>By no means an essential step, but the <span class="caps">AWS</span> terminal tools are useful - e.g. for copying files to S3 or starting and stopping <span class="caps">EMR</span> clusters without having to login to the <span class="caps">AWS</span> console and click&nbsp;buttons.</p>
+<p>I think the easiest way to install the <span class="caps">AWS</span> <span class="caps">CLI</span> tools is to use <a href="https://brew.sh">Homebrew</a>, a package manager for <span class="caps">OS</span> X (like <span class="caps">APT</span> or <span class="caps">RPM</span> for Mac). With Homebrew, installation is as easy as&nbsp;executing,</p>
+<p><code>$ brew install awscli</code></p>
+<p>from the terminal. Once installation is finished the <span class="caps">AWS</span> <span class="caps">CLI</span> Tools need to be configured. Make sure you have your users&#8217; credentials details to hand (open the file that downloaded when you created your admin user). From the terminal&nbsp;run,</p>
+<p><code>$ aws configure</code>.</p>
+<p>This will ask you for, in sequence: Access Key <span class="caps">ID</span> (copy from credentials file), Secret Access Key (copy from credentials file), Default region name (I use eu-west-1 in Ireland), and default output (I prefer <span class="caps">JSON</span>). To test that everything is working&nbsp;execute,</p>
+<p><code>$ aws s3 ls</code></p>
+<p>to list all the buckets we&#8217;ve made in S3 (currently&nbsp;none).</p>
+<h2>Upload Data to&nbsp;S3</h2>
+<p>Finally, it&#8217;s time to do something data science-y - loading data. Before we can do this we need to create a &#8216;bucket&#8217; in S3 to put our data objects in. Using the <span class="caps">AWS</span> <span class="caps">CLI</span> tools we&nbsp;execute,</p>
+<p><code>$ aws s3 mb s3://alex.data</code></p>
+<p>to create the <code>alex.data</code> bucket. <span class="caps">AWS</span> is quite strict about what names are valid (i.e. no underscores), so it&#8217;s worth reading the <span class="caps">AWS</span> documentation on S3 if you get any errors. We can then copy a file over to our new bucket by&nbsp;executing,</p>
+<p><code>$ aws s3 cp ./README.md s3://alex.data</code></p>
+<p>We can check this file has been successfully copied by returning to the <span class="caps">AWS</span> console and heading to S3 under Storage <span class="amp">&amp;</span> Content Delivery where it should be easy to browse to our&nbsp;file:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt1/8_S3.png" title="S3"></p>
+<p>All of the above steps could have been carried out through the console, but I prefer using the&nbsp;terminal.</p>
+<p>We are now ready to fire-up a Spark cluster and use it to read our data (Part 2 in this series of&nbsp;blogs).</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="./tag/big-data.html">big data</a>
+      <a href="./tag/aws.html">AWS</a>
+      <a href="./tag/data-processing.html">data processing</a>
+    </p>
+  </div>
+
+
+
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'alexioannides';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy;  </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Dr Alex Ioannides ",
+  "url" : ".",
+  "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
+  "description": ""
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="./static/custom.css" rel="stylesheet">
+
+    <link href="https://alexioannides.github.io/feeds/all-atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
+
+    <link href="https://alexioannides.github.io/feeds/all-rss.xml" type="application/rss+xml" rel="alternate" title="Dr Alex Ioannides RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-125604661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+<meta name="author" content="Dr Alex Ioannides" />
+<meta name="description" content="Part 1 in this series of blog posts describes how to setup AWS with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on AWS and accessing our S3 data from within Spark. A key part of my vision …" />
+<meta name="keywords" content="big data, AWS, data processing, spark">
+
+<meta property="og:site_name" content="Dr Alex Ioannides"/>
+<meta property="og:title" content="Building a Data Science Platform for R&amp;D, Part 2 - Deploying Spark on AWS using Flintrock"/>
+<meta property="og:description" content="Part 1 in this series of blog posts describes how to setup AWS with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on AWS and accessing our S3 data from within Spark. A key part of my vision …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="./building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2016-08-18 00:00:00+01:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="./author/dr-alex-ioannides.html">
+<meta property="article:section" content="data_science"/>
+<meta property="article:tag" content="big data"/>
+<meta property="article:tag" content="AWS"/>
+<meta property="article:tag" content="data processing"/>
+<meta property="article:tag" content="spark"/>
+<meta property="og:image" content="//avatars1.githubusercontent.com/u/5968486?s=460&v=4">
+
+  <title>Dr Alex Ioannides &ndash; Building a Data Science Platform for R&amp;D, Part 2 - Deploying Spark on AWS using Flintrock</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href=".">
+        <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
+      </a>
+      <h1><a href=".">Dr Alex Ioannides</a></h1>
+
+<p>Financial engineer - (data) scientist - habitual coder</p>
+      <nav>
+        <ul class="list">
+          <li><a href="./pages/about-this-blog.html#about-this-blog">About this&nbsp;Blog</a></li>
+          <li><a href="./pages/about-me.html#about-me">About&nbsp;Me</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-github" href="https://github.com/alexioannides" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank"><i class="fa fa-soundcloud"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href=".">    Home
+</a>
+
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+      <a href="/archives.html">Archives</a>
+
+      <a href="https://alexioannides.github.io/feeds/all-atom.xml">    Atom
+</a>
+
+      <a href="https://alexioannides.github.io/feeds/all-rss.xml">    RSS
+</a>
+    </nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock">Building a Data Science Platform for R&D, Part 2 - Deploying Spark on <span class="caps">AWS</span> using&nbsp;Flintrock</h1>
+    <p>
+          Posted on Thu 18 August 2016 in <a href="./category/data_science.html">data_science</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><img alt="Alt" src="./images/data_science/data_science_platform_pt2/spark.png" title="spark"></p>
+<p><a href="./building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" title="PartOne">Part 1</a> in this series of blog posts describes how to setup <span class="caps">AWS</span> with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on <span class="caps">AWS</span> and accessing our S3 data from within&nbsp;Spark.</p>
+<p>A key part of my vision for a Spark-based R&amp;D platform is being able to to launch, stop, start and then connect to a cluster from my laptop. By this I mean that I don&#8217;t want to have to directly interact with <span class="caps">AWS</span> every time I want to switch my cluster on or off. Versions of Spark prior to v2 had a folder in the home directory, <code>/ec2</code>, containing scripts for doing exactly this from the terminal. I was perturbed to find this folder missing in Spark 2.0 and &#8216;Amazon <span class="caps">EC2</span>&#8217; missing from the &#8216;Deploying&#8217; menu of the official Spark documentation. It appears that these scripts have not been actively maintained and as such they&#8217;ve been moved to a separate <a href="https://github.com/amplab/spark-ec2" title="ec2-tools">GitHub repo</a> for the foreseeable future. I spent a little bit of time trying to get them to work, but ultimately they do not support v2 of Spark as yet. They also don&#8217;t allow you the flexibility of choosing which version of Hadoop to install along with Spark and this can cause headaches when it comes to accessing data on S3 (a bit more on this&nbsp;later).</p>
+<p>I&#8217;m very keen on using Spark 2.0 so I needed an alternative solution. Manually firing-up VMs on <span class="caps">EC2</span> and installing Spark and Hadoop on each node was out of the question, as was an ascent of the <span class="caps">AWS</span> DevOps learning-curve required to automate such a process. This sort of thing is not part of my day-job and I don&#8217;t have the time otherwise. So I turned to Google and was <strong>very</strong> happy to stumble upon the <a href="https://github.com/nchammas/flintrock" title="Flintrock">Flintrock</a> project on GitHub. Its still in its infancy, but using it I managed to achieve everything I could do with the old Spark ec2 scripts, but with far greater flexibility and speed. It is really rather good and I will be using it for Spark cluster&nbsp;management.</p>
+<h2>Download Spark&nbsp;Locally</h2>
+<p>In order to be able to send jobs to our Spark cluster we will need a local version of Spark so we can use the <code>spark-submit</code> command. In any case, its useful for development and learning as well as for small ad hoc jobs. Download Spark 2.0 <a href="https://spark.apache.org/downloads.html" title="SparkDownload">here</a> and choose &#8216;Pre-built for Hadoop 2.7 and later&#8217;. My version lives in <code>/applications</code> and I will assume that yours does too. To check that everything is okay, open the terminal and make Spark-2.0.0 your current directory. From here&nbsp;run,</p>
+<p><code>$ ./bin/spark-shell</code></p>
+<p>If everything is okay you should be met with the Spark shell for Scala&nbsp;interaction:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt2/welcome_to_spark.png" title="spark-shell"></p>
+<h2>Install&nbsp;Flintrock</h2>
+<p>Exit the Spark shell (ctrl-d on a Mac, just in case you didn&#8217;t know&#8230;) and return to Spark&#8217;s home directory. For convenience, I&#8217;m going to download Flintrock to here as well - where the old ec2 scripts used to be. The steps for downloading the Flintrock binaries - taken verbatim from the Flinkrock repo&#8217;s <span class="caps">README</span> - are as&nbsp;follows:</p>
+<div class="highlight"><pre><span></span>$ <span class="nv">flintrock_version</span><span class="o">=</span><span class="s2">&quot;0.5.0&quot;</span>
+
+$ curl --location --remote-name <span class="s2">&quot;https://github.com/nchammas/flintrock/releases/download/v</span><span class="nv">$flintrock_version</span><span class="s2">/Flintrock-</span><span class="nv">$flintrock_version</span><span class="s2">-standalone-OSX-x86_64.zip&quot;</span>
+$ unzip -q -d flintrock <span class="s2">&quot;Flintrock-</span><span class="nv">$flintrock_version</span><span class="s2">-standalone-OSX-x86_64.zip&quot;</span>
+$ <span class="nb">cd</span> flintrock/
+</pre></div>
+
+
+<p>And test that it works by&nbsp;running,</p>
+<p><code>$ ./flintrock --help</code></p>
+<p>It&#8217;s worth familiarizing yourself with the available commands. We&#8217;ll only be using a small sub-set of these, but there&#8217;s a lot more you can do with&nbsp;Flintrock.</p>
+<h2>Configure&nbsp;Flintrock</h2>
+<p>The configuration details of the default cluster are kept in a <span class="caps">YAML</span> file that will be opened in your favorite text editor if you&nbsp;run</p>
+<p><code>$ ./flintrock configure</code></p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt2/figure_configure.png" title="FlintrockConfig"></p>
+<p>Most of these are the default Flintrock options, but a few of them deserve a little more&nbsp;discussion:</p>
+<ul>
+<li>
+<p><code>key-name</code> and <code>identity-file</code> - in <a href="./building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" title="PartOne">Part 1</a> we generated a key-pair to allow us to connect remotely to <span class="caps">EC2</span> VMs. These options refer to the name of the key-par and the path to the file containing our private&nbsp;key.</p>
+</li>
+<li>
+<p><code>instance-profile-name</code> - this assigns an <span class="caps">IAM</span> &#8216;role&#8217; to each node. A role is a like an <span class="caps">IAM</span> user that isn&#8217;t a person, but can have access policies attached to it. Ultimately, this determines what out Spark nodes can and cannot do on <span class="caps">AWS</span>. I have chosen the default role that <span class="caps">EMR</span> assigns to nodes, which allows them to access data held in&nbsp;S3.</p>
+</li>
+<li>
+<p><code>instance-type</code> - I think running 2 x m4.large instances is more than enough for testing a Spark cluster. In total, this gets you 4 cores, 16Gb of <span class="caps">RAM</span> and Elastic Block Storage (<span class="caps">EBS</span>). The latter is important as it means your VMs will &#8216;persist&#8217; when you stop them - just like shutting-down your laptop. Check that the overall pricing is acceptable to you <a href="https://aws.amazon.com/ec2/pricing/" title="AWS-pricing">here</a>. If it isn&#8217;t, then choose another instance type, but make sure it has <span class="caps">EBS</span> (or add it separately if you need&nbsp;to).</p>
+</li>
+<li>
+<p><code>region</code> - the <span class="caps">AWS</span> region that you want the cluster to be created in. I&#8217;m in the <span class="caps">UK</span> so my default region is Ireland (aka&nbsp;eu-west-1).</p>
+</li>
+<li>
+<p><code>ami</code> - which Amazon Machine Image (<span class="caps">AMI</span>) should the VMs in our cluster be based on? For the time-being I&#8217;m using the latest version of Amazon&#8217;s Linux distribution, which is based on Red Hat Linux and includes <span class="caps">AWS</span> tools. Be aware that this has its idiosyncrasies (deviations from what would be expected on Red Hat and CentOS), and that these can create headaches (some of which I encountered when I was trying to get the Apache Zeppelin daemon to run). It is free and easy, however, and the <span class="caps">ID</span> for the latest version can be found <a href="https://aws.amazon.com/amazon-linux-ami/" title="AMI">here</a>.</p>
+</li>
+<li>
+<p><code>user</code> - the setup scripts will create a non-root user on each <span class="caps">VM</span> and this will be the associated&nbsp;username.</p>
+</li>
+<li>
+<p><code>num-slaves</code> - the number of non-master Spark nodes - 1 or 2 will suffice for&nbsp;testing.</p>
+</li>
+<li>
+<p><code>install-hdfs</code> - should Hadoop be installed on each machine alongside Spark? We want to access data in S3 and Hadoop is also a convenient way of making files and JARs visible to all nodes. So it&#8217;s a &#8216;True&#8217; for&nbsp;me.</p>
+</li>
+</ul>
+<h2>Launch&nbsp;Cluster</h2>
+<p>Once you&#8217;ve decided on the cluster&#8217;s configuration, head back to the terminal and launch a cluster&nbsp;using,</p>
+<p><code>$ ./flintrock launch the_name_of_my_cluster</code></p>
+<p>This took me under 3 minutes, which is an <em>enormous</em> improvement on the old ec2 scripts. Once Flintrock issues it&#8217;s health report and returns control of the terminal back to you, login to the <span class="caps">AWS</span> console and head over to the <span class="caps">EC2</span> page to see the VMs that have been created for&nbsp;you:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt2/ec2_instances.png" title="EC2-dashboard"></p>
+<p>Select the master node to see it&#8217;s details and check that the correct <span class="caps">IAM</span> role has been&nbsp;added:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt2/instance_details.png" title="EC2-instances"></p>
+<p>Note that Flintrock has created two security groups for us: flintrock-your_cluster_name-cluster and flintrock. The former allows each node to connect with every other node, and the latter determines who can connect to the nodes from the &#8216;outside world&#8217;. Select the &#8216;flintrock&#8217; security&nbsp;group:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt2/flintrock_security_group.png" title="SecurityGroup"></p>
+<p>The Sources are the <span class="caps">IP</span> addresses allowed to access the cluster. Initially, this should be set to the <span class="caps">IP</span> address of the machine that has just created your cluster. If you are unsure what you <span class="caps">IP</span> address is, then try <a href="http://whatismyip.com" title="whatismyip">whatismyip.com</a>. The ports that should be open&nbsp;are:</p>
+<ul>
+<li>4040 - allows you to connect to a Spark application&#8217;s web <span class="caps">UI</span> (e.g. the spark-shell or Zeppelin,&nbsp;etc.),</li>
+<li>8080 <span class="amp">&amp;</span> 8081 - the Spark master node&#8217;s web <span class="caps">UI</span> and a free port that we&#8217;ll use for Apache Zeppelin when we set that up later on (in the final post of this&nbsp;series),</li>
+<li>22 - the default port for connecting via <span class="caps">SSH</span>.</li>
+</ul>
+<p>Edit this list and add another Custom <span class="caps">TCP</span> rule to allow port 8787 to be accessed by your <span class="caps">IP</span> address. We will use this port to connect to R Studio when we set that up in the next post in this&nbsp;series.</p>
+<h2>Connect to&nbsp;Cluster</h2>
+<p>Find the Public <span class="caps">IP</span> address of the master node from the Instances tab of the <span class="caps">EC2</span> Dashboard. Enter this into a browser followed by <code>:8080</code>, which should allow us to access the Spark master node&#8217;s web <span class="caps">UI</span>:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt2/spark_web_ui.png" title="SparkBebUI"></p>
+<p>If everything has worked correctly then you should see one worker node registered with the&nbsp;master.</p>
+<p>Back on the Instances tab, select the master node and hit the connect button. You should be presented with all the information required for connecting to the master node via <span class="caps">SSH</span>:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt2/ssh_connect.png" title="SSH-details"></p>
+<p>Return to the terminal and follow this advice. If successful, you should see something along the lines&nbsp;of:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt2/ssh_master.png" title="SSH-connect"></p>
+<p>Next, fire-up the Spark shell for Scala by executing <code>spark-shell</code>. To run a trivial job across all nodes and test the cluster, run the following program on a line-by-line&nbsp;basis:</p>
+<div class="highlight"><pre><span></span>val localArray = Array(1,2,3,4,5)
+val rddArray = sc.parallelize(localArray)
+val rddArraySum = rddArray.reduce((x, y) =&gt; x + y)
+</pre></div>
+
+
+<p>If no errors were thrown and the shell&#8217;s final output&nbsp;is,</p>
+<p><code>rddArraySum: Int = 15</code></p>
+<p>then give yourself a pat-on-the-back as you&#8217;ve just executed your first distributed computation on a cloud-hosted Spark&nbsp;cluster.</p>
+<p>There are two ways we can send a complete Spark application - a <span class="caps">JAR</span> file - to the cluster. Firstly, we could copy our <span class="caps">JAR</span> to the master node - let&#8217;s assume it&#8217;s the Apache Spark example application that computes Pi to <code>n</code> decimal places, where <code>n</code> is passed as an argument to the application. In this instance, we could <span class="caps">SSH</span> into the master node as we did for the Spark shell and then execute Spark in &#8216;client&#8217;&nbsp;mode,</p>
+<p><code>$ spark/bin/spark-submit --master spark://ip-172-31-6-33:7077 --deploy-mode client --class org.apache.spark.examples.SparkPi spark/examples/jars/spark-examples_2.11-2.0.0.jar 10</code></p>
+<p>Note that the <code>--master</code> option takes the local <span class="caps">IP</span> address of the master node within our network in <span class="caps">AWS</span>. An alternative method is to send our <span class="caps">JAR</span> file directly from our local machine using Spark in &#8216;cluster&#8217;&nbsp;mode,</p>
+<p><code>$ bin/spark-submit --master spark://52.48.93.43:6066 --deploy-mode cluster --class org.apache.spark.examples.SparkPi examples/jars/spark-examples_2.11-2.0.0.jar 10</code></p>
+<p>A common pattern is to use the latter when the application both reads data and writes output to and from S3 or some other data repository (or database) in our <span class="caps">AWS</span> network. I have not had any luck running an application on the cluster from my local machine in &#8216;client&#8217; mode. I haven&#8217;t been able to make the master node &#8216;see&#8217; my laptop - pinging the latter from the former always fails and in client mode the Spark master node must be able to reach the machine that is running the driver application (which in client mode, in this context, is my laptop). I&#8217;m sure that I could circumnavigate this issue if I setup a <span class="caps">VPN</span> or an <span class="caps">SSH</span>-tunnel between my laptop and the <span class="caps">AWS</span> cluster, but this seem like more hassle than it&#8217;s worth considering that most of my interaction with Spark will be via R Studio or Zeppelin that I will setup to access&nbsp;remotely.</p>
+<h2>Read S3 Data from&nbsp;Spark</h2>
+<p>In order to access our S3 data from Spark (via Hadoop), we need to make a couple of packages (<span class="caps">JAR</span> files and their dependencies) available to all nodes in our cluster. The easiest way to do this, is to start the spark-shell with the following&nbsp;options:</p>
+<p><code>$ spark-shell --packages com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2</code></p>
+<p>Once the cluster has downloaded everything it needs and the shell has started, run the following program that &#8216;opens&#8217; the <span class="caps">README</span> file we uploaded to S3 in Part 1 of this series of blogs, and &#8216;collects&#8217; it back to the master node from its distributed (<span class="caps">RDD</span>)&nbsp;representation:</p>
+<div class="highlight"><pre><span></span>val data = sc.textFile(&quot;s3a://alex.data/README.md&quot;)
+data.collect
+</pre></div>
+
+
+<p>If everything is successful then you should see the contents of the file printed to&nbsp;screen.</p>
+<p>If you have read elsewhere about accessing data on S3, you may have seen references made to connection strings that start with <code>"s3n://...</code> or maybe even <code>"s3://...</code> with accompanying discussions about passing credentials either as part of the connection string or by setting system variables, etc. Because we are using a recent version of Hadoop and the Amazon packages required to map S3 objects onto Hadoop, and because we have assigned our nodes <span class="caps">IAM</span> roles that have permission to access S3, we do not need to negotiate any of these (sometimes painful)&nbsp;issues.</p>
+<h2>Stopping, Starting and Destroying&nbsp;Clusters</h2>
+<p>Stopping a cluster - shutting it down to be re-started in the state you left it in - and preventing any further costs from accumulating is as simple as asking Flintrock&nbsp;to,</p>
+<p><code>$ ./flintrock stop the_name_of_my_cluster</code></p>
+<p>and similarly for starting and destroying (terminating the cluster VMs and their state&#8217;s&nbsp;forever),</p>
+<p><code>$ ./flintrock start the_name_of_my_cluster</code></p>
+<p><code>$ ./flintrock destroy the_name_of_my_cluster</code></p>
+<p><strong>Be aware</strong> that when you restart a cluster the public <span class="caps">IP</span> addresses for all the nodes will have changed. This can be a bit of a (minor) hassle, so I have opted to create an <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" title="ElasticIP">Elastic <span class="caps">IP</span></a> address and assign it to my master node to keep it&#8217;s public <span class="caps">IP</span> address constant over stops and restarts (for a nominal cost). To see what clusters are running at any one moment in&nbsp;time,</p>
+<p><code>$ ./flintrock describe</code></p>
+<p>We are now ready to install R, R Studio and start using Sparklyr and/or SparkR to start interacting with our data (Part 3 in this series of&nbsp;blogs).</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="./tag/big-data.html">big data</a>
+      <a href="./tag/aws.html">AWS</a>
+      <a href="./tag/data-processing.html">data processing</a>
+      <a href="./tag/spark.html">spark</a>
+    </p>
+  </div>
+
+
+
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'alexioannides';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy;  </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Dr Alex Ioannides ",
+  "url" : ".",
+  "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
+  "description": ""
+}
+</script>
+
+</body>
+</html>

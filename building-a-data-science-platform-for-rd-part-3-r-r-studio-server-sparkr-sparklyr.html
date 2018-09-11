@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="./static/custom.css" rel="stylesheet">
+
+    <link href="https://alexioannides.github.io/feeds/all-atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
+
+    <link href="https://alexioannides.github.io/feeds/all-rss.xml" type="application/rss+xml" rel="alternate" title="Dr Alex Ioannides RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-125604661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+<meta name="author" content="Dr Alex Ioannides" />
+<meta name="description" content="Part 1 and Part 2 of this series dealt with setting up AWS, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster’s master node and use it to …" />
+<meta name="keywords" content="big data, AWS, data processing, spark">
+
+<meta property="og:site_name" content="Dr Alex Ioannides"/>
+<meta property="og:title" content="Building a Data Science Platform for R&amp;D, Part 3 - R, R Studio Server, SparkR &amp; Sparklyr"/>
+<meta property="og:description" content="Part 1 and Part 2 of this series dealt with setting up AWS, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster’s master node and use it to …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="./building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2016-08-22 00:00:00+01:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="./author/dr-alex-ioannides.html">
+<meta property="article:section" content="data_science"/>
+<meta property="article:tag" content="big data"/>
+<meta property="article:tag" content="AWS"/>
+<meta property="article:tag" content="data processing"/>
+<meta property="article:tag" content="spark"/>
+<meta property="og:image" content="//avatars1.githubusercontent.com/u/5968486?s=460&v=4">
+
+  <title>Dr Alex Ioannides &ndash; Building a Data Science Platform for R&amp;D, Part 3 - R, R Studio Server, SparkR &amp; Sparklyr</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href=".">
+        <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
+      </a>
+      <h1><a href=".">Dr Alex Ioannides</a></h1>
+
+<p>Financial engineer - (data) scientist - habitual coder</p>
+      <nav>
+        <ul class="list">
+          <li><a href="./pages/about-this-blog.html#about-this-blog">About this&nbsp;Blog</a></li>
+          <li><a href="./pages/about-me.html#about-me">About&nbsp;Me</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-github" href="https://github.com/alexioannides" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank"><i class="fa fa-soundcloud"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href=".">    Home
+</a>
+
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+      <a href="/archives.html">Archives</a>
+
+      <a href="https://alexioannides.github.io/feeds/all-atom.xml">    Atom
+</a>
+
+      <a href="https://alexioannides.github.io/feeds/all-rss.xml">    RSS
+</a>
+    </nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr">Building a Data Science Platform for R&D, Part 3 - R, R Studio Server, SparkR <span class="amp">&amp;</span>&nbsp;Sparklyr</h1>
+    <p>
+          Posted on Mon 22 August 2016 in <a href="./category/data_science.html">data_science</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><img alt="Alt" src="./images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"></p>
+<p><a href="./building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" title="Part 1">Part 1</a> and <a href="./building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 2">Part 2</a> of this series dealt with setting up <span class="caps">AWS</span>, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster&#8217;s master node and use it to serve my favorite R <span class="caps">IDE</span>: R Studio.
+We will then install and configure both the <a href="http://spark.rstudio.com/index.html" title="sparklyr">Sparklyr</a> and [SparkR][sparkR] packages for connecting and interacting with Spark and our data. After this, we will be on our way to interacting with and computing on large-scale data as if it were sitting on our&nbsp;laptops.</p>
+<h1>Installing&nbsp;R</h1>
+<p>Our first task is to install R onto our master node. Start by <span class="caps">SSH</span>-ing into the master node using the steps described in <a href="./building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 2">Part 2</a>. Then execute the following commands in the following&nbsp;order:</p>
+<ol>
+<li><code>$ sudo yum update</code> - update all the packages on Amazon Linux machine imagine to the latest ones in the Amazon Linux&#8217;s&nbsp;repository;</li>
+<li><code>$ sudo yum install R</code> - install R and all of its&nbsp;dependencies;</li>
+<li><code>$ sudo yum install libcurl libcurl-devel</code> - ensure that <a href="https://curl.haxx.se/" title="CURL">Curl</a> is installed (a dependency for the <code>httr</code> and <code>curl</code> R packages used to install other R packages);&nbsp;and,</li>
+<li><code>$ sudo yum install openssl openssl-devel</code> - ensure that <a href="https://www.openssl.org/" title="OpenSSL">OpenSSL</a> is installed (another dependency for the httr R&nbsp;package).</li>
+</ol>
+<p>If everything has worked as intended, then executing <code>$ R</code> should present you with R on the command&nbsp;line:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt3/r_terminal.png" title="Command Line R"></p>
+<h1>Installing R Studio&nbsp;Server</h1>
+<p>Installing R Studio on the same local network as the Spark cluster that we want to connect to  - in our case directly on the master node - is the recommended approach for using R Studio with a remote Spark Cluster. Using a local version of R Studio to connect to a remote Spark cluster is prone to the same networking issues as trying to use the Spark shell remotely in client-mode (see <a href="./building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 2">part 2</a>).</p>
+<p>First of all we need the <span class="caps">URL</span> for the latest version of R Studio Server. Preview versions can be found <a href="https://www.rstudio.com/products/rstudio/download/preview/" title="R Studio Server Preview">here</a> while stable releases can be found <a href="https://www.rstudio.com/products/rstudio/download-server/" title="R Studio Server Current">here</a>. At the time of writing Sparklyr integration is a preview feature so I&#8217;m using the latest preview version of R Studio Server for 64bit RedHat/CentOS (should this fail at any point, then revert back to the latest stable release as all of the scripts used in this post will still run). Picking-up where we left-off in the master node&#8217;s terminal window, execute the following&nbsp;commands,</p>
+<p><code>$ wget https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-rhel-0.99.1289-i686.rpm</code>
+<code>$ sudo yum install --nogpgcheck rstudio-server-rhel-0.99.1289-i686.rpm</code></p>
+<p>Next, we need to assign a password to our ec2-user so that they can login to R Studio as&nbsp;well,</p>
+<p><code>$ sudo passwd ec2-user</code></p>
+<p>If we wanted to create additional users (with their own R Studio workspaces and local R package repositories), we would&nbsp;execute,</p>
+<p><code>$ sudo useradd alex</code>
+<code>$ sudo passwd alex</code></p>
+<p>Because we have installed Spark in our ec2-user&#8217;s <code>home</code> directory, other users will not be able to access it. To get around this problem (if we want to have multiple users working on the platform), we need a local copy of Spark available to everyone. A sensible place to store this is in <code>/usr/local/lib</code> and we can make a copy of our Spark directory here as&nbsp;follows:</p>
+<p><code>$ cd /home/ec2-user</code>
+<code>$ sudo cp -r spark /usr/local/lib</code></p>
+<p>Now check that everything works as expected by opening your browser and heading to <code>http://master_nodes_public_ip_address:8787</code> where you should be greeted with the R Studio login&nbsp;page:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt3/r_studio_login.png" title="R Studio Server Login"></p>
+<p>Enter a username and password and then we should be ready to&nbsp;go:</p>
+<p><img alt="Alt" src="./images/data_science/data_science_platform_pt3/r_studio_server.png" title="R Studio Server"></p>
+<p>Finally, on R Studio&#8217;s command line&nbsp;run,</p>
+<p><code>&gt; install.packages("devtools")</code></p>
+<p>to install the <code>devtools</code> R package that will allow us to install packages directly from GitHub repositories (as well as many other things). If OpenSSL and Curl were installed correctly in the above steps, then this should take under a&nbsp;minute.</p>
+<h1>Connect to Spark with&nbsp;Sparklyr</h1>
+<p><a href="http://spark.rstudio.com/index.html" title="sparklyr">Sparklyr</a> is an extensible R <span class="caps">API</span> for Spark from the people at <a href="https://www.rstudio.com" title="rStudio">R Studio</a>- an alternative to the SparkR package that ships with Spark as standard. In particular, it provides a &#8216;back end&#8217; for the powerful <code>dplyr</code> data manipulation package that lets you manipulate Spark DataFrames using the same package and functions that I would use to manipulate native R data frames on my&nbsp;laptop.</p>
+<p>Sparklyr is still in it&#8217;s infancy and is not yet available on the <span class="caps">CRAN</span> archives. As such, it needs to be installed directly from its GitHub repo, which from within R Studio is done by&nbsp;executing,</p>
+<p><code>&gt; devtools::install_github("rstudio/sparklyr")</code></p>
+<p>This will take a few minutes as there are a lot of dependencies that need to be built from source. Once this is finished create a new script and copy the following code for testing Sparklyr, its ability to connect to our Spark cluster and our S3&nbsp;data:</p>
+<div class="highlight"><pre><span></span><span class="c1"># set system variables for access to S3 using older &quot;s3n:&quot; protocol ----</span>
+<span class="c1"># Sys.setenv(AWS_ACCESS_KEY_ID=&quot;AKIAJL4EWJCQ3R86DWAA&quot;)</span>
+<span class="c1"># Sys.setenv(AWS_SECRET_ACCESS_KEY=&quot;nVZJQtKj6ODDy+t253OZJWZLEo2gaEoFAYjH1pEf&quot;)</span>
+
+<span class="c1"># load packages ----</span>
+<span class="kn">library</span><span class="p">(</span>sparklyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+
+<span class="c1"># add packages to Spark config ----</span>
+config <span class="o">&lt;-</span> spark_config<span class="p">()</span>
+config<span class="o">$</span>sparklyr.defaultPackages<span class="p">[[</span><span class="m">3</span><span class="p">]]</span> <span class="o">&lt;-</span> <span class="s">&quot;org.apache.hadoop:hadoop-aws:2.7.2&quot;</span>
+config<span class="o">$</span>sparklyr.defaultPackages
+<span class="c1"># [1] &quot;com.databricks:spark-csv_2.11:1.3.0&quot;    &quot;com.amazonaws:aws-java-sdk-pom:1.10.34&quot; &quot;org.apache.hadoop:hadoop-aws:2.7.2&quot;</span>
+
+<span class="c1"># connect to Spark cluster ----</span>
+sc <span class="o">&lt;-</span> spark_connect<span class="p">(</span>master <span class="o">=</span> <span class="s">&quot;spark://ip-172-31-11-216:7077&quot;</span><span class="p">,</span>
+                   spark_home <span class="o">=</span> <span class="s">&quot;/usr/local/lib/spark&quot;</span><span class="p">,</span>
+                   config <span class="o">=</span> config<span class="p">)</span>
+
+<span class="c1"># copy the local iris dataset to Spark ----</span>
+iris_tbl <span class="o">&lt;-</span> copy_to<span class="p">(</span>sc<span class="p">,</span> iris<span class="p">)</span>
+<span class="kp">head</span><span class="p">(</span>iris_tbl<span class="p">)</span>
+<span class="c1"># Sepal_Length Sepal_Width Petal_Length Petal_Width  Species</span>
+<span class="c1">#        &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;    &lt;chr&gt;</span>
+<span class="c1">#          5.1         3.5          1.4         0.2 &quot;setosa&quot;</span>
+<span class="c1">#          4.9         3.0          1.4         0.2 &quot;setosa&quot;</span>
+<span class="c1">#          4.7         3.2          1.3         0.2 &quot;setosa&quot;</span>
+<span class="c1">#          4.6         3.1          1.5         0.2 &quot;setosa&quot;</span>
+<span class="c1">#          5.0         3.6          1.4         0.2 &quot;setosa&quot;</span>
+<span class="c1">#          5.4         3.9          1.7         0.4 &quot;setosa&quot;</span>
+
+<span class="c1"># load S3 file into Spark&#39;s using the &quot;s3a:&quot; protocol ----</span>
+test <span class="o">&lt;-</span> spark_read_csv<span class="p">(</span>sc<span class="p">,</span> <span class="s">&quot;test&quot;</span><span class="p">,</span> <span class="s">&quot;s3a://adhoc.analytics.data/README.md&quot;</span><span class="p">)</span>
+test
+<span class="c1"># Source:   query [?? x 1]</span>
+<span class="c1"># Database: spark connection master=spark://ip-172-31-11-216:7077 app=sparklyr local=FALSE</span>
+<span class="c1">#</span>
+<span class="c1">#                                                                  _Apache_Spark</span>
+<span class="c1">#                                                                          &lt;chr&gt;</span>
+<span class="c1"># Spark is a fast and general cluster computing system for Big Data. It provides</span>
+<span class="c1">#                                                       high-level APIs in Scala</span>
+<span class="c1">#      supports general computation graphs for data analysis. It also supports a</span>
+<span class="c1">#      rich set of higher-level tools including Spark SQL for SQL and DataFrames</span>
+<span class="c1">#                                                     MLlib for machine learning</span>
+<span class="c1">#                                     and Spark Streaming for stream processing.</span>
+<span class="c1">#                                                     &lt;http://spark.apache.org/&gt;</span>
+<span class="c1">#                                                        ## Online Documentation</span>
+<span class="c1">#                                    You can find the latest Spark documentation</span>
+<span class="c1">#                                                                          guide</span>
+<span class="c1"># # ... with more rows</span>
+
+<span class="c1"># disconnect ----</span>
+spark_disconnect_all<span class="p">()</span>
+</pre></div>
+
+
+<p>Execute line-by-line and check the key outputs with those commented-out in the above script. Sparklyr is changing rapidly at the moment - for the latest documentation and information on: how to use it with the <code>dplyr</code> package, how to leverage Spark machine learning libraries and how to extend Sparklyr itself, head over to the <a href="http://spark.rstudio.com/index.html" title="sparklyr">Sparklyr web site</a> hosted by R&nbsp;Studio.</p>
+<h1>Connect to Spark with&nbsp;SparkR</h1>
+<p>SparkR is shipped with Spark and as such there is no external installation process that we&#8217;re required to follow. It does, however, require R to be installed on every node in the cluster. This can be achieved by <span class="caps">SSH</span>-ing into every node in our cluster and repeating the above R installation steps, or experimenting with Flintrock&#8217;s <code>run-command</code> command that will automatically execute the same command on every node in the cluster, such&nbsp;as,</p>
+<p><code>$ ./flintrock run-command the_name_of_your_cluster 'sudo yum install -y R'</code></p>
+<p>To enable SparkR to be used via R Studio and demonstrate the same connectivity as we did above for Sparklyr, create a new script for the following&nbsp;code:</p>
+<div class="highlight"><pre><span></span><span class="c1"># set system variables ----</span>
+<span class="c1"># - location of Spark on master node;</span>
+<span class="c1"># - add sparkR package directory to the list of path to look for R packages</span>
+<span class="kp">Sys.setenv</span><span class="p">(</span>SPARK_HOME<span class="o">=</span><span class="s">&quot;/home/ec2-user/spark&quot;</span><span class="p">)</span>
+<span class="m">.</span>libPaths<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="kp">file.path</span><span class="p">(</span><span class="kp">Sys.getenv</span><span class="p">(</span><span class="s">&quot;SPARK_HOME&quot;</span><span class="p">),</span> <span class="s">&quot;R&quot;</span><span class="p">,</span> <span class="s">&quot;lib&quot;</span><span class="p">),</span> <span class="m">.</span>libPaths<span class="p">()))</span>
+
+<span class="c1"># load packages ----</span>
+<span class="kn">library</span><span class="p">(</span>SparkR<span class="p">)</span>
+
+<span class="c1"># connect to Spark cluster ----</span>
+<span class="c1"># check your_public_ip_address:8080 to get the local network address of your master node</span>
+sc <span class="o">&lt;-</span> sparkR.session<span class="p">(</span>master <span class="o">=</span> <span class="s">&quot;spark://ip-172-31-11-216:7077&quot;</span><span class="p">,</span>
+                     sparkPackages <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;com.databricks:spark-csv_2.11:1.3.0&quot;</span><span class="p">,</span>
+                                       <span class="s">&quot;com.amazonaws:aws-java-sdk-pom:1.10.34&quot;</span><span class="p">,</span>
+                                       <span class="s">&quot;org.apache.hadoop:hadoop-aws:2.7.2&quot;</span><span class="p">))</span>
+
+<span class="c1"># copy the local iris dataset to Spark ----</span>
+iris_tbl <span class="o">&lt;-</span> createDataFrame<span class="p">(</span>iris<span class="p">)</span>
+<span class="kp">head</span><span class="p">(</span>iris_tbl<span class="p">)</span>
+<span class="c1"># Sepal_Length Sepal_Width Petal_Length Petal_Width Species</span>
+<span class="c1">#          5.1         3.5          1.4         0.2  setosa</span>
+<span class="c1">#          4.9         3.0          1.4         0.2  setosa</span>
+<span class="c1">#          4.7         3.2          1.3         0.2  setosa</span>
+<span class="c1">#          4.6         3.1          1.5         0.2  setosa</span>
+<span class="c1">#          5.0         3.6          1.4         0.2  setosa</span>
+<span class="c1">#          5.4         3.9          1.7         0.4  setosa</span>
+
+<span class="c1"># load S3 file into Spark&#39;s using the &quot;s3a:&quot; protocol ----</span>
+test <span class="o">&lt;-</span> read.text<span class="p">(</span><span class="s">&quot;s3a://adhoc.analytics.data/README.md&quot;</span><span class="p">)</span>
+<span class="kp">head</span><span class="p">(</span>collect<span class="p">(</span>test<span class="p">))</span>
+<span class="c1">#                                                                            value</span>
+<span class="c1"># 1                                                                 # Apache Spark</span>
+<span class="c1"># 2</span>
+<span class="c1"># 3 Spark is a fast and general cluster computing system for Big Data. It provides</span>
+<span class="c1"># 4    high-level APIs in Scala, Java, Python, and R, and an optimized engine that</span>
+<span class="c1"># 5      supports general computation graphs for data analysis. It also supports a</span>
+<span class="c1"># 6     rich set of higher-level tools including Spark SQL for SQL and DataFrames,</span>
+
+<span class="c1"># close connection</span>
+sparkR.session.stop<span class="p">()</span>
+</pre></div>
+
+
+<p>Again, execute line-by-line and check the key outputs with those commented-out in the above script. Use the <a href="https://spark.apache.org/docs/latest/sparkr.html" title="sparkR guide">sparkR programming guide</a> and the <a href="https://spark.apache.org/docs/latest/api/R/index.html" title="sparkR API">sparkR <span class="caps">API</span> documentation</a> for more information on the available&nbsp;functions.</p>
+<p>We have nearly met all of the aims set-out at the beginning of this series of posts. All that remains now is to install Apache Zeppelin so we can interact with Spark using Scala in the same way we can now interact with it using&nbsp;R.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="./tag/big-data.html">big data</a>
+      <a href="./tag/aws.html">AWS</a>
+      <a href="./tag/data-processing.html">data processing</a>
+      <a href="./tag/spark.html">spark</a>
+    </p>
+  </div>
+
+
+
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'alexioannides';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy;  </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Dr Alex Ioannides ",
+  "url" : ".",
+  "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
+  "description": ""
+}
+</script>
+
+</body>
+</html>

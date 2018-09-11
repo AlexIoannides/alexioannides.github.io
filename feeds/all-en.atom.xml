@@ -1,0 +1,1093 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dr Alex Ioannides</title><link href="https://alexioannides.github.io/" rel="alternate"></link><link href="https://alexioannides.github.io/feeds/all-en.atom.xml" rel="self"></link><id>https://alexioannides.github.io/</id><updated>2018-09-09T00:00:00+01:00</updated><entry><title>It Recently Occurred to Me…</title><link href="https://alexioannides.github.io/it-recently-occurred-to-me.html" rel="alternate"></link><published>2018-09-09T00:00:00+01:00</published><updated>2018-09-09T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2018-09-09:/it-recently-occurred-to-me.html</id><summary type="html">&lt;p&gt;&amp;#8230; I should get back into writing/blogging things that come to mind. For example, that type annotations and type-checking with &lt;code&gt;mypy&lt;/code&gt; are great tools for data scientists as well as day-to-day developers -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;circle_area&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;radius&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;pi&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;3.141&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pi&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Makes it so much …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&amp;#8230; I should get back into writing/blogging things that come to mind. For example, that type annotations and type-checking with &lt;code&gt;mypy&lt;/code&gt; are great tools for data scientists as well as day-to-day developers -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;circle_area&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;radius&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;pi&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;3.141&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pi&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Makes it so much easier to understand how to use functions and methods as well as providing extra piece of mind that code will work as&amp;nbsp;expected.&lt;/p&gt;</content><category term="musings"></category></entry><entry><title>Machine Learning Pipelines for R</title><link href="https://alexioannides.github.io/machine-learning-pipelines-for-r.html" rel="alternate"></link><published>2017-05-17T00:00:00+01:00</published><updated>2017-05-17T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2017-05-17:/machine-learning-pipelines-for-r.html</id><summary type="html">&lt;p&gt;&lt;img alt="pipes" src="https://alexioannides.github.io/images/r/pipeliner/pipelines1.png" title="Pipelines!"&gt;&lt;/p&gt;
+&lt;p&gt;Building machine learning and statistical models often requires pre- and post-transformation of the input and/or response variables, prior to training (or fitting) the models. For example, a model may require training on the logarithm of the response and input variables. As a consequence, fitting and then generating predictions from …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="pipes" src="https://alexioannides.github.io/images/r/pipeliner/pipelines1.png" title="Pipelines!"&gt;&lt;/p&gt;
+&lt;p&gt;Building machine learning and statistical models often requires pre- and post-transformation of the input and/or response variables, prior to training (or fitting) the models. For example, a model may require training on the logarithm of the response and input variables. As a consequence, fitting and then generating predictions from these models requires repeated application of transformation and inverse-transformation functions - to go from the domain of the original input variables to the domain of the original output variables (via the model). This is usually quite a laborious and repetitive process that leads to messy code and&amp;nbsp;notebooks.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;pipeliner&lt;/code&gt; package aims to provide an elegant solution to these issues by implementing a common interface and workflow with which it is possible&amp;nbsp;to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;define transformation and inverse-transformation&amp;nbsp;functions;&lt;/li&gt;
+&lt;li&gt;fit a model on training data; and&amp;nbsp;then,&lt;/li&gt;
+&lt;li&gt;generate a prediction (or model-scoring) function that automatically applies the entire pipeline of transformations and inverse-transformations to the inputs and outputs of the inner-model and its predicted values (or&amp;nbsp;scores).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The idea of pipelines is inspired by the machine learning pipelines implemented in &lt;a href="http://spark.apache.org/docs/latest/ml-pipeline.html" title="Pipelines in Apache Spark MLib"&gt;Apache Spark&amp;#8217;s MLib library&lt;/a&gt; (which are in-turn inspired by Python&amp;#8217;s scikit-Learn package). This package is still in its infancy and the latest development version can be downloaded from &lt;a href="https://github.com/AlexIoannides/pipeliner" title="Pipeliner on GitHub"&gt;this GitHub repository&lt;/a&gt; using the &lt;code&gt;devtools&lt;/code&gt; package (bundled with&amp;nbsp;RStudio),&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;devtools&lt;span class="o"&gt;::&lt;/span&gt;install_github&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;alexioannides/pipeliner&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Pipes in the&amp;nbsp;Pipeline&lt;/h2&gt;
+&lt;p&gt;There are currently four types of pipeline section - a section being a function that wraps a user-defined function - that can be assembled into a&amp;nbsp;pipeline:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;transform_features&lt;/code&gt;: wraps a function that maps input variables (or features) to another space -&amp;nbsp;e.g.,&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;transform_features&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kt"&gt;data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;x1 &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;var1&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;transform_response&lt;/code&gt;: wraps a function that maps the response variable to another space -&amp;nbsp;e.g.,&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;transform_response&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kt"&gt;data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;y &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;response&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;estimate_model&lt;/code&gt;: wraps a function that defines how to estimate a model from training data in a data.frame -&amp;nbsp;e.g.,&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;estimate_model&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  lm&lt;span class="p"&gt;(&lt;/span&gt;y &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; x1&lt;span class="p"&gt;,&lt;/span&gt; df&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;inv_transform_features(f)&lt;/code&gt;: wraps a function that is the inverse to &lt;code&gt;transform_response&lt;/code&gt;, such that we can map from the space of inner-model predictions to the one of output domain predictions -&amp;nbsp;e.g.,&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;inv_transform_response&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kt"&gt;data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;pred_response &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;pred_y&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As demonstrated above, each one of these functions expects as its argument another unary function of a data.frame (i.e. it has to be a function of a single data.frame). With the &lt;strong&gt;exception&lt;/strong&gt; of &lt;code&gt;estimate_model&lt;/code&gt;, which expects the input function to return an object that has a &lt;code&gt;predict.object-class-name&lt;/code&gt; method existing in the current environment (e.g. &lt;code&gt;predict.lm&lt;/code&gt; for linear models built using &lt;code&gt;lm()&lt;/code&gt;), all the other transform functions also expect their input functions to return data.frames (consisting entirely of columns &lt;strong&gt;not&lt;/strong&gt; present in the input data.frame). If any of these rules are violated then appropriately named errors will be thrown to help you locate the&amp;nbsp;issue.&lt;/p&gt;
+&lt;p&gt;If this sounds complex and convoluted then I encourage you to to skip to the examples below - this framework is &lt;strong&gt;very&lt;/strong&gt; simple to use in practice. Simplicity is the key aim&amp;nbsp;here.&lt;/p&gt;
+&lt;h2&gt;Two Interfaces to Rule Them&amp;nbsp;All&lt;/h2&gt;
+&lt;p&gt;I am a great believer and protagonist for functional programming - especially for data-related tasks like building machine learning models. At the same time the notion of a &amp;#8216;machine learning pipeline&amp;#8217; is well represented with a simple object-oriented class hierarchy (which is how it is implemented in &lt;a href="http://spark.apache.org/docs/latest/ml-pipeline.html" title="Pipelines in Apache Spark MLib"&gt;Apache Spark&amp;#8217;s&lt;/a&gt;). I couldn&amp;#8217;t decide which style of interface was best, so I implemented both within &lt;code&gt;pipeliner&lt;/code&gt; (using the same underlying code) and ensured their output can be used interchangeably. To keep this introduction simple, however, I&amp;#8217;m only going to talk about the functional interface - those interested in the (more) object-oriented approach are encouraged to read the manual pages for the &lt;code&gt;ml_pipeline_builder&lt;/code&gt; &lt;span class="quo"&gt;&amp;#8216;&lt;/span&gt;class&amp;#8217;.&lt;/p&gt;
+&lt;h3&gt;Example Usage with a Functional&amp;nbsp;Flavor&lt;/h3&gt;
+&lt;p&gt;We use the &lt;code&gt;faithful&lt;/code&gt; dataset shipped with R, together with the &lt;code&gt;pipeliner&lt;/code&gt; package to estimate a linear regression model for the eruption duration of &amp;#8216;Old Faithful&amp;#8217; as a function of the inter-eruption waiting time. The transformations we apply to the input and response variables - before we estimate the model - are simple scaling by the mean and standard deviation (i.e. mapping the variables to&amp;nbsp;z-scores).&lt;/p&gt;
+&lt;p&gt;The end-to-end process for building the pipeline, estimating the model and generating in-sample predictions (that include all interim variable transformations), is as&amp;nbsp;follows,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;pipeliner&lt;span class="p"&gt;)&lt;/span&gt;
+
+data &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; faithful
+
+lm_pipeline &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; pipeline&lt;span class="p"&gt;(&lt;/span&gt;
+  data&lt;span class="p"&gt;,&lt;/span&gt;
+
+  transform_features&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;x1 &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;waiting &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;waiting&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; sd&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;waiting&lt;span class="p"&gt;))&lt;/span&gt;
+  &lt;span class="p"&gt;}),&lt;/span&gt;
+
+  transform_response&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;y &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;eruptions &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;eruptions&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; sd&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;eruptions&lt;span class="p"&gt;))&lt;/span&gt;
+  &lt;span class="p"&gt;}),&lt;/span&gt;
+
+  estimate_model&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    lm&lt;span class="p"&gt;(&lt;/span&gt;y &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; x1&lt;span class="p"&gt;,&lt;/span&gt; df&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="p"&gt;}),&lt;/span&gt;
+
+  inv_transform_response&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;pred_eruptions &lt;span class="o"&gt;=&lt;/span&gt; df&lt;span class="o"&gt;$&lt;/span&gt;pred_model &lt;span class="o"&gt;*&lt;/span&gt; sd&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;eruptions&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="o"&gt;$&lt;/span&gt;eruptions&lt;span class="p"&gt;))&lt;/span&gt;
+  &lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+
+in_sample_predictions &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; predict&lt;span class="p"&gt;(&lt;/span&gt;lm_pipeline&lt;span class="p"&gt;,&lt;/span&gt; data&lt;span class="p"&gt;,&lt;/span&gt; verbose &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  
+&lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;in_sample_predictions&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;##   eruptions waiting         x1 pred_model pred_eruptions&lt;/span&gt;
+&lt;span class="c1"&gt;## 1     3.600      79  0.5960248  0.5369058       4.100592&lt;/span&gt;
+&lt;span class="c1"&gt;## 2     1.800      54 -1.2428901 -1.1196093       2.209893&lt;/span&gt;
+&lt;span class="c1"&gt;## 3     3.333      74  0.2282418  0.2056028       3.722452&lt;/span&gt;
+&lt;span class="c1"&gt;## 4     2.283      62 -0.6544374 -0.5895245       2.814917&lt;/span&gt;
+&lt;span class="c1"&gt;## 5     4.533      85  1.0373644  0.9344694       4.554360&lt;/span&gt;
+&lt;span class="c1"&gt;## 6     2.883      55 -1.1693335 -1.0533487       2.285521&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Accessing Inner Models &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Prediction&amp;nbsp;Functions&lt;/h3&gt;
+&lt;p&gt;We can access the estimated inner models directly and compute summaries, etc - for&amp;nbsp;example,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kp"&gt;summary&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;lm_pipeline&lt;span class="o"&gt;$&lt;/span&gt;inner_model&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;##&lt;/span&gt;
+&lt;span class="c1"&gt;## Call:&lt;/span&gt;
+&lt;span class="c1"&gt;## lm(formula = y ~ 1 + x1, data = df)&lt;/span&gt;
+&lt;span class="c1"&gt;##&lt;/span&gt;
+&lt;span class="c1"&gt;## Residuals:&lt;/span&gt;
+&lt;span class="c1"&gt;##      Min       1Q   Median       3Q      Max&lt;/span&gt;
+&lt;span class="c1"&gt;## -1.13826 -0.33021  0.03074  0.30586  1.04549&lt;/span&gt;
+&lt;span class="c1"&gt;##&lt;/span&gt;
+&lt;span class="c1"&gt;## Coefficients:&lt;/span&gt;
+&lt;span class="c1"&gt;##               Estimate Std. Error t value Pr(&amp;gt;|t|)    &lt;/span&gt;
+&lt;span class="c1"&gt;## (Intercept) -3.139e-16  2.638e-02    0.00        1    &lt;/span&gt;
+&lt;span class="c1"&gt;## x1           9.008e-01  2.643e-02   34.09   &amp;lt;2e-16 ***&lt;/span&gt;
+&lt;span class="c1"&gt;## ---&lt;/span&gt;
+&lt;span class="c1"&gt;## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1&lt;/span&gt;
+&lt;span class="c1"&gt;##&lt;/span&gt;
+&lt;span class="c1"&gt;## Residual standard error: 0.435 on 270 degrees of freedom&lt;/span&gt;
+&lt;span class="c1"&gt;## Multiple R-squared:  0.8115, Adjusted R-squared:  0.8108&lt;/span&gt;
+&lt;span class="c1"&gt;## F-statistic:  1162 on 1 and 270 DF,  p-value: &amp;lt; 2.2e-16&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Pipeline prediction functions can also be accessed directly in a similar way - for&amp;nbsp;example,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pred_function &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; lm_pipeline&lt;span class="o"&gt;$&lt;/span&gt;predict
+predictions &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; pred_function&lt;span class="p"&gt;(&lt;/span&gt;data&lt;span class="p"&gt;,&lt;/span&gt; verbose &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;FALSE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;predictions&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;##   pred_eruptions&lt;/span&gt;
+&lt;span class="c1"&gt;## 1       4.100592&lt;/span&gt;
+&lt;span class="c1"&gt;## 2       2.209893&lt;/span&gt;
+&lt;span class="c1"&gt;## 3       3.722452&lt;/span&gt;
+&lt;span class="c1"&gt;## 4       2.814917&lt;/span&gt;
+&lt;span class="c1"&gt;## 5       4.554360&lt;/span&gt;
+&lt;span class="c1"&gt;## 6       2.285521&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Turbo-Charged Pipelines in the&amp;nbsp;Tidyverse&lt;/h1&gt;
+&lt;p&gt;The &lt;code&gt;pipeliner&lt;/code&gt; approach to building models becomes even more concise when combined with the set of packages in the &lt;a href="http://tidyverse.org" title="Welcome to The Tidyverse!"&gt;tidyverse&lt;/a&gt;. For example, the &amp;#8216;Old Faithful&amp;#8217; pipeline could be rewritten&amp;nbsp;as,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;tidyverse&lt;span class="p"&gt;)&lt;/span&gt;
+
+lm_pipeline &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; data &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt;
+  pipeline&lt;span class="p"&gt;(&lt;/span&gt;
+    transform_features&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      transmute&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;,&lt;/span&gt; x1 &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;waiting &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;waiting&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; sd&lt;span class="p"&gt;(&lt;/span&gt;waiting&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="p"&gt;}),&lt;/span&gt;
+
+    transform_response&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      transmute&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;,&lt;/span&gt; y &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;eruptions &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;eruptions&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; sd&lt;span class="p"&gt;(&lt;/span&gt;eruptions&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="p"&gt;}),&lt;/span&gt;
+
+    estimate_model&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      lm&lt;span class="p"&gt;(&lt;/span&gt;y &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; x1&lt;span class="p"&gt;,&lt;/span&gt; df&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;}),&lt;/span&gt;
+
+    inv_transform_response&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      transmute&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;,&lt;/span&gt; pred_eruptions &lt;span class="o"&gt;=&lt;/span&gt; pred_model &lt;span class="o"&gt;*&lt;/span&gt; sd&lt;span class="p"&gt;(&lt;/span&gt;eruptions&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;eruptions&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="p"&gt;})&lt;/span&gt;
+  &lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;predict&lt;span class="p"&gt;(&lt;/span&gt;lm_pipeline&lt;span class="p"&gt;,&lt;/span&gt; data&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c1"&gt;## [1] 4.100592 2.209893 3.722452 2.814917 4.554360 2.285521&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Nice, compact and expressive (if I don&amp;#8217;t say so&amp;nbsp;myself)!&lt;/p&gt;
+&lt;h3&gt;Compact&amp;nbsp;Cross-validation&lt;/h3&gt;
+&lt;p&gt;If we now introduce the &lt;code&gt;modelr&lt;/code&gt; package into this workflow and adopt the the list-columns pattern described in Hadley Wickham&amp;#8217;s &lt;a href="http://r4ds.had.co.nz/many-models.html#list-columns-1" title="R 4 Data Science - Many Models &amp;amp; List Columns"&gt;R for Data Science&lt;/a&gt;, we can also achieve wonderfully compact end-to-end model estimation and&amp;nbsp;cross-validation,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;modelr&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# define a function that estimates a machine learning pipeline on a single fold of the data&lt;/span&gt;
+pipeline_func &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  pipeline&lt;span class="p"&gt;(&lt;/span&gt;
+    df&lt;span class="p"&gt;,&lt;/span&gt;
+    transform_features&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      transmute&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;,&lt;/span&gt; x1 &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;waiting &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;waiting&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; sd&lt;span class="p"&gt;(&lt;/span&gt;waiting&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="p"&gt;}),&lt;/span&gt;
+
+    transform_response&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      transmute&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;,&lt;/span&gt; y &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;eruptions &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;eruptions&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; sd&lt;span class="p"&gt;(&lt;/span&gt;eruptions&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="p"&gt;}),&lt;/span&gt;
+
+    estimate_model&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      lm&lt;span class="p"&gt;(&lt;/span&gt;y &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; x1&lt;span class="p"&gt;,&lt;/span&gt; df&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;}),&lt;/span&gt;
+
+    inv_transform_response&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      transmute&lt;span class="p"&gt;(&lt;/span&gt;df&lt;span class="p"&gt;,&lt;/span&gt; pred_eruptions &lt;span class="o"&gt;=&lt;/span&gt; pred_model &lt;span class="o"&gt;*&lt;/span&gt; sd&lt;span class="p"&gt;(&lt;/span&gt;eruptions&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;eruptions&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="p"&gt;})&lt;/span&gt;
+  &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;# 5-fold cross-validation using machine learning pipelines&lt;/span&gt;
+cv_rmse &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; crossv_kfold&lt;span class="p"&gt;(&lt;/span&gt;data&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt;
+  mutate&lt;span class="p"&gt;(&lt;/span&gt;model &lt;span class="o"&gt;=&lt;/span&gt; map&lt;span class="p"&gt;(&lt;/span&gt;train&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; pipeline_func&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;as.data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;.&lt;/span&gt;x&lt;span class="p"&gt;))),&lt;/span&gt;
+         predictions &lt;span class="o"&gt;=&lt;/span&gt; map2&lt;span class="p"&gt;(&lt;/span&gt;model&lt;span class="p"&gt;,&lt;/span&gt; test&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; predict&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;.&lt;/span&gt;x&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kp"&gt;as.data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;.&lt;/span&gt;y&lt;span class="p"&gt;))),&lt;/span&gt;
+         residuals &lt;span class="o"&gt;=&lt;/span&gt; map2&lt;span class="p"&gt;(&lt;/span&gt;predictions&lt;span class="p"&gt;,&lt;/span&gt; test&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="m"&gt;.&lt;/span&gt;x &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="kp"&gt;as.data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;.&lt;/span&gt;y&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;eruptions&lt;span class="p"&gt;),&lt;/span&gt;
+         rmse &lt;span class="o"&gt;=&lt;/span&gt; map_dbl&lt;span class="p"&gt;(&lt;/span&gt;residuals&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="kp"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;.&lt;/span&gt;x &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;))))&lt;/span&gt; &lt;span class="o"&gt;%&amp;gt;%&lt;/span&gt;
+  summarise&lt;span class="p"&gt;(&lt;/span&gt;mean_rmse &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;rmse&lt;span class="p"&gt;),&lt;/span&gt; sd_rmse &lt;span class="o"&gt;=&lt;/span&gt; sd&lt;span class="p"&gt;(&lt;/span&gt;rmse&lt;span class="p"&gt;))&lt;/span&gt;
+
+cv_rmse
+&lt;span class="c1"&gt;## # A tibble: 1 × 2&lt;/span&gt;
+&lt;span class="c1"&gt;##   mean_rmse    sd_rmse&lt;/span&gt;
+&lt;span class="c1"&gt;##       &amp;lt;dbl&amp;gt;      &amp;lt;dbl&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;## 1 0.4877222 0.05314748&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Forthcoming&amp;nbsp;Attractions&lt;/h1&gt;
+&lt;p&gt;I built &lt;code&gt;pipeliner&lt;/code&gt; largely to fill a hole in my own workflows. Up until now I&amp;#8217;ve used Max Kuhn&amp;#8217;s excellent &lt;a href="http://topepo.github.io/caret/index.html" title="Caret"&gt;caret package&lt;/a&gt; quite a bit, but for in-the-moment model building (e.g. within a R Notebook) it wasn&amp;#8217;t simplifying the code &lt;em&gt;that&lt;/em&gt; much, and the style doesn&amp;#8217;t quite fit with the tidy and functional world that I now inhabit most of the time. So, I plugged the hole by myself. I intend to live with &lt;code&gt;pipeliner&lt;/code&gt; for a while to get an idea of where it might go next, but I am always open to suggestions (and bug notifications) - please &lt;a href="https://github.com/AlexIoannides/pipeliner/issues" title="Pipeliner Issues on GitHub"&gt;leave any ideas here&lt;/a&gt;.&lt;/p&gt;</content><category term="machine learning"></category><category term="data processing"></category></entry><entry><title>elasticsearchr - a Lightweight Elasticsearch Client for R</title><link href="https://alexioannides.github.io/elasticsearchr-a-lightweight-elasticsearch-client-for-r.html" rel="alternate"></link><published>2016-11-28T00:00:00+00:00</published><updated>2016-11-28T00:00:00+00:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-11-28:/elasticsearchr-a-lightweight-elasticsearch-client-for-r.html</id><summary type="html">&lt;p&gt;&lt;img alt="elasticsearchr" src="https://alexioannides.github.io/images/r/elasticsearchr/elasticsearchr2.png" title="Elasticsearchr"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.elastic.co/products/elasticsearch" title="Elasticsearch"&gt;Elasticsearch&lt;/a&gt; is a distributed &lt;a href="https://en.wikipedia.org/wiki/NoSQL" title="What is NoSQL?"&gt;NoSQL&lt;/a&gt; document store search-engine and &lt;a href="https://www.elastic.co/blog/elasticsearch-as-a-column-store" title="Elasticsearch as a Column Store"&gt;column-oriented database&lt;/a&gt;, whose &lt;strong&gt;fast&lt;/strong&gt; (near real-time) reads and powerful aggregation engine make it an excellent choice as an &amp;#8216;analytics database&amp;#8217; for R&amp;amp;D, production-use or both. Installation is simple, it ships with default settings that allow it to work effectively out-of-the-box …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="elasticsearchr" src="https://alexioannides.github.io/images/r/elasticsearchr/elasticsearchr2.png" title="Elasticsearchr"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.elastic.co/products/elasticsearch" title="Elasticsearch"&gt;Elasticsearch&lt;/a&gt; is a distributed &lt;a href="https://en.wikipedia.org/wiki/NoSQL" title="What is NoSQL?"&gt;NoSQL&lt;/a&gt; document store search-engine and &lt;a href="https://www.elastic.co/blog/elasticsearch-as-a-column-store" title="Elasticsearch as a Column Store"&gt;column-oriented database&lt;/a&gt;, whose &lt;strong&gt;fast&lt;/strong&gt; (near real-time) reads and powerful aggregation engine make it an excellent choice as an &amp;#8216;analytics database&amp;#8217; for R&amp;amp;D, production-use or both. Installation is simple, it ships with default settings that allow it to work effectively out-of-the-box, and all interaction is made via a set of intuitive and extremely &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;well documented&lt;/a&gt; &lt;a href="https://en.wikipedia.org/wiki/Representational_state_transfer" title="RESTful?"&gt;RESTful&lt;/a&gt; APIs. I&amp;#8217;ve been using it for two years now and I am&amp;nbsp;evangelical.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;elasticsearchr&lt;/code&gt; package implements a simple Domain-Specific Language (&lt;span class="caps"&gt;DSL&lt;/span&gt;) for indexing, deleting, querying, sorting and aggregating data in Elasticsearch, from within R. The main purpose of this package is to remove the labour involved with assembling &lt;span class="caps"&gt;HTTP&lt;/span&gt; requests to Elasticsearch&amp;#8217;s &lt;span class="caps"&gt;REST&lt;/span&gt; APIs and parsing the responses. Instead, users of this package need only send and receive data frames to Elasticsearch resources. Users needing richer functionality are encouraged to investigate the excellent &lt;code&gt;elastic&lt;/code&gt; package from the good people at &lt;a href="https://github.com/ropensci/elastic" title="rOpenSci"&gt;rOpenSci&lt;/a&gt;.
+&lt;!--more--&gt;
+This package is available on &lt;a href="https://cran.r-project.org/web/packages/elasticsearchr/" title="elasticsearchr on CRAN"&gt;&lt;span class="caps"&gt;CRAN&lt;/span&gt;&lt;/a&gt; or from &lt;a href="https://github.com/AlexIoannides/elasticsearchr" title="Alex's GitHub repository"&gt;this GitHub repository&lt;/a&gt;. To install the latest (development) version from GitHub, make sure that you have the &lt;code&gt;devtools&lt;/code&gt; package installed (this comes bundled with RStudio), and then execute the following on the R command&amp;nbsp;line:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;devtools&lt;span class="o"&gt;::&lt;/span&gt;install_github&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;alexioannides/elasticsearchr&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Installing&amp;nbsp;Elasticsearch&lt;/h2&gt;
+&lt;p&gt;Elasticsearch can be downloaded &lt;a href="https://www.elastic.co/downloads/elasticsearch" title="Download"&gt;here&lt;/a&gt;, where the instructions for installing and starting it can also be found. &lt;span class="caps"&gt;OS&lt;/span&gt; X users (such as myself) can also make use of &lt;a href="http://brew.sh/" title="Homebrew for OS X"&gt;Homebrew&lt;/a&gt; to install it with the&amp;nbsp;command,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ brew install elasticsearch
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And then start it by executing &lt;code&gt;$ elasticsearch&lt;/code&gt; from within any Terminal window. Successful installation can be checked by navigating any web browser to &lt;code&gt;http://localhost:9200&lt;/code&gt;, where the following message should greet you (give or take the cluster name that changes with every&amp;nbsp;restart),&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;name&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Kraven the Hunter&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;cluster_name&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;elasticsearch&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;version&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;number&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2.3.5&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;build_hash&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;90f439ff60a3c0f497f91663701e64ccd01edbb4&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;build_timestamp&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2016-07-27T10:36:52Z&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;build_snapshot&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;false&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;lucene_version&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;5.5.0&amp;quot;&lt;/span&gt;
+  &lt;span class="p"&gt;},&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;tagline&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;You Know, for Search&amp;quot;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Elasticsearch&amp;nbsp;101&lt;/h2&gt;
+&lt;p&gt;If you followed the installation steps above, you have just installed a single Elasticsearch &amp;#8216;node&amp;#8217;. When &lt;strong&gt;not&lt;/strong&gt; testing on your laptop, Elasticsearch usually comes in clusters of nodes (usually there are at least 3). The easiest easy way to get access to a managed Elasticsearch cluster is by using the &lt;a href="https://www.elastic.co/cloud/as-a-service" title="Elastic Cloud"&gt;Elastic Cloud&lt;/a&gt; managed service provided by &lt;a href="https://www.elastic.co" title="Elastic corp."&gt;Elastic&lt;/a&gt; (Amazon Web Services offer something similar too). For the rest of this brief tutorial I will assuming you&amp;#8217;re running a single node on your&amp;nbsp;laptop.&lt;/p&gt;
+&lt;p&gt;In Elasticsearch a &amp;#8216;row&amp;#8217; of data is stored as a &amp;#8216;document&amp;#8217;. A document is a &lt;a href="https://en.wikipedia.org/wiki/JSON" title="JSON"&gt;&lt;span class="caps"&gt;JSON&lt;/span&gt;&lt;/a&gt; object - for example, the first row of R&amp;#8217;s &lt;code&gt;iris&lt;/code&gt; dataset,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#   sepal_length sepal_width petal_length petal_width species&lt;/span&gt;
+&lt;span class="c1"&gt;# 1          5.1         3.5          1.4         0.2  setosa&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;would be represented as follows using &lt;span class="caps"&gt;JSON&lt;/span&gt;,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;sepal_length&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;5.1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;sepal_width&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;3.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;petal_length&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;1.4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;petal_width&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;0.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;&amp;quot;species&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Documents are classified into &amp;#8216;types&amp;#8217; and stored in an &amp;#8216;index&amp;#8217;. In a crude analogy with traditional &lt;span class="caps"&gt;SQL&lt;/span&gt; databases that is often used, we would associate an index with a database instance and the document types as tables within that database. In practice this example is not accurate - it is better to think of all documents as residing in a single - possibly sparse - table (defined by the index), where the document types represent sub-sets of columns in the table. This is especially so as fields that occur in multiple document types (within the same index), must have the same data-type - for example, if &lt;code&gt;"name"&lt;/code&gt; exists in document type &lt;code&gt;customer&lt;/code&gt; as well as in document type &lt;code&gt;address&lt;/code&gt;, then &lt;code&gt;"name"&lt;/code&gt; will need to be a &lt;code&gt;string&lt;/code&gt; in&amp;nbsp;both.&lt;/p&gt;
+&lt;p&gt;Each document is a &amp;#8216;resource&amp;#8217; that has a Uniform Resource Locator (&lt;span class="caps"&gt;URL&lt;/span&gt;) associated with it. Elasticsearch URLs all have the following&amp;nbsp;format:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://your_cluster:9200/your_index/your_doc_type/your_doc_id&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;For example, the above &lt;code&gt;iris&lt;/code&gt; document could be living&amp;nbsp;at&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://localhost:9200/iris/data/1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Although Elasticsearch - like most NoSQL databases - is often referred to as being &amp;#8216;schema free&amp;#8217;, as we have already see this is not entirely correct. What is true, however, is that the schema - or &amp;#8216;mapping&amp;#8217; as it&amp;#8217;s called in Elasticsearch - does not &lt;em&gt;need&lt;/em&gt; to be declared up-front (although you certainly can do this). Elasticsearch is more than capable of guessing the types of fields based on new data indexed for the first time. For more information on any of these basic concepts take a look &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/_basic_concepts.html" title="Basic Concepts"&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;elasticsearchr: a Quick&amp;nbsp;Start&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;elasticsearchr&lt;/code&gt; is a &lt;strong&gt;lightweight&lt;/strong&gt; client - by this I mean that it only aims to do &amp;#8216;just enough&amp;#8217; work to make using Elasticsearch with R easy and intuitive. You will still need to read the &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;Elasticsearch documentation&lt;/a&gt; to understand how to compose queries and aggregations. What follows is a quick summary of what is&amp;nbsp;possible.&lt;/p&gt;
+&lt;h3&gt;Resources&lt;/h3&gt;
+&lt;p&gt;Elasticsearch resources, as defined by the URLs described above, are defined as &lt;code&gt;elastic&lt;/code&gt; objects in &lt;code&gt;elasticsearchr&lt;/code&gt;. For&amp;nbsp;example,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;es &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Refers to documents of types &amp;#8216;data&amp;#8217; in the &amp;#8216;iris&amp;#8217; index located on an Elasticsearch node on my laptop. Note that:
+- it is possible to leave the document type empty if you need to refer to all documents in an index; and,
+- &lt;code&gt;elastic&lt;/code&gt; objects can be defined even if the underling resources have yet to be brought into&amp;nbsp;existence.&lt;/p&gt;
+&lt;h3&gt;Indexing New&amp;nbsp;Data&lt;/h3&gt;
+&lt;p&gt;To index (insert) data from a data frame, use the &lt;code&gt;%index%&lt;/code&gt; operator as&amp;nbsp;follows:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%index%&lt;/span&gt; iris
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In this example, the &lt;code&gt;iris&lt;/code&gt; dataset is indexed into the &amp;#8216;iris&amp;#8217; index and given a document type called &amp;#8216;data&amp;#8217;. Note that I have not provided any document ids here. &lt;strong&gt;To explicitly specify document ids there must be a column in the data frame that is labelled &lt;code&gt;id&lt;/code&gt;&lt;/strong&gt;, from which the document ids will be&amp;nbsp;taken.&lt;/p&gt;
+&lt;h3&gt;Deleting&amp;nbsp;Data&lt;/h3&gt;
+&lt;p&gt;Documents can be deleted in three different ways using the &lt;code&gt;%delete%&lt;/code&gt; operator. Firstly, an entire index (including the mapping information) can be erased by referencing just the index in the resource -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Alternatively, documents can be deleted on a type-by-type basis leaving the index and it&amp;#8217;s mappings untouched, by referencing both the index and the document type as the resource -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally, specific documents can be deleted by referencing their ids directly -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;3&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;4&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;5&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Queries&lt;/h3&gt;
+&lt;p&gt;Any type of query that Elasticsearch makes available can be defined in a &lt;code&gt;query&lt;/code&gt; object using the native Elasticsearch &lt;span class="caps"&gt;JSON&lt;/span&gt; syntax - e.g. to match every document we could use the &lt;code&gt;match_all&lt;/code&gt; query,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;for_everything &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; query&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
+&lt;span class="s"&gt;  &amp;quot;match_all&amp;quot;: {}&lt;/span&gt;
+&lt;span class="s"&gt;}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To execute this query we use the &lt;code&gt;%search%&lt;/code&gt; operator on the appropriate resource -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; for_everything
+
+&lt;span class="c1"&gt;#     sepal_length sepal_width petal_length petal_width    species&lt;/span&gt;
+&lt;span class="c1"&gt;# 1            4.9         3.0          1.4         0.2     setosa&lt;/span&gt;
+&lt;span class="c1"&gt;# 2            4.9         3.1          1.5         0.1     setosa&lt;/span&gt;
+&lt;span class="c1"&gt;# 3            5.8         4.0          1.2         0.2     setosa&lt;/span&gt;
+&lt;span class="c1"&gt;# 4            5.4         3.9          1.3         0.4     setosa&lt;/span&gt;
+&lt;span class="c1"&gt;# 5            5.1         3.5          1.4         0.3     setosa&lt;/span&gt;
+&lt;span class="c1"&gt;# 6            5.4         3.4          1.7         0.2     setosa&lt;/span&gt;
+&lt;span class="c1"&gt;# ...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Sorting Query&amp;nbsp;Results&lt;/h3&gt;
+&lt;p&gt;Query results can be sorted on multiple fields by defining a &lt;code&gt;sort&lt;/code&gt; object using the same Elasticsearch &lt;span class="caps"&gt;JSON&lt;/span&gt; syntax - e.g. to sort by &lt;code&gt;sepal_width&lt;/code&gt; in ascending order the required &lt;code&gt;sort&lt;/code&gt; object would be defined&amp;nbsp;as,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;by_sepal_width &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&amp;quot;sepal_width&amp;quot;: {&amp;quot;order&amp;quot;: &amp;quot;asc&amp;quot;}}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This is then added to a &lt;code&gt;query&lt;/code&gt; object whose results we want sorted and executed using the &lt;code&gt;%search%&lt;/code&gt; operator as before -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;for_everything &lt;span class="o"&gt;+&lt;/span&gt; by_sepal_width&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;#   sepal_length sepal_width petal_length petal_width    species&lt;/span&gt;
+&lt;span class="c1"&gt;# 1          5.0         2.0          3.5         1.0 versicolor&lt;/span&gt;
+&lt;span class="c1"&gt;# 2          6.0         2.2          5.0         1.5  virginica&lt;/span&gt;
+&lt;span class="c1"&gt;# 3          6.0         2.2          4.0         1.0 versicolor&lt;/span&gt;
+&lt;span class="c1"&gt;# 4          6.2         2.2          4.5         1.5 versicolor&lt;/span&gt;
+&lt;span class="c1"&gt;# 5          4.5         2.3          1.3         0.3     setosa&lt;/span&gt;
+&lt;span class="c1"&gt;# 6          6.3         2.3          4.4         1.3 versicolor&lt;/span&gt;
+&lt;span class="c1"&gt;# ...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Aggregations&lt;/h3&gt;
+&lt;p&gt;Similarly, any type of aggregation that Elasticsearch makes available can be defined in an &lt;code&gt;aggs&lt;/code&gt; object - e.g. to compute the average &lt;code&gt;sepal_width&lt;/code&gt; per-species of flower we would specify the following&amp;nbsp;aggregation,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;avg_sepal_width &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; aggs&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
+&lt;span class="s"&gt;  &amp;quot;avg_sepal_width_per_species&amp;quot;: {&lt;/span&gt;
+&lt;span class="s"&gt;    &amp;quot;terms&amp;quot;: {&lt;/span&gt;
+&lt;span class="s"&gt;      &amp;quot;field&amp;quot;: &amp;quot;species&amp;quot;,&lt;/span&gt;
+&lt;span class="s"&gt;      &amp;quot;size&amp;quot;: 3&lt;/span&gt;
+&lt;span class="s"&gt;    },&lt;/span&gt;
+&lt;span class="s"&gt;    &amp;quot;aggs&amp;quot;: {&lt;/span&gt;
+&lt;span class="s"&gt;      &amp;quot;avg_sepal_width&amp;quot;: {&lt;/span&gt;
+&lt;span class="s"&gt;        &amp;quot;avg&amp;quot;: {&lt;/span&gt;
+&lt;span class="s"&gt;          &amp;quot;field&amp;quot;: &amp;quot;sepal_width&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;        }&lt;/span&gt;
+&lt;span class="s"&gt;      }&lt;/span&gt;
+&lt;span class="s"&gt;    }&lt;/span&gt;
+&lt;span class="s"&gt;  }&lt;/span&gt;
+&lt;span class="s"&gt;}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;em&gt;(Elasticsearch 5.x users please note that when using the out-of-the-box mappings the above aggregation requires that &lt;code&gt;"field": "species"&lt;/code&gt; be changed to &lt;code&gt;"field": "species.keyword"&lt;/code&gt; - see &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.0/breaking_50_mapping_changes.html" title="Text fields in Elasticsearch 5.x"&gt;here&lt;/a&gt; for more information as to&amp;nbsp;why)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This aggregation is also executed via the &lt;code&gt;%search%&lt;/code&gt; operator on the appropriate resource -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; avg_sepal_width
+
+&lt;span class="c1"&gt;#          key doc_count avg_sepal_width.value&lt;/span&gt;
+&lt;span class="c1"&gt;# 1     setosa        50                 3.428&lt;/span&gt;
+&lt;span class="c1"&gt;# 2 versicolor        50                 2.770&lt;/span&gt;
+&lt;span class="c1"&gt;# 3  virginica        50                 2.974&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Queries and aggregations can be combined such that the aggregations are computed on the results of the query. For example, to execute the combination of the above query and aggregation, we would&amp;nbsp;execute,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;for_everything &lt;span class="o"&gt;+&lt;/span&gt; avg_sepal_width&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;#          key doc_count avg_sepal_width.value&lt;/span&gt;
+&lt;span class="c1"&gt;# 1     setosa        50                 3.428&lt;/span&gt;
+&lt;span class="c1"&gt;# 2 versicolor        50                 2.770&lt;/span&gt;
+&lt;span class="c1"&gt;# 3  virginica        50                 2.974&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;where the combination&amp;nbsp;yields,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kp"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;for_everything &lt;span class="o"&gt;+&lt;/span&gt; avg_sepal_width&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# {&lt;/span&gt;
+&lt;span class="c1"&gt;#     &amp;quot;size&amp;quot;: 0,&lt;/span&gt;
+&lt;span class="c1"&gt;#     &amp;quot;query&amp;quot;: {&lt;/span&gt;
+&lt;span class="c1"&gt;#         &amp;quot;match_all&amp;quot;: {&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;#         }&lt;/span&gt;
+&lt;span class="c1"&gt;#     },&lt;/span&gt;
+&lt;span class="c1"&gt;#     &amp;quot;aggs&amp;quot;: {&lt;/span&gt;
+&lt;span class="c1"&gt;#         &amp;quot;avg_sepal_width_per_species&amp;quot;: {&lt;/span&gt;
+&lt;span class="c1"&gt;#             &amp;quot;terms&amp;quot;: {&lt;/span&gt;
+&lt;span class="c1"&gt;#                 &amp;quot;field&amp;quot;: &amp;quot;species&amp;quot;,&lt;/span&gt;
+&lt;span class="c1"&gt;#                 &amp;quot;size&amp;quot;: 0&lt;/span&gt;
+&lt;span class="c1"&gt;#             },&lt;/span&gt;
+&lt;span class="c1"&gt;#             &amp;quot;aggs&amp;quot;: {&lt;/span&gt;
+&lt;span class="c1"&gt;#                 &amp;quot;avg_sepal_width&amp;quot;: {&lt;/span&gt;
+&lt;span class="c1"&gt;#                     &amp;quot;avg&amp;quot;: {&lt;/span&gt;
+&lt;span class="c1"&gt;#                         &amp;quot;field&amp;quot;: &amp;quot;sepal_width&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#                     }&lt;/span&gt;
+&lt;span class="c1"&gt;#                 }&lt;/span&gt;
+&lt;span class="c1"&gt;#             }&lt;/span&gt;
+&lt;span class="c1"&gt;#         }&lt;/span&gt;
+&lt;span class="c1"&gt;#     }&lt;/span&gt;
+&lt;span class="c1"&gt;# }&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;For comprehensive coverage of all query and aggregations types please refer to the rather excellent &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;official documentation&lt;/a&gt; (newcomers to Elasticsearch are advised to start with the &amp;#8216;Query String&amp;#8217;&amp;nbsp;query).&lt;/p&gt;
+&lt;h3&gt;Mappings&lt;/h3&gt;
+&lt;p&gt;Finally, I have included the ability to create an empty index with a custom mapping, using the &lt;code&gt;%create%&lt;/code&gt; operator -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%create%&lt;/span&gt; mapping_default_simple&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Where in this instance &lt;code&gt;mapping_default_simple()&lt;/code&gt; is a default mapping that I have shipped with &lt;code&gt;elasticsearchr&lt;/code&gt;. It switches-off the text analyser for all fields of type &amp;#8216;string&amp;#8217; (i.e. switches off free text search), allows all text search to work with case-insensitive lower-case terms, and maps any field with the name &amp;#8216;timestamp&amp;#8217; to type &amp;#8216;date&amp;#8217;, so long as it has the appropriate string or long&amp;nbsp;format.&lt;/p&gt;
+&lt;h2&gt;Forthcoming&amp;nbsp;Attractions&lt;/h2&gt;
+&lt;p&gt;I do not have a grand vision for &lt;code&gt;elasticsearchr&lt;/code&gt; - I want to keep it a lightweight client that requires knowledge of Elasticsearch - but I would like to add the ability to compose major query and aggregation types, without having to type-out lots of &lt;span class="caps"&gt;JSON&lt;/span&gt;, and to be able to retrieve simple information like the names of all indices in a cluster, and all the document types within an index, etc. Future development will likely be focused in these&amp;nbsp;areas.&lt;/p&gt;
+&lt;h2&gt;Acknowledgements&lt;/h2&gt;
+&lt;p&gt;A big thank you to Hadley Wickham and Jeroen Ooms, the authors of the &lt;code&gt;httr&lt;/code&gt; and &lt;code&gt;jsonlite&lt;/code&gt; packages that &lt;code&gt;elasticsearchr&lt;/code&gt; leans upon &lt;em&gt;heavily&lt;/em&gt;.&lt;/p&gt;</content><category term="data processing"></category><category term="big data"></category></entry><entry><title>Asynchronous and Distributed Programming in R with the Future Package</title><link href="https://alexioannides.github.io/asynchronous-and-distributed-programming-in-r-with-the-future-package.html" rel="alternate"></link><published>2016-11-02T00:00:00+00:00</published><updated>2016-11-02T00:00:00+00:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-11-02:/asynchronous-and-distributed-programming-in-r-with-the-future-package.html</id><summary type="html">&lt;p&gt;&lt;img alt="Future!" src="https://alexioannides.github.io/images/r/future/the_future.jpg" title="the_future"&gt;&lt;/p&gt;
+&lt;p&gt;Every now and again someone comes along and writes an R package that I consider to be a &amp;#8216;game changer&amp;#8217; for the language and it&amp;#8217;s application to Data Science. For example, I consider &lt;a href="https://github.com/hadley/dplyr" title="dplyr on GitHub"&gt;dplyr&lt;/a&gt; one such package as it has made data munging/manipulation &lt;em&gt;that&lt;/em&gt; more intuitive and more …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Future!" src="https://alexioannides.github.io/images/r/future/the_future.jpg" title="the_future"&gt;&lt;/p&gt;
+&lt;p&gt;Every now and again someone comes along and writes an R package that I consider to be a &amp;#8216;game changer&amp;#8217; for the language and it&amp;#8217;s application to Data Science. For example, I consider &lt;a href="https://github.com/hadley/dplyr" title="dplyr on GitHub"&gt;dplyr&lt;/a&gt; one such package as it has made data munging/manipulation &lt;em&gt;that&lt;/em&gt; more intuitive and more productive than it had been before. Although I only first read about it at the beginning of this week, my instinct tells me that in &lt;a href="https://www.linkedin.com/in/henrikbengtsson" title="Henrik Bengtsson on LinkedIn"&gt;Henrik Bengtsson&amp;#8217;s&lt;/a&gt; &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future&lt;/a&gt; package we might have another such game-changing R&amp;nbsp;package.&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future&lt;/a&gt; package provides an &lt;span class="caps"&gt;API&lt;/span&gt; for futures (or promises) in R. To quote Wikipedia, a &lt;a href="https://en.wikipedia.org/wiki/Futures_and_promises" title="Wikipedia on futures and promises"&gt;future or promise&lt;/a&gt;&amp;nbsp;is,&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;&amp;#8230; a proxy for a result that is initially unknown, usually because the computation of its value is yet&amp;nbsp;incomplete.&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;A classic example would be a request made to a web server via &lt;span class="caps"&gt;HTTP&lt;/span&gt;, that has yet to return and whose value remains unknown until it does (and which has promised to return at some point in the future). This &amp;#8216;promise&amp;#8217; is an object assigned to a variable in R like any other, and allows code execution to progress until the moment the code explicitly requires the future to be resolved (i.e. to &amp;#8216;make good&amp;#8217; on it&amp;#8217;s promise). So the code does not need to wait for the web server until the very moment that the information anticipated in its response it actually needed. In the intervening execution time we can send requests to other web servers, run some other computations, etc. Ultimately, this leads to &lt;strong&gt;faster&lt;/strong&gt; and &lt;strong&gt;more efficient code&lt;/strong&gt;. This way of working also opens the door to distributed (i.e. parallel) computation, as the computation assigned to each new future can be executed on a new thread (and executed on a different core on the same machine, or on another&amp;nbsp;machine/node).&lt;/p&gt;
+&lt;p&gt;The future &lt;span class="caps"&gt;API&lt;/span&gt; is extremely expressive and the associated documentation is excellent. My motivation here is not to repeat any of this, but rather to give a few examples to serve as inspiration for how futures could be used for day-to-day Data Science tasks in&amp;nbsp;R.&lt;/p&gt;
+&lt;h1&gt;Creating a Future to be Executed on a Different Core to that Running the Main&amp;nbsp;Script&lt;/h1&gt;
+&lt;p&gt;To demonstrate the syntax and structure required to achieve this aim, I am going to delegate to a future the task of estimating the mean of 10 million random samples from the normal distribution, and ask it to spawn a new R process on a different core in order to do so. The code to achieve this is as&amp;nbsp;follows,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;future&lt;span class="p"&gt;)&lt;/span&gt;
+
+f &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt;
+  samples &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; rnorm&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;10000000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;samples&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+w &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; value&lt;span class="p"&gt;(&lt;/span&gt;f&lt;span class="p"&gt;)&lt;/span&gt;
+w
+&lt;span class="c1"&gt;# [1] 3.046653e-05&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;future({...})&lt;/code&gt; assigns the code (actually a construct known as a &lt;a href="http://adv-r.had.co.nz/Functional-programming.html#closures" title="Hadley Wickham on closures"&gt;closure&lt;/a&gt;), to be computed asynchronously from the main script. The code will be start execution the moment this initial assignment is&amp;nbsp;made;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;%plan% multiprocess&lt;/code&gt; sets the future&amp;#8217;s execution plan to be on a different core (or thread);&amp;nbsp;and,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;value&lt;/code&gt; asks for the return value of future. This will block further code execution until the future can be&amp;nbsp;resolved.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The above example can easily be turned into a function that outputs dots (&lt;code&gt;...&lt;/code&gt;) to the console until the future can be resolved and return it&amp;#8217;s&amp;nbsp;value,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;f_dots &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  f &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt;
+    s &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; rnorm&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;10000000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;s&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+
+  &lt;span class="kr"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;resolved&lt;span class="p"&gt;(&lt;/span&gt;f&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kp"&gt;cat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="kp"&gt;cat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+  value&lt;span class="p"&gt;(&lt;/span&gt;f&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+f_dots&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="c1"&gt;# ............&lt;/span&gt;
+&lt;span class="c1"&gt;# [1] -0.0001872372&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Here, &lt;code&gt;resolved(f)&lt;/code&gt; will return &lt;code&gt;FALSE&lt;/code&gt; until the future &lt;code&gt;f&lt;/code&gt; has finished&amp;nbsp;executing.&lt;/p&gt;
+&lt;h1&gt;Useful Use&amp;nbsp;Cases&lt;/h1&gt;
+&lt;p&gt;I can recall many situations where futures would have been handy when writing R scripts. The examples below are the most obvious that come to mind. No doubt there will be many&amp;nbsp;more.&lt;/p&gt;
+&lt;h2&gt;Distributed (Parallel)&amp;nbsp;Computation&lt;/h2&gt;
+&lt;p&gt;In the past, when I&amp;#8217;ve felt the need to distribute a calculation I have usually used the &lt;code&gt;mclapply&lt;/code&gt; function (i.e. multi-core &lt;code&gt;lapply&lt;/code&gt;), from the &lt;code&gt;parallel&lt;/code&gt; library that comes bundled together with base R. Computing the mean of 100 million random samples from the normal distribution would look something&amp;nbsp;like,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;parallel&lt;span class="p"&gt;)&lt;/span&gt;
+
+sub_means &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; mclapply&lt;span class="p"&gt;(&lt;/span&gt;
+              X &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+              FUN &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;x&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; samples &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; rnorm&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;25000000&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;samples&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+              mc.cores &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+final_mean &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;unlist&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;sub_mean&lt;span class="p"&gt;))&lt;/span&gt;
+final_mean
+&lt;span class="c1"&gt;# [1] -0.0002100956&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Perhaps more importantly, the script will be &amp;#8216;blocked&amp;#8217; until &lt;code&gt;sub_means&lt;/code&gt; has finished executing. We can achieve the same end-result, but without blocking, using&amp;nbsp;futures,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;single_thread_mean &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  samples &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; rnorm&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;25000000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;samples&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+multi_thread_mean &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  f1 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt; single_thread_mean&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+  f2 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt; single_thread_mean&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+  f3 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt; single_thread_mean&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+  f4 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt; single_thread_mean&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+
+  &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;value&lt;span class="p"&gt;(&lt;/span&gt;f1&lt;span class="p"&gt;),&lt;/span&gt; value&lt;span class="p"&gt;(&lt;/span&gt;f2&lt;span class="p"&gt;),&lt;/span&gt; value&lt;span class="p"&gt;(&lt;/span&gt;f3&lt;span class="p"&gt;),&lt;/span&gt; value&lt;span class="p"&gt;(&lt;/span&gt;f4&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+multi_thread_mean&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="c1"&gt;# [1] -4.581293e-05&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can compare computation time between the single and multi-threaded versions of the mean computation (using the &lt;a href="https://cran.r-project.org/web/packages/microbenchmark/index.html" title="microbenchmark on CRAN"&gt;microbenchmark&lt;/a&gt;&amp;nbsp;package),&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;microbenchmark&lt;span class="p"&gt;)&lt;/span&gt;
+
+microbenchmark&lt;span class="p"&gt;({&lt;/span&gt; samples &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; rnorm&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;100000000&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;samples&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+               multi_thread_mean&lt;span class="p"&gt;(),&lt;/span&gt;
+               times &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Unit: seconds&lt;/span&gt;
+&lt;span class="c1"&gt;#                  expr      min       lq     mean   median       uq      max neval&lt;/span&gt;
+&lt;span class="c1"&gt;#  single_thread(1e+08) 7.671721 7.729608 7.886563 7.765452 7.957930 8.406778    10&lt;/span&gt;
+&lt;span class="c1"&gt;#   multi_thread(1e+08) 2.046663 2.069641 2.139476 2.111769 2.206319 2.344448    10&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can see that the multi-threaded version is nearly 3 times faster, which is not surprising given that we&amp;#8217;re using 3 extra threads. Note that time is lost spawning the extra threads and combining their results (usually referred to as &amp;#8216;overhead&amp;#8217;), such that distributing a calculation can actually increase computation time if the benefit of parallelisation is less than the cost of the&amp;nbsp;overhead.&lt;/p&gt;
+&lt;h2&gt;Non-Blocking Asynchronous&amp;nbsp;Input/Output&lt;/h2&gt;
+&lt;p&gt;I have often found myself in the situation where I need to read several large &lt;span class="caps"&gt;CSV&lt;/span&gt; files, each of which can take a long time to load. Because the files can only be loaded sequentially, I have had to wait for one file to be read before the next one can start loading, which compounds the time devoted to input. Thanks to futures, we can can now achieve &lt;a href="https://en.wikipedia.org/wiki/Asynchronous_I/O" title="Wikipedia on asynchronous io"&gt;asynchronous input and output&lt;/a&gt; as&amp;nbsp;follows,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;readr&lt;span class="p"&gt;)&lt;/span&gt;
+
+df1 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt; read_csv&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;data/csv1.csv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+df2 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt; read_csv&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;data/csv2.csv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+df3 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt; read_csv&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;data/csv3.csv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+df4 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt; read_csv&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;data/csv4.csv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+
+df &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;rbind&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;value&lt;span class="p"&gt;(&lt;/span&gt;df1&lt;span class="p"&gt;),&lt;/span&gt; value&lt;span class="p"&gt;(&lt;/span&gt;df2&lt;span class="p"&gt;),&lt;/span&gt; value&lt;span class="p"&gt;(&lt;/span&gt;df3&lt;span class="p"&gt;),&lt;/span&gt; value&lt;span class="p"&gt;(&lt;/span&gt;df4&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Running &lt;code&gt;microbenchmark&lt;/code&gt; on the above code illustrates the speed-up (each file is ~&lt;span class="caps"&gt;50MB&lt;/span&gt; in&amp;nbsp;size),&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Unit: seconds&lt;/span&gt;
+&lt;span class="c1"&gt;#                   min       lq     mean   median       uq      max neval&lt;/span&gt;
+&lt;span class="c1"&gt;#  synchronous 7.880043 8.220015 8.502294 8.446078 8.604284 9.447176    10&lt;/span&gt;
+&lt;span class="c1"&gt;# asynchronous 4.203271 4.256449 4.494366 4.388478 4.490442 5.748833    10&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The same pattern can be applied to making &lt;span class="caps"&gt;HTTP&lt;/span&gt; requests asynchronously. In the following example I make an asynchronous &lt;span class="caps"&gt;HTTP&lt;/span&gt; &lt;span class="caps"&gt;GET&lt;/span&gt; request to the OpenCPU public &lt;span class="caps"&gt;API&lt;/span&gt;, to retrieve the Boston housing dataset via &lt;span class="caps"&gt;JSON&lt;/span&gt;. While I&amp;#8217;m waiting for the future to resolve the response I keep making more asynchronous requests, but this time to &lt;code&gt;http://time.jsontest.com&lt;/code&gt; to get the current time. Once the original future has resolved, I block output until all remaining futures have been&amp;nbsp;resolved.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;httr&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;jsonlite&lt;span class="p"&gt;)&lt;/span&gt;
+
+time_futures &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;list&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+data_future &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt;
+  response &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; GET&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://public.opencpu.org/ocpu/library/MASS/data/Boston/json&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  fromJSON&lt;span class="p"&gt;(&lt;/span&gt;content&lt;span class="p"&gt;(&lt;/span&gt;response&lt;span class="p"&gt;,&lt;/span&gt; as &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;text&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess
+
+&lt;span class="kr"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;resolved&lt;span class="p"&gt;(&lt;/span&gt;data_future&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  time_futures &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;time_futures&lt;span class="p"&gt;,&lt;/span&gt; future&lt;span class="p"&gt;({&lt;/span&gt; GET&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://time.jsontest.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;%plan%&lt;/span&gt; multiprocess&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+values&lt;span class="p"&gt;(&lt;/span&gt;time_futures&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# [[1]]&lt;/span&gt;
+&lt;span class="c1"&gt;# Response [http://time.jsontest.com/]&lt;/span&gt;
+&lt;span class="c1"&gt;#   Date: 2016-11-02 01:31&lt;/span&gt;
+&lt;span class="c1"&gt;#   Status: 200&lt;/span&gt;
+&lt;span class="c1"&gt;#   Content-Type: application/json; charset=ISO-8859-1&lt;/span&gt;
+&lt;span class="c1"&gt;#   Size: 100 B&lt;/span&gt;
+&lt;span class="c1"&gt;# {&lt;/span&gt;
+&lt;span class="c1"&gt;#    &amp;quot;time&amp;quot;: &amp;quot;01:31:19 AM&amp;quot;,&lt;/span&gt;
+&lt;span class="c1"&gt;#    &amp;quot;milliseconds_since_epoch&amp;quot;: 1478050279145,&lt;/span&gt;
+&lt;span class="c1"&gt;#    &amp;quot;date&amp;quot;: &amp;quot;11-02-2016&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;# }&lt;/span&gt;
+
+&lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;value&lt;span class="p"&gt;(&lt;/span&gt;data_future&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c1"&gt;# crim zn indus chas   nox    rm  age    dis rad tax ptratio  black lstat medv&lt;/span&gt;
+&lt;span class="c1"&gt;# 1 0.0063 18  2.31    0 0.538 6.575 65.2 4.0900   1 296    15.3 396.90  4.98 24.0&lt;/span&gt;
+&lt;span class="c1"&gt;# 2 0.0273  0  7.07    0 0.469 6.421 78.9 4.9671   2 242    17.8 396.90  9.14 21.6&lt;/span&gt;
+&lt;span class="c1"&gt;# 3 0.0273  0  7.07    0 0.469 7.185 61.1 4.9671   2 242    17.8 392.83  4.03 34.7&lt;/span&gt;
+&lt;span class="c1"&gt;# 4 0.0324  0  2.18    0 0.458 6.998 45.8 6.0622   3 222    18.7 394.63  2.94 33.4&lt;/span&gt;
+&lt;span class="c1"&gt;# 5 0.0690  0  2.18    0 0.458 7.147 54.2 6.0622   3 222    18.7 396.90  5.33 36.2&lt;/span&gt;
+&lt;span class="c1"&gt;# 6 0.0298  0  2.18    0 0.458 6.430 58.7 6.0622   3 222    18.7 394.12  5.21 28.7&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The same logic applies to accessing databases and executing &lt;span class="caps"&gt;SQL&lt;/span&gt; queries via &lt;a href="https://en.wikipedia.org/wiki/Open_Database_Connectivity" title="Wikipedia on ODBC"&gt;&lt;span class="caps"&gt;ODBC&lt;/span&gt;&lt;/a&gt; or &lt;a href="https://en.wikipedia.org/wiki/Java_Database_Connectivity" title="Wikipedia on JDBC"&gt;&lt;span class="caps"&gt;JDBC&lt;/span&gt;&lt;/a&gt;. For example, large complex queries can be split into &amp;#8216;chunks&amp;#8217; and sent asynchronously to the database server in order to have them executed on multiple server threads. The output can then be unified once the server has sent back the chunks, using R (e.g. with &lt;a href="https://github.com/hadley/dplyr" title="dplyr on GitHub"&gt;dplyr&lt;/a&gt;). This is a strategy that I have been using with Apache Spark, but I could now implement it within R. Similarly, multiple database tables can be accessed concurrently, and so&amp;nbsp;on.  &lt;/p&gt;
+&lt;h1&gt;Final&amp;nbsp;Thoughts&lt;/h1&gt;
+&lt;p&gt;I have only really scratched the surface of what is possible with futures. For example, &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future&lt;/a&gt; supports multiple execution plans including &lt;code&gt;lazy&lt;/code&gt; and &lt;code&gt;cluster&lt;/code&gt; (for multiple machines/nodes) - I have only focused on increasing performance on a single machine with multiple cores. If this post has provided some inspiration or left you curious, then head over to the official &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future docs&lt;/a&gt; for the full details (which are a joy to read and&amp;nbsp;work-through).&lt;/p&gt;</content><category term="data processing"></category><category term="high-performance computing"></category></entry><entry><title>An R Function for Generating Authenticated URLs to Private Web Sites Hosted on AWS S3</title><link href="https://alexioannides.github.io/an-r-function-for-generating-authenticated-urls-to-private-web-sites-hosted-on-aws-s3.html" rel="alternate"></link><published>2016-09-19T00:00:00+01:00</published><updated>2016-09-19T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-09-19:/an-r-function-for-generating-authenticated-urls-to-private-web-sites-hosted-on-aws-s3.html</id><summary type="html">&lt;p&gt;&lt;img alt="crypto" src="https://alexioannides.files.wordpress.com/2016/08/hmac.png" title="HMAC"&gt;&lt;/p&gt;
+&lt;p&gt;Quite often I want to share simple (static) web pages with other colleagues or clients. For example, I may have written a report using &lt;a href="http://rmarkdown.rstudio.com" title="R Markdown @ R Studio"&gt;R Markdown&lt;/a&gt; and rendered it to &lt;span class="caps"&gt;HTML&lt;/span&gt;. &lt;span class="caps"&gt;AWS&lt;/span&gt; S3 can easily host such a simple web page (e.g. see &lt;a href="http://docs.aws.amazon.com/gettingstarted/latest/swh/website-hosting-intro.html" title="AWS S3 Static Web Page"&gt;here&lt;/a&gt;), but it cannot, however, offer …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="crypto" src="https://alexioannides.files.wordpress.com/2016/08/hmac.png" title="HMAC"&gt;&lt;/p&gt;
+&lt;p&gt;Quite often I want to share simple (static) web pages with other colleagues or clients. For example, I may have written a report using &lt;a href="http://rmarkdown.rstudio.com" title="R Markdown @ R Studio"&gt;R Markdown&lt;/a&gt; and rendered it to &lt;span class="caps"&gt;HTML&lt;/span&gt;. &lt;span class="caps"&gt;AWS&lt;/span&gt; S3 can easily host such a simple web page (e.g. see &lt;a href="http://docs.aws.amazon.com/gettingstarted/latest/swh/website-hosting-intro.html" title="AWS S3 Static Web Page"&gt;here&lt;/a&gt;), but it cannot, however, offer any authentication to prevent anyone from accessing potentially sensitive&amp;nbsp;information.&lt;/p&gt;
+&lt;p&gt;Yegor Bugayenko has created an external service &lt;a href="http://www.s3auth.com" title="S3 Authentication Service"&gt;S3Auth.com&lt;/a&gt; that stands in the way of any S3 hosted web site, but this is a little too much for my needs. All I want to achieve is to limit access to specific S3 resources that will be largely transient in nature. A viable and simple solution is to use &amp;#8216;query string request authentication&amp;#8217; that is described in detail &lt;a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html#RESTAuthenticationQueryStringAuth" title="AWS documentation"&gt;here&lt;/a&gt;. I must confess to not really understanding what was going on here, until I had dug around on the web to see what others have been up&amp;nbsp;to.&lt;/p&gt;
+&lt;p&gt;This blog post describes a simple R function for generating authenticated and ephemeral URLs to private S3 resources (including web pages) that only the holders of the &lt;span class="caps"&gt;URL&lt;/span&gt; can&amp;nbsp;access.&lt;/p&gt;
+&lt;h1&gt;Creating User Credentials for Read-Only Access to&amp;nbsp;S3&lt;/h1&gt;
+&lt;p&gt;Before we can authenticate anyone, we need someone to authenticate. From the &lt;span class="caps"&gt;AWS&lt;/span&gt; Management Console create a new user, download their security credentials and then attach the &lt;code&gt;AmazonS3ReadOnlyAccess&lt;/code&gt; policy to them. For more details on how to do this, refer to a &lt;a href="https://alexioannides.com/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;previous post&lt;/a&gt;. Note, that you should &lt;strong&gt;not&lt;/strong&gt; create passwords for them to access the &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;console.&lt;/p&gt;
+&lt;h1&gt;Loading a Static Web Page to &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;S3&lt;/h1&gt;
+&lt;p&gt;Do &lt;strong&gt;not&lt;/strong&gt; be tempted to follow the S3 &amp;#8216;Getting Started&amp;#8217; page on how to host a static web page and in doing so enable &amp;#8216;Static Website Hosting&amp;#8217;. We need our resources to remain private and we would also like to use &lt;span class="caps"&gt;HTTPS&lt;/span&gt;, which this option does not support. Instead, create a new bucket and upload a simple &lt;span class="caps"&gt;HTML&lt;/span&gt; file &lt;a href="https://alexioannides.com/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;as usual&lt;/a&gt;. An example html file - e.g. &lt;code&gt;index.html&lt;/code&gt; - could&amp;nbsp;be,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;p&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Hello, World!&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;p&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;An R Function for Generating Authenticated&amp;nbsp;URLs&lt;/h1&gt;
+&lt;p&gt;We can now use our new user&amp;#8217;s Access Key &lt;span class="caps"&gt;ID&lt;/span&gt; and Secret Access Key to create a &lt;span class="caps"&gt;URL&lt;/span&gt; with a limited lifetime that enables access to &lt;code&gt;index.html&lt;/code&gt;. Technically, we are making a &lt;span class="caps"&gt;HTTP&lt;/span&gt; &lt;span class="caps"&gt;GET&lt;/span&gt; request to the S3 &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt;, with the authentication details sent as part of a query string. Creating this &lt;span class="caps"&gt;URL&lt;/span&gt; is a bit tricky - I have adapted the Python example (number 3) that is provided &lt;a href="https://s3.amazonaws.com/doc/s3-developer-guide/RESTAuthentication.html" title="Python Auth Example"&gt;here&lt;/a&gt;, as an R function (that can be found in the Gist below) - &lt;code&gt;aws_query_string_auth_url(...)&lt;/code&gt;. Here&amp;#8217;s an example showing this R function in&amp;nbsp;action:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;path_to_file &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;
+bucket &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;my.s3.bucket&amp;quot;&lt;/span&gt;
+region &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;eu-west-1&amp;quot;&lt;/span&gt;
+aws_access_key_id &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;DWAAAAJL4KIEWJCV3R36&amp;quot;&lt;/span&gt;
+aws_secret_access_key &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;jH1pEfnQtKj6VZJOFDy+t253OZJWZLEo9gaEoFAY&amp;quot;&lt;/span&gt;
+lifetime_minutes &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+aws_query_string_auth_url&lt;span class="p"&gt;(&lt;/span&gt;path_to_file&lt;span class="p"&gt;,&lt;/span&gt; bucket&lt;span class="p"&gt;,&lt;/span&gt; region&lt;span class="p"&gt;,&lt;/span&gt; aws_access_key_id&lt;span class="p"&gt;,&lt;/span&gt; aws_secret_access_key&lt;span class="p"&gt;,&lt;/span&gt; lifetime_minutes&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# &amp;quot;https://s3-eu-west-1.amazonaws.com/my.s3.bucket/index.html?AWSAccessKeyId=DWAAAKIAJL4EWJCV3R36&amp;amp;Expires=1471994487&amp;amp;Signature=inZlnNHHswKmcPfTBiKhziRSwT4%3D&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And here&amp;#8217;s the code for it as inspired by the short code snippet &lt;a href="https://s3.amazonaws.com/doc/s3-developer-guide/RESTAuthentication.html" title="Python Auth Example"&gt;here&lt;/a&gt;:&lt;/p&gt;
+&lt;script src="https://gist.github.com/AlexIoannides/927dc77c8258ab436f602096c8491460.js"&gt;&lt;/script&gt;
+
+&lt;p&gt;Note the dependencies on the &lt;code&gt;digest&lt;/code&gt; and &lt;code&gt;base64enc&lt;/code&gt; packages.&lt;/p&gt;</content><category term="AWS"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 4 - Apache Zeppelin &amp; Scala Notebooks</title><link href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks.html" rel="alternate"></link><published>2016-08-29T00:00:00+01:00</published><updated>2016-08-29T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-29:/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks.html</id><summary type="html">&lt;p&gt;&lt;img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"&gt;&lt;/p&gt;
+&lt;p&gt;Parts &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" title="Part 1"&gt;one&lt;/a&gt;, &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 2"&gt;two&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 3"&gt;three&lt;/a&gt; of this series of posts have taken us from creating an account on &lt;span class="caps"&gt;AWS&lt;/span&gt; to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;amp;D is nearly complete - the only outstanding component is …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"&gt;&lt;/p&gt;
+&lt;p&gt;Parts &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" title="Part 1"&gt;one&lt;/a&gt;, &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 2"&gt;two&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 3"&gt;three&lt;/a&gt; of this series of posts have taken us from creating an account on &lt;span class="caps"&gt;AWS&lt;/span&gt; to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;amp;D is nearly complete - the only outstanding component is the ability to interact (&lt;span class="caps"&gt;REPL&lt;/span&gt;-style) with Spark using code written in Scala and to run this on some sort of scheduled basis. So, for this last part I am going to focus on getting &lt;a href="http://zeppelin.apache.org" title="Apache Zeppelin"&gt;Apache Zeppelin&lt;/a&gt;&amp;nbsp;up-and-running.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://zeppelin.apache.org" title="Apache Zeppelin"&gt;Zeppelin&lt;/a&gt; is a notebook server in a similar vein as the Jupyter or Beaker notebooks (and very similar to those available on Databricks). Code is submitted and executed in &amp;#8216;chunks&amp;#8217; with interim output (e.g. charts and tables) displayed after it has been computed. Where Zeppelin differs from the other, is its first-class support for Spark and it&amp;#8217;s ability to run notebooks (and thereby &lt;span class="caps"&gt;ETL&lt;/span&gt; process) on a schedule (in essence it uses &lt;code&gt;chron&lt;/code&gt; for scheduling and&amp;nbsp;execution).&lt;/p&gt;
+&lt;h1&gt;Installing Apache&amp;nbsp;Zeppelin&lt;/h1&gt;
+&lt;p&gt;Following the steps laid-out in previous posts, &lt;span class="caps"&gt;SSH&lt;/span&gt; into our Spark cluster&amp;#8217;s master node (or use &lt;code&gt;$ ./flintrock login my-cluster&lt;/code&gt; for extra convenience). Just like we did for R Studio Server we&amp;#8217;re going to install Zeppelin here as well. Find the &lt;span class="caps"&gt;URL&lt;/span&gt; for the latest version of Zeppelin &lt;a href="http://www.apache.org/dyn/closer.cgi/zeppelin/zeppelin-0.6.1/zeppelin-0.6.1-bin-all.tgz" title="Download Zeppelin"&gt;here&lt;/a&gt; and then from the master node&amp;#8217;s shell&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cd /home/ec2-user&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ wget http://apache.mirror.anlx.net/zeppelin/zeppelin-0.6.1/zeppelin-0.6.1-bin-all.tgz&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ tar -xzf zeppelin-0.6.1-bin-all.tgz&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ rm zeppelin-0.6.1-bin-all.tgz&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Note that I have chosen to install the binaries that contain all of the available language interpreters - there is no restriction on choice of language and you could just as easily use R or Python for interacting with&amp;nbsp;Spark.&lt;/p&gt;
+&lt;h1&gt;Configuring&amp;nbsp;Zeppelin&lt;/h1&gt;
+&lt;p&gt;Before we can start-up and test Zeppelin, we will need to configure it. Templates for configuration files can be found in the &lt;code&gt;conf&lt;/code&gt; directory of the Zeppelin folder. Makes copies of these by executing the following&amp;nbsp;commands,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cd /home/ec2-user/zeppelin-0.6.1-bin-all/conf&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cp zeppelin-env.sh.template zeppelin-env.sh&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cp zeppelin-site.xml.template zeppelin-site.xml&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Then using a text editor such as &lt;a href="https://en.wikipedia.org/wiki/Vi" title="vi Wiki"&gt;vi&lt;/a&gt; - e.g. &lt;code&gt;$ vi zeppelin-env.sh&lt;/code&gt; - to edit each file making the changes described&amp;nbsp;below.&lt;/p&gt;
+&lt;h2&gt;zeppelin-env.sh&lt;/h2&gt;
+&lt;p&gt;Find the following variable exports, uncomment them, and then make the following&amp;nbsp;assignments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;MASTER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;spark://ip-172-31-6-33:7077 &lt;span class="c1"&gt;# use the appropriate local IP address here&lt;/span&gt;
+&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/usr/local/lib/spark
+&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;SPARK_SUBMIT_OPTIONS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;--packages com.databricks:spark-csv_2.11:1.3.0,com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Most of these options should be familiar to you by now so I won&amp;#8217;t go-over again&amp;nbsp;here.&lt;/p&gt;
+&lt;h2&gt;zeppelin-site.xml&lt;/h2&gt;
+&lt;p&gt;Find the following property name and change it to the value&amp;nbsp;below:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.server.port&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;8081&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Server port.&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;All we&amp;#8217;re doing here is assigning Zeppelin to port 8081 (which we opened in Part 2), so that it does not clash with the Spark master web &lt;span class="caps"&gt;UI&lt;/span&gt; on port 8080 (the default port for Zeppelin). Test that Zeppelin is working by executing the&amp;nbsp;following,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cd /home/ec2-user/zeppelin-0.6.1-bin-all/bin&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./zeppelin-daemon start&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Open a browser and navigate to &lt;code&gt;http://your_master_node_public_ip:8081&lt;/code&gt;. If Zeppelin has been installed and configured properly you should be presented with Zeppelin&amp;#8217;s home&amp;nbsp;screen:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="zeppelin-home" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-home.png" title="Zeppelin Home"&gt;&lt;/p&gt;
+&lt;p&gt;To shut Zeppelin down return to the master node&amp;#8217;s shell and&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./zeppelin-daemon stop&lt;/code&gt;.&lt;/p&gt;
+&lt;h1&gt;Running Zeppelin with a Service&amp;nbsp;Manager&lt;/h1&gt;
+&lt;p&gt;Unlike R Studio server that automatically configures and starts-up a &lt;a href="https://en.wikipedia.org/wiki/Daemon_(computing)" title="daemon Wiki"&gt;daemon&lt;/a&gt; that will shut-down and re-start with our master node when required, we will have to configure and perform these steps manually for Zeppelin - otherwise it will need to be manually started-up every time the cluster is started after being stopped (and I&amp;#8217;m far too lazy for this&amp;nbsp;inconvenience).&lt;/p&gt;
+&lt;p&gt;To make this happen on Amazon Linux we will make use of &lt;a href="https://en.wikipedia.org/wiki/Upstart" title="Upstart"&gt;Upstart&lt;/a&gt; and the &lt;code&gt;initctl&lt;/code&gt; command. But first of all we will need to create a configuration file in the &lt;code&gt;/etc/init&lt;/code&gt; directory,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cd /etc/init&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ sudo touch zeppelin.conf&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We then need to edit this file - e.g. &lt;code&gt;$ sudo vi zeppelin.conf&lt;/code&gt; - and copy the following script, which is adapted from &lt;code&gt;rstudio-server.conf&lt;/code&gt; and this &lt;strong&gt;fantastic&lt;/strong&gt; blog post from &lt;a href="http://doatt.com/2015/03/03/amazon-linux-and-upstart-init/index.html" title="doatt blog"&gt;DevOps All the Things&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;description &lt;span class="s2"&gt;&amp;quot;zeppelin&amp;quot;&lt;/span&gt;
+
+start on &lt;span class="o"&gt;(&lt;/span&gt;runlevel &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;345&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; and started network&lt;span class="o"&gt;)&lt;/span&gt;
+stop on &lt;span class="o"&gt;(&lt;/span&gt;runlevel &lt;span class="o"&gt;[&lt;/span&gt;!345&lt;span class="o"&gt;]&lt;/span&gt; or stopping network&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# start on (local-filesystems and net-device-up IFACE!=lo)&lt;/span&gt;
+&lt;span class="c1"&gt;# stop on shutdown&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Respawn the process on unexpected termination&lt;/span&gt;
+respawn
+
+&lt;span class="c1"&gt;# respawn the job up to 7 times within a 5 second period.&lt;/span&gt;
+&lt;span class="c1"&gt;# If the job exceeds these values, it will be stopped and marked as failed.&lt;/span&gt;
+respawn limit &lt;span class="m"&gt;7&lt;/span&gt; &lt;span class="m"&gt;5&lt;/span&gt;
+
+&lt;span class="c1"&gt;# zeppelin was installed in /home/ec2-user/zeppelin-0.6.1-bin-all in this example&lt;/span&gt;
+chdir /home/ec2-user/zeppelin-0.6.1-bin-all
+&lt;span class="nb"&gt;exec&lt;/span&gt; bin/zeppelin-daemon.sh upstart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To test our script return to the shell and&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ sudo initctl start zeppelin&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;And return to the browser to check that Zeppelin is up-and-running. You can check that this works by stopping the cluster and then starting it&amp;nbsp;again.&lt;/p&gt;
+&lt;h1&gt;Scala&amp;nbsp;Notebooks&lt;/h1&gt;
+&lt;p&gt;From the Zeppelin home page select the &amp;#8216;Zeppelin Tutorial&amp;#8217;, accept the interpreter options and you should be presented with the following&amp;nbsp;notebook:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="zeppeling-nb" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-nb.png" title="Zeppelin Scala Notebook"&gt;&lt;/p&gt;
+&lt;p&gt;Click into the first code chunk and hit &lt;code&gt;shift + enter&lt;/code&gt; to run it. If everything has been configured correctly then the code will run and the Zeppelin application will be listed in the Spark master node&amp;#8217;s web &lt;span class="caps"&gt;UI&lt;/span&gt;. We then test our connectivity to S3 by attempting to access our data there in the usual&amp;nbsp;way:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="zeppelin-s3" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-s3-nb.png" title="Connecting to S3"&gt;&lt;/p&gt;
+&lt;p&gt;Note that this notebook, as well as any other, can be set to execute on a schedule defined using the &amp;#8216;Run Scheduler&amp;#8217; from the notebook&amp;#8217;s menu bar. This will happen irrespective of whether or not you have it loaded in the browser - so long as the Zeppelin daemon is running the notebooks will run on their defined&amp;nbsp;schedule.&lt;/p&gt;
+&lt;h1&gt;Storing Zeppelin Notebooks on&amp;nbsp;S3&lt;/h1&gt;
+&lt;p&gt;By default Zeppelin will store all notebooks locally. This is likely to be fine under most circumstances (as it is also very easy to export them), but it makes sense to exploit the ability to have them stored in an S3 bucket instead. For example, if you have amassed a lot of notebooks working on one cluster and you&amp;#8217;d like to run them on another (maybe much larger) cluster, then it makes sense not to have to manually export them all from one cluster to&amp;nbsp;another.&lt;/p&gt;
+&lt;p&gt;Enabling access to S3 is relatively easy as we already have S3-enabled &lt;span class="caps"&gt;IAM&lt;/span&gt; roles assigned to our nodes (via Flintrock configuration). Start by creating a new bucket to store them in - e.g. &lt;code&gt;my.zeppelin.notebooks&lt;/code&gt;. Then create a folder within this bucket - e.g. &lt;code&gt;userone&lt;/code&gt; - and another one within that called &lt;code&gt;notebook&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Next, &lt;span class="caps"&gt;SSH&lt;/span&gt; into the master node and open the &lt;code&gt;zeppelin-site.xml&lt;/code&gt; file for editing as we did above. This time, un-comment and set the following&amp;nbsp;properties,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.bucket&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;my.zeppelin.notebooks&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;bucket name for notebook storage&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.user&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;userone&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;user name for s3 folder structure&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.S3NotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook persistence layer implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And comment-out the property for local&amp;nbsp;storage,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.VFSNotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook persistence layer implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Save the changes and return to the terminal. Finally,&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ sudo initctl restart zeppelin&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;And wait a few seconds before re-loading Zeppelin in your browser. If you create a new notebook you should be able to see if you go looking for it in the &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;console.&lt;/p&gt;
+&lt;h1&gt;Basic Notebook&amp;nbsp;Security&lt;/h1&gt;
+&lt;p&gt;Being able to limit access to Zeppelin as well control the read/write permissions on individual notebooks will be useful if multiple people are likely to be working on the platform and using it to trial and schedule jobs on the cluster. It&amp;#8217;s also handy if you just want to grant someone access to read results and don&amp;#8217;t want to risk them changing the code by&amp;nbsp;accident.&lt;/p&gt;
+&lt;p&gt;Enabling basic authentication is relatively straight-forwards. First, open the &lt;code&gt;zeppelin-site.xml&lt;/code&gt; file for editing and ensure that the &lt;code&gt;zeppelin.anonymous.allowed&lt;/code&gt; property is set to &lt;code&gt;false&lt;/code&gt;,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.anonymous.allowed&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;false&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Anonymous user allowed by default&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Next, open the &lt;code&gt;shiro.ini&lt;/code&gt; file in Zeppelin&amp;#8217;s &lt;code&gt;conf&lt;/code&gt; directory and then&amp;nbsp;change,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/** = anon&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;#/** = authc&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;to&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#/** = anon&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/** = authc&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This file also allows you to set usernames, password and groups. For a slightly more detailed explanation head-over to the &lt;a href="http://zeppelin.apache.org/docs/0.6.1/security/shiroauthentication.html" title="Shiro on Zeppelin"&gt;Zeppelin documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h1&gt;Zeppelin as a Spark Job &lt;span class="caps"&gt;REST&lt;/span&gt;&amp;nbsp;Server&lt;/h1&gt;
+&lt;p&gt;Each notebook on a Zeppelin server can be considered as an &amp;#8216;analytics job&amp;#8217;. We have already briefly mentioned the ability to execute such &amp;#8216;jobs&amp;#8217; on a schedule - e.g. execute an &lt;span class="caps"&gt;ETL&lt;/span&gt; process every hour, etc. We can actually take this further by exploiting Zeppelin&amp;#8217;s &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; that controls pretty much any server action. So, for example, we could execute a job (as defined in a notebook), remotely and possibly on an event-driven basis. A comprehensive description of the Zeppelin &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; can be found on the &lt;a href="http://zeppelin.apache.org/docs/0.6.1/rest-api/rest-notebook.html" title="Zeppelin RESTful API"&gt;official &lt;span class="caps"&gt;API&lt;/span&gt; documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This is the point at which I start to get excited as our R&amp;amp;D platform starts to resemble a production platform. To illustrate how one could remotely execute Zeppelin jobs I have written a few basic R function (with examples) to facilitate this using R - these can be found on &lt;a href="https://github.com/AlexIoannides/alexutilr/blob/master/R/zeppelin_utils.R" title="alexutilr"&gt;GitHub&lt;/a&gt;, a discussion of which may make a post of its own in the near&amp;nbsp;future.&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;That&amp;#8217;s it - mission&amp;nbsp;accomplished!&lt;/p&gt;
+&lt;p&gt;I have met all of my initial aims - possibly more. I have myself a Spark-based R&amp;amp;D platform that I can interact with using my favorite R tools and Scala, all from the comfort of my laptop. And we&amp;#8217;re not far removed from being able to deploy code and &amp;#8216;analytics jobs&amp;#8217; in a production environment. All we&amp;#8217;re really missing is a database for serving analytics (e.g. Elasticsearch) and maybe another for storing data if we won&amp;#8217;t be relying on S3. More on this in another&amp;nbsp;post.&lt;/p&gt;</content><category term="big data"></category><category term="AWS"></category><category term="data processing"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 3 - R, R Studio Server, SparkR &amp; Sparklyr</title><link href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr.html" rel="alternate"></link><published>2016-08-22T00:00:00+01:00</published><updated>2016-08-22T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-22:/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr.html</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" title="Part 1"&gt;Part 1&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 2"&gt;Part 2&lt;/a&gt; of this series dealt with setting up &lt;span class="caps"&gt;AWS&lt;/span&gt;, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster&amp;#8217;s master node and use it to …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" title="Part 1"&gt;Part 1&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 2"&gt;Part 2&lt;/a&gt; of this series dealt with setting up &lt;span class="caps"&gt;AWS&lt;/span&gt;, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster&amp;#8217;s master node and use it to serve my favorite R &lt;span class="caps"&gt;IDE&lt;/span&gt;: R Studio.
+We will then install and configure both the &lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr&lt;/a&gt; and [SparkR][sparkR] packages for connecting and interacting with Spark and our data. After this, we will be on our way to interacting with and computing on large-scale data as if it were sitting on our&amp;nbsp;laptops.&lt;/p&gt;
+&lt;h1&gt;Installing&amp;nbsp;R&lt;/h1&gt;
+&lt;p&gt;Our first task is to install R onto our master node. Start by &lt;span class="caps"&gt;SSH&lt;/span&gt;-ing into the master node using the steps described in &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 2"&gt;Part 2&lt;/a&gt;. Then execute the following commands in the following&amp;nbsp;order:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;$ sudo yum update&lt;/code&gt; - update all the packages on Amazon Linux machine imagine to the latest ones in the Amazon Linux&amp;#8217;s&amp;nbsp;repository;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$ sudo yum install R&lt;/code&gt; - install R and all of its&amp;nbsp;dependencies;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$ sudo yum install libcurl libcurl-devel&lt;/code&gt; - ensure that &lt;a href="https://curl.haxx.se/" title="CURL"&gt;Curl&lt;/a&gt; is installed (a dependency for the &lt;code&gt;httr&lt;/code&gt; and &lt;code&gt;curl&lt;/code&gt; R packages used to install other R packages);&amp;nbsp;and,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$ sudo yum install openssl openssl-devel&lt;/code&gt; - ensure that &lt;a href="https://www.openssl.org/" title="OpenSSL"&gt;OpenSSL&lt;/a&gt; is installed (another dependency for the httr R&amp;nbsp;package).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If everything has worked as intended, then executing &lt;code&gt;$ R&lt;/code&gt; should present you with R on the command&amp;nbsp;line:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/r_terminal.png" title="Command Line R"&gt;&lt;/p&gt;
+&lt;h1&gt;Installing R Studio&amp;nbsp;Server&lt;/h1&gt;
+&lt;p&gt;Installing R Studio on the same local network as the Spark cluster that we want to connect to  - in our case directly on the master node - is the recommended approach for using R Studio with a remote Spark Cluster. Using a local version of R Studio to connect to a remote Spark cluster is prone to the same networking issues as trying to use the Spark shell remotely in client-mode (see &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" title="Part 2"&gt;part 2&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;First of all we need the &lt;span class="caps"&gt;URL&lt;/span&gt; for the latest version of R Studio Server. Preview versions can be found &lt;a href="https://www.rstudio.com/products/rstudio/download/preview/" title="R Studio Server Preview"&gt;here&lt;/a&gt; while stable releases can be found &lt;a href="https://www.rstudio.com/products/rstudio/download-server/" title="R Studio Server Current"&gt;here&lt;/a&gt;. At the time of writing Sparklyr integration is a preview feature so I&amp;#8217;m using the latest preview version of R Studio Server for 64bit RedHat/CentOS (should this fail at any point, then revert back to the latest stable release as all of the scripts used in this post will still run). Picking-up where we left-off in the master node&amp;#8217;s terminal window, execute the following&amp;nbsp;commands,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ wget https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-rhel-0.99.1289-i686.rpm&lt;/code&gt;
+&lt;code&gt;$ sudo yum install --nogpgcheck rstudio-server-rhel-0.99.1289-i686.rpm&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Next, we need to assign a password to our ec2-user so that they can login to R Studio as&amp;nbsp;well,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ sudo passwd ec2-user&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If we wanted to create additional users (with their own R Studio workspaces and local R package repositories), we would&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ sudo useradd alex&lt;/code&gt;
+&lt;code&gt;$ sudo passwd alex&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Because we have installed Spark in our ec2-user&amp;#8217;s &lt;code&gt;home&lt;/code&gt; directory, other users will not be able to access it. To get around this problem (if we want to have multiple users working on the platform), we need a local copy of Spark available to everyone. A sensible place to store this is in &lt;code&gt;/usr/local/lib&lt;/code&gt; and we can make a copy of our Spark directory here as&amp;nbsp;follows:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cd /home/ec2-user&lt;/code&gt;
+&lt;code&gt;$ sudo cp -r spark /usr/local/lib&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Now check that everything works as expected by opening your browser and heading to &lt;code&gt;http://master_nodes_public_ip_address:8787&lt;/code&gt; where you should be greeted with the R Studio login&amp;nbsp;page:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/r_studio_login.png" title="R Studio Server Login"&gt;&lt;/p&gt;
+&lt;p&gt;Enter a username and password and then we should be ready to&amp;nbsp;go:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/r_studio_server.png" title="R Studio Server"&gt;&lt;/p&gt;
+&lt;p&gt;Finally, on R Studio&amp;#8217;s command line&amp;nbsp;run,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;gt; install.packages("devtools")&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;to install the &lt;code&gt;devtools&lt;/code&gt; R package that will allow us to install packages directly from GitHub repositories (as well as many other things). If OpenSSL and Curl were installed correctly in the above steps, then this should take under a&amp;nbsp;minute.&lt;/p&gt;
+&lt;h1&gt;Connect to Spark with&amp;nbsp;Sparklyr&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr&lt;/a&gt; is an extensible R &lt;span class="caps"&gt;API&lt;/span&gt; for Spark from the people at &lt;a href="https://www.rstudio.com" title="rStudio"&gt;R Studio&lt;/a&gt;- an alternative to the SparkR package that ships with Spark as standard. In particular, it provides a &amp;#8216;back end&amp;#8217; for the powerful &lt;code&gt;dplyr&lt;/code&gt; data manipulation package that lets you manipulate Spark DataFrames using the same package and functions that I would use to manipulate native R data frames on my&amp;nbsp;laptop.&lt;/p&gt;
+&lt;p&gt;Sparklyr is still in it&amp;#8217;s infancy and is not yet available on the &lt;span class="caps"&gt;CRAN&lt;/span&gt; archives. As such, it needs to be installed directly from its GitHub repo, which from within R Studio is done by&amp;nbsp;executing,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;gt; devtools::install_github("rstudio/sparklyr")&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This will take a few minutes as there are a lot of dependencies that need to be built from source. Once this is finished create a new script and copy the following code for testing Sparklyr, its ability to connect to our Spark cluster and our S3&amp;nbsp;data:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# set system variables for access to S3 using older &amp;quot;s3n:&amp;quot; protocol ----&lt;/span&gt;
+&lt;span class="c1"&gt;# Sys.setenv(AWS_ACCESS_KEY_ID=&amp;quot;AKIAJL4EWJCQ3R86DWAA&amp;quot;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Sys.setenv(AWS_SECRET_ACCESS_KEY=&amp;quot;nVZJQtKj6ODDy+t253OZJWZLEo2gaEoFAYjH1pEf&amp;quot;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# load packages ----&lt;/span&gt;
+&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;sparklyr&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;dplyr&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# add packages to Spark config ----&lt;/span&gt;
+config &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; spark_config&lt;span class="p"&gt;()&lt;/span&gt;
+config&lt;span class="o"&gt;$&lt;/span&gt;sparklyr.defaultPackages&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
+config&lt;span class="o"&gt;$&lt;/span&gt;sparklyr.defaultPackages
+&lt;span class="c1"&gt;# [1] &amp;quot;com.databricks:spark-csv_2.11:1.3.0&amp;quot;    &amp;quot;com.amazonaws:aws-java-sdk-pom:1.10.34&amp;quot; &amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# connect to Spark cluster ----&lt;/span&gt;
+sc &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; spark_connect&lt;span class="p"&gt;(&lt;/span&gt;master &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                   spark_home &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/usr/local/lib/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                   config &lt;span class="o"&gt;=&lt;/span&gt; config&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# copy the local iris dataset to Spark ----&lt;/span&gt;
+iris_tbl &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; copy_to&lt;span class="p"&gt;(&lt;/span&gt;sc&lt;span class="p"&gt;,&lt;/span&gt; iris&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;iris_tbl&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Sepal_Length Sepal_Width Petal_Length Petal_Width  Species&lt;/span&gt;
+&lt;span class="c1"&gt;#        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;    &amp;lt;chr&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.1         3.5          1.4         0.2 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.9         3.0          1.4         0.2 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.7         3.2          1.3         0.2 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.6         3.1          1.5         0.2 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.0         3.6          1.4         0.2 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.4         3.9          1.7         0.4 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# load S3 file into Spark&amp;#39;s using the &amp;quot;s3a:&amp;quot; protocol ----&lt;/span&gt;
+test &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; spark_read_csv&lt;span class="p"&gt;(&lt;/span&gt;sc&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+test
+&lt;span class="c1"&gt;# Source:   query [?? x 1]&lt;/span&gt;
+&lt;span class="c1"&gt;# Database: spark connection master=spark://ip-172-31-11-216:7077 app=sparklyr local=FALSE&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                                  _Apache_Spark&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                                          &amp;lt;chr&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;# Spark is a fast and general cluster computing system for Big Data. It provides&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                       high-level APIs in Scala&lt;/span&gt;
+&lt;span class="c1"&gt;#      supports general computation graphs for data analysis. It also supports a&lt;/span&gt;
+&lt;span class="c1"&gt;#      rich set of higher-level tools including Spark SQL for SQL and DataFrames&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                     MLlib for machine learning&lt;/span&gt;
+&lt;span class="c1"&gt;#                                     and Spark Streaming for stream processing.&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                     &amp;lt;http://spark.apache.org/&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                        ## Online Documentation&lt;/span&gt;
+&lt;span class="c1"&gt;#                                    You can find the latest Spark documentation&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                                          guide&lt;/span&gt;
+&lt;span class="c1"&gt;# # ... with more rows&lt;/span&gt;
+
+&lt;span class="c1"&gt;# disconnect ----&lt;/span&gt;
+spark_disconnect_all&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Execute line-by-line and check the key outputs with those commented-out in the above script. Sparklyr is changing rapidly at the moment - for the latest documentation and information on: how to use it with the &lt;code&gt;dplyr&lt;/code&gt; package, how to leverage Spark machine learning libraries and how to extend Sparklyr itself, head over to the &lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr web site&lt;/a&gt; hosted by R&amp;nbsp;Studio.&lt;/p&gt;
+&lt;h1&gt;Connect to Spark with&amp;nbsp;SparkR&lt;/h1&gt;
+&lt;p&gt;SparkR is shipped with Spark and as such there is no external installation process that we&amp;#8217;re required to follow. It does, however, require R to be installed on every node in the cluster. This can be achieved by &lt;span class="caps"&gt;SSH&lt;/span&gt;-ing into every node in our cluster and repeating the above R installation steps, or experimenting with Flintrock&amp;#8217;s &lt;code&gt;run-command&lt;/code&gt; command that will automatically execute the same command on every node in the cluster, such&amp;nbsp;as,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock run-command the_name_of_your_cluster 'sudo yum install -y R'&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;To enable SparkR to be used via R Studio and demonstrate the same connectivity as we did above for Sparklyr, create a new script for the following&amp;nbsp;code:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# set system variables ----&lt;/span&gt;
+&lt;span class="c1"&gt;# - location of Spark on master node;&lt;/span&gt;
+&lt;span class="c1"&gt;# - add sparkR package directory to the list of path to look for R packages&lt;/span&gt;
+&lt;span class="kp"&gt;Sys.setenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;SPARK_HOME&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/home/ec2-user/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="m"&gt;.&lt;/span&gt;libPaths&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;file.path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;Sys.getenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;SPARK_HOME&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;R&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;lib&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="m"&gt;.&lt;/span&gt;libPaths&lt;span class="p"&gt;()))&lt;/span&gt;
+
+&lt;span class="c1"&gt;# load packages ----&lt;/span&gt;
+&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;SparkR&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# connect to Spark cluster ----&lt;/span&gt;
+&lt;span class="c1"&gt;# check your_public_ip_address:8080 to get the local network address of your master node&lt;/span&gt;
+sc &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; sparkR.session&lt;span class="p"&gt;(&lt;/span&gt;master &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                     sparkPackages &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;com.databricks:spark-csv_2.11:1.3.0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                                       &lt;span class="s"&gt;&amp;quot;com.amazonaws:aws-java-sdk-pom:1.10.34&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                                       &lt;span class="s"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="c1"&gt;# copy the local iris dataset to Spark ----&lt;/span&gt;
+iris_tbl &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; createDataFrame&lt;span class="p"&gt;(&lt;/span&gt;iris&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;iris_tbl&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Sepal_Length Sepal_Width Petal_Length Petal_Width Species&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.1         3.5          1.4         0.2  setosa&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.9         3.0          1.4         0.2  setosa&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.7         3.2          1.3         0.2  setosa&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.6         3.1          1.5         0.2  setosa&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.0         3.6          1.4         0.2  setosa&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.4         3.9          1.7         0.4  setosa&lt;/span&gt;
+
+&lt;span class="c1"&gt;# load S3 file into Spark&amp;#39;s using the &amp;quot;s3a:&amp;quot; protocol ----&lt;/span&gt;
+test &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; read.text&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;collect&lt;span class="p"&gt;(&lt;/span&gt;test&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                                            value&lt;/span&gt;
+&lt;span class="c1"&gt;# 1                                                                 # Apache Spark&lt;/span&gt;
+&lt;span class="c1"&gt;# 2&lt;/span&gt;
+&lt;span class="c1"&gt;# 3 Spark is a fast and general cluster computing system for Big Data. It provides&lt;/span&gt;
+&lt;span class="c1"&gt;# 4    high-level APIs in Scala, Java, Python, and R, and an optimized engine that&lt;/span&gt;
+&lt;span class="c1"&gt;# 5      supports general computation graphs for data analysis. It also supports a&lt;/span&gt;
+&lt;span class="c1"&gt;# 6     rich set of higher-level tools including Spark SQL for SQL and DataFrames,&lt;/span&gt;
+
+&lt;span class="c1"&gt;# close connection&lt;/span&gt;
+sparkR.session.stop&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Again, execute line-by-line and check the key outputs with those commented-out in the above script. Use the &lt;a href="https://spark.apache.org/docs/latest/sparkr.html" title="sparkR guide"&gt;sparkR programming guide&lt;/a&gt; and the &lt;a href="https://spark.apache.org/docs/latest/api/R/index.html" title="sparkR API"&gt;sparkR &lt;span class="caps"&gt;API&lt;/span&gt; documentation&lt;/a&gt; for more information on the available&amp;nbsp;functions.&lt;/p&gt;
+&lt;p&gt;We have nearly met all of the aims set-out at the beginning of this series of posts. All that remains now is to install Apache Zeppelin so we can interact with Spark using Scala in the same way we can now interact with it using&amp;nbsp;R.&lt;/p&gt;</content><category term="big data"></category><category term="AWS"></category><category term="data processing"></category><category term="spark"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 2 - Deploying Spark on AWS using Flintrock</title><link href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html" rel="alternate"></link><published>2016-08-18T00:00:00+01:00</published><updated>2016-08-18T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-18:/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock.html</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/spark.png" title="spark"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" title="PartOne"&gt;Part 1&lt;/a&gt; in this series of blog posts describes how to setup &lt;span class="caps"&gt;AWS&lt;/span&gt; with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on &lt;span class="caps"&gt;AWS&lt;/span&gt; and accessing our S3 data from within&amp;nbsp;Spark.&lt;/p&gt;
+&lt;p&gt;A key part of my vision …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/spark.png" title="spark"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" title="PartOne"&gt;Part 1&lt;/a&gt; in this series of blog posts describes how to setup &lt;span class="caps"&gt;AWS&lt;/span&gt; with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on &lt;span class="caps"&gt;AWS&lt;/span&gt; and accessing our S3 data from within&amp;nbsp;Spark.&lt;/p&gt;
+&lt;p&gt;A key part of my vision for a Spark-based R&amp;amp;D platform is being able to to launch, stop, start and then connect to a cluster from my laptop. By this I mean that I don&amp;#8217;t want to have to directly interact with &lt;span class="caps"&gt;AWS&lt;/span&gt; every time I want to switch my cluster on or off. Versions of Spark prior to v2 had a folder in the home directory, &lt;code&gt;/ec2&lt;/code&gt;, containing scripts for doing exactly this from the terminal. I was perturbed to find this folder missing in Spark 2.0 and &amp;#8216;Amazon &lt;span class="caps"&gt;EC2&lt;/span&gt;&amp;#8217; missing from the &amp;#8216;Deploying&amp;#8217; menu of the official Spark documentation. It appears that these scripts have not been actively maintained and as such they&amp;#8217;ve been moved to a separate &lt;a href="https://github.com/amplab/spark-ec2" title="ec2-tools"&gt;GitHub repo&lt;/a&gt; for the foreseeable future. I spent a little bit of time trying to get them to work, but ultimately they do not support v2 of Spark as yet. They also don&amp;#8217;t allow you the flexibility of choosing which version of Hadoop to install along with Spark and this can cause headaches when it comes to accessing data on S3 (a bit more on this&amp;nbsp;later).&lt;/p&gt;
+&lt;p&gt;I&amp;#8217;m very keen on using Spark 2.0 so I needed an alternative solution. Manually firing-up VMs on &lt;span class="caps"&gt;EC2&lt;/span&gt; and installing Spark and Hadoop on each node was out of the question, as was an ascent of the &lt;span class="caps"&gt;AWS&lt;/span&gt; DevOps learning-curve required to automate such a process. This sort of thing is not part of my day-job and I don&amp;#8217;t have the time otherwise. So I turned to Google and was &lt;strong&gt;very&lt;/strong&gt; happy to stumble upon the &lt;a href="https://github.com/nchammas/flintrock" title="Flintrock"&gt;Flintrock&lt;/a&gt; project on GitHub. Its still in its infancy, but using it I managed to achieve everything I could do with the old Spark ec2 scripts, but with far greater flexibility and speed. It is really rather good and I will be using it for Spark cluster&amp;nbsp;management.&lt;/p&gt;
+&lt;h2&gt;Download Spark&amp;nbsp;Locally&lt;/h2&gt;
+&lt;p&gt;In order to be able to send jobs to our Spark cluster we will need a local version of Spark so we can use the &lt;code&gt;spark-submit&lt;/code&gt; command. In any case, its useful for development and learning as well as for small ad hoc jobs. Download Spark 2.0 &lt;a href="https://spark.apache.org/downloads.html" title="SparkDownload"&gt;here&lt;/a&gt; and choose &amp;#8216;Pre-built for Hadoop 2.7 and later&amp;#8217;. My version lives in &lt;code&gt;/applications&lt;/code&gt; and I will assume that yours does too. To check that everything is okay, open the terminal and make Spark-2.0.0 your current directory. From here&amp;nbsp;run,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./bin/spark-shell&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If everything is okay you should be met with the Spark shell for Scala&amp;nbsp;interaction:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/welcome_to_spark.png" title="spark-shell"&gt;&lt;/p&gt;
+&lt;h2&gt;Install&amp;nbsp;Flintrock&lt;/h2&gt;
+&lt;p&gt;Exit the Spark shell (ctrl-d on a Mac, just in case you didn&amp;#8217;t know&amp;#8230;) and return to Spark&amp;#8217;s home directory. For convenience, I&amp;#8217;m going to download Flintrock to here as well - where the old ec2 scripts used to be. The steps for downloading the Flintrock binaries - taken verbatim from the Flinkrock repo&amp;#8217;s &lt;span class="caps"&gt;README&lt;/span&gt; - are as&amp;nbsp;follows:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nv"&gt;flintrock_version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0.5.0&amp;quot;&lt;/span&gt;
+
+$ curl --location --remote-name &lt;span class="s2"&gt;&amp;quot;https://github.com/nchammas/flintrock/releases/download/v&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;/Flintrock-&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
+$ unzip -q -d flintrock &lt;span class="s2"&gt;&amp;quot;Flintrock-&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And test that it works by&amp;nbsp;running,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock --help&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;It&amp;#8217;s worth familiarizing yourself with the available commands. We&amp;#8217;ll only be using a small sub-set of these, but there&amp;#8217;s a lot more you can do with&amp;nbsp;Flintrock.&lt;/p&gt;
+&lt;h2&gt;Configure&amp;nbsp;Flintrock&lt;/h2&gt;
+&lt;p&gt;The configuration details of the default cluster are kept in a &lt;span class="caps"&gt;YAML&lt;/span&gt; file that will be opened in your favorite text editor if you&amp;nbsp;run&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock configure&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/figure_configure.png" title="FlintrockConfig"&gt;&lt;/p&gt;
+&lt;p&gt;Most of these are the default Flintrock options, but a few of them deserve a little more&amp;nbsp;discussion:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;key-name&lt;/code&gt; and &lt;code&gt;identity-file&lt;/code&gt; - in &lt;a href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" title="PartOne"&gt;Part 1&lt;/a&gt; we generated a key-pair to allow us to connect remotely to &lt;span class="caps"&gt;EC2&lt;/span&gt; VMs. These options refer to the name of the key-par and the path to the file containing our private&amp;nbsp;key.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;instance-profile-name&lt;/code&gt; - this assigns an &lt;span class="caps"&gt;IAM&lt;/span&gt; &amp;#8216;role&amp;#8217; to each node. A role is a like an &lt;span class="caps"&gt;IAM&lt;/span&gt; user that isn&amp;#8217;t a person, but can have access policies attached to it. Ultimately, this determines what out Spark nodes can and cannot do on &lt;span class="caps"&gt;AWS&lt;/span&gt;. I have chosen the default role that &lt;span class="caps"&gt;EMR&lt;/span&gt; assigns to nodes, which allows them to access data held in&amp;nbsp;S3.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;instance-type&lt;/code&gt; - I think running 2 x m4.large instances is more than enough for testing a Spark cluster. In total, this gets you 4 cores, 16Gb of &lt;span class="caps"&gt;RAM&lt;/span&gt; and Elastic Block Storage (&lt;span class="caps"&gt;EBS&lt;/span&gt;). The latter is important as it means your VMs will &amp;#8216;persist&amp;#8217; when you stop them - just like shutting-down your laptop. Check that the overall pricing is acceptable to you &lt;a href="https://aws.amazon.com/ec2/pricing/" title="AWS-pricing"&gt;here&lt;/a&gt;. If it isn&amp;#8217;t, then choose another instance type, but make sure it has &lt;span class="caps"&gt;EBS&lt;/span&gt; (or add it separately if you need&amp;nbsp;to).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;region&lt;/code&gt; - the &lt;span class="caps"&gt;AWS&lt;/span&gt; region that you want the cluster to be created in. I&amp;#8217;m in the &lt;span class="caps"&gt;UK&lt;/span&gt; so my default region is Ireland (aka&amp;nbsp;eu-west-1).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;ami&lt;/code&gt; - which Amazon Machine Image (&lt;span class="caps"&gt;AMI&lt;/span&gt;) should the VMs in our cluster be based on? For the time-being I&amp;#8217;m using the latest version of Amazon&amp;#8217;s Linux distribution, which is based on Red Hat Linux and includes &lt;span class="caps"&gt;AWS&lt;/span&gt; tools. Be aware that this has its idiosyncrasies (deviations from what would be expected on Red Hat and CentOS), and that these can create headaches (some of which I encountered when I was trying to get the Apache Zeppelin daemon to run). It is free and easy, however, and the &lt;span class="caps"&gt;ID&lt;/span&gt; for the latest version can be found &lt;a href="https://aws.amazon.com/amazon-linux-ami/" title="AMI"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;user&lt;/code&gt; - the setup scripts will create a non-root user on each &lt;span class="caps"&gt;VM&lt;/span&gt; and this will be the associated&amp;nbsp;username.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;num-slaves&lt;/code&gt; - the number of non-master Spark nodes - 1 or 2 will suffice for&amp;nbsp;testing.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;install-hdfs&lt;/code&gt; - should Hadoop be installed on each machine alongside Spark? We want to access data in S3 and Hadoop is also a convenient way of making files and JARs visible to all nodes. So it&amp;#8217;s a &amp;#8216;True&amp;#8217; for&amp;nbsp;me.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Launch&amp;nbsp;Cluster&lt;/h2&gt;
+&lt;p&gt;Once you&amp;#8217;ve decided on the cluster&amp;#8217;s configuration, head back to the terminal and launch a cluster&amp;nbsp;using,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock launch the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This took me under 3 minutes, which is an &lt;em&gt;enormous&lt;/em&gt; improvement on the old ec2 scripts. Once Flintrock issues it&amp;#8217;s health report and returns control of the terminal back to you, login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console and head over to the &lt;span class="caps"&gt;EC2&lt;/span&gt; page to see the VMs that have been created for&amp;nbsp;you:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ec2_instances.png" title="EC2-dashboard"&gt;&lt;/p&gt;
+&lt;p&gt;Select the master node to see it&amp;#8217;s details and check that the correct &lt;span class="caps"&gt;IAM&lt;/span&gt; role has been&amp;nbsp;added:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/instance_details.png" title="EC2-instances"&gt;&lt;/p&gt;
+&lt;p&gt;Note that Flintrock has created two security groups for us: flintrock-your_cluster_name-cluster and flintrock. The former allows each node to connect with every other node, and the latter determines who can connect to the nodes from the &amp;#8216;outside world&amp;#8217;. Select the &amp;#8216;flintrock&amp;#8217; security&amp;nbsp;group:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/flintrock_security_group.png" title="SecurityGroup"&gt;&lt;/p&gt;
+&lt;p&gt;The Sources are the &lt;span class="caps"&gt;IP&lt;/span&gt; addresses allowed to access the cluster. Initially, this should be set to the &lt;span class="caps"&gt;IP&lt;/span&gt; address of the machine that has just created your cluster. If you are unsure what you &lt;span class="caps"&gt;IP&lt;/span&gt; address is, then try &lt;a href="http://whatismyip.com" title="whatismyip"&gt;whatismyip.com&lt;/a&gt;. The ports that should be open&amp;nbsp;are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;4040 - allows you to connect to a Spark application&amp;#8217;s web &lt;span class="caps"&gt;UI&lt;/span&gt; (e.g. the spark-shell or Zeppelin,&amp;nbsp;etc.),&lt;/li&gt;
+&lt;li&gt;8080 &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; 8081 - the Spark master node&amp;#8217;s web &lt;span class="caps"&gt;UI&lt;/span&gt; and a free port that we&amp;#8217;ll use for Apache Zeppelin when we set that up later on (in the final post of this&amp;nbsp;series),&lt;/li&gt;
+&lt;li&gt;22 - the default port for connecting via &lt;span class="caps"&gt;SSH&lt;/span&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Edit this list and add another Custom &lt;span class="caps"&gt;TCP&lt;/span&gt; rule to allow port 8787 to be accessed by your &lt;span class="caps"&gt;IP&lt;/span&gt; address. We will use this port to connect to R Studio when we set that up in the next post in this&amp;nbsp;series.&lt;/p&gt;
+&lt;h2&gt;Connect to&amp;nbsp;Cluster&lt;/h2&gt;
+&lt;p&gt;Find the Public &lt;span class="caps"&gt;IP&lt;/span&gt; address of the master node from the Instances tab of the &lt;span class="caps"&gt;EC2&lt;/span&gt; Dashboard. Enter this into a browser followed by &lt;code&gt;:8080&lt;/code&gt;, which should allow us to access the Spark master node&amp;#8217;s web &lt;span class="caps"&gt;UI&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/spark_web_ui.png" title="SparkBebUI"&gt;&lt;/p&gt;
+&lt;p&gt;If everything has worked correctly then you should see one worker node registered with the&amp;nbsp;master.&lt;/p&gt;
+&lt;p&gt;Back on the Instances tab, select the master node and hit the connect button. You should be presented with all the information required for connecting to the master node via &lt;span class="caps"&gt;SSH&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ssh_connect.png" title="SSH-details"&gt;&lt;/p&gt;
+&lt;p&gt;Return to the terminal and follow this advice. If successful, you should see something along the lines&amp;nbsp;of:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ssh_master.png" title="SSH-connect"&gt;&lt;/p&gt;
+&lt;p&gt;Next, fire-up the Spark shell for Scala by executing &lt;code&gt;spark-shell&lt;/code&gt;. To run a trivial job across all nodes and test the cluster, run the following program on a line-by-line&amp;nbsp;basis:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val localArray = Array(1,2,3,4,5)
+val rddArray = sc.parallelize(localArray)
+val rddArraySum = rddArray.reduce((x, y) =&amp;gt; x + y)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If no errors were thrown and the shell&amp;#8217;s final output&amp;nbsp;is,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;rddArraySum: Int = 15&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;then give yourself a pat-on-the-back as you&amp;#8217;ve just executed your first distributed computation on a cloud-hosted Spark&amp;nbsp;cluster.&lt;/p&gt;
+&lt;p&gt;There are two ways we can send a complete Spark application - a &lt;span class="caps"&gt;JAR&lt;/span&gt; file - to the cluster. Firstly, we could copy our &lt;span class="caps"&gt;JAR&lt;/span&gt; to the master node - let&amp;#8217;s assume it&amp;#8217;s the Apache Spark example application that computes Pi to &lt;code&gt;n&lt;/code&gt; decimal places, where &lt;code&gt;n&lt;/code&gt; is passed as an argument to the application. In this instance, we could &lt;span class="caps"&gt;SSH&lt;/span&gt; into the master node as we did for the Spark shell and then execute Spark in &amp;#8216;client&amp;#8217;&amp;nbsp;mode,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ spark/bin/spark-submit --master spark://ip-172-31-6-33:7077 --deploy-mode client --class org.apache.spark.examples.SparkPi spark/examples/jars/spark-examples_2.11-2.0.0.jar 10&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Note that the &lt;code&gt;--master&lt;/code&gt; option takes the local &lt;span class="caps"&gt;IP&lt;/span&gt; address of the master node within our network in &lt;span class="caps"&gt;AWS&lt;/span&gt;. An alternative method is to send our &lt;span class="caps"&gt;JAR&lt;/span&gt; file directly from our local machine using Spark in &amp;#8216;cluster&amp;#8217;&amp;nbsp;mode,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ bin/spark-submit --master spark://52.48.93.43:6066 --deploy-mode cluster --class org.apache.spark.examples.SparkPi examples/jars/spark-examples_2.11-2.0.0.jar 10&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;A common pattern is to use the latter when the application both reads data and writes output to and from S3 or some other data repository (or database) in our &lt;span class="caps"&gt;AWS&lt;/span&gt; network. I have not had any luck running an application on the cluster from my local machine in &amp;#8216;client&amp;#8217; mode. I haven&amp;#8217;t been able to make the master node &amp;#8216;see&amp;#8217; my laptop - pinging the latter from the former always fails and in client mode the Spark master node must be able to reach the machine that is running the driver application (which in client mode, in this context, is my laptop). I&amp;#8217;m sure that I could circumnavigate this issue if I setup a &lt;span class="caps"&gt;VPN&lt;/span&gt; or an &lt;span class="caps"&gt;SSH&lt;/span&gt;-tunnel between my laptop and the &lt;span class="caps"&gt;AWS&lt;/span&gt; cluster, but this seem like more hassle than it&amp;#8217;s worth considering that most of my interaction with Spark will be via R Studio or Zeppelin that I will setup to access&amp;nbsp;remotely.&lt;/p&gt;
+&lt;h2&gt;Read S3 Data from&amp;nbsp;Spark&lt;/h2&gt;
+&lt;p&gt;In order to access our S3 data from Spark (via Hadoop), we need to make a couple of packages (&lt;span class="caps"&gt;JAR&lt;/span&gt; files and their dependencies) available to all nodes in our cluster. The easiest way to do this, is to start the spark-shell with the following&amp;nbsp;options:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ spark-shell --packages com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Once the cluster has downloaded everything it needs and the shell has started, run the following program that &amp;#8216;opens&amp;#8217; the &lt;span class="caps"&gt;README&lt;/span&gt; file we uploaded to S3 in Part 1 of this series of blogs, and &amp;#8216;collects&amp;#8217; it back to the master node from its distributed (&lt;span class="caps"&gt;RDD&lt;/span&gt;)&amp;nbsp;representation:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val data = sc.textFile(&amp;quot;s3a://alex.data/README.md&amp;quot;)
+data.collect
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If everything is successful then you should see the contents of the file printed to&amp;nbsp;screen.&lt;/p&gt;
+&lt;p&gt;If you have read elsewhere about accessing data on S3, you may have seen references made to connection strings that start with &lt;code&gt;"s3n://...&lt;/code&gt; or maybe even &lt;code&gt;"s3://...&lt;/code&gt; with accompanying discussions about passing credentials either as part of the connection string or by setting system variables, etc. Because we are using a recent version of Hadoop and the Amazon packages required to map S3 objects onto Hadoop, and because we have assigned our nodes &lt;span class="caps"&gt;IAM&lt;/span&gt; roles that have permission to access S3, we do not need to negotiate any of these (sometimes painful)&amp;nbsp;issues.&lt;/p&gt;
+&lt;h2&gt;Stopping, Starting and Destroying&amp;nbsp;Clusters&lt;/h2&gt;
+&lt;p&gt;Stopping a cluster - shutting it down to be re-started in the state you left it in - and preventing any further costs from accumulating is as simple as asking Flintrock&amp;nbsp;to,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock stop the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;and similarly for starting and destroying (terminating the cluster VMs and their state&amp;#8217;s&amp;nbsp;forever),&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock start the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock destroy the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Be aware&lt;/strong&gt; that when you restart a cluster the public &lt;span class="caps"&gt;IP&lt;/span&gt; addresses for all the nodes will have changed. This can be a bit of a (minor) hassle, so I have opted to create an &lt;a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" title="ElasticIP"&gt;Elastic &lt;span class="caps"&gt;IP&lt;/span&gt;&lt;/a&gt; address and assign it to my master node to keep it&amp;#8217;s public &lt;span class="caps"&gt;IP&lt;/span&gt; address constant over stops and restarts (for a nominal cost). To see what clusters are running at any one moment in&amp;nbsp;time,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock describe&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We are now ready to install R, R Studio and start using Sparklyr and/or SparkR to start interacting with our data (Part 3 in this series of&amp;nbsp;blogs).&lt;/p&gt;</content><category term="big data"></category><category term="AWS"></category><category term="data processing"></category><category term="spark"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 1 - Setting-Up AWS</title><link href="https://alexioannides.github.io/building-a-data-science-platform-for-rd-part-1-setting-up-aws.html" rel="alternate"></link><published>2016-08-16T00:00:00+01:00</published><updated>2016-08-16T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-16:/building-a-data-science-platform-for-rd-part-1-setting-up-aws.html</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/aws.png" title="AWS"&gt;&lt;/p&gt;
+&lt;p&gt;Here&amp;#8217;s my vision: I get into the office and switch-on my laptop; then I start-up my &lt;a href="https://spark.apache.org"&gt;Spark&lt;/a&gt; cluster; I interact with it via &lt;a href="https://www.rstudio.com"&gt;RStudio&lt;/a&gt; to exploring a new dataset a client uploaded overnight; after getting a handle on what I want to do with it, I prototype an &lt;span class="caps"&gt;ETL …&lt;/span&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/aws.png" title="AWS"&gt;&lt;/p&gt;
+&lt;p&gt;Here&amp;#8217;s my vision: I get into the office and switch-on my laptop; then I start-up my &lt;a href="https://spark.apache.org"&gt;Spark&lt;/a&gt; cluster; I interact with it via &lt;a href="https://www.rstudio.com"&gt;RStudio&lt;/a&gt; to exploring a new dataset a client uploaded overnight; after getting a handle on what I want to do with it, I prototype an &lt;span class="caps"&gt;ETL&lt;/span&gt; and/or model-building process in &lt;a href="http://www.scala-lang.org"&gt;Scala&lt;/a&gt; by using &lt;a href="http://zeppelin.apache.org"&gt;Zeppelin&lt;/a&gt; and I might even ask it to run every hour to see how it&amp;nbsp;fairs.&lt;/p&gt;
+&lt;p&gt;In all likelihood this is going to be more than one day&amp;#8217;s work, but you get the idea - I want a workspace that lets me use production-scale technologies to test ideas and processes that are a small step away from being handed-over to someone who can put them into&amp;nbsp;production.&lt;/p&gt;
+&lt;p&gt;This series of posts is about how to setup and configure what I&amp;#8217;m going to refer to as the &amp;#8216;Data Science R&amp;amp;D platform&amp;#8217;. I&amp;#8217;m intending to cover the&amp;nbsp;following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;setting-up Amazon Web Services (&lt;span class="caps"&gt;AWS&lt;/span&gt;) with some respect for security, and loading data to &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;#8217;s S3 file system (where I&amp;#8217;m assuming all static data will&amp;nbsp;live);&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;launching, connecting-to and controlling an Apache Spark cluster on &lt;span class="caps"&gt;AWS&lt;/span&gt;, from my laptop, with the ability to start and stop it at&amp;nbsp;will,&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;installing R and RStudio Server on my Spark cluster&amp;#8217;s master node and then configuring &lt;a href="https://spark.apache.org/docs/latest/sparkr.html"&gt;SparkR&lt;/a&gt; and &lt;a href="http://spark.rstudio.com/index.html"&gt;Sparklyr&lt;/a&gt; to connect to Spark and &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;S3,&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;installing and configuring Apache Zeppelin for Scala and &lt;span class="caps"&gt;SQL&lt;/span&gt; based Spark interaction, and for automating basic &lt;span class="caps"&gt;ETL&lt;/span&gt;/model-building&amp;nbsp;processes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I&amp;#8217;m running on Mac &lt;span class="caps"&gt;OS&lt;/span&gt; X so this will be my frame of reference, but the Unix/Linux terminal-based parts of these posts should play nicely with all Linux distributions. I have no idea about&amp;nbsp;Windows.&lt;/p&gt;
+&lt;p&gt;You might be wondering why I don&amp;#8217;t use &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;#8217;s &lt;a href="https://aws.amazon.com/emr/"&gt;Elastic Map Reduce&lt;/a&gt; (&lt;span class="caps"&gt;EMR&lt;/span&gt;) service that can also run a Spark cluster with Zeppelin. I did try, but I found that it wasn&amp;#8217;t really suited to ad hoc R&amp;amp;D - I couldn&amp;#8217;t configure it with all my favorite tools (e.g. RStudio) and then easily &amp;#8216;pause&amp;#8217; the cluster when I&amp;#8217;m done for the day. I&amp;#8217;d be forced to stop the cluster and re-install my tools when I start another cluster up. &lt;span class="caps"&gt;EMR&lt;/span&gt; clusters appear to be better suited to being programmatically brought up and down as and when required, or for long-running clusters - excellent for a production environment. Not quite so good for R&amp;amp;D. Costs more too, which is the main reason &lt;a href="https://databricks.com/"&gt;Databricks&lt;/a&gt; doesn&amp;#8217;t work for me&amp;nbsp;either.&lt;/p&gt;
+&lt;h2&gt;Sign-Up for an &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;Account!&lt;/h2&gt;
+&lt;p&gt;This is obvious, but nevertheless for completeness head over to &lt;a href="https://aws.amazon.com/"&gt;aws.amazon.com&lt;/a&gt; and create an&amp;nbsp;account:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/1_aws_create_account.png" title="AWS"&gt;&lt;/p&gt;
+&lt;p&gt;Once you&amp;#8217;ve entered your credentials and payment details you&amp;#8217;ll be brought to the main &lt;span class="caps"&gt;AWS&lt;/span&gt; Management Console that lists all the services at your disposal. The &lt;a href="https://aws.amazon.com/documentation"&gt;&lt;span class="caps"&gt;AWS&lt;/span&gt; documentation&lt;/a&gt; is excellent and a great way to get an understanding of what everything is and how you might use&amp;nbsp;it.&lt;/p&gt;
+&lt;p&gt;This is also a good point to choose the region you want your services to be created in. I live in the &lt;span class="caps"&gt;UK&lt;/span&gt; so it makes sense for me to choose Ireland (aka&amp;nbsp;eu-west-1):&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/0_region.png" title="Region"&gt;&lt;/p&gt;
+&lt;h2&gt;Setup Users and Grant them&amp;nbsp;Roles&lt;/h2&gt;
+&lt;p&gt;It is considered bad practice to login to &lt;span class="caps"&gt;AWS&lt;/span&gt; as the root user (i.e. the one that opened the account). So it&amp;#8217;s worth knowing how to setup users, restrict their access to the platform and assign them credentials. This is also easy to&amp;nbsp;to.&lt;/p&gt;
+&lt;p&gt;For now I&amp;#8217;m just going to create an &amp;#8216;admin&amp;#8217; user that has more-or-less the same privileges as the root user, but is unable to delete the account or change the billing details,&amp;nbsp;etc.&lt;/p&gt;
+&lt;p&gt;To begin with, login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console as the root user and navigate to Identity and Access Management (&lt;span class="caps"&gt;IAM&lt;/span&gt;) under Security and Identity. Click on the Users tab and then Create New User. Enter a new user name and then Create. You should then see the following confirmation together with new users&amp;#8217;&amp;nbsp;credentials:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/3_user_credentials.png" title="User Credentials"&gt;&lt;/p&gt;
+&lt;p&gt;Make a note of these - or even better download them in &lt;span class="caps"&gt;CSV&lt;/span&gt; format using the &amp;#8216;Download Credentials&amp;#8217; button. Close the window and then select the new user again on the Users tab. Next, find the Permissions tab and Attach&amp;nbsp;Policy:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/4_attach_policy.png" title="AttachPolicy"&gt;&lt;/p&gt;
+&lt;p&gt;Choose AdministratorAccess for our admin&amp;nbsp;user:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/5_admin_rights_policy.png" title="AdminAccess"&gt;&lt;/p&gt;
+&lt;p&gt;There are an enormous amount of policies you could apply depending on what your users need to access. For example, we could just as easily have created a user that can only access Amazon&amp;#8217;s &lt;span class="caps"&gt;EMR&lt;/span&gt; service with read-only permission on&amp;nbsp;S3.&lt;/p&gt;
+&lt;p&gt;Finally, because we&amp;#8217;d like our admin user to be able to able to login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; Management Console, we need to given them a password by navigating to the Security Credentials tab to Manage&amp;nbsp;Password.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/6_create_user_password.png" title="Password"&gt;&lt;/p&gt;
+&lt;p&gt;Note, that non-root users need to login via a difference &lt;span class="caps"&gt;URL&lt;/span&gt; that can be found at the top of the &lt;span class="caps"&gt;IAM&lt;/span&gt;&amp;nbsp;Dashboard:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/7_user_login_link.png" title="UserLogin"&gt;&lt;/p&gt;
+&lt;p&gt;Log out of the console and then back in again using this link, as your new admin user. It&amp;#8217;s worth noting that the &lt;span class="caps"&gt;IAM&lt;/span&gt; Dashboard encourages you to follow a series of steps for securing your platform. The steps above represent a sub-set of what is required to get the &amp;#8216;green light&amp;#8217; and I recommend that you work your way through all of them once you know your way around. For example, Multi-Factor Authentication (&lt;span class="caps"&gt;MFA&lt;/span&gt;) for the root user makes a lot of&amp;nbsp;sense.&lt;/p&gt;
+&lt;h2&gt;Generate &lt;span class="caps"&gt;EC2&lt;/span&gt; Key&amp;nbsp;Pairs&lt;/h2&gt;
+&lt;p&gt;In order for you to remotely access &lt;span class="caps"&gt;AWS&lt;/span&gt; services - e.g. data in in S3 and virtual machines on &lt;span class="caps"&gt;EC2&lt;/span&gt; from the comfort of your laptop - you will need to authenticate yourself. This is achieved using Key Pairs. Cryptography has never been a strong point, so if you want to know more about how this works I suggest taking a look &lt;a href="https://en.wikipedia.org/wiki/Public-key_cryptography"&gt;here&lt;/a&gt;. To generate our Key Pair and download the private key we use for authentication, start by navigating from the main console page to the &lt;span class="caps"&gt;EC2&lt;/span&gt; dashboard under Compute, and then to Key Pairs under Network &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Security. Once there, Create Key Pair and name it (e.g. &amp;#8216;spark_cluster&amp;#8217;). The file containing your private key will be automatically downloaded. Stash it somewhere safe like your home directory ,or even better in a hidden folder like &lt;code&gt;~/.ssh&lt;/code&gt;. We will ultimately assign these Key Pairs to Virtual Machines (VMs) and other services we want to setup and access&amp;nbsp;remotely.&lt;/p&gt;
+&lt;h2&gt;Install the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt;&amp;nbsp;Tools&lt;/h2&gt;
+&lt;p&gt;By no means an essential step, but the &lt;span class="caps"&gt;AWS&lt;/span&gt; terminal tools are useful - e.g. for copying files to S3 or starting and stopping &lt;span class="caps"&gt;EMR&lt;/span&gt; clusters without having to login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console and click&amp;nbsp;buttons.&lt;/p&gt;
+&lt;p&gt;I think the easiest way to install the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt; tools is to use &lt;a href="https://brew.sh"&gt;Homebrew&lt;/a&gt;, a package manager for &lt;span class="caps"&gt;OS&lt;/span&gt; X (like &lt;span class="caps"&gt;APT&lt;/span&gt; or &lt;span class="caps"&gt;RPM&lt;/span&gt; for Mac). With Homebrew, installation is as easy as&amp;nbsp;executing,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ brew install awscli&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;from the terminal. Once installation is finished the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt; Tools need to be configured. Make sure you have your users&amp;#8217; credentials details to hand (open the file that downloaded when you created your admin user). From the terminal&amp;nbsp;run,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ aws configure&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This will ask you for, in sequence: Access Key &lt;span class="caps"&gt;ID&lt;/span&gt; (copy from credentials file), Secret Access Key (copy from credentials file), Default region name (I use eu-west-1 in Ireland), and default output (I prefer &lt;span class="caps"&gt;JSON&lt;/span&gt;). To test that everything is working&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ aws s3 ls&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;to list all the buckets we&amp;#8217;ve made in S3 (currently&amp;nbsp;none).&lt;/p&gt;
+&lt;h2&gt;Upload Data to&amp;nbsp;S3&lt;/h2&gt;
+&lt;p&gt;Finally, it&amp;#8217;s time to do something data science-y - loading data. Before we can do this we need to create a &amp;#8216;bucket&amp;#8217; in S3 to put our data objects in. Using the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt; tools we&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ aws s3 mb s3://alex.data&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;to create the &lt;code&gt;alex.data&lt;/code&gt; bucket. &lt;span class="caps"&gt;AWS&lt;/span&gt; is quite strict about what names are valid (i.e. no underscores), so it&amp;#8217;s worth reading the &lt;span class="caps"&gt;AWS&lt;/span&gt; documentation on S3 if you get any errors. We can then copy a file over to our new bucket by&amp;nbsp;executing,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ aws s3 cp ./README.md s3://alex.data&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We can check this file has been successfully copied by returning to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console and heading to S3 under Storage &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Content Delivery where it should be easy to browse to our&amp;nbsp;file:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/8_S3.png" title="S3"&gt;&lt;/p&gt;
+&lt;p&gt;All of the above steps could have been carried out through the console, but I prefer using the&amp;nbsp;terminal.&lt;/p&gt;
+&lt;p&gt;We are now ready to fire-up a Spark cluster and use it to read our data (Part 2 in this series of&amp;nbsp;blogs).&lt;/p&gt;</content><category term="big data"></category><category term="AWS"></category><category term="data processing"></category></entry></feed>

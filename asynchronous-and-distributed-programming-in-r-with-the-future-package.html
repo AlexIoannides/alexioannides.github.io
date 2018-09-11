@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="./static/custom.css" rel="stylesheet">
+
+    <link href="https://alexioannides.github.io/feeds/all-atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
+
+    <link href="https://alexioannides.github.io/feeds/all-rss.xml" type="application/rss+xml" rel="alternate" title="Dr Alex Ioannides RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-125604661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+<meta name="author" content="Dr Alex Ioannides" />
+<meta name="description" content="Every now and again someone comes along and writes an R package that I consider to be a ‘game changer’ for the language and it’s application to Data Science. For example, I consider dplyr one such package as it has made data munging/manipulation that more intuitive and more …" />
+<meta name="keywords" content="data processing, high-performance computing">
+
+<meta property="og:site_name" content="Dr Alex Ioannides"/>
+<meta property="og:title" content="Asynchronous and Distributed Programming in R with the Future Package"/>
+<meta property="og:description" content="Every now and again someone comes along and writes an R package that I consider to be a ‘game changer’ for the language and it’s application to Data Science. For example, I consider dplyr one such package as it has made data munging/manipulation that more intuitive and more …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="./asynchronous-and-distributed-programming-in-r-with-the-future-package.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2016-11-02 00:00:00+00:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="./author/dr-alex-ioannides.html">
+<meta property="article:section" content="r"/>
+<meta property="article:tag" content="data processing"/>
+<meta property="article:tag" content="high-performance computing"/>
+<meta property="og:image" content="//avatars1.githubusercontent.com/u/5968486?s=460&v=4">
+
+  <title>Dr Alex Ioannides &ndash; Asynchronous and Distributed Programming in R with the Future Package</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href=".">
+        <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
+      </a>
+      <h1><a href=".">Dr Alex Ioannides</a></h1>
+
+<p>Financial engineer - (data) scientist - habitual coder</p>
+      <nav>
+        <ul class="list">
+          <li><a href="./pages/about-this-blog.html#about-this-blog">About this&nbsp;Blog</a></li>
+          <li><a href="./pages/about-me.html#about-me">About&nbsp;Me</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-github" href="https://github.com/alexioannides" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank"><i class="fa fa-soundcloud"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href=".">    Home
+</a>
+
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+      <a href="/archives.html">Archives</a>
+
+      <a href="https://alexioannides.github.io/feeds/all-atom.xml">    Atom
+</a>
+
+      <a href="https://alexioannides.github.io/feeds/all-rss.xml">    RSS
+</a>
+    </nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="asynchronous-and-distributed-programming-in-r-with-the-future-package">Asynchronous and Distributed Programming in R with the Future&nbsp;Package</h1>
+    <p>
+          Posted on Wed 02 November 2016 in <a href="./category/r.html">r</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><img alt="Future!" src="./images/r/future/the_future.jpg" title="the_future"></p>
+<p>Every now and again someone comes along and writes an R package that I consider to be a &#8216;game changer&#8217; for the language and it&#8217;s application to Data Science. For example, I consider <a href="https://github.com/hadley/dplyr" title="dplyr on GitHub">dplyr</a> one such package as it has made data munging/manipulation <em>that</em> more intuitive and more productive than it had been before. Although I only first read about it at the beginning of this week, my instinct tells me that in <a href="https://www.linkedin.com/in/henrikbengtsson" title="Henrik Bengtsson on LinkedIn">Henrik Bengtsson&#8217;s</a> <a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub">future</a> package we might have another such game-changing R&nbsp;package.</p>
+<p>The <a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub">future</a> package provides an <span class="caps">API</span> for futures (or promises) in R. To quote Wikipedia, a <a href="https://en.wikipedia.org/wiki/Futures_and_promises" title="Wikipedia on futures and promises">future or promise</a>&nbsp;is,</p>
+<blockquote>
+<p><em>&#8230; a proxy for a result that is initially unknown, usually because the computation of its value is yet&nbsp;incomplete.</em></p>
+</blockquote>
+<p>A classic example would be a request made to a web server via <span class="caps">HTTP</span>, that has yet to return and whose value remains unknown until it does (and which has promised to return at some point in the future). This &#8216;promise&#8217; is an object assigned to a variable in R like any other, and allows code execution to progress until the moment the code explicitly requires the future to be resolved (i.e. to &#8216;make good&#8217; on it&#8217;s promise). So the code does not need to wait for the web server until the very moment that the information anticipated in its response it actually needed. In the intervening execution time we can send requests to other web servers, run some other computations, etc. Ultimately, this leads to <strong>faster</strong> and <strong>more efficient code</strong>. This way of working also opens the door to distributed (i.e. parallel) computation, as the computation assigned to each new future can be executed on a new thread (and executed on a different core on the same machine, or on another&nbsp;machine/node).</p>
+<p>The future <span class="caps">API</span> is extremely expressive and the associated documentation is excellent. My motivation here is not to repeat any of this, but rather to give a few examples to serve as inspiration for how futures could be used for day-to-day Data Science tasks in&nbsp;R.</p>
+<h1>Creating a Future to be Executed on a Different Core to that Running the Main&nbsp;Script</h1>
+<p>To demonstrate the syntax and structure required to achieve this aim, I am going to delegate to a future the task of estimating the mean of 10 million random samples from the normal distribution, and ask it to spawn a new R process on a different core in order to do so. The code to achieve this is as&nbsp;follows,</p>
+<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>future<span class="p">)</span>
+
+f <span class="o">&lt;-</span> future<span class="p">({</span>
+  samples <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">10000000</span><span class="p">)</span>
+  <span class="kp">mean</span><span class="p">(</span>samples<span class="p">)</span>
+<span class="p">})</span> <span class="o">%plan%</span> multiprocess
+w <span class="o">&lt;-</span> value<span class="p">(</span>f<span class="p">)</span>
+w
+<span class="c1"># [1] 3.046653e-05</span>
+</pre></div>
+
+
+<ul>
+<li><code>future({...})</code> assigns the code (actually a construct known as a <a href="http://adv-r.had.co.nz/Functional-programming.html#closures" title="Hadley Wickham on closures">closure</a>), to be computed asynchronously from the main script. The code will be start execution the moment this initial assignment is&nbsp;made;</li>
+<li><code>%plan% multiprocess</code> sets the future&#8217;s execution plan to be on a different core (or thread);&nbsp;and,</li>
+<li><code>value</code> asks for the return value of future. This will block further code execution until the future can be&nbsp;resolved.</li>
+</ul>
+<p>The above example can easily be turned into a function that outputs dots (<code>...</code>) to the console until the future can be resolved and return it&#8217;s&nbsp;value,</p>
+<div class="highlight"><pre><span></span>f_dots <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">()</span> <span class="p">{</span>
+  f <span class="o">&lt;-</span> future<span class="p">({</span>
+    s <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">10000000</span><span class="p">)</span>
+    <span class="kp">mean</span><span class="p">(</span>s<span class="p">)</span>
+  <span class="p">})</span> <span class="o">%plan%</span> multiprocess
+
+  <span class="kr">while</span> <span class="p">(</span><span class="o">!</span>resolved<span class="p">(</span>f<span class="p">))</span> <span class="p">{</span>
+    <span class="kp">cat</span><span class="p">(</span><span class="s">&quot;...&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="kp">cat</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">)</span>
+
+  value<span class="p">(</span>f<span class="p">)</span>
+<span class="p">}</span>
+f_dots<span class="p">()</span>
+<span class="c1"># ............</span>
+<span class="c1"># [1] -0.0001872372</span>
+</pre></div>
+
+
+<p>Here, <code>resolved(f)</code> will return <code>FALSE</code> until the future <code>f</code> has finished&nbsp;executing.</p>
+<h1>Useful Use&nbsp;Cases</h1>
+<p>I can recall many situations where futures would have been handy when writing R scripts. The examples below are the most obvious that come to mind. No doubt there will be many&nbsp;more.</p>
+<h2>Distributed (Parallel)&nbsp;Computation</h2>
+<p>In the past, when I&#8217;ve felt the need to distribute a calculation I have usually used the <code>mclapply</code> function (i.e. multi-core <code>lapply</code>), from the <code>parallel</code> library that comes bundled together with base R. Computing the mean of 100 million random samples from the normal distribution would look something&nbsp;like,</p>
+<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>parallel<span class="p">)</span>
+
+sub_means <span class="o">&lt;-</span> mclapply<span class="p">(</span>
+              X <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">,</span>
+              FUN <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">)</span> <span class="p">{</span> samples <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">25000000</span><span class="p">);</span> <span class="kp">mean</span><span class="p">(</span>samples<span class="p">)</span> <span class="p">},</span>
+              mc.cores <span class="o">=</span> <span class="m">4</span><span class="p">)</span>
+
+final_mean <span class="o">&lt;-</span> <span class="kp">mean</span><span class="p">(</span><span class="kp">unlist</span><span class="p">(</span>sub_mean<span class="p">))</span>
+final_mean
+<span class="c1"># [1] -0.0002100956</span>
+</pre></div>
+
+
+<p>Perhaps more importantly, the script will be &#8216;blocked&#8217; until <code>sub_means</code> has finished executing. We can achieve the same end-result, but without blocking, using&nbsp;futures,</p>
+<div class="highlight"><pre><span></span>single_thread_mean <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">()</span> <span class="p">{</span>
+  samples <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">25000000</span><span class="p">)</span>
+  <span class="kp">mean</span><span class="p">(</span>samples<span class="p">)</span>
+<span class="p">}</span>
+
+multi_thread_mean <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">()</span> <span class="p">{</span>
+  f1 <span class="o">&lt;-</span> future<span class="p">({</span> single_thread_mean<span class="p">()</span> <span class="p">})</span> <span class="o">%plan%</span> multiprocess
+  f2 <span class="o">&lt;-</span> future<span class="p">({</span> single_thread_mean<span class="p">()</span> <span class="p">})</span> <span class="o">%plan%</span> multiprocess
+  f3 <span class="o">&lt;-</span> future<span class="p">({</span> single_thread_mean<span class="p">()</span> <span class="p">})</span> <span class="o">%plan%</span> multiprocess
+  f4 <span class="o">&lt;-</span> future<span class="p">({</span> single_thread_mean<span class="p">()</span> <span class="p">})</span> <span class="o">%plan%</span> multiprocess
+
+  <span class="kp">mean</span><span class="p">(</span>value<span class="p">(</span>f1<span class="p">),</span> value<span class="p">(</span>f2<span class="p">),</span> value<span class="p">(</span>f3<span class="p">),</span> value<span class="p">(</span>f4<span class="p">))</span>
+<span class="p">}</span>
+
+multi_thread_mean<span class="p">()</span>
+<span class="c1"># [1] -4.581293e-05</span>
+</pre></div>
+
+
+<p>We can compare computation time between the single and multi-threaded versions of the mean computation (using the <a href="https://cran.r-project.org/web/packages/microbenchmark/index.html" title="microbenchmark on CRAN">microbenchmark</a>&nbsp;package),</p>
+<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>microbenchmark<span class="p">)</span>
+
+microbenchmark<span class="p">({</span> samples <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">100000000</span><span class="p">);</span> <span class="kp">mean</span><span class="p">(</span>samples<span class="p">)</span> <span class="p">},</span>
+               multi_thread_mean<span class="p">(),</span>
+               times <span class="o">=</span> <span class="m">10</span><span class="p">)</span>
+<span class="c1"># Unit: seconds</span>
+<span class="c1">#                  expr      min       lq     mean   median       uq      max neval</span>
+<span class="c1">#  single_thread(1e+08) 7.671721 7.729608 7.886563 7.765452 7.957930 8.406778    10</span>
+<span class="c1">#   multi_thread(1e+08) 2.046663 2.069641 2.139476 2.111769 2.206319 2.344448    10</span>
+</pre></div>
+
+
+<p>We can see that the multi-threaded version is nearly 3 times faster, which is not surprising given that we&#8217;re using 3 extra threads. Note that time is lost spawning the extra threads and combining their results (usually referred to as &#8216;overhead&#8217;), such that distributing a calculation can actually increase computation time if the benefit of parallelisation is less than the cost of the&nbsp;overhead.</p>
+<h2>Non-Blocking Asynchronous&nbsp;Input/Output</h2>
+<p>I have often found myself in the situation where I need to read several large <span class="caps">CSV</span> files, each of which can take a long time to load. Because the files can only be loaded sequentially, I have had to wait for one file to be read before the next one can start loading, which compounds the time devoted to input. Thanks to futures, we can can now achieve <a href="https://en.wikipedia.org/wiki/Asynchronous_I/O" title="Wikipedia on asynchronous io">asynchronous input and output</a> as&nbsp;follows,</p>
+<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>readr<span class="p">)</span>
+
+df1 <span class="o">&lt;-</span> future<span class="p">({</span> read_csv<span class="p">(</span><span class="s">&quot;data/csv1.csv&quot;</span><span class="p">)</span> <span class="p">})</span> <span class="o">%plan%</span> multiprocess
+df2 <span class="o">&lt;-</span> future<span class="p">({</span> read_csv<span class="p">(</span><span class="s">&quot;data/csv2.csv&quot;</span><span class="p">)</span> <span class="p">})</span> <span class="o">%plan%</span> multiprocess
+df3 <span class="o">&lt;-</span> future<span class="p">({</span> read_csv<span class="p">(</span><span class="s">&quot;data/csv3.csv&quot;</span><span class="p">)</span> <span class="p">})</span> <span class="o">%plan%</span> multiprocess
+df4 <span class="o">&lt;-</span> future<span class="p">({</span> read_csv<span class="p">(</span><span class="s">&quot;data/csv4.csv&quot;</span><span class="p">)</span> <span class="p">})</span> <span class="o">%plan%</span> multiprocess
+
+df <span class="o">&lt;-</span> <span class="kp">rbind</span><span class="p">(</span>value<span class="p">(</span>df1<span class="p">),</span> value<span class="p">(</span>df2<span class="p">),</span> value<span class="p">(</span>df3<span class="p">),</span> value<span class="p">(</span>df4<span class="p">))</span>
+</pre></div>
+
+
+<p>Running <code>microbenchmark</code> on the above code illustrates the speed-up (each file is ~<span class="caps">50MB</span> in&nbsp;size),</p>
+<div class="highlight"><pre><span></span><span class="c1"># Unit: seconds</span>
+<span class="c1">#                   min       lq     mean   median       uq      max neval</span>
+<span class="c1">#  synchronous 7.880043 8.220015 8.502294 8.446078 8.604284 9.447176    10</span>
+<span class="c1"># asynchronous 4.203271 4.256449 4.494366 4.388478 4.490442 5.748833    10</span>
+</pre></div>
+
+
+<p>The same pattern can be applied to making <span class="caps">HTTP</span> requests asynchronously. In the following example I make an asynchronous <span class="caps">HTTP</span> <span class="caps">GET</span> request to the OpenCPU public <span class="caps">API</span>, to retrieve the Boston housing dataset via <span class="caps">JSON</span>. While I&#8217;m waiting for the future to resolve the response I keep making more asynchronous requests, but this time to <code>http://time.jsontest.com</code> to get the current time. Once the original future has resolved, I block output until all remaining futures have been&nbsp;resolved.</p>
+<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>httr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>jsonlite<span class="p">)</span>
+
+time_futures <span class="o">&lt;-</span> <span class="kt">list</span><span class="p">()</span>
+
+data_future <span class="o">&lt;-</span> future<span class="p">({</span>
+  response <span class="o">&lt;-</span> GET<span class="p">(</span><span class="s">&quot;http://public.opencpu.org/ocpu/library/MASS/data/Boston/json&quot;</span><span class="p">)</span>
+  fromJSON<span class="p">(</span>content<span class="p">(</span>response<span class="p">,</span> as <span class="o">=</span> <span class="s">&quot;text&quot;</span><span class="p">))</span>
+<span class="p">})</span> <span class="o">%plan%</span> multiprocess
+
+<span class="kr">while</span> <span class="p">(</span><span class="o">!</span>resolved<span class="p">(</span>data_future<span class="p">))</span> <span class="p">{</span>
+  time_futures <span class="o">&lt;-</span> <span class="kp">append</span><span class="p">(</span>time_futures<span class="p">,</span> future<span class="p">({</span> GET<span class="p">(</span><span class="s">&quot;http://time.jsontest.com&quot;</span><span class="p">)</span> <span class="p">})</span> <span class="o">%plan%</span> multiprocess<span class="p">)</span>
+<span class="p">}</span>
+values<span class="p">(</span>time_futures<span class="p">)</span>
+<span class="c1"># [[1]]</span>
+<span class="c1"># Response [http://time.jsontest.com/]</span>
+<span class="c1">#   Date: 2016-11-02 01:31</span>
+<span class="c1">#   Status: 200</span>
+<span class="c1">#   Content-Type: application/json; charset=ISO-8859-1</span>
+<span class="c1">#   Size: 100 B</span>
+<span class="c1"># {</span>
+<span class="c1">#    &quot;time&quot;: &quot;01:31:19 AM&quot;,</span>
+<span class="c1">#    &quot;milliseconds_since_epoch&quot;: 1478050279145,</span>
+<span class="c1">#    &quot;date&quot;: &quot;11-02-2016&quot;</span>
+<span class="c1"># }</span>
+
+<span class="kp">head</span><span class="p">(</span>value<span class="p">(</span>data_future<span class="p">))</span>
+<span class="c1"># crim zn indus chas   nox    rm  age    dis rad tax ptratio  black lstat medv</span>
+<span class="c1"># 1 0.0063 18  2.31    0 0.538 6.575 65.2 4.0900   1 296    15.3 396.90  4.98 24.0</span>
+<span class="c1"># 2 0.0273  0  7.07    0 0.469 6.421 78.9 4.9671   2 242    17.8 396.90  9.14 21.6</span>
+<span class="c1"># 3 0.0273  0  7.07    0 0.469 7.185 61.1 4.9671   2 242    17.8 392.83  4.03 34.7</span>
+<span class="c1"># 4 0.0324  0  2.18    0 0.458 6.998 45.8 6.0622   3 222    18.7 394.63  2.94 33.4</span>
+<span class="c1"># 5 0.0690  0  2.18    0 0.458 7.147 54.2 6.0622   3 222    18.7 396.90  5.33 36.2</span>
+<span class="c1"># 6 0.0298  0  2.18    0 0.458 6.430 58.7 6.0622   3 222    18.7 394.12  5.21 28.7</span>
+</pre></div>
+
+
+<p>The same logic applies to accessing databases and executing <span class="caps">SQL</span> queries via <a href="https://en.wikipedia.org/wiki/Open_Database_Connectivity" title="Wikipedia on ODBC"><span class="caps">ODBC</span></a> or <a href="https://en.wikipedia.org/wiki/Java_Database_Connectivity" title="Wikipedia on JDBC"><span class="caps">JDBC</span></a>. For example, large complex queries can be split into &#8216;chunks&#8217; and sent asynchronously to the database server in order to have them executed on multiple server threads. The output can then be unified once the server has sent back the chunks, using R (e.g. with <a href="https://github.com/hadley/dplyr" title="dplyr on GitHub">dplyr</a>). This is a strategy that I have been using with Apache Spark, but I could now implement it within R. Similarly, multiple database tables can be accessed concurrently, and so&nbsp;on.  </p>
+<h1>Final&nbsp;Thoughts</h1>
+<p>I have only really scratched the surface of what is possible with futures. For example, <a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub">future</a> supports multiple execution plans including <code>lazy</code> and <code>cluster</code> (for multiple machines/nodes) - I have only focused on increasing performance on a single machine with multiple cores. If this post has provided some inspiration or left you curious, then head over to the official <a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub">future docs</a> for the full details (which are a joy to read and&nbsp;work-through).</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="./tag/data-processing.html">data processing</a>
+      <a href="./tag/high-performance-computing.html">high-performance computing</a>
+    </p>
+  </div>
+
+
+
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'alexioannides';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy;  </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Dr Alex Ioannides ",
+  "url" : ".",
+  "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
+  "description": ""
+}
+</script>
+
+</body>
+</html>
