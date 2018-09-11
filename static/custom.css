@@ -1,3 +1,20 @@
 body {
     line-height: 1.5
 }
+
+a {
+    color: #0099ff
+}
+
+a:hover {
+    color: #66c2ff
+}
+
+a.btn {
+    background-color: #0099ff
+}
+
+a.btn:hover{
+    color:#fff;
+    background-color: #66c2ff
+}

@@ -1,2 +1,3 @@
-# alexioannides.github.io
-My website and blog about all things (data) science and probably a lot more.
+# alexioannides
+
+Python source code for generating my website at alexaioannides.github.io.
