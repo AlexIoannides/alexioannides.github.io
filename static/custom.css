@@ -15,6 +15,15 @@ a.btn {
 }
 
 a.btn:hover{
+    background-color: #66c2ff;
     color:#fff;
-    background-color: #66c2ff
+}
+
+.tag-cloud a {
+    background-color: #0099ff
+}
+
+.tag-cloud a:hover {
+    background-color: #66c2ff;
+    color:#fff;
 }
