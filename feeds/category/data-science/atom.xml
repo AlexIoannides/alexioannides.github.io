@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dr Alex Ioannides - data-science</title><link href="https://alexioannides.github.io/" rel="alternate"></link><link href="https://alexioannides.github.io/feeds/category/data-science/atom.xml" rel="self"></link><id>https://alexioannides.github.io/</id><updated>2018-09-09T00:00:00+01:00</updated><entry><title>It Recently Occurred to Me…</title><link href="https://alexioannides.github.io/2018/09/09/it-recently-occurred-to-me/" rel="alternate"></link><published>2018-09-09T00:00:00+01:00</published><updated>2018-09-09T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2018-09-09:/2018/09/09/it-recently-occurred-to-me/</id><summary type="html">&lt;p&gt;&amp;#8230; I should get back into writing/blogging things that come to mind. For example, that type annotations and type-checking with &lt;code&gt;mypy&lt;/code&gt; are great tools for data scientists as well as day-to-day developers -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;circle_area&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;radius&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;pi&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;3.141&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pi&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Makes it so much …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&amp;#8230; I should get back into writing/blogging things that come to mind. For example, that type annotations and type-checking with &lt;code&gt;mypy&lt;/code&gt; are great tools for data scientists as well as day-to-day developers -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;circle_area&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;radius&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;pi&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;3.141&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pi&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Makes it so much easier to understand how to use functions and methods as well as providing extra piece of mind that code will work as&amp;nbsp;expected.&lt;/p&gt;</content><category term="musings"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 4 - Apache Zeppelin &amp; Scala Notebooks</title><link href="https://alexioannides.github.io/2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/" rel="alternate"></link><published>2016-08-29T00:00:00+01:00</published><updated>2016-08-29T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-29:/2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/</id><summary type="html">&lt;p&gt;&lt;img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"&gt;&lt;/p&gt;
+&lt;p&gt;Parts &lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;one&lt;/a&gt;, &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;two&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3"&gt;three&lt;/a&gt; of this series of posts have taken us from creating an account on &lt;span class="caps"&gt;AWS&lt;/span&gt; to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;amp;D is nearly complete - the only outstanding component is …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"&gt;&lt;/p&gt;
+&lt;p&gt;Parts &lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;one&lt;/a&gt;, &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;two&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3"&gt;three&lt;/a&gt; of this series of posts have taken us from creating an account on &lt;span class="caps"&gt;AWS&lt;/span&gt; to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;amp;D is nearly complete - the only outstanding component is the ability to interact (&lt;span class="caps"&gt;REPL&lt;/span&gt;-style) with Spark using code written in Scala and to run this on some sort of scheduled basis. So, for this last part I am going to focus on getting &lt;a href="http://zeppelin.apache.org" title="Apache Zeppelin"&gt;Apache Zeppelin&lt;/a&gt;&amp;nbsp;up-and-running.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://zeppelin.apache.org" title="Apache Zeppelin"&gt;Zeppelin&lt;/a&gt; is a notebook server in a similar vein as the Jupyter or Beaker notebooks (and very similar to those available on Databricks). Code is submitted and executed in &amp;#8216;chunks&amp;#8217; with interim output (e.g. charts and tables) displayed after it has been computed. Where Zeppelin differs from the other, is its first-class support for Spark and it&amp;#8217;s ability to run notebooks (and thereby &lt;span class="caps"&gt;ETL&lt;/span&gt; process) on a schedule (in essence it uses &lt;code&gt;chron&lt;/code&gt; for scheduling and&amp;nbsp;execution).&lt;/p&gt;
+&lt;h1&gt;Installing Apache&amp;nbsp;Zeppelin&lt;/h1&gt;
+&lt;p&gt;Following the steps laid-out in previous posts, &lt;span class="caps"&gt;SSH&lt;/span&gt; into our Spark cluster&amp;#8217;s master node (or use &lt;code&gt;$ ./flintrock login my-cluster&lt;/code&gt; for extra convenience). Just like we did for R Studio Server we&amp;#8217;re going to install Zeppelin here as well. Find the &lt;span class="caps"&gt;URL&lt;/span&gt; for the latest version of Zeppelin &lt;a href="http://www.apache.org/dyn/closer.cgi/zeppelin/zeppelin-0.6.1/zeppelin-0.6.1-bin-all.tgz" title="Download Zeppelin"&gt;here&lt;/a&gt; and then from the master node&amp;#8217;s shell&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cd /home/ec2-user&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ wget http://apache.mirror.anlx.net/zeppelin/zeppelin-0.6.1/zeppelin-0.6.1-bin-all.tgz&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ tar -xzf zeppelin-0.6.1-bin-all.tgz&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ rm zeppelin-0.6.1-bin-all.tgz&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Note that I have chosen to install the binaries that contain all of the available language interpreters - there is no restriction on choice of language and you could just as easily use R or Python for interacting with&amp;nbsp;Spark.&lt;/p&gt;
+&lt;h1&gt;Configuring&amp;nbsp;Zeppelin&lt;/h1&gt;
+&lt;p&gt;Before we can start-up and test Zeppelin, we will need to configure it. Templates for configuration files can be found in the &lt;code&gt;conf&lt;/code&gt; directory of the Zeppelin folder. Makes copies of these by executing the following&amp;nbsp;commands,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cd /home/ec2-user/zeppelin-0.6.1-bin-all/conf&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cp zeppelin-env.sh.template zeppelin-env.sh&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cp zeppelin-site.xml.template zeppelin-site.xml&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Then using a text editor such as &lt;a href="https://en.wikipedia.org/wiki/Vi" title="vi Wiki"&gt;vi&lt;/a&gt; - e.g. &lt;code&gt;$ vi zeppelin-env.sh&lt;/code&gt; - to edit each file making the changes described&amp;nbsp;below.&lt;/p&gt;
+&lt;h2&gt;zeppelin-env.sh&lt;/h2&gt;
+&lt;p&gt;Find the following variable exports, uncomment them, and then make the following&amp;nbsp;assignments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;MASTER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;spark://ip-172-31-6-33:7077 &lt;span class="c1"&gt;# use the appropriate local IP address here&lt;/span&gt;
+&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/usr/local/lib/spark
+&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;SPARK_SUBMIT_OPTIONS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;--packages com.databricks:spark-csv_2.11:1.3.0,com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Most of these options should be familiar to you by now so I won&amp;#8217;t go-over again&amp;nbsp;here.&lt;/p&gt;
+&lt;h2&gt;zeppelin-site.xml&lt;/h2&gt;
+&lt;p&gt;Find the following property name and change it to the value&amp;nbsp;below:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.server.port&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;8081&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Server port.&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;All we&amp;#8217;re doing here is assigning Zeppelin to port 8081 (which we opened in Part 2), so that it does not clash with the Spark master web &lt;span class="caps"&gt;UI&lt;/span&gt; on port 8080 (the default port for Zeppelin). Test that Zeppelin is working by executing the&amp;nbsp;following,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cd /home/ec2-user/zeppelin-0.6.1-bin-all/bin&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./zeppelin-daemon start&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Open a browser and navigate to &lt;code&gt;http://your_master_node_public_ip:8081&lt;/code&gt;. If Zeppelin has been installed and configured properly you should be presented with Zeppelin&amp;#8217;s home&amp;nbsp;screen:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="zeppelin-home" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-home.png" title="Zeppelin Home"&gt;&lt;/p&gt;
+&lt;p&gt;To shut Zeppelin down return to the master node&amp;#8217;s shell and&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./zeppelin-daemon stop&lt;/code&gt;.&lt;/p&gt;
+&lt;h1&gt;Running Zeppelin with a Service&amp;nbsp;Manager&lt;/h1&gt;
+&lt;p&gt;Unlike R Studio server that automatically configures and starts-up a &lt;a href="https://en.wikipedia.org/wiki/Daemon_(computing)" title="daemon Wiki"&gt;daemon&lt;/a&gt; that will shut-down and re-start with our master node when required, we will have to configure and perform these steps manually for Zeppelin - otherwise it will need to be manually started-up every time the cluster is started after being stopped (and I&amp;#8217;m far too lazy for this&amp;nbsp;inconvenience).&lt;/p&gt;
+&lt;p&gt;To make this happen on Amazon Linux we will make use of &lt;a href="https://en.wikipedia.org/wiki/Upstart" title="Upstart"&gt;Upstart&lt;/a&gt; and the &lt;code&gt;initctl&lt;/code&gt; command. But first of all we will need to create a configuration file in the &lt;code&gt;/etc/init&lt;/code&gt; directory,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cd /etc/init&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ sudo touch zeppelin.conf&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We then need to edit this file - e.g. &lt;code&gt;$ sudo vi zeppelin.conf&lt;/code&gt; - and copy the following script, which is adapted from &lt;code&gt;rstudio-server.conf&lt;/code&gt; and this &lt;strong&gt;fantastic&lt;/strong&gt; blog post from &lt;a href="http://doatt.com/2015/03/03/amazon-linux-and-upstart-init/index.html" title="doatt blog"&gt;DevOps All the Things&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;description &lt;span class="s2"&gt;&amp;quot;zeppelin&amp;quot;&lt;/span&gt;
+
+start on &lt;span class="o"&gt;(&lt;/span&gt;runlevel &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;345&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; and started network&lt;span class="o"&gt;)&lt;/span&gt;
+stop on &lt;span class="o"&gt;(&lt;/span&gt;runlevel &lt;span class="o"&gt;[&lt;/span&gt;!345&lt;span class="o"&gt;]&lt;/span&gt; or stopping network&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# start on (local-filesystems and net-device-up IFACE!=lo)&lt;/span&gt;
+&lt;span class="c1"&gt;# stop on shutdown&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Respawn the process on unexpected termination&lt;/span&gt;
+respawn
+
+&lt;span class="c1"&gt;# respawn the job up to 7 times within a 5 second period.&lt;/span&gt;
+&lt;span class="c1"&gt;# If the job exceeds these values, it will be stopped and marked as failed.&lt;/span&gt;
+respawn limit &lt;span class="m"&gt;7&lt;/span&gt; &lt;span class="m"&gt;5&lt;/span&gt;
+
+&lt;span class="c1"&gt;# zeppelin was installed in /home/ec2-user/zeppelin-0.6.1-bin-all in this example&lt;/span&gt;
+chdir /home/ec2-user/zeppelin-0.6.1-bin-all
+&lt;span class="nb"&gt;exec&lt;/span&gt; bin/zeppelin-daemon.sh upstart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To test our script return to the shell and&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ sudo initctl start zeppelin&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;And return to the browser to check that Zeppelin is up-and-running. You can check that this works by stopping the cluster and then starting it&amp;nbsp;again.&lt;/p&gt;
+&lt;h1&gt;Scala&amp;nbsp;Notebooks&lt;/h1&gt;
+&lt;p&gt;From the Zeppelin home page select the &amp;#8216;Zeppelin Tutorial&amp;#8217;, accept the interpreter options and you should be presented with the following&amp;nbsp;notebook:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="zeppeling-nb" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-nb.png" title="Zeppelin Scala Notebook"&gt;&lt;/p&gt;
+&lt;p&gt;Click into the first code chunk and hit &lt;code&gt;shift + enter&lt;/code&gt; to run it. If everything has been configured correctly then the code will run and the Zeppelin application will be listed in the Spark master node&amp;#8217;s web &lt;span class="caps"&gt;UI&lt;/span&gt;. We then test our connectivity to S3 by attempting to access our data there in the usual&amp;nbsp;way:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="zeppelin-s3" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-s3-nb.png" title="Connecting to S3"&gt;&lt;/p&gt;
+&lt;p&gt;Note that this notebook, as well as any other, can be set to execute on a schedule defined using the &amp;#8216;Run Scheduler&amp;#8217; from the notebook&amp;#8217;s menu bar. This will happen irrespective of whether or not you have it loaded in the browser - so long as the Zeppelin daemon is running the notebooks will run on their defined&amp;nbsp;schedule.&lt;/p&gt;
+&lt;h1&gt;Storing Zeppelin Notebooks on&amp;nbsp;S3&lt;/h1&gt;
+&lt;p&gt;By default Zeppelin will store all notebooks locally. This is likely to be fine under most circumstances (as it is also very easy to export them), but it makes sense to exploit the ability to have them stored in an S3 bucket instead. For example, if you have amassed a lot of notebooks working on one cluster and you&amp;#8217;d like to run them on another (maybe much larger) cluster, then it makes sense not to have to manually export them all from one cluster to&amp;nbsp;another.&lt;/p&gt;
+&lt;p&gt;Enabling access to S3 is relatively easy as we already have S3-enabled &lt;span class="caps"&gt;IAM&lt;/span&gt; roles assigned to our nodes (via Flintrock configuration). Start by creating a new bucket to store them in - e.g. &lt;code&gt;my.zeppelin.notebooks&lt;/code&gt;. Then create a folder within this bucket - e.g. &lt;code&gt;userone&lt;/code&gt; - and another one within that called &lt;code&gt;notebook&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Next, &lt;span class="caps"&gt;SSH&lt;/span&gt; into the master node and open the &lt;code&gt;zeppelin-site.xml&lt;/code&gt; file for editing as we did above. This time, un-comment and set the following&amp;nbsp;properties,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.bucket&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;my.zeppelin.notebooks&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;bucket name for notebook storage&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.user&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;userone&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;user name for s3 folder structure&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.S3NotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook persistence layer implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And comment-out the property for local&amp;nbsp;storage,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.VFSNotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook persistence layer implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Save the changes and return to the terminal. Finally,&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ sudo initctl restart zeppelin&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;And wait a few seconds before re-loading Zeppelin in your browser. If you create a new notebook you should be able to see if you go looking for it in the &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;console.&lt;/p&gt;
+&lt;h1&gt;Basic Notebook&amp;nbsp;Security&lt;/h1&gt;
+&lt;p&gt;Being able to limit access to Zeppelin as well control the read/write permissions on individual notebooks will be useful if multiple people are likely to be working on the platform and using it to trial and schedule jobs on the cluster. It&amp;#8217;s also handy if you just want to grant someone access to read results and don&amp;#8217;t want to risk them changing the code by&amp;nbsp;accident.&lt;/p&gt;
+&lt;p&gt;Enabling basic authentication is relatively straight-forwards. First, open the &lt;code&gt;zeppelin-site.xml&lt;/code&gt; file for editing and ensure that the &lt;code&gt;zeppelin.anonymous.allowed&lt;/code&gt; property is set to &lt;code&gt;false&lt;/code&gt;,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.anonymous.allowed&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;false&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Anonymous user allowed by default&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Next, open the &lt;code&gt;shiro.ini&lt;/code&gt; file in Zeppelin&amp;#8217;s &lt;code&gt;conf&lt;/code&gt; directory and then&amp;nbsp;change,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/** = anon&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;#/** = authc&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;to&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#/** = anon&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;/** = authc&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This file also allows you to set usernames, password and groups. For a slightly more detailed explanation head-over to the &lt;a href="http://zeppelin.apache.org/docs/0.6.1/security/shiroauthentication.html" title="Shiro on Zeppelin"&gt;Zeppelin documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h1&gt;Zeppelin as a Spark Job &lt;span class="caps"&gt;REST&lt;/span&gt;&amp;nbsp;Server&lt;/h1&gt;
+&lt;p&gt;Each notebook on a Zeppelin server can be considered as an &amp;#8216;analytics job&amp;#8217;. We have already briefly mentioned the ability to execute such &amp;#8216;jobs&amp;#8217; on a schedule - e.g. execute an &lt;span class="caps"&gt;ETL&lt;/span&gt; process every hour, etc. We can actually take this further by exploiting Zeppelin&amp;#8217;s &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; that controls pretty much any server action. So, for example, we could execute a job (as defined in a notebook), remotely and possibly on an event-driven basis. A comprehensive description of the Zeppelin &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; can be found on the &lt;a href="http://zeppelin.apache.org/docs/0.6.1/rest-api/rest-notebook.html" title="Zeppelin RESTful API"&gt;official &lt;span class="caps"&gt;API&lt;/span&gt; documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This is the point at which I start to get excited as our R&amp;amp;D platform starts to resemble a production platform. To illustrate how one could remotely execute Zeppelin jobs I have written a few basic R function (with examples) to facilitate this using R - these can be found on &lt;a href="https://github.com/AlexIoannides/alexutilr/blob/master/R/zeppelin_utils.R" title="alexutilr"&gt;GitHub&lt;/a&gt;, a discussion of which may make a post of its own in the near&amp;nbsp;future.&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;That&amp;#8217;s it - mission&amp;nbsp;accomplished!&lt;/p&gt;
+&lt;p&gt;I have met all of my initial aims - possibly more. I have myself a Spark-based R&amp;amp;D platform that I can interact with using my favorite R tools and Scala, all from the comfort of my laptop. And we&amp;#8217;re not far removed from being able to deploy code and &amp;#8216;analytics jobs&amp;#8217; in a production environment. All we&amp;#8217;re really missing is a database for serving analytics (e.g. Elasticsearch) and maybe another for storing data if we won&amp;#8217;t be relying on S3. More on this in another&amp;nbsp;post.&lt;/p&gt;</content><category term="AWS"></category><category term="data-processing"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 3 - R, R Studio Server, SparkR &amp; Sparklyr</title><link href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" rel="alternate"></link><published>2016-08-22T00:00:00+01:00</published><updated>2016-08-22T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-22:/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;Part 1&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;Part 2&lt;/a&gt; of this series dealt with setting up &lt;span class="caps"&gt;AWS&lt;/span&gt;, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster&amp;#8217;s master node and use it to …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;Part 1&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;Part 2&lt;/a&gt; of this series dealt with setting up &lt;span class="caps"&gt;AWS&lt;/span&gt;, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster&amp;#8217;s master node and use it to serve my favorite R &lt;span class="caps"&gt;IDE&lt;/span&gt;: R Studio.
+We will then install and configure both the &lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr&lt;/a&gt; and [SparkR][sparkR] packages for connecting and interacting with Spark and our data. After this, we will be on our way to interacting with and computing on large-scale data as if it were sitting on our&amp;nbsp;laptops.&lt;/p&gt;
+&lt;h1&gt;Installing&amp;nbsp;R&lt;/h1&gt;
+&lt;p&gt;Our first task is to install R onto our master node. Start by &lt;span class="caps"&gt;SSH&lt;/span&gt;-ing into the master node using the steps described in &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;Part 2&lt;/a&gt;. Then execute the following commands in the following&amp;nbsp;order:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;$ sudo yum update&lt;/code&gt; - update all the packages on Amazon Linux machine imagine to the latest ones in the Amazon Linux&amp;#8217;s&amp;nbsp;repository;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$ sudo yum install R&lt;/code&gt; - install R and all of its&amp;nbsp;dependencies;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$ sudo yum install libcurl libcurl-devel&lt;/code&gt; - ensure that &lt;a href="https://curl.haxx.se/" title="CURL"&gt;Curl&lt;/a&gt; is installed (a dependency for the &lt;code&gt;httr&lt;/code&gt; and &lt;code&gt;curl&lt;/code&gt; R packages used to install other R packages);&amp;nbsp;and,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$ sudo yum install openssl openssl-devel&lt;/code&gt; - ensure that &lt;a href="https://www.openssl.org/" title="OpenSSL"&gt;OpenSSL&lt;/a&gt; is installed (another dependency for the httr R&amp;nbsp;package).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If everything has worked as intended, then executing &lt;code&gt;$ R&lt;/code&gt; should present you with R on the command&amp;nbsp;line:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/r_terminal.png" title="Command Line R"&gt;&lt;/p&gt;
+&lt;h1&gt;Installing R Studio&amp;nbsp;Server&lt;/h1&gt;
+&lt;p&gt;Installing R Studio on the same local network as the Spark cluster that we want to connect to  - in our case directly on the master node - is the recommended approach for using R Studio with a remote Spark Cluster. Using a local version of R Studio to connect to a remote Spark cluster is prone to the same networking issues as trying to use the Spark shell remotely in client-mode (see &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;part 2&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;First of all we need the &lt;span class="caps"&gt;URL&lt;/span&gt; for the latest version of R Studio Server. Preview versions can be found &lt;a href="https://www.rstudio.com/products/rstudio/download/preview/" title="R Studio Server Preview"&gt;here&lt;/a&gt; while stable releases can be found &lt;a href="https://www.rstudio.com/products/rstudio/download-server/" title="R Studio Server Current"&gt;here&lt;/a&gt;. At the time of writing Sparklyr integration is a preview feature so I&amp;#8217;m using the latest preview version of R Studio Server for 64bit RedHat/CentOS (should this fail at any point, then revert back to the latest stable release as all of the scripts used in this post will still run). Picking-up where we left-off in the master node&amp;#8217;s terminal window, execute the following&amp;nbsp;commands,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ wget https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-rhel-0.99.1289-i686.rpm&lt;/code&gt;
+&lt;code&gt;$ sudo yum install --nogpgcheck rstudio-server-rhel-0.99.1289-i686.rpm&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Next, we need to assign a password to our ec2-user so that they can login to R Studio as&amp;nbsp;well,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ sudo passwd ec2-user&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If we wanted to create additional users (with their own R Studio workspaces and local R package repositories), we would&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ sudo useradd alex&lt;/code&gt;
+&lt;code&gt;$ sudo passwd alex&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Because we have installed Spark in our ec2-user&amp;#8217;s &lt;code&gt;home&lt;/code&gt; directory, other users will not be able to access it. To get around this problem (if we want to have multiple users working on the platform), we need a local copy of Spark available to everyone. A sensible place to store this is in &lt;code&gt;/usr/local/lib&lt;/code&gt; and we can make a copy of our Spark directory here as&amp;nbsp;follows:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ cd /home/ec2-user&lt;/code&gt;
+&lt;code&gt;$ sudo cp -r spark /usr/local/lib&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Now check that everything works as expected by opening your browser and heading to &lt;code&gt;http://master_nodes_public_ip_address:8787&lt;/code&gt; where you should be greeted with the R Studio login&amp;nbsp;page:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/r_studio_login.png" title="R Studio Server Login"&gt;&lt;/p&gt;
+&lt;p&gt;Enter a username and password and then we should be ready to&amp;nbsp;go:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/r_studio_server.png" title="R Studio Server"&gt;&lt;/p&gt;
+&lt;p&gt;Finally, on R Studio&amp;#8217;s command line&amp;nbsp;run,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;gt; install.packages("devtools")&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;to install the &lt;code&gt;devtools&lt;/code&gt; R package that will allow us to install packages directly from GitHub repositories (as well as many other things). If OpenSSL and Curl were installed correctly in the above steps, then this should take under a&amp;nbsp;minute.&lt;/p&gt;
+&lt;h1&gt;Connect to Spark with&amp;nbsp;Sparklyr&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr&lt;/a&gt; is an extensible R &lt;span class="caps"&gt;API&lt;/span&gt; for Spark from the people at &lt;a href="https://www.rstudio.com" title="rStudio"&gt;R Studio&lt;/a&gt;- an alternative to the SparkR package that ships with Spark as standard. In particular, it provides a &amp;#8216;back end&amp;#8217; for the powerful &lt;code&gt;dplyr&lt;/code&gt; data manipulation package that lets you manipulate Spark DataFrames using the same package and functions that I would use to manipulate native R data frames on my&amp;nbsp;laptop.&lt;/p&gt;
+&lt;p&gt;Sparklyr is still in it&amp;#8217;s infancy and is not yet available on the &lt;span class="caps"&gt;CRAN&lt;/span&gt; archives. As such, it needs to be installed directly from its GitHub repo, which from within R Studio is done by&amp;nbsp;executing,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;gt; devtools::install_github("rstudio/sparklyr")&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This will take a few minutes as there are a lot of dependencies that need to be built from source. Once this is finished create a new script and copy the following code for testing Sparklyr, its ability to connect to our Spark cluster and our S3&amp;nbsp;data:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# set system variables for access to S3 using older &amp;quot;s3n:&amp;quot; protocol ----&lt;/span&gt;
+&lt;span class="c1"&gt;# Sys.setenv(AWS_ACCESS_KEY_ID=&amp;quot;AKIAJL4EWJCQ3R86DWAA&amp;quot;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Sys.setenv(AWS_SECRET_ACCESS_KEY=&amp;quot;nVZJQtKj6ODDy+t253OZJWZLEo2gaEoFAYjH1pEf&amp;quot;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# load packages ----&lt;/span&gt;
+&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;sparklyr&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;dplyr&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# add packages to Spark config ----&lt;/span&gt;
+config &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; spark_config&lt;span class="p"&gt;()&lt;/span&gt;
+config&lt;span class="o"&gt;$&lt;/span&gt;sparklyr.defaultPackages&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
+config&lt;span class="o"&gt;$&lt;/span&gt;sparklyr.defaultPackages
+&lt;span class="c1"&gt;# [1] &amp;quot;com.databricks:spark-csv_2.11:1.3.0&amp;quot;    &amp;quot;com.amazonaws:aws-java-sdk-pom:1.10.34&amp;quot; &amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# connect to Spark cluster ----&lt;/span&gt;
+sc &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; spark_connect&lt;span class="p"&gt;(&lt;/span&gt;master &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                   spark_home &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/usr/local/lib/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                   config &lt;span class="o"&gt;=&lt;/span&gt; config&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# copy the local iris dataset to Spark ----&lt;/span&gt;
+iris_tbl &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; copy_to&lt;span class="p"&gt;(&lt;/span&gt;sc&lt;span class="p"&gt;,&lt;/span&gt; iris&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;iris_tbl&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Sepal_Length Sepal_Width Petal_Length Petal_Width  Species&lt;/span&gt;
+&lt;span class="c1"&gt;#        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;    &amp;lt;chr&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.1         3.5          1.4         0.2 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.9         3.0          1.4         0.2 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.7         3.2          1.3         0.2 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.6         3.1          1.5         0.2 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.0         3.6          1.4         0.2 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.4         3.9          1.7         0.4 &amp;quot;setosa&amp;quot;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# load S3 file into Spark&amp;#39;s using the &amp;quot;s3a:&amp;quot; protocol ----&lt;/span&gt;
+test &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; spark_read_csv&lt;span class="p"&gt;(&lt;/span&gt;sc&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+test
+&lt;span class="c1"&gt;# Source:   query [?? x 1]&lt;/span&gt;
+&lt;span class="c1"&gt;# Database: spark connection master=spark://ip-172-31-11-216:7077 app=sparklyr local=FALSE&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                                  _Apache_Spark&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                                          &amp;lt;chr&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;# Spark is a fast and general cluster computing system for Big Data. It provides&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                       high-level APIs in Scala&lt;/span&gt;
+&lt;span class="c1"&gt;#      supports general computation graphs for data analysis. It also supports a&lt;/span&gt;
+&lt;span class="c1"&gt;#      rich set of higher-level tools including Spark SQL for SQL and DataFrames&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                     MLlib for machine learning&lt;/span&gt;
+&lt;span class="c1"&gt;#                                     and Spark Streaming for stream processing.&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                     &amp;lt;http://spark.apache.org/&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                        ## Online Documentation&lt;/span&gt;
+&lt;span class="c1"&gt;#                                    You can find the latest Spark documentation&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                                          guide&lt;/span&gt;
+&lt;span class="c1"&gt;# # ... with more rows&lt;/span&gt;
+
+&lt;span class="c1"&gt;# disconnect ----&lt;/span&gt;
+spark_disconnect_all&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Execute line-by-line and check the key outputs with those commented-out in the above script. Sparklyr is changing rapidly at the moment - for the latest documentation and information on: how to use it with the &lt;code&gt;dplyr&lt;/code&gt; package, how to leverage Spark machine learning libraries and how to extend Sparklyr itself, head over to the &lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr web site&lt;/a&gt; hosted by R&amp;nbsp;Studio.&lt;/p&gt;
+&lt;h1&gt;Connect to Spark with&amp;nbsp;SparkR&lt;/h1&gt;
+&lt;p&gt;SparkR is shipped with Spark and as such there is no external installation process that we&amp;#8217;re required to follow. It does, however, require R to be installed on every node in the cluster. This can be achieved by &lt;span class="caps"&gt;SSH&lt;/span&gt;-ing into every node in our cluster and repeating the above R installation steps, or experimenting with Flintrock&amp;#8217;s &lt;code&gt;run-command&lt;/code&gt; command that will automatically execute the same command on every node in the cluster, such&amp;nbsp;as,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock run-command the_name_of_your_cluster 'sudo yum install -y R'&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;To enable SparkR to be used via R Studio and demonstrate the same connectivity as we did above for Sparklyr, create a new script for the following&amp;nbsp;code:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# set system variables ----&lt;/span&gt;
+&lt;span class="c1"&gt;# - location of Spark on master node;&lt;/span&gt;
+&lt;span class="c1"&gt;# - add sparkR package directory to the list of path to look for R packages&lt;/span&gt;
+&lt;span class="kp"&gt;Sys.setenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;SPARK_HOME&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/home/ec2-user/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="m"&gt;.&lt;/span&gt;libPaths&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;file.path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;Sys.getenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;SPARK_HOME&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;R&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;lib&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="m"&gt;.&lt;/span&gt;libPaths&lt;span class="p"&gt;()))&lt;/span&gt;
+
+&lt;span class="c1"&gt;# load packages ----&lt;/span&gt;
+&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;SparkR&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# connect to Spark cluster ----&lt;/span&gt;
+&lt;span class="c1"&gt;# check your_public_ip_address:8080 to get the local network address of your master node&lt;/span&gt;
+sc &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; sparkR.session&lt;span class="p"&gt;(&lt;/span&gt;master &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                     sparkPackages &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;com.databricks:spark-csv_2.11:1.3.0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                                       &lt;span class="s"&gt;&amp;quot;com.amazonaws:aws-java-sdk-pom:1.10.34&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                                       &lt;span class="s"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="c1"&gt;# copy the local iris dataset to Spark ----&lt;/span&gt;
+iris_tbl &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; createDataFrame&lt;span class="p"&gt;(&lt;/span&gt;iris&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;iris_tbl&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Sepal_Length Sepal_Width Petal_Length Petal_Width Species&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.1         3.5          1.4         0.2  setosa&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.9         3.0          1.4         0.2  setosa&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.7         3.2          1.3         0.2  setosa&lt;/span&gt;
+&lt;span class="c1"&gt;#          4.6         3.1          1.5         0.2  setosa&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.0         3.6          1.4         0.2  setosa&lt;/span&gt;
+&lt;span class="c1"&gt;#          5.4         3.9          1.7         0.4  setosa&lt;/span&gt;
+
+&lt;span class="c1"&gt;# load S3 file into Spark&amp;#39;s using the &amp;quot;s3a:&amp;quot; protocol ----&lt;/span&gt;
+test &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; read.text&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;collect&lt;span class="p"&gt;(&lt;/span&gt;test&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                                            value&lt;/span&gt;
+&lt;span class="c1"&gt;# 1                                                                 # Apache Spark&lt;/span&gt;
+&lt;span class="c1"&gt;# 2&lt;/span&gt;
+&lt;span class="c1"&gt;# 3 Spark is a fast and general cluster computing system for Big Data. It provides&lt;/span&gt;
+&lt;span class="c1"&gt;# 4    high-level APIs in Scala, Java, Python, and R, and an optimized engine that&lt;/span&gt;
+&lt;span class="c1"&gt;# 5      supports general computation graphs for data analysis. It also supports a&lt;/span&gt;
+&lt;span class="c1"&gt;# 6     rich set of higher-level tools including Spark SQL for SQL and DataFrames,&lt;/span&gt;
+
+&lt;span class="c1"&gt;# close connection&lt;/span&gt;
+sparkR.session.stop&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Again, execute line-by-line and check the key outputs with those commented-out in the above script. Use the &lt;a href="https://spark.apache.org/docs/latest/sparkr.html" title="sparkR guide"&gt;sparkR programming guide&lt;/a&gt; and the &lt;a href="https://spark.apache.org/docs/latest/api/R/index.html" title="sparkR API"&gt;sparkR &lt;span class="caps"&gt;API&lt;/span&gt; documentation&lt;/a&gt; for more information on the available&amp;nbsp;functions.&lt;/p&gt;
+&lt;p&gt;We have nearly met all of the aims set-out at the beginning of this series of posts. All that remains now is to install Apache Zeppelin so we can interact with Spark using Scala in the same way we can now interact with it using&amp;nbsp;R.&lt;/p&gt;</content><category term="AWS"></category><category term="data-processing"></category><category term="apache-spark"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 2 - Deploying Spark on AWS using Flintrock</title><link href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" rel="alternate"></link><published>2016-08-18T00:00:00+01:00</published><updated>2016-08-18T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-18:/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/spark.png" title="spark"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="PartOne"&gt;Part 1&lt;/a&gt; in this series of blog posts describes how to setup &lt;span class="caps"&gt;AWS&lt;/span&gt; with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on &lt;span class="caps"&gt;AWS&lt;/span&gt; and accessing our S3 data from within&amp;nbsp;Spark.&lt;/p&gt;
+&lt;p&gt;A key part of my vision …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/spark.png" title="spark"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="PartOne"&gt;Part 1&lt;/a&gt; in this series of blog posts describes how to setup &lt;span class="caps"&gt;AWS&lt;/span&gt; with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on &lt;span class="caps"&gt;AWS&lt;/span&gt; and accessing our S3 data from within&amp;nbsp;Spark.&lt;/p&gt;
+&lt;p&gt;A key part of my vision for a Spark-based R&amp;amp;D platform is being able to to launch, stop, start and then connect to a cluster from my laptop. By this I mean that I don&amp;#8217;t want to have to directly interact with &lt;span class="caps"&gt;AWS&lt;/span&gt; every time I want to switch my cluster on or off. Versions of Spark prior to v2 had a folder in the home directory, &lt;code&gt;/ec2&lt;/code&gt;, containing scripts for doing exactly this from the terminal. I was perturbed to find this folder missing in Spark 2.0 and &amp;#8216;Amazon &lt;span class="caps"&gt;EC2&lt;/span&gt;&amp;#8217; missing from the &amp;#8216;Deploying&amp;#8217; menu of the official Spark documentation. It appears that these scripts have not been actively maintained and as such they&amp;#8217;ve been moved to a separate &lt;a href="https://github.com/amplab/spark-ec2" title="ec2-tools"&gt;GitHub repo&lt;/a&gt; for the foreseeable future. I spent a little bit of time trying to get them to work, but ultimately they do not support v2 of Spark as yet. They also don&amp;#8217;t allow you the flexibility of choosing which version of Hadoop to install along with Spark and this can cause headaches when it comes to accessing data on S3 (a bit more on this&amp;nbsp;later).&lt;/p&gt;
+&lt;p&gt;I&amp;#8217;m very keen on using Spark 2.0 so I needed an alternative solution. Manually firing-up VMs on &lt;span class="caps"&gt;EC2&lt;/span&gt; and installing Spark and Hadoop on each node was out of the question, as was an ascent of the &lt;span class="caps"&gt;AWS&lt;/span&gt; DevOps learning-curve required to automate such a process. This sort of thing is not part of my day-job and I don&amp;#8217;t have the time otherwise. So I turned to Google and was &lt;strong&gt;very&lt;/strong&gt; happy to stumble upon the &lt;a href="https://github.com/nchammas/flintrock" title="Flintrock"&gt;Flintrock&lt;/a&gt; project on GitHub. Its still in its infancy, but using it I managed to achieve everything I could do with the old Spark ec2 scripts, but with far greater flexibility and speed. It is really rather good and I will be using it for Spark cluster&amp;nbsp;management.&lt;/p&gt;
+&lt;h2&gt;Download Spark&amp;nbsp;Locally&lt;/h2&gt;
+&lt;p&gt;In order to be able to send jobs to our Spark cluster we will need a local version of Spark so we can use the &lt;code&gt;spark-submit&lt;/code&gt; command. In any case, its useful for development and learning as well as for small ad hoc jobs. Download Spark 2.0 &lt;a href="https://spark.apache.org/downloads.html" title="SparkDownload"&gt;here&lt;/a&gt; and choose &amp;#8216;Pre-built for Hadoop 2.7 and later&amp;#8217;. My version lives in &lt;code&gt;/applications&lt;/code&gt; and I will assume that yours does too. To check that everything is okay, open the terminal and make Spark-2.0.0 your current directory. From here&amp;nbsp;run,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./bin/spark-shell&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If everything is okay you should be met with the Spark shell for Scala&amp;nbsp;interaction:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/welcome_to_spark.png" title="spark-shell"&gt;&lt;/p&gt;
+&lt;h2&gt;Install&amp;nbsp;Flintrock&lt;/h2&gt;
+&lt;p&gt;Exit the Spark shell (ctrl-d on a Mac, just in case you didn&amp;#8217;t know&amp;#8230;) and return to Spark&amp;#8217;s home directory. For convenience, I&amp;#8217;m going to download Flintrock to here as well - where the old ec2 scripts used to be. The steps for downloading the Flintrock binaries - taken verbatim from the Flinkrock repo&amp;#8217;s &lt;span class="caps"&gt;README&lt;/span&gt; - are as&amp;nbsp;follows:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nv"&gt;flintrock_version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0.5.0&amp;quot;&lt;/span&gt;
+
+$ curl --location --remote-name &lt;span class="s2"&gt;&amp;quot;https://github.com/nchammas/flintrock/releases/download/v&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;/Flintrock-&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
+$ unzip -q -d flintrock &lt;span class="s2"&gt;&amp;quot;Flintrock-&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And test that it works by&amp;nbsp;running,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock --help&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;It&amp;#8217;s worth familiarizing yourself with the available commands. We&amp;#8217;ll only be using a small sub-set of these, but there&amp;#8217;s a lot more you can do with&amp;nbsp;Flintrock.&lt;/p&gt;
+&lt;h2&gt;Configure&amp;nbsp;Flintrock&lt;/h2&gt;
+&lt;p&gt;The configuration details of the default cluster are kept in a &lt;span class="caps"&gt;YAML&lt;/span&gt; file that will be opened in your favorite text editor if you&amp;nbsp;run&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock configure&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/figure_configure.png" title="FlintrockConfig"&gt;&lt;/p&gt;
+&lt;p&gt;Most of these are the default Flintrock options, but a few of them deserve a little more&amp;nbsp;discussion:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;key-name&lt;/code&gt; and &lt;code&gt;identity-file&lt;/code&gt; - in &lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="PartOne"&gt;Part 1&lt;/a&gt; we generated a key-pair to allow us to connect remotely to &lt;span class="caps"&gt;EC2&lt;/span&gt; VMs. These options refer to the name of the key-par and the path to the file containing our private&amp;nbsp;key.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;instance-profile-name&lt;/code&gt; - this assigns an &lt;span class="caps"&gt;IAM&lt;/span&gt; &amp;#8216;role&amp;#8217; to each node. A role is a like an &lt;span class="caps"&gt;IAM&lt;/span&gt; user that isn&amp;#8217;t a person, but can have access policies attached to it. Ultimately, this determines what out Spark nodes can and cannot do on &lt;span class="caps"&gt;AWS&lt;/span&gt;. I have chosen the default role that &lt;span class="caps"&gt;EMR&lt;/span&gt; assigns to nodes, which allows them to access data held in&amp;nbsp;S3.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;instance-type&lt;/code&gt; - I think running 2 x m4.large instances is more than enough for testing a Spark cluster. In total, this gets you 4 cores, 16Gb of &lt;span class="caps"&gt;RAM&lt;/span&gt; and Elastic Block Storage (&lt;span class="caps"&gt;EBS&lt;/span&gt;). The latter is important as it means your VMs will &amp;#8216;persist&amp;#8217; when you stop them - just like shutting-down your laptop. Check that the overall pricing is acceptable to you &lt;a href="https://aws.amazon.com/ec2/pricing/" title="AWS-pricing"&gt;here&lt;/a&gt;. If it isn&amp;#8217;t, then choose another instance type, but make sure it has &lt;span class="caps"&gt;EBS&lt;/span&gt; (or add it separately if you need&amp;nbsp;to).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;region&lt;/code&gt; - the &lt;span class="caps"&gt;AWS&lt;/span&gt; region that you want the cluster to be created in. I&amp;#8217;m in the &lt;span class="caps"&gt;UK&lt;/span&gt; so my default region is Ireland (aka&amp;nbsp;eu-west-1).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;ami&lt;/code&gt; - which Amazon Machine Image (&lt;span class="caps"&gt;AMI&lt;/span&gt;) should the VMs in our cluster be based on? For the time-being I&amp;#8217;m using the latest version of Amazon&amp;#8217;s Linux distribution, which is based on Red Hat Linux and includes &lt;span class="caps"&gt;AWS&lt;/span&gt; tools. Be aware that this has its idiosyncrasies (deviations from what would be expected on Red Hat and CentOS), and that these can create headaches (some of which I encountered when I was trying to get the Apache Zeppelin daemon to run). It is free and easy, however, and the &lt;span class="caps"&gt;ID&lt;/span&gt; for the latest version can be found &lt;a href="https://aws.amazon.com/amazon-linux-ami/" title="AMI"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;user&lt;/code&gt; - the setup scripts will create a non-root user on each &lt;span class="caps"&gt;VM&lt;/span&gt; and this will be the associated&amp;nbsp;username.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;num-slaves&lt;/code&gt; - the number of non-master Spark nodes - 1 or 2 will suffice for&amp;nbsp;testing.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;install-hdfs&lt;/code&gt; - should Hadoop be installed on each machine alongside Spark? We want to access data in S3 and Hadoop is also a convenient way of making files and JARs visible to all nodes. So it&amp;#8217;s a &amp;#8216;True&amp;#8217; for&amp;nbsp;me.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Launch&amp;nbsp;Cluster&lt;/h2&gt;
+&lt;p&gt;Once you&amp;#8217;ve decided on the cluster&amp;#8217;s configuration, head back to the terminal and launch a cluster&amp;nbsp;using,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock launch the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This took me under 3 minutes, which is an &lt;em&gt;enormous&lt;/em&gt; improvement on the old ec2 scripts. Once Flintrock issues it&amp;#8217;s health report and returns control of the terminal back to you, login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console and head over to the &lt;span class="caps"&gt;EC2&lt;/span&gt; page to see the VMs that have been created for&amp;nbsp;you:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ec2_instances.png" title="EC2-dashboard"&gt;&lt;/p&gt;
+&lt;p&gt;Select the master node to see it&amp;#8217;s details and check that the correct &lt;span class="caps"&gt;IAM&lt;/span&gt; role has been&amp;nbsp;added:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/instance_details.png" title="EC2-instances"&gt;&lt;/p&gt;
+&lt;p&gt;Note that Flintrock has created two security groups for us: flintrock-your_cluster_name-cluster and flintrock. The former allows each node to connect with every other node, and the latter determines who can connect to the nodes from the &amp;#8216;outside world&amp;#8217;. Select the &amp;#8216;flintrock&amp;#8217; security&amp;nbsp;group:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/flintrock_security_group.png" title="SecurityGroup"&gt;&lt;/p&gt;
+&lt;p&gt;The Sources are the &lt;span class="caps"&gt;IP&lt;/span&gt; addresses allowed to access the cluster. Initially, this should be set to the &lt;span class="caps"&gt;IP&lt;/span&gt; address of the machine that has just created your cluster. If you are unsure what you &lt;span class="caps"&gt;IP&lt;/span&gt; address is, then try &lt;a href="http://whatismyip.com" title="whatismyip"&gt;whatismyip.com&lt;/a&gt;. The ports that should be open&amp;nbsp;are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;4040 - allows you to connect to a Spark application&amp;#8217;s web &lt;span class="caps"&gt;UI&lt;/span&gt; (e.g. the spark-shell or Zeppelin,&amp;nbsp;etc.),&lt;/li&gt;
+&lt;li&gt;8080 &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; 8081 - the Spark master node&amp;#8217;s web &lt;span class="caps"&gt;UI&lt;/span&gt; and a free port that we&amp;#8217;ll use for Apache Zeppelin when we set that up later on (in the final post of this&amp;nbsp;series),&lt;/li&gt;
+&lt;li&gt;22 - the default port for connecting via &lt;span class="caps"&gt;SSH&lt;/span&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Edit this list and add another Custom &lt;span class="caps"&gt;TCP&lt;/span&gt; rule to allow port 8787 to be accessed by your &lt;span class="caps"&gt;IP&lt;/span&gt; address. We will use this port to connect to R Studio when we set that up in the next post in this&amp;nbsp;series.&lt;/p&gt;
+&lt;h2&gt;Connect to&amp;nbsp;Cluster&lt;/h2&gt;
+&lt;p&gt;Find the Public &lt;span class="caps"&gt;IP&lt;/span&gt; address of the master node from the Instances tab of the &lt;span class="caps"&gt;EC2&lt;/span&gt; Dashboard. Enter this into a browser followed by &lt;code&gt;:8080&lt;/code&gt;, which should allow us to access the Spark master node&amp;#8217;s web &lt;span class="caps"&gt;UI&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/spark_web_ui.png" title="SparkBebUI"&gt;&lt;/p&gt;
+&lt;p&gt;If everything has worked correctly then you should see one worker node registered with the&amp;nbsp;master.&lt;/p&gt;
+&lt;p&gt;Back on the Instances tab, select the master node and hit the connect button. You should be presented with all the information required for connecting to the master node via &lt;span class="caps"&gt;SSH&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ssh_connect.png" title="SSH-details"&gt;&lt;/p&gt;
+&lt;p&gt;Return to the terminal and follow this advice. If successful, you should see something along the lines&amp;nbsp;of:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ssh_master.png" title="SSH-connect"&gt;&lt;/p&gt;
+&lt;p&gt;Next, fire-up the Spark shell for Scala by executing &lt;code&gt;spark-shell&lt;/code&gt;. To run a trivial job across all nodes and test the cluster, run the following program on a line-by-line&amp;nbsp;basis:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val localArray = Array(1,2,3,4,5)
+val rddArray = sc.parallelize(localArray)
+val rddArraySum = rddArray.reduce((x, y) =&amp;gt; x + y)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If no errors were thrown and the shell&amp;#8217;s final output&amp;nbsp;is,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;rddArraySum: Int = 15&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;then give yourself a pat-on-the-back as you&amp;#8217;ve just executed your first distributed computation on a cloud-hosted Spark&amp;nbsp;cluster.&lt;/p&gt;
+&lt;p&gt;There are two ways we can send a complete Spark application - a &lt;span class="caps"&gt;JAR&lt;/span&gt; file - to the cluster. Firstly, we could copy our &lt;span class="caps"&gt;JAR&lt;/span&gt; to the master node - let&amp;#8217;s assume it&amp;#8217;s the Apache Spark example application that computes Pi to &lt;code&gt;n&lt;/code&gt; decimal places, where &lt;code&gt;n&lt;/code&gt; is passed as an argument to the application. In this instance, we could &lt;span class="caps"&gt;SSH&lt;/span&gt; into the master node as we did for the Spark shell and then execute Spark in &amp;#8216;client&amp;#8217;&amp;nbsp;mode,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ spark/bin/spark-submit --master spark://ip-172-31-6-33:7077 --deploy-mode client --class org.apache.spark.examples.SparkPi spark/examples/jars/spark-examples_2.11-2.0.0.jar 10&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Note that the &lt;code&gt;--master&lt;/code&gt; option takes the local &lt;span class="caps"&gt;IP&lt;/span&gt; address of the master node within our network in &lt;span class="caps"&gt;AWS&lt;/span&gt;. An alternative method is to send our &lt;span class="caps"&gt;JAR&lt;/span&gt; file directly from our local machine using Spark in &amp;#8216;cluster&amp;#8217;&amp;nbsp;mode,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ bin/spark-submit --master spark://52.48.93.43:6066 --deploy-mode cluster --class org.apache.spark.examples.SparkPi examples/jars/spark-examples_2.11-2.0.0.jar 10&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;A common pattern is to use the latter when the application both reads data and writes output to and from S3 or some other data repository (or database) in our &lt;span class="caps"&gt;AWS&lt;/span&gt; network. I have not had any luck running an application on the cluster from my local machine in &amp;#8216;client&amp;#8217; mode. I haven&amp;#8217;t been able to make the master node &amp;#8216;see&amp;#8217; my laptop - pinging the latter from the former always fails and in client mode the Spark master node must be able to reach the machine that is running the driver application (which in client mode, in this context, is my laptop). I&amp;#8217;m sure that I could circumnavigate this issue if I setup a &lt;span class="caps"&gt;VPN&lt;/span&gt; or an &lt;span class="caps"&gt;SSH&lt;/span&gt;-tunnel between my laptop and the &lt;span class="caps"&gt;AWS&lt;/span&gt; cluster, but this seem like more hassle than it&amp;#8217;s worth considering that most of my interaction with Spark will be via R Studio or Zeppelin that I will setup to access&amp;nbsp;remotely.&lt;/p&gt;
+&lt;h2&gt;Read S3 Data from&amp;nbsp;Spark&lt;/h2&gt;
+&lt;p&gt;In order to access our S3 data from Spark (via Hadoop), we need to make a couple of packages (&lt;span class="caps"&gt;JAR&lt;/span&gt; files and their dependencies) available to all nodes in our cluster. The easiest way to do this, is to start the spark-shell with the following&amp;nbsp;options:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ spark-shell --packages com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Once the cluster has downloaded everything it needs and the shell has started, run the following program that &amp;#8216;opens&amp;#8217; the &lt;span class="caps"&gt;README&lt;/span&gt; file we uploaded to S3 in Part 1 of this series of blogs, and &amp;#8216;collects&amp;#8217; it back to the master node from its distributed (&lt;span class="caps"&gt;RDD&lt;/span&gt;)&amp;nbsp;representation:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val data = sc.textFile(&amp;quot;s3a://alex.data/README.md&amp;quot;)
+data.collect
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If everything is successful then you should see the contents of the file printed to&amp;nbsp;screen.&lt;/p&gt;
+&lt;p&gt;If you have read elsewhere about accessing data on S3, you may have seen references made to connection strings that start with &lt;code&gt;"s3n://...&lt;/code&gt; or maybe even &lt;code&gt;"s3://...&lt;/code&gt; with accompanying discussions about passing credentials either as part of the connection string or by setting system variables, etc. Because we are using a recent version of Hadoop and the Amazon packages required to map S3 objects onto Hadoop, and because we have assigned our nodes &lt;span class="caps"&gt;IAM&lt;/span&gt; roles that have permission to access S3, we do not need to negotiate any of these (sometimes painful)&amp;nbsp;issues.&lt;/p&gt;
+&lt;h2&gt;Stopping, Starting and Destroying&amp;nbsp;Clusters&lt;/h2&gt;
+&lt;p&gt;Stopping a cluster - shutting it down to be re-started in the state you left it in - and preventing any further costs from accumulating is as simple as asking Flintrock&amp;nbsp;to,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock stop the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;and similarly for starting and destroying (terminating the cluster VMs and their state&amp;#8217;s&amp;nbsp;forever),&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock start the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock destroy the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Be aware&lt;/strong&gt; that when you restart a cluster the public &lt;span class="caps"&gt;IP&lt;/span&gt; addresses for all the nodes will have changed. This can be a bit of a (minor) hassle, so I have opted to create an &lt;a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" title="ElasticIP"&gt;Elastic &lt;span class="caps"&gt;IP&lt;/span&gt;&lt;/a&gt; address and assign it to my master node to keep it&amp;#8217;s public &lt;span class="caps"&gt;IP&lt;/span&gt; address constant over stops and restarts (for a nominal cost). To see what clusters are running at any one moment in&amp;nbsp;time,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ ./flintrock describe&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We are now ready to install R, R Studio and start using Sparklyr and/or SparkR to start interacting with our data (Part 3 in this series of&amp;nbsp;blogs).&lt;/p&gt;</content><category term="AWS"></category><category term="data-processing"></category><category term="apache-spark"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 1 - Setting-Up AWS</title><link href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" rel="alternate"></link><published>2016-08-16T00:00:00+01:00</published><updated>2016-08-16T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-16:/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/aws.png" title="AWS"&gt;&lt;/p&gt;
+&lt;p&gt;Here&amp;#8217;s my vision: I get into the office and switch-on my laptop; then I start-up my &lt;a href="https://spark.apache.org"&gt;Spark&lt;/a&gt; cluster; I interact with it via &lt;a href="https://www.rstudio.com"&gt;RStudio&lt;/a&gt; to exploring a new dataset a client uploaded overnight; after getting a handle on what I want to do with it, I prototype an &lt;span class="caps"&gt;ETL …&lt;/span&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/aws.png" title="AWS"&gt;&lt;/p&gt;
+&lt;p&gt;Here&amp;#8217;s my vision: I get into the office and switch-on my laptop; then I start-up my &lt;a href="https://spark.apache.org"&gt;Spark&lt;/a&gt; cluster; I interact with it via &lt;a href="https://www.rstudio.com"&gt;RStudio&lt;/a&gt; to exploring a new dataset a client uploaded overnight; after getting a handle on what I want to do with it, I prototype an &lt;span class="caps"&gt;ETL&lt;/span&gt; and/or model-building process in &lt;a href="http://www.scala-lang.org"&gt;Scala&lt;/a&gt; by using &lt;a href="http://zeppelin.apache.org"&gt;Zeppelin&lt;/a&gt; and I might even ask it to run every hour to see how it&amp;nbsp;fairs.&lt;/p&gt;
+&lt;p&gt;In all likelihood this is going to be more than one day&amp;#8217;s work, but you get the idea - I want a workspace that lets me use production-scale technologies to test ideas and processes that are a small step away from being handed-over to someone who can put them into&amp;nbsp;production.&lt;/p&gt;
+&lt;p&gt;This series of posts is about how to setup and configure what I&amp;#8217;m going to refer to as the &amp;#8216;Data Science R&amp;amp;D platform&amp;#8217;. I&amp;#8217;m intending to cover the&amp;nbsp;following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;setting-up Amazon Web Services (&lt;span class="caps"&gt;AWS&lt;/span&gt;) with some respect for security, and loading data to &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;#8217;s S3 file system (where I&amp;#8217;m assuming all static data will&amp;nbsp;live);&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;launching, connecting-to and controlling an Apache Spark cluster on &lt;span class="caps"&gt;AWS&lt;/span&gt;, from my laptop, with the ability to start and stop it at&amp;nbsp;will,&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;installing R and RStudio Server on my Spark cluster&amp;#8217;s master node and then configuring &lt;a href="https://spark.apache.org/docs/latest/sparkr.html"&gt;SparkR&lt;/a&gt; and &lt;a href="http://spark.rstudio.com/index.html"&gt;Sparklyr&lt;/a&gt; to connect to Spark and &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;S3,&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;installing and configuring Apache Zeppelin for Scala and &lt;span class="caps"&gt;SQL&lt;/span&gt; based Spark interaction, and for automating basic &lt;span class="caps"&gt;ETL&lt;/span&gt;/model-building&amp;nbsp;processes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I&amp;#8217;m running on Mac &lt;span class="caps"&gt;OS&lt;/span&gt; X so this will be my frame of reference, but the Unix/Linux terminal-based parts of these posts should play nicely with all Linux distributions. I have no idea about&amp;nbsp;Windows.&lt;/p&gt;
+&lt;p&gt;You might be wondering why I don&amp;#8217;t use &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;#8217;s &lt;a href="https://aws.amazon.com/emr/"&gt;Elastic Map Reduce&lt;/a&gt; (&lt;span class="caps"&gt;EMR&lt;/span&gt;) service that can also run a Spark cluster with Zeppelin. I did try, but I found that it wasn&amp;#8217;t really suited to ad hoc R&amp;amp;D - I couldn&amp;#8217;t configure it with all my favorite tools (e.g. RStudio) and then easily &amp;#8216;pause&amp;#8217; the cluster when I&amp;#8217;m done for the day. I&amp;#8217;d be forced to stop the cluster and re-install my tools when I start another cluster up. &lt;span class="caps"&gt;EMR&lt;/span&gt; clusters appear to be better suited to being programmatically brought up and down as and when required, or for long-running clusters - excellent for a production environment. Not quite so good for R&amp;amp;D. Costs more too, which is the main reason &lt;a href="https://databricks.com/"&gt;Databricks&lt;/a&gt; doesn&amp;#8217;t work for me&amp;nbsp;either.&lt;/p&gt;
+&lt;h2&gt;Sign-Up for an &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;Account!&lt;/h2&gt;
+&lt;p&gt;This is obvious, but nevertheless for completeness head over to &lt;a href="https://aws.amazon.com/"&gt;aws.amazon.com&lt;/a&gt; and create an&amp;nbsp;account:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/1_aws_create_account.png" title="AWS"&gt;&lt;/p&gt;
+&lt;p&gt;Once you&amp;#8217;ve entered your credentials and payment details you&amp;#8217;ll be brought to the main &lt;span class="caps"&gt;AWS&lt;/span&gt; Management Console that lists all the services at your disposal. The &lt;a href="https://aws.amazon.com/documentation"&gt;&lt;span class="caps"&gt;AWS&lt;/span&gt; documentation&lt;/a&gt; is excellent and a great way to get an understanding of what everything is and how you might use&amp;nbsp;it.&lt;/p&gt;
+&lt;p&gt;This is also a good point to choose the region you want your services to be created in. I live in the &lt;span class="caps"&gt;UK&lt;/span&gt; so it makes sense for me to choose Ireland (aka&amp;nbsp;eu-west-1):&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/0_region.png" title="Region"&gt;&lt;/p&gt;
+&lt;h2&gt;Setup Users and Grant them&amp;nbsp;Roles&lt;/h2&gt;
+&lt;p&gt;It is considered bad practice to login to &lt;span class="caps"&gt;AWS&lt;/span&gt; as the root user (i.e. the one that opened the account). So it&amp;#8217;s worth knowing how to setup users, restrict their access to the platform and assign them credentials. This is also easy to&amp;nbsp;to.&lt;/p&gt;
+&lt;p&gt;For now I&amp;#8217;m just going to create an &amp;#8216;admin&amp;#8217; user that has more-or-less the same privileges as the root user, but is unable to delete the account or change the billing details,&amp;nbsp;etc.&lt;/p&gt;
+&lt;p&gt;To begin with, login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console as the root user and navigate to Identity and Access Management (&lt;span class="caps"&gt;IAM&lt;/span&gt;) under Security and Identity. Click on the Users tab and then Create New User. Enter a new user name and then Create. You should then see the following confirmation together with new users&amp;#8217;&amp;nbsp;credentials:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/3_user_credentials.png" title="User Credentials"&gt;&lt;/p&gt;
+&lt;p&gt;Make a note of these - or even better download them in &lt;span class="caps"&gt;CSV&lt;/span&gt; format using the &amp;#8216;Download Credentials&amp;#8217; button. Close the window and then select the new user again on the Users tab. Next, find the Permissions tab and Attach&amp;nbsp;Policy:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/4_attach_policy.png" title="AttachPolicy"&gt;&lt;/p&gt;
+&lt;p&gt;Choose AdministratorAccess for our admin&amp;nbsp;user:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/5_admin_rights_policy.png" title="AdminAccess"&gt;&lt;/p&gt;
+&lt;p&gt;There are an enormous amount of policies you could apply depending on what your users need to access. For example, we could just as easily have created a user that can only access Amazon&amp;#8217;s &lt;span class="caps"&gt;EMR&lt;/span&gt; service with read-only permission on&amp;nbsp;S3.&lt;/p&gt;
+&lt;p&gt;Finally, because we&amp;#8217;d like our admin user to be able to able to login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; Management Console, we need to given them a password by navigating to the Security Credentials tab to Manage&amp;nbsp;Password.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/6_create_user_password.png" title="Password"&gt;&lt;/p&gt;
+&lt;p&gt;Note, that non-root users need to login via a difference &lt;span class="caps"&gt;URL&lt;/span&gt; that can be found at the top of the &lt;span class="caps"&gt;IAM&lt;/span&gt;&amp;nbsp;Dashboard:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/7_user_login_link.png" title="UserLogin"&gt;&lt;/p&gt;
+&lt;p&gt;Log out of the console and then back in again using this link, as your new admin user. It&amp;#8217;s worth noting that the &lt;span class="caps"&gt;IAM&lt;/span&gt; Dashboard encourages you to follow a series of steps for securing your platform. The steps above represent a sub-set of what is required to get the &amp;#8216;green light&amp;#8217; and I recommend that you work your way through all of them once you know your way around. For example, Multi-Factor Authentication (&lt;span class="caps"&gt;MFA&lt;/span&gt;) for the root user makes a lot of&amp;nbsp;sense.&lt;/p&gt;
+&lt;h2&gt;Generate &lt;span class="caps"&gt;EC2&lt;/span&gt; Key&amp;nbsp;Pairs&lt;/h2&gt;
+&lt;p&gt;In order for you to remotely access &lt;span class="caps"&gt;AWS&lt;/span&gt; services - e.g. data in in S3 and virtual machines on &lt;span class="caps"&gt;EC2&lt;/span&gt; from the comfort of your laptop - you will need to authenticate yourself. This is achieved using Key Pairs. Cryptography has never been a strong point, so if you want to know more about how this works I suggest taking a look &lt;a href="https://en.wikipedia.org/wiki/Public-key_cryptography"&gt;here&lt;/a&gt;. To generate our Key Pair and download the private key we use for authentication, start by navigating from the main console page to the &lt;span class="caps"&gt;EC2&lt;/span&gt; dashboard under Compute, and then to Key Pairs under Network &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Security. Once there, Create Key Pair and name it (e.g. &amp;#8216;spark_cluster&amp;#8217;). The file containing your private key will be automatically downloaded. Stash it somewhere safe like your home directory ,or even better in a hidden folder like &lt;code&gt;~/.ssh&lt;/code&gt;. We will ultimately assign these Key Pairs to Virtual Machines (VMs) and other services we want to setup and access&amp;nbsp;remotely.&lt;/p&gt;
+&lt;h2&gt;Install the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt;&amp;nbsp;Tools&lt;/h2&gt;
+&lt;p&gt;By no means an essential step, but the &lt;span class="caps"&gt;AWS&lt;/span&gt; terminal tools are useful - e.g. for copying files to S3 or starting and stopping &lt;span class="caps"&gt;EMR&lt;/span&gt; clusters without having to login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console and click&amp;nbsp;buttons.&lt;/p&gt;
+&lt;p&gt;I think the easiest way to install the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt; tools is to use &lt;a href="https://brew.sh"&gt;Homebrew&lt;/a&gt;, a package manager for &lt;span class="caps"&gt;OS&lt;/span&gt; X (like &lt;span class="caps"&gt;APT&lt;/span&gt; or &lt;span class="caps"&gt;RPM&lt;/span&gt; for Mac). With Homebrew, installation is as easy as&amp;nbsp;executing,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ brew install awscli&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;from the terminal. Once installation is finished the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt; Tools need to be configured. Make sure you have your users&amp;#8217; credentials details to hand (open the file that downloaded when you created your admin user). From the terminal&amp;nbsp;run,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ aws configure&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This will ask you for, in sequence: Access Key &lt;span class="caps"&gt;ID&lt;/span&gt; (copy from credentials file), Secret Access Key (copy from credentials file), Default region name (I use eu-west-1 in Ireland), and default output (I prefer &lt;span class="caps"&gt;JSON&lt;/span&gt;). To test that everything is working&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ aws s3 ls&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;to list all the buckets we&amp;#8217;ve made in S3 (currently&amp;nbsp;none).&lt;/p&gt;
+&lt;h2&gt;Upload Data to&amp;nbsp;S3&lt;/h2&gt;
+&lt;p&gt;Finally, it&amp;#8217;s time to do something data science-y - loading data. Before we can do this we need to create a &amp;#8216;bucket&amp;#8217; in S3 to put our data objects in. Using the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt; tools we&amp;nbsp;execute,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ aws s3 mb s3://alex.data&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;to create the &lt;code&gt;alex.data&lt;/code&gt; bucket. &lt;span class="caps"&gt;AWS&lt;/span&gt; is quite strict about what names are valid (i.e. no underscores), so it&amp;#8217;s worth reading the &lt;span class="caps"&gt;AWS&lt;/span&gt; documentation on S3 if you get any errors. We can then copy a file over to our new bucket by&amp;nbsp;executing,&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ aws s3 cp ./README.md s3://alex.data&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We can check this file has been successfully copied by returning to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console and heading to S3 under Storage &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Content Delivery where it should be easy to browse to our&amp;nbsp;file:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/8_S3.png" title="S3"&gt;&lt;/p&gt;
+&lt;p&gt;All of the above steps could have been carried out through the console, but I prefer using the&amp;nbsp;terminal.&lt;/p&gt;
+&lt;p&gt;We are now ready to fire-up a Spark cluster and use it to read our data (Part 2 in this series of&amp;nbsp;blogs).&lt;/p&gt;</content><category term="AWS"></category><category term="data-processing"></category></entry></feed>
