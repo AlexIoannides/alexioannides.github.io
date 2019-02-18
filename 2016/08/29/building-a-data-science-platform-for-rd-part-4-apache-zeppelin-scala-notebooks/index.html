@@ -10,12 +10,12 @@
 
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="../../../../theme/pygments/monokai.min.css">
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/font-awesome.min.css">
 
-    <link href="../../../../static/custom.css" rel="stylesheet">
+    <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
     <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
 
@@ -43,11 +43,11 @@
 <meta property="og:title" content="Building a Data Science Platform for R&amp;D, Part 4 - Apache Zeppelin &amp; Scala Notebooks"/>
 <meta property="og:description" content="Parts one, two and three of this series of posts have taken us from creating an account on AWS to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;D is nearly complete - the only outstanding component is …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="../../../../2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/"/>
+<meta property="og:url" content="https://alexioannides.github.io/2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2016-08-29 00:00:00+01:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
+<meta property="article:author" content="https://alexioannides.github.io/author/dr-alex-ioannides.html">
 <meta property="article:section" content="data-science"/>
 <meta property="article:tag" content="AWS"/>
 <meta property="article:tag" content="data-processing"/>
@@ -59,16 +59,16 @@
 <body>
   <aside>
     <div>
-      <a href="../../../..">
+      <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
-      <h1><a href="../../../..">Dr Alex Ioannides</a></h1>
+      <h1><a href="https://alexioannides.github.io">Dr Alex Ioannides</a></h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
       <nav>
         <ul class="list">
-          <li><a href="../../../../about-this-blog/">About this&nbsp;Blog</a></li>
-          <li><a href="../../../../about-me/">About&nbsp;Me</a></li>
+          <li><a href="https://alexioannides.github.io/about-this-blog/">About this&nbsp;Blog</a></li>
+          <li><a href="https://alexioannides.github.io/about-me/">About&nbsp;Me</a></li>
 
         </ul>
       </nav>
@@ -86,7 +86,7 @@
   <main>
 
     <nav>
-      <a href="../../../..">    Home
+      <a href="https://alexioannides.github.io">    Home
 </a>
 
       <a href="/categories.html">Categories</a>
@@ -103,7 +103,7 @@
       
     <h1 id="building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks">Building a Data Science Platform for R&D, Part 4 - Apache Zeppelin <span class="amp">&amp;</span> Scala&nbsp;Notebooks</h1>
     <p>
-          Posted on Mon 29 August 2016 in <a href="../../../../category/data-science.html">data-science</a>
+          Posted on Mon 29 August 2016 in <a href="https://alexioannides.github.io/category/data-science.html">data-science</a>
 
 
     </p>
@@ -111,8 +111,8 @@
 
 
   <div>
-    <p><img alt="zeppelin" src="../../../../images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"></p>
-<p>Parts <a href="../../../../2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1">one</a>, <a href="../../../../2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2">two</a> and <a href="../../../../2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3">three</a> of this series of posts have taken us from creating an account on <span class="caps">AWS</span> to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;D is nearly complete - the only outstanding component is the ability to interact (<span class="caps">REPL</span>-style) with Spark using code written in Scala and to run this on some sort of scheduled basis. So, for this last part I am going to focus on getting <a href="http://zeppelin.apache.org" title="Apache Zeppelin">Apache Zeppelin</a>&nbsp;up-and-running.</p>
+    <p><img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"></p>
+<p>Parts <a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1">one</a>, <a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2">two</a> and <a href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3">three</a> of this series of posts have taken us from creating an account on <span class="caps">AWS</span> to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;D is nearly complete - the only outstanding component is the ability to interact (<span class="caps">REPL</span>-style) with Spark using code written in Scala and to run this on some sort of scheduled basis. So, for this last part I am going to focus on getting <a href="http://zeppelin.apache.org" title="Apache Zeppelin">Apache Zeppelin</a>&nbsp;up-and-running.</p>
 <p><a href="http://zeppelin.apache.org" title="Apache Zeppelin">Zeppelin</a> is a notebook server in a similar vein as the Jupyter or Beaker notebooks (and very similar to those available on Databricks). Code is submitted and executed in &#8216;chunks&#8217; with interim output (e.g. charts and tables) displayed after it has been computed. Where Zeppelin differs from the other, is its first-class support for Spark and it&#8217;s ability to run notebooks (and thereby <span class="caps">ETL</span> process) on a schedule (in essence it uses <code>chron</code> for scheduling and&nbsp;execution).</p>
 <h1>Installing Apache&nbsp;Zeppelin</h1>
 <p>Following the steps laid-out in previous posts, <span class="caps">SSH</span> into our Spark cluster&#8217;s master node (or use <code>$ ./flintrock login my-cluster</code> for extra convenience). Just like we did for R Studio Server we&#8217;re going to install Zeppelin here as well. Find the <span class="caps">URL</span> for the latest version of Zeppelin <a href="http://www.apache.org/dyn/closer.cgi/zeppelin/zeppelin-0.6.1/zeppelin-0.6.1-bin-all.tgz" title="Download Zeppelin">here</a> and then from the master node&#8217;s shell&nbsp;execute,</p>
@@ -150,7 +150,7 @@
 <p><code>$ cd /home/ec2-user/zeppelin-0.6.1-bin-all/bin</code></p>
 <p><code>$ ./zeppelin-daemon start</code></p>
 <p>Open a browser and navigate to <code>http://your_master_node_public_ip:8081</code>. If Zeppelin has been installed and configured properly you should be presented with Zeppelin&#8217;s home&nbsp;screen:</p>
-<p><img alt="zeppelin-home" src="../../../../images/data_science/data_science_platform_pt4/zeppelin-home.png" title="Zeppelin Home"></p>
+<p><img alt="zeppelin-home" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-home.png" title="Zeppelin Home"></p>
 <p>To shut Zeppelin down return to the master node&#8217;s shell and&nbsp;execute,</p>
 <p><code>$ ./zeppelin-daemon stop</code>.</p>
 <h1>Running Zeppelin with a Service&nbsp;Manager</h1>
@@ -185,9 +185,9 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 <p>And return to the browser to check that Zeppelin is up-and-running. You can check that this works by stopping the cluster and then starting it&nbsp;again.</p>
 <h1>Scala&nbsp;Notebooks</h1>
 <p>From the Zeppelin home page select the &#8216;Zeppelin Tutorial&#8217;, accept the interpreter options and you should be presented with the following&nbsp;notebook:</p>
-<p><img alt="zeppeling-nb" src="../../../../images/data_science/data_science_platform_pt4/zeppelin-nb.png" title="Zeppelin Scala Notebook"></p>
+<p><img alt="zeppeling-nb" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-nb.png" title="Zeppelin Scala Notebook"></p>
 <p>Click into the first code chunk and hit <code>shift + enter</code> to run it. If everything has been configured correctly then the code will run and the Zeppelin application will be listed in the Spark master node&#8217;s web <span class="caps">UI</span>. We then test our connectivity to S3 by attempting to access our data there in the usual&nbsp;way:</p>
-<p><img alt="zeppelin-s3" src="../../../../images/data_science/data_science_platform_pt4/zeppelin-s3-nb.png" title="Connecting to S3"></p>
+<p><img alt="zeppelin-s3" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-s3-nb.png" title="Connecting to S3"></p>
 <p>Note that this notebook, as well as any other, can be set to execute on a schedule defined using the &#8216;Run Scheduler&#8217; from the notebook&#8217;s menu bar. This will happen irrespective of whether or not you have it loaded in the browser - so long as the Zeppelin daemon is running the notebooks will run on their defined&nbsp;schedule.</p>
 <h1>Storing Zeppelin Notebooks on&nbsp;S3</h1>
 <p>By default Zeppelin will store all notebooks locally. This is likely to be fine under most circumstances (as it is also very easy to export them), but it makes sense to exploit the ability to have them stored in an S3 bucket instead. For example, if you have amassed a lot of notebooks working on one cluster and you&#8217;d like to run them on another (maybe much larger) cluster, then it makes sense not to have to manually export them all from one cluster to&nbsp;another.</p>
@@ -258,8 +258,8 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="../../../../tag/aws.html">AWS</a>
-      <a href="../../../../tag/data-processing.html">data-processing</a>
+      <a href="https://alexioannides.github.io/tag/aws.html">AWS</a>
+      <a href="https://alexioannides.github.io/tag/data-processing.html">data-processing</a>
     </p>
   </div>
 
@@ -298,7 +298,7 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Dr Alex Ioannides ",
-  "url" : "../../../..",
+  "url" : "https://alexioannides.github.io",
   "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
   "description": ""
 }

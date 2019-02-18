@@ -10,12 +10,12 @@
 
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="../../../../theme/pygments/monokai.min.css">
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/font-awesome.min.css">
 
-    <link href="../../../../static/custom.css" rel="stylesheet">
+    <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
     <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
 
@@ -43,11 +43,11 @@
 <meta property="og:title" content="Deploying Python ML Models with Flask, Docker and Kubernetes"/>
 <meta property="og:description" content="A common pattern for deploying Machine Learning (ML) models into production environments - e.g. a ML model trained using the SciKit-Learn package in Python and ready to provide predictions on new data - is to expose them as RESTful API microservices hosted from within Docker containers, that are in-turn deployed to …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="../../../../2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"/>
+<meta property="og:url" content="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2019-01-10 00:00:00+00:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
+<meta property="article:author" content="https://alexioannides.github.io/author/dr-alex-ioannides.html">
 <meta property="article:section" content="machine-learning-engineering"/>
 <meta property="article:tag" content="python"/>
 <meta property="article:tag" content="machine-learning"/>
@@ -63,16 +63,16 @@
 <body>
   <aside>
     <div>
-      <a href="../../../..">
+      <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
-      <h1><a href="../../../..">Dr Alex Ioannides</a></h1>
+      <h1><a href="https://alexioannides.github.io">Dr Alex Ioannides</a></h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
       <nav>
         <ul class="list">
-          <li><a href="../../../../about-this-blog/">About this&nbsp;Blog</a></li>
-          <li><a href="../../../../about-me/">About&nbsp;Me</a></li>
+          <li><a href="https://alexioannides.github.io/about-this-blog/">About this&nbsp;Blog</a></li>
+          <li><a href="https://alexioannides.github.io/about-me/">About&nbsp;Me</a></li>
 
         </ul>
       </nav>
@@ -90,7 +90,7 @@
   <main>
 
     <nav>
-      <a href="../../../..">    Home
+      <a href="https://alexioannides.github.io">    Home
 </a>
 
       <a href="/categories.html">Categories</a>
@@ -107,7 +107,7 @@
       
     <h1 id="deploying-python-ml-models-with-flask-docker-and-kubernetes">Deploying Python <span class="caps">ML</span> Models with Flask, Docker and&nbsp;Kubernetes</h1>
     <p>
-          Posted on Thu 10 January 2019 in <a href="../../../../category/machine-learning-engineering.html">machine-learning-engineering</a>
+          Posted on Thu 10 January 2019 in <a href="https://alexioannides.github.io/category/machine-learning-engineering.html">machine-learning-engineering</a>
 
 
     </p>
@@ -115,7 +115,7 @@
 
 
   <div>
-    <p><img alt="jpeg" src="../../../../images/machine-learning-engineering/k8s-ml-ops/docker+k8s.jpg"></p>
+    <p><img alt="jpeg" src="https://alexioannides.github.io/images/machine-learning-engineering/k8s-ml-ops/docker+k8s.jpg"></p>
 <p>A common pattern for deploying Machine Learning (<span class="caps">ML</span>) models into production environments - e.g. a <span class="caps">ML</span> model trained using the SciKit-Learn package in Python and ready to provide predictions on new data - is to expose them as RESTful <span class="caps">API</span> microservices hosted from within <a href="https://www.docker.com">Docker</a> containers, that are in-turn deployed to a cloud environment for handling everything required for maintaining continuous availability - e.g. fail-over, auto-scaling, load balancing and rolling service&nbsp;updates.</p>
 <p>The configuration details for a continuously available cloud deployment are specific to the targeted cloud provider(s) - e.g. the deployment process and topology for Amazon Web Services is not the same as that for Microsoft Azure, which in-turn is not the same as that for Google Cloud Platform. This constitutes knowledge that needs to be acquired for every targeted cloud provider. Furthermore, it is difficult (some would say near impossible) to test entire deployment strategies locally, which makes issues such as networking hard to debug. Do not underestimate the headaches and drain-on-resources that these issues can have, especially if you are not expert in these areas, which many <span class="caps">ML</span> and data science practitioners, are&nbsp;not. </p>
 <p><a href="https://kubernetes.io">Kubernetes</a> is a container orchestration platform that seeks to address these issues. Briefly, it provides a single mechanism for defining <strong>entire</strong> microservice-based application deployment topologies and their service-level requirements for maintaining continuous availability. It is agnostic to the targeted cloud provider, can be run on-premises and even locally on your laptop - all that&#8217;s required is a cluster of virtual machines running Kubernetes - i.e. a Kubernetes&nbsp;cluster.</p>
@@ -734,12 +734,12 @@ minikube delete
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="../../../../tag/python.html">python</a>
-      <a href="../../../../tag/machine-learning.html">machine-learning</a>
-      <a href="../../../../tag/machine-learning-operations.html">machine-learning-operations</a>
-      <a href="../../../../tag/kubernetes.html">kubernetes</a>
-      <a href="../../../../tag/docker.html">docker</a>
-      <a href="../../../../tag/gcp.html">GCP</a>
+      <a href="https://alexioannides.github.io/tag/python.html">python</a>
+      <a href="https://alexioannides.github.io/tag/machine-learning.html">machine-learning</a>
+      <a href="https://alexioannides.github.io/tag/machine-learning-operations.html">machine-learning-operations</a>
+      <a href="https://alexioannides.github.io/tag/kubernetes.html">kubernetes</a>
+      <a href="https://alexioannides.github.io/tag/docker.html">docker</a>
+      <a href="https://alexioannides.github.io/tag/gcp.html">GCP</a>
     </p>
   </div>
 
@@ -778,7 +778,7 @@ minikube delete
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Dr Alex Ioannides ",
-  "url" : "../../../..",
+  "url" : "https://alexioannides.github.io",
   "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
   "description": ""
 }
