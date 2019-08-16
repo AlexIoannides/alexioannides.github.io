@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0"><channel><title>Dr Alex Ioannides - machine-learning-engineering</title><link>https://alexioannides.github.io/</link><description>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</description><lastBuildDate>Thu, 10 Jan 2019 00:00:00 +0000</lastBuildDate><item><title>Deploying Python ML Models with Flask, Docker and Kubernetes</title><link>https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/</link><description>&lt;p&gt;&lt;img alt="jpeg" src="https://alexioannides.github.io/images/machine-learning-engineering/k8s-ml-ops/docker+k8s.jpg"&gt;&lt;/p&gt;
-&lt;p&gt;A common pattern for deploying Machine Learning (&lt;span class="caps"&gt;ML&lt;/span&gt;) models into production environments - e.g. a &lt;span class="caps"&gt;ML&lt;/span&gt; model trained using the SciKit-Learn package in Python and ready to provide predictions on new data - is to expose them as RESTful &lt;span class="caps"&gt;API&lt;/span&gt; microservices hosted from within &lt;a href="https://www.docker.com"&gt;Docker&lt;/a&gt; containers, that are in-turn deployed to a cloud environment for handling everything required for maintaining continuous availability - e.g. fail-over, auto-scaling, load balancing and rolling service&amp;nbsp;updates.&lt;/p&gt;
-&lt;p&gt;The configuration details for a continuously available cloud deployment are specific to the targeted cloud provider(s) - e.g. the deployment process and topology for Amazon Web Services is not the same as that for Microsoft Azure, which in-turn is not the same as that for Google Cloud Platform. This constitutes knowledge that needs to be acquired for every targeted cloud provider. Furthermore, it is difficult (some would say near impossible) to test entire deployment strategies locally, which makes issues such as networking hard to debug. Do not underestimate the headaches and drain-on-resources that these issues can have, especially if you are not expert in these areas, which many &lt;span class="caps"&gt;ML&lt;/span&gt; and data science practitioners, are&amp;nbsp;not. &lt;/p&gt;
-&lt;p&gt;&lt;a href="https://kubernetes.io"&gt;Kubernetes&lt;/a&gt; is a container orchestration platform that seeks to address these issues. Briefly, it provides a single mechanism for defining &lt;strong&gt;entire&lt;/strong&gt; microservice-based application deployment topologies and their service-level requirements for maintaining continuous availability. It is agnostic to the targeted cloud provider, can be run on-premises and even locally on your laptop - all that&amp;#8217;s required is a cluster of virtual machines running Kubernetes - i.e. a Kubernetes&amp;nbsp;cluster.&lt;/p&gt;
-&lt;p&gt;This blog post is designed to be read in conjunction with the code in &lt;a href="https://github.com/AlexIoannides/kubernetes-ml-ops"&gt;this GitHub repository&lt;/a&gt;, that contains the Python modules, Docker configuration files and Kubernetes instructions for demonstrating how a simple Python &lt;span class="caps"&gt;ML&lt;/span&gt; model can be turned into a production-grade RESTful model-scoring (or prediction) &lt;span class="caps"&gt;API&lt;/span&gt; service, using Docker and Kubernetes - both locally and with Google Cloud Platform (&lt;span class="caps"&gt;GCP&lt;/span&gt;). It is not a comprehensive guide to Kubernetes, Docker or &lt;span class="caps"&gt;ML&lt;/span&gt; - think of it more as a &amp;#8216;&lt;span class="caps"&gt;ML&lt;/span&gt; on Kubernetes 101&amp;#8217; for demonstrating capability and allowing newcomers to Kubernetes (e.g. data scientists who are more focused on building models as opposed to deploying them), to get up-and-running quickly and become familiar enough with the basic concepts to be able to use the official documentation for these&amp;nbsp;technologies.&lt;/p&gt;
-&lt;p&gt;We will demonstrate &lt;span class="caps"&gt;ML&lt;/span&gt; model deployment using two different strategies: first principles approaches using Docker and Kubernetes; and then deployment using the &lt;a href="https://www.seldon.io"&gt;Seldon-Core&lt;/a&gt; framework for managing &lt;span class="caps"&gt;ML&lt;/span&gt; model pipelines on Kubernetes. The former will help to appreciate the latter, which constitutes a powerful framework for deploying and performance-monitoring many complex &lt;span class="caps"&gt;ML&lt;/span&gt; model&amp;nbsp;pipelines.&lt;/p&gt;
-&lt;h2&gt;Containerising a Simple &lt;span class="caps"&gt;ML&lt;/span&gt; Model-Scoring Service using&amp;nbsp;Docker&lt;/h2&gt;
-&lt;p&gt;We start by demonstrating how to achieve this basic competence using the simple Python &lt;span class="caps"&gt;ML&lt;/span&gt; model-scoring &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; contained in the &lt;code&gt;api.py&lt;/code&gt; module, together with the &lt;code&gt;Dockerfile&lt;/code&gt; and Python dependencies frozen in &lt;code&gt;Pipfile.lock&lt;/code&gt;, all contained within the &lt;code&gt;py-flask-ml-score-api&lt;/code&gt; directory, whose core contents are as&amp;nbsp;follows,&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;17th August 2019&lt;/strong&gt; - &lt;em&gt;updated to reflect changes in the Kubernetes &lt;span class="caps"&gt;API&lt;/span&gt; and Seldon&amp;nbsp;Core.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;A common pattern for deploying Machine Learning (&lt;span class="caps"&gt;ML&lt;/span&gt;) models into production environments - e.g. &lt;span class="caps"&gt;ML&lt;/span&gt; models trained using the SciKit Learn or Keras packages (for Python), that are ready to provide predictions on new data - is to expose these &lt;span class="caps"&gt;ML&lt;/span&gt; as RESTful &lt;span class="caps"&gt;API&lt;/span&gt; microservices, hosted from within &lt;a href="https://www.docker.com"&gt;Docker&lt;/a&gt; containers. These can then deployed to a cloud environment for handling everything required for maintaining continuous availability - e.g. fault-tolerance, auto-scaling, load balancing and rolling service&amp;nbsp;updates.&lt;/p&gt;
+&lt;p&gt;The configuration details for a continuously available cloud deployment are specific to the targeted cloud provider(s) - e.g. the deployment process and topology for Amazon Web Services is not the same as that for Microsoft Azure, which in-turn is not the same as that for Google Cloud Platform. This constitutes knowledge that needs to be acquired for every cloud provider. Furthermore, it is difficult (some would say near impossible) to test entire deployment strategies locally, which makes issues such as networking hard to&amp;nbsp;debug.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://kubernetes.io"&gt;Kubernetes&lt;/a&gt; is a container orchestration platform that seeks to address these issues. Briefly, it provides a mechanism for defining &lt;strong&gt;entire&lt;/strong&gt; microservice-based application deployment topologies and their service-level requirements for maintaining continuous availability. It is agnostic to the targeted cloud provider, can be run on-premises and even locally on your laptop - all that&amp;#8217;s required is a cluster of virtual machines running Kubernetes - i.e. a Kubernetes&amp;nbsp;cluster.&lt;/p&gt;
+&lt;p&gt;This blog post is designed to be read in conjunction with the code in &lt;a href="https://github.com/AlexIoannides/kubernetes-ml-ops"&gt;this GitHub repository&lt;/a&gt;, that contains the Python modules, Docker configuration files and Kubernetes instructions for demonstrating how a simple Python &lt;span class="caps"&gt;ML&lt;/span&gt; model can be turned into a production-grade RESTful model-scoring (or prediction) &lt;span class="caps"&gt;API&lt;/span&gt; service, using Docker and Kubernetes - both locally and with Google Cloud Platform (&lt;span class="caps"&gt;GCP&lt;/span&gt;). It is not a comprehensive guide to Kubernetes, Docker or &lt;span class="caps"&gt;ML&lt;/span&gt; - think of it more as a &amp;#8216;&lt;span class="caps"&gt;ML&lt;/span&gt; on Kubernetes 101&amp;#8217; for demonstrating capability and allowing newcomers to Kubernetes (e.g. data scientists who are more focused on building models as opposed to deploying them), to get up-and-running quickly and become familiar with the basic concepts and&amp;nbsp;patterns.&lt;/p&gt;
+&lt;p&gt;We will demonstrate &lt;span class="caps"&gt;ML&lt;/span&gt; model deployment using two different approaches: a first principles approach using Docker and Kubernetes; and then a deployment using the &lt;a href="https://www.seldon.io"&gt;Seldon-Core&lt;/a&gt; Kubernetes native framework for streamlining the deployment of &lt;span class="caps"&gt;ML&lt;/span&gt; services. The former will help to appreciate the latter, which constitutes a powerful framework for deploying and performance-monitoring many complex &lt;span class="caps"&gt;ML&lt;/span&gt; model&amp;nbsp;pipelines.&lt;/p&gt;
+&lt;h2&gt;Containerising a Simple &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service using&amp;nbsp;Docker&lt;/h2&gt;
+&lt;p&gt;We start by demonstrating how to achieve this basic competence using the simple Python &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; contained in the &lt;code&gt;api.py&lt;/code&gt; module, together with the &lt;code&gt;Dockerfile&lt;/code&gt;, both within the &lt;code&gt;py-flask-ml-score-api&lt;/code&gt; directory, whose core contents are as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;py-flask-ml-score-api/
  &lt;span class="p"&gt;|&lt;/span&gt; Dockerfile
  &lt;span class="p"&gt;|&lt;/span&gt; Pipfile
@@ -15,9 +16,9 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;If you&amp;#8217;re already feeling lost then these files are discussed below, otherwise feel free to skip to &amp;#8216;Building a Docker&amp;nbsp;Image&amp;#8217;.&lt;/p&gt;
-&lt;h3&gt;Defining a Simple &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt;&amp;nbsp;Service&lt;/h3&gt;
-&lt;p&gt;The &lt;code&gt;api.py&lt;/code&gt; module uses the &lt;a href="http://flask.pocoo.org"&gt;Flask&lt;/a&gt; framework for defining a web service (&lt;code&gt;app&lt;/code&gt;) with a function (&lt;code&gt;score&lt;/code&gt;) that executes in response to a &lt;span class="caps"&gt;HTTP&lt;/span&gt; request to a specific &lt;span class="caps"&gt;URL&lt;/span&gt; (or &amp;#8216;route&amp;#8217;), thanks to being wrapped by the &lt;code&gt;app.route&lt;/code&gt; function. For reference, the relevant code is reproduced&amp;nbsp;below,&lt;/p&gt;
+&lt;p&gt;If you&amp;#8217;re already feeling lost then these files are discussed in the points below, otherwise feel free to skip to the next&amp;nbsp;section.&lt;/p&gt;
+&lt;h3&gt;&lt;code&gt;api.py&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;This is a Python module that uses the &lt;a href="http://flask.pocoo.org"&gt;Flask&lt;/a&gt; framework for defining a web service (&lt;code&gt;app&lt;/code&gt;), with a function (&lt;code&gt;score&lt;/code&gt;), that executes in response to a &lt;span class="caps"&gt;HTTP&lt;/span&gt; request to a specific &lt;span class="caps"&gt;URL&lt;/span&gt; (or &amp;#8216;route&amp;#8217;), thanks to being wrapped by the &lt;code&gt;app.route&lt;/code&gt; function. For reference, the relevant code is reproduced&amp;nbsp;below,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;flask&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jsonify&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;make_response&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;
 
 &lt;span class="n"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -34,32 +35,42 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;If running locally - e.g. by starting the web service using &lt;code&gt;python run api.py&lt;/code&gt; - we would be able reach our function (or &amp;#8216;endpoint&amp;#8217;) at &lt;code&gt;http://localhost:5000/score&lt;/code&gt;. This function takes data sent to it as &lt;span class="caps"&gt;JSON&lt;/span&gt; (that has been automatically de-serialised as a Python dict made available as the &lt;code&gt;request&lt;/code&gt; variable in our function definition), and returns a response (automatically serialised as &lt;span class="caps"&gt;JSON&lt;/span&gt;). In our example function, we expect an array of features, &lt;code&gt;X&lt;/code&gt;, that we pass to a &lt;span class="caps"&gt;ML&lt;/span&gt; model, which in our example returns those same features back to the caller - i.e. our &lt;span class="caps"&gt;ML&lt;/span&gt; model is simply the identity function, which we have chosen for demonstrative purposes. We could have loaded a pickled SciKit-Learn model and passed the data to its &lt;code&gt;predict&lt;/code&gt; method, returning its score for the feature-data as &lt;span class="caps"&gt;JSON&lt;/span&gt;, without much additional effort - see &lt;a href="https://github.com/AlexIoannides/ml-workflow-automation/blob/master/deploy/py-sklearn-flask-ml-service/api.py"&gt;here&lt;/a&gt; for an example of this in&amp;nbsp;action.&lt;/p&gt;
-&lt;h3&gt;Dockerfile&lt;/h3&gt;
-&lt;p&gt;The &lt;code&gt;Dockerfile&lt;/code&gt; is a &lt;a href="https://en.wikipedia.org/wiki/YAML"&gt;&lt;span class="caps"&gt;YAML&lt;/span&gt;&lt;/a&gt; file that allows us to define the contents and configure the operation of our intended Docker container, when it is running. This static data, when not executed as a container, is referred to as the &amp;#8216;image&amp;#8217;. For reference, the &lt;code&gt;Dockerfile&lt;/code&gt; is reproduced&amp;nbsp;below,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;FROM python:3.6-slim
-WORKDIR /usr/src/app
+&lt;p&gt;If running locally - e.g. by starting the web service using &lt;code&gt;python run api.py&lt;/code&gt; - we would be able reach our function (or &amp;#8216;endpoint&amp;#8217;) at &lt;code&gt;http://localhost:5000/score&lt;/code&gt;. This function takes data sent to it as &lt;span class="caps"&gt;JSON&lt;/span&gt; (that has been automatically de-serialised as a Python dict made available as the &lt;code&gt;request&lt;/code&gt; variable in our function definition), and returns a response (automatically serialised as &lt;span class="caps"&gt;JSON&lt;/span&gt;).&lt;/p&gt;
+&lt;p&gt;In our example function, we expect an array of features, &lt;code&gt;X&lt;/code&gt;, that we pass to a &lt;span class="caps"&gt;ML&lt;/span&gt; model, which in our example returns those same features back to the caller - i.e. our chosen &lt;span class="caps"&gt;ML&lt;/span&gt; model is the identity function, which we have chosen for purely demonstrative purposes. We could just as easily have loaded a pickled SciKit-Learn or Keras model and passed the data to the approproate &lt;code&gt;predict&lt;/code&gt; method, returning a score for the feature-data as &lt;span class="caps"&gt;JSON&lt;/span&gt; - see &lt;a href="https://github.com/AlexIoannides/ml-workflow-automation/blob/master/deploy/py-sklearn-flask-ml-service/api.py"&gt;here&lt;/a&gt; for an example of this in&amp;nbsp;action.&lt;/p&gt;
+&lt;h3&gt;&lt;code&gt;Dockerfile&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;A &lt;code&gt;Dockerfile&lt;/code&gt; is essentially the configuration file used by Docker, that allows you to define the contents and configure the operation of a Docker container, when operational. This static data, when not executed as a container, is referred to as the &amp;#8216;image&amp;#8217;. For reference, the &lt;code&gt;Dockerfile&lt;/code&gt; is reproduced&amp;nbsp;below,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; python:3.6-slim&lt;/span&gt;
+&lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; /usr/src/app&lt;/span&gt;
 COPY . .
-RUN pip install pipenv
-RUN pipenv install
-EXPOSE 5000
-ENTRYPOINT [&amp;quot;pipenv&amp;quot;, &amp;quot;run&amp;quot;, &amp;quot;python&amp;quot;, &amp;quot;api.py&amp;quot;]
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install pipenv
+&lt;span class="k"&gt;RUN&lt;/span&gt; pipenv install
+&lt;span class="k"&gt;EXPOSE&lt;/span&gt;&lt;span class="s"&gt; 5000&lt;/span&gt;
+&lt;span class="k"&gt;ENTRYPOINT&lt;/span&gt;&lt;span class="s"&gt; [&amp;quot;pipenv&amp;quot;, &amp;quot;run&amp;quot;, &amp;quot;python&amp;quot;, &amp;quot;api.py&amp;quot;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;In our example Dockerfile, we start by using a pre-configured Docker image (&lt;code&gt;python:3.6-slim&lt;/code&gt;) that has a lightweight version of Linux with Python already installed; we then copy the contents of the &lt;code&gt;py-flask-ml-score-api&lt;/code&gt; local directory to a directory on the image called &lt;code&gt;/usr/src/app&lt;/code&gt;; then use &lt;code&gt;pip&lt;/code&gt; to install the &lt;a href="https://pipenv.readthedocs.io/en/latest/"&gt;Pipenv&lt;/a&gt; package for Python dependency management; then use Pipenv to install the dependencies described in &lt;code&gt;Pipfile.lock&lt;/code&gt; into a virtual environment on the image; configure port 5000 to be exposed to the &amp;#8216;outside world&amp;#8217; on the running container; and finally, to start our Flask RESTful web service - &lt;code&gt;api.py&lt;/code&gt;. Building this custom image and asking the Docker daemon to run it (remember that a running image is a &amp;#8216;container&amp;#8217;), will expose our RESTful &lt;span class="caps"&gt;ML&lt;/span&gt; model-scoring service on port 5000 as if it were running on a dedicated virtual machine. Refer to the official &lt;a href="https://docs.docker.com/get-started/"&gt;Docker documentation&lt;/a&gt; for a more comprehensive discussion of the core Docker concepts used&amp;nbsp;above.&lt;/p&gt;
-&lt;h3&gt;Building a Docker&amp;nbsp;Image&lt;/h3&gt;
-&lt;p&gt;We assume that there is a &lt;a href="https://www.docker.com"&gt;Docker client and Docker daemon&lt;/a&gt; running locally, that the client is logged into an account on &lt;a href="https://hub.docker.com"&gt;DockerHub&lt;/a&gt; and that there is a terminal open in the this project&amp;#8217;s root directory (&lt;code&gt;kubernetes-ml-ops&lt;/code&gt;). To build the image described in the Dockerfile&amp;nbsp;run,&lt;/p&gt;
+&lt;p&gt;In our example &lt;code&gt;Dockerfile&lt;/code&gt; we:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;start by using a pre-configured Docker image (&lt;code&gt;python:3.6-slim&lt;/code&gt;) that has a version of the &lt;a href="https://www.alpinelinux.org/community/"&gt;Alpine Linux&lt;/a&gt; distribution with Python already&amp;nbsp;installed;&lt;/li&gt;
+&lt;li&gt;then copy the contents of the &lt;code&gt;py-flask-ml-score-api&lt;/code&gt; local directory to a directory on the image called &lt;code&gt;/usr/src/app&lt;/code&gt;;&lt;/li&gt;
+&lt;li&gt;then use &lt;code&gt;pip&lt;/code&gt; to install the &lt;a href="https://pipenv.readthedocs.io/en/latest/"&gt;Pipenv&lt;/a&gt; package for Python dependency management (see the appendix at the bottom for more information on how we use&amp;nbsp;Pipenv);&lt;/li&gt;
+&lt;li&gt;then use Pipenv to install the dependencies described in &lt;code&gt;Pipfile.lock&lt;/code&gt; into a virtual environment on the&amp;nbsp;image;&lt;/li&gt;
+&lt;li&gt;configure port 5000 to be exposed to the &amp;#8216;outside world&amp;#8217; on the running container; and&amp;nbsp;finally,&lt;/li&gt;
+&lt;li&gt;to start our Flask RESTful web service - &lt;code&gt;api.py&lt;/code&gt;. Note, that here we are relying on Flask&amp;#8217;s internal &lt;a href="https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface"&gt;&lt;span class="caps"&gt;WSGI&lt;/span&gt;&lt;/a&gt; server, whereas in a production setting we would recommend on configuring a more robust option (e.g. Gunicorn), &lt;a href="https://pythonspeed.com/articles/gunicorn-in-docker/"&gt;as discussed here&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Building this custom image and asking the Docker daemon to run it (remember that a running image is a &amp;#8216;container&amp;#8217;), will expose our RESTful &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service on port 5000 as if it were running on a dedicated virtual machine. Refer to the official &lt;a href="https://docs.docker.com/get-started/"&gt;Docker documentation&lt;/a&gt; for a more comprehensive discussion of these core&amp;nbsp;concepts.&lt;/p&gt;
+&lt;h3&gt;Building the Docker Image for the &lt;span class="caps"&gt;ML&lt;/span&gt; Scoring&amp;nbsp;Service&lt;/h3&gt;
+&lt;p&gt;We assume that &lt;a href="https://www.docker.com"&gt;Docker is running locally&lt;/a&gt; (both Docker client and daemon), that the client is logged into an account on &lt;a href="https://hub.docker.com"&gt;DockerHub&lt;/a&gt; and that there is a terminal open in the this project&amp;#8217;s root directory. To build the image described in the &lt;code&gt;Dockerfile&lt;/code&gt; run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker build --tag alexioannides/test-ml-score-api py-flask-ml-score-api
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Where &amp;#8216;alexioannides&amp;#8217; refers to the name of the &lt;a href="https://hub.docker.com/u/alexioannides"&gt;DockerHub account&lt;/a&gt; that we will push the image to, once we have tested it. To test that the image can be used to create a Docker container that functions as we expect it to&amp;nbsp;use,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker run --name test-api -p &lt;span class="m"&gt;5000&lt;/span&gt;:5000 -d alexioannides/test-ml-score-api
+&lt;p&gt;Where &amp;#8216;alexioannides&amp;#8217; refers to the name of the DockerHub account that we will push the image to, once we have tested it. To test that the image can be used to create a Docker container that functions as we expect it to&amp;nbsp;use,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker run --rm --name test-api -p &lt;span class="m"&gt;5000&lt;/span&gt;:5000 -d alexioannides/test-ml-score-api
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Where we have mapped port 5000 from the Docker container - i.e. the port our &lt;span class="caps"&gt;ML&lt;/span&gt; model-scoring service is listening to - to port 5000 on our host machine (localhost). Then check that the container is listed as running&amp;nbsp;using,&lt;/p&gt;
+&lt;p&gt;Where we have mapped port 5000 from the Docker container - i.e. the port our &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service is listening to - to port 5000 on our host machine (localhost). Then check that the container is listed as running&amp;nbsp;using,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker ps
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -77,9 +88,8 @@ ENTRYPOINT [&amp;quot;pipenv&amp;quot;, &amp;quot;run&amp;quot;, &amp;quot;pytho
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;All our test model does is return the input data - i.e. it is the identity function. Only a few lines of additional code are required to modify this service to load a SciKit Learn model from disk and pass new data to it&amp;#8217;s &amp;#8216;predict&amp;#8217; method for generating predictions - see &lt;a href="https://github.com/AlexIoannides/ml-workflow-automation/blob/master/deploy/py-sklearn-flask-ml-service/api.py"&gt;here&lt;/a&gt; for an example. Now that the container has been confirmed as operational, we can stop and remove&amp;nbsp;it,&lt;/p&gt;
+&lt;p&gt;All our test model does is return the input data - i.e. it is the identity function. Only a few lines of additional code are required to modify this service to load a SciKit Learn model from disk and pass new data to it&amp;#8217;s &amp;#8216;predict&amp;#8217; method for generating predictions - see &lt;a href="https://github.com/AlexIoannides/ml-workflow-automation/blob/master/deploy/py-sklearn-flask-ml-service/api.py"&gt;here&lt;/a&gt; for an example. Now that the container has been confirmed as operational, we can stop&amp;nbsp;it,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker stop test-api
-docker rm test-api
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -89,9 +99,26 @@ docker rm test-api
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Where we can now see that our chosen naming convention for the image is intrinsically linked to our target image registry (you will need to insert your own account &lt;span class="caps"&gt;ID&lt;/span&gt; where necessary). Once the upload is finished, log onto DockerHub to confirm that the upload has been successful via the &lt;a href="https://hub.docker.com/u/alexioannides"&gt;DockerHub &lt;span class="caps"&gt;UI&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;h2&gt;Installing Minikube for Local Development and&amp;nbsp;Testing&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://github.com/kubernetes/minikube"&gt;Minikube&lt;/a&gt; allows a single node Kubernetes cluster to run within a Virtual Machine (&lt;span class="caps"&gt;VM&lt;/span&gt;) within a local machine (i.e. on your laptop), for development purposes. On Mac &lt;span class="caps"&gt;OS&lt;/span&gt; X, the steps required to get up-and-running are as&amp;nbsp;follows:&lt;/p&gt;
+&lt;p&gt;Where we can now see that our chosen naming convention for the image is intrinsically linked to our target image registry (you will need to insert your own account &lt;span class="caps"&gt;ID&lt;/span&gt; where required). Once the upload is finished, log onto DockerHub to confirm that the upload has been successful via the &lt;a href="https://hub.docker.com/u/alexioannides"&gt;DockerHub &lt;span class="caps"&gt;UI&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Installing Kubernetes for Local Development and&amp;nbsp;Testing&lt;/h2&gt;
+&lt;p&gt;There are two options for installing a single-node Kubernetes cluster that is suitable for local development and testing: via the &lt;a href="https://www.docker.com/products/docker-desktop"&gt;Docker Desktop&lt;/a&gt; client, or via &lt;a href="https://github.com/kubernetes/minikube"&gt;Minikube&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Installing Kubernetes via Docker&amp;nbsp;Desktop&lt;/h3&gt;
+&lt;p&gt;If you have been using Docker on a Mac, then the chances are that you will have been doing this via the Docker Desktop application. If not (e.g. if you installed Docker Engine via Homebrew), then Docker Desktop can be downloaded &lt;a href="https://www.docker.com/products/docker-desktop"&gt;here&lt;/a&gt;. Docker Desktop now comes bundled with Kubernetes, which can be activated by going to &lt;code&gt;Preferences -&amp;gt; Kubernetes&lt;/code&gt; and selecting &lt;code&gt;Enable Kubernetes&lt;/code&gt;. It will take a while for Docker Desktop to download the Docker images required to run Kubernetes, so be patient. After it has finished, go to &lt;code&gt;Preferences -&amp;gt; Advanced&lt;/code&gt; and ensure that at least 2 CPUs and 4 GiB have been allocated to the Docker Engine, which are the the minimum resources required to deploy a single Seldon &lt;span class="caps"&gt;ML&lt;/span&gt;&amp;nbsp;component.&lt;/p&gt;
+&lt;p&gt;To interact with the Kubernetes cluster you will need the &lt;code&gt;kubectl&lt;/code&gt; Command Line Interface (&lt;span class="caps"&gt;CLI&lt;/span&gt;) tool, which will need to be downloaded separately. The easiest way to do this on a Mac is via Homebrew - i.e with &lt;code&gt;brew install kubernetes-cli&lt;/code&gt;. Once you have &lt;code&gt;kubectl&lt;/code&gt; installed and a Kubernetes cluster up-and-running, test that everything is working as expected by&amp;nbsp;running,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl cluster-info
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Which ought to return something along the lines&amp;nbsp;of,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Kubernetes master is running at https://kubernetes.docker.internal:6443
+KubeDNS is running at https://kubernetes.docker.internal:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use &lt;span class="s1"&gt;&amp;#39;kubectl cluster-info dump&amp;#39;&lt;/span&gt;.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Installing Kubernetes via&amp;nbsp;Minikube&lt;/h3&gt;
+&lt;p&gt;On Mac &lt;span class="caps"&gt;OS&lt;/span&gt; X, the steps required to get up-and-running with Minikube are as&amp;nbsp;follows:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;make sure the &lt;a href="https://brew.sh"&gt;Homebrew&lt;/a&gt; package manager for &lt;span class="caps"&gt;OS&lt;/span&gt; X is installed;&amp;nbsp;then,&lt;/li&gt;
 &lt;li&gt;install VirtualBox using, &lt;code&gt;brew cask install virtualbox&lt;/code&gt; (you may need to approve installation via &lt;span class="caps"&gt;OS&lt;/span&gt; X System Preferences); and&amp;nbsp;then,&lt;/li&gt;
@@ -108,16 +135,18 @@ docker rm test-api
 
 
 &lt;p&gt;Where &lt;code&gt;kubectl&lt;/code&gt; is the standard Command Line Interface (&lt;span class="caps"&gt;CLI&lt;/span&gt;) client for interacting with the Kubernetes &lt;span class="caps"&gt;API&lt;/span&gt; (which was installed as part of Minikube, but is also available&amp;nbsp;separately).&lt;/p&gt;
-&lt;h3&gt;Launching the Containerised &lt;span class="caps"&gt;ML&lt;/span&gt; Model-Scoring Service on&amp;nbsp;Minikube&lt;/h3&gt;
-&lt;p&gt;To launch our test model-scoring service on Kubernetes, start by running the container within a Kubernetes &lt;a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/"&gt;pod&lt;/a&gt; that is managed by a &lt;a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/"&gt;replication controller&lt;/a&gt;, which is the device that ensures that at least one pod running our service is operational at any given time. This is achieved&amp;nbsp;with, &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl run test-ml-score-api &lt;span class="se"&gt;\&lt;/span&gt;
-    --image&lt;span class="o"&gt;=&lt;/span&gt;alexioannides/test-ml-score-api:latest &lt;span class="se"&gt;\ &lt;/span&gt;
-    --port&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;5000&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-    --generator&lt;span class="o"&gt;=&lt;/span&gt;run/v1
+&lt;h3&gt;Deploying the Containerised &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service on&amp;nbsp;Kubernetes&lt;/h3&gt;
+&lt;p&gt;To launch our test model scoring service on Kubernetes, we will start by deploying the containerised service within a Kubernetes &lt;a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/"&gt;Pod&lt;/a&gt;, whose rollout is managed by a &lt;a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/"&gt;Deployment&lt;/a&gt;, which in in-turn creates a &lt;a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/"&gt;ReplicaSet&lt;/a&gt; - a Kubernetes resource that ensures a minimum number of pods (or replicas), running our service are operational at any given time. This is achieved&amp;nbsp;with,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create deployment test-ml-score-api --image&lt;span class="o"&gt;=&lt;/span&gt;alexioannides/test-ml-score-api:latest
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Where the &lt;code&gt;--generator=run/v1&lt;/code&gt; flag triggers the construction of the replication controller to manage the pod. To check that it&amp;#8217;s running&amp;nbsp;use,&lt;/p&gt;
+&lt;p&gt;To check on the status of the deployment&amp;nbsp;run,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl rollout status deployment test-ml-score-api
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And to see the pods that is has created&amp;nbsp;run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl get pods
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -136,41 +165,38 @@ docker rm test-api
 
 
 &lt;p&gt;To expose the container as a (load balanced) &lt;a href="https://kubernetes.io/docs/concepts/services-networking/service/"&gt;service&lt;/a&gt; to the outside world, we have to create a Kubernetes service that references it. This is achieved with the following&amp;nbsp;command,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl expose replicationcontroller test-ml-score-api &lt;span class="se"&gt;\&lt;/span&gt;
-    --type&lt;span class="o"&gt;=&lt;/span&gt;LoadBalancer &lt;span class="se"&gt;\&lt;/span&gt;
-    --name test-ml-score-api-http
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl expose deployment test-ml-score-api --port &lt;span class="m"&gt;5000&lt;/span&gt; --type&lt;span class="o"&gt;=&lt;/span&gt;LoadBalancer --name test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;To check that this has worked and to find the services&amp;#8217;s external &lt;span class="caps"&gt;IP&lt;/span&gt; address&amp;nbsp;run,&lt;/p&gt;
+&lt;p&gt;If you are using Docker Desktop, then this will automatically emulate a load balancer at &lt;code&gt;http://localhost:5000&lt;/code&gt;. To find where Minikube has exposed its emulated load balancer&amp;nbsp;run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;minikube service list
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;And we can then test our new service - for&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl http://192.168.99.100:30888/score &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;p&gt;Now we test our new service - for example (with Docker&amp;nbsp;Desktop),&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl http://localhost:5000/score &lt;span class="se"&gt;\&lt;/span&gt;
     --request POST &lt;span class="se"&gt;\&lt;/span&gt;
     --header &lt;span class="s2"&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
     --data &lt;span class="s1"&gt;&amp;#39;{&amp;quot;X&amp;quot;: [1, 2]}&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Note that we need to use Minikube-specific commands as Minikube does not setup a real-life load balancer (which is what would happen if we made this request on a cloud platform). To tear-down the load balancer, replication controller, pod and Minikube cluster run the following commands in&amp;nbsp;sequence,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl delete rc test-ml-score-api
-kubectl delete service test-ml-score-api-http
-minikube delete
+&lt;p&gt;Note, neither Docker Desktop or Minikube setup a real-life load balancer (which is what would happen if we made this request on a cloud platform). To tear-down the load balancer, deployment and pod, run the following commands in&amp;nbsp;sequence,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl delete deployment test-ml-score-api
+kubectl delete service test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h2&gt;Configuring a Multi-Node Cluster on Google Cloud&amp;nbsp;Platform&lt;/h2&gt;
-&lt;p&gt;In order to perform testing on a real-world Kubernetes cluster with far greater resources that those available on a laptop, the easiest way is to use a managed Kubernetes platform from a cloud provider. We will use Kubernetes Engine on &lt;a href="https://cloud.google.com"&gt;Google Cloud Platform (&lt;span class="caps"&gt;GCP&lt;/span&gt;)&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In order to perform testing on a real-world Kubernetes cluster with far greater resources than those available on a laptop, the easiest way is to use a managed Kubernetes platform from a cloud provider. We will use Kubernetes Engine on &lt;a href="https://cloud.google.com"&gt;Google Cloud Platform (&lt;span class="caps"&gt;GCP&lt;/span&gt;)&lt;/a&gt;.&lt;/p&gt;
 &lt;h3&gt;Getting Up-and-Running with Google Cloud&amp;nbsp;Platform&lt;/h3&gt;
 &lt;p&gt;Before we can use Google Cloud Platform, sign-up for an account and create a project specifically for this work. Next, make sure that the &lt;span class="caps"&gt;GCP&lt;/span&gt; &lt;span class="caps"&gt;SDK&lt;/span&gt; is installed on your local machine -&amp;nbsp;e.g.,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;brew cask install google-cloud-sdk
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Or by downloading an installation image &lt;a href="https://cloud.google.com/sdk/docs/quickstart-macos"&gt;directly from &lt;span class="caps"&gt;GCP&lt;/span&gt;&lt;/a&gt;. Note, that if you haven&amp;#8217;t installed Minikube and all of the tools that come packaged with it, then you will need to install Kubectl, which can be done using the &lt;span class="caps"&gt;GCP&lt;/span&gt; &lt;span class="caps"&gt;SDK&lt;/span&gt;,&lt;/p&gt;
+&lt;p&gt;Or by downloading an installation image &lt;a href="https://cloud.google.com/sdk/docs/quickstart-macos"&gt;directly from &lt;span class="caps"&gt;GCP&lt;/span&gt;&lt;/a&gt;. Note, that if you haven&amp;#8217;t already installed Kubectl, then you will need to do so now, which can be done using the &lt;span class="caps"&gt;GCP&lt;/span&gt; &lt;span class="caps"&gt;SDK&lt;/span&gt;,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gcloud components install kubectl
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -187,17 +213,11 @@ minikube delete
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;And then go make a cup of coffee while you wait for the cluster to be&amp;nbsp;created.&lt;/p&gt;
-&lt;h3&gt;Launching the Containerised &lt;span class="caps"&gt;ML&lt;/span&gt; Model-Scoring Service on the &lt;span class="caps"&gt;GCP&lt;/span&gt;&lt;/h3&gt;
-&lt;p&gt;This is largely the same as we did for running the test service locally using Minikube - run the following commands in&amp;nbsp;sequence,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl run test-ml-score-api &lt;span class="se"&gt;\&lt;/span&gt;
-    --image&lt;span class="o"&gt;=&lt;/span&gt;alexioannides/test-ml-score-api:latest &lt;span class="se"&gt;\&lt;/span&gt;
-    --port&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;5000&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-    --generator&lt;span class="o"&gt;=&lt;/span&gt;run/v1
-
-kubectl expose replicationcontroller test-ml-score-api &lt;span class="se"&gt;\&lt;/span&gt;
-    --type&lt;span class="o"&gt;=&lt;/span&gt;LoadBalancer &lt;span class="se"&gt;\&lt;/span&gt;
-    --name test-ml-score-api-http
+&lt;p&gt;And then go make a cup of coffee while you wait for the cluster to be created. Note, that this will automatically switch your &lt;code&gt;kubectl&lt;/code&gt; context to point to the cluster on &lt;span class="caps"&gt;GCP&lt;/span&gt;, as you will see if you run, &lt;code&gt;kubectl config get-contexts&lt;/code&gt;. To switch back to the Docker Desktop client use &lt;code&gt;kubectl config use-context docker-desktop&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;Launching the Containerised &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service on the &lt;span class="caps"&gt;GCP&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;This is largely the same as we did for running the test service locally - run the following commands in&amp;nbsp;sequence,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create deployment test-ml-score-api --image&lt;span class="o"&gt;=&lt;/span&gt;alexioannides/test-ml-score-api:latest
+kubectl expose deployment test-ml-score-api --port &lt;span class="m"&gt;5000&lt;/span&gt; --type&lt;span class="o"&gt;=&lt;/span&gt;LoadBalancer --name test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -207,7 +227,7 @@ kubectl expose replicationcontroller test-ml-score-api &lt;span class="se"&gt;\&
 
 
 &lt;p&gt;And then we can test our service on &lt;span class="caps"&gt;GCP&lt;/span&gt; - for&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl http://35.234.149.50:5000/score &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl http://35.246.92.213:5000/score &lt;span class="se"&gt;\&lt;/span&gt;
     --request POST &lt;span class="se"&gt;\&lt;/span&gt;
     --header &lt;span class="s2"&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
     --data &lt;span class="s1"&gt;&amp;#39;{&amp;quot;X&amp;quot;: [1, 2]}&amp;#39;&lt;/span&gt;
@@ -228,14 +248,14 @@ kubectl expose replicationcontroller test-ml-score-api &lt;span class="se"&gt;\&
 
 
 &lt;p&gt;Finally, we tear-down the replication controller and load&amp;nbsp;balancer,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl delete replicationcontroller test-ml-score-api
-kubectl delete service test-ml-score-api-http
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl delete deployment test-ml-score-api
+kubectl delete service test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h2&gt;Switching Between Kubectl&amp;nbsp;Contexts&lt;/h2&gt;
-&lt;p&gt;If you are running both with Minikube locally and with a cluster on &lt;span class="caps"&gt;GCP&lt;/span&gt;, then you can switch Kubectl &lt;a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/"&gt;context&lt;/a&gt; from one cluster to the other using, for&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl config use-context minikube
+&lt;p&gt;If you are running both with Kubernetes locally and with a cluster on &lt;span class="caps"&gt;GCP&lt;/span&gt;, then you can switch Kubectl &lt;a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/"&gt;context&lt;/a&gt; from one cluster to the other, as&amp;nbsp;follows,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl config use-context docker-desktop
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -244,60 +264,13 @@ kubectl delete service test-ml-score-api-http
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Using &lt;span class="caps"&gt;YAML&lt;/span&gt; Files to Define and Deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; Model-Scoring&amp;nbsp;Service&lt;/h2&gt;
-&lt;p&gt;Up to this point we have been using Kubectl commands to define and deploy a basic version of our &lt;span class="caps"&gt;ML&lt;/span&gt; model-scoring service. This is fine for demonstrative purposes, but quickly becomes limiting as well as unmanageable. In practice, the standard way of defining entire applications is with &lt;span class="caps"&gt;YAML&lt;/span&gt; files that are posted to the Kubernetes &lt;span class="caps"&gt;API&lt;/span&gt;. The &lt;code&gt;py-flask-ml-score.yaml&lt;/code&gt; file in the &lt;code&gt;py-flask-ml-score-api&lt;/code&gt; directory is an example of how our &lt;span class="caps"&gt;ML&lt;/span&gt; model-scoring service can be defined in a single &lt;span class="caps"&gt;YAML&lt;/span&gt; file, which we reproduce below for&amp;nbsp;reference,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;apiVersion&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v1&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;kind&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Namespace&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;metadata&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-app&lt;/span&gt;
-&lt;span class="nn"&gt;---&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;apiVersion&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v1&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;kind&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;ReplicationController&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;metadata&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-score-rc&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;labels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-score&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;env&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;prod&lt;/span&gt;    
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;namespace&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-app&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;spec&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;replicas&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;2&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;template&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;metadata&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-      &lt;span class="l l-Scalar l-Scalar-Plain"&gt;labels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-score&lt;/span&gt;
-        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;env&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;prod&lt;/span&gt;
-      &lt;span class="l l-Scalar l-Scalar-Plain"&gt;namespace&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-app&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;spec&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-      &lt;span class="l l-Scalar l-Scalar-Plain"&gt;containers&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-      &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;image&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;alexioannides/test-ml-score-api&lt;/span&gt;
-        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-score-api&lt;/span&gt;
-        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;ports&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-        &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;containerPort&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;5000&lt;/span&gt;
-          &lt;span class="l l-Scalar l-Scalar-Plain"&gt;protocol&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;TCP&lt;/span&gt;
-&lt;span class="nn"&gt;---&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;apiVersion&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v1&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;kind&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Service&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;metadata&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-score-lb&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;labels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-score&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;namespace&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-app&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;spec&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;type&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;LoadBalancer&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;ports&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;port&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;5000&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;targetPort&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;5000&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;selector&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-score&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This can now be deployed using a single&amp;nbsp;command,&lt;/p&gt;
+&lt;h2&gt;Using &lt;span class="caps"&gt;YAML&lt;/span&gt; Files to Define and Deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring&amp;nbsp;Service&lt;/h2&gt;
+&lt;p&gt;Up to this point we have been using Kubectl commands to define and deploy a basic version of our &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service. This is fine for demonstrative purposes, but quickly becomes limiting, as well as unmanageable. In practice, the standard way of defining entire Kubernetes deployments is with &lt;span class="caps"&gt;YAML&lt;/span&gt; files,  posted to the Kubernetes &lt;span class="caps"&gt;API&lt;/span&gt;. The &lt;code&gt;py-flask-ml-score.yaml&lt;/code&gt; file in the &lt;code&gt;py-flask-ml-score-api&lt;/code&gt; directory is an example of how our &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service can be defined in a single &lt;span class="caps"&gt;YAML&lt;/span&gt; file. This can now be deployed using a single&amp;nbsp;command,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl apply -f py-flask-ml-score-api/py-flask-ml-score.yaml
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Note, that we have defined three separate Kubernetes components in this single file: a replication controller, a load-balancer service and a &lt;a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/"&gt;namespace&lt;/a&gt; for all of these components (and their sub-components) - using &lt;code&gt;---&lt;/code&gt; to delimit the definition of each separate component. To see all components deployed into this namespace&amp;nbsp;use,&lt;/p&gt;
+&lt;p&gt;Note, that we have defined three separate Kubernetes components in this single file: a &lt;a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/"&gt;namespace&lt;/a&gt;, a deployment and a load-balanced service - for all of these components (and their sub-components), using &lt;code&gt;---&lt;/code&gt; to delimit the definition of each separate component. To see all components deployed into this namespace&amp;nbsp;use,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl get all --namespace test-ml-app
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -323,55 +296,47 @@ kubectl delete service test-ml-score-api-http
 
 
 &lt;p&gt;Which saves us from having to use multiple commands to delete each component individually. Refer to the &lt;a href="https://kubernetes.io/docs/home/"&gt;official documentation for the Kubernetes &lt;span class="caps"&gt;API&lt;/span&gt;&lt;/a&gt; to understand the contents of this &lt;span class="caps"&gt;YAML&lt;/span&gt; file in greater&amp;nbsp;depth.&lt;/p&gt;
-&lt;h2&gt;Using Helm Charts to Define and Deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; Model-Scoring&amp;nbsp;Service&lt;/h2&gt;
-&lt;p&gt;Writing &lt;span class="caps"&gt;YAML&lt;/span&gt; files for Kubernetes can get repetitive and hard to manage, especially if there is a lot of &amp;#8216;copy paste&amp;#8217; involved when only a handful of parameters need to be changed from one deployment to the next and there is a &amp;#8216;wall of &lt;span class="caps"&gt;YAML&lt;/span&gt;&amp;#8217; that needs to be modified. Enter &lt;a href="https://helm.sh//"&gt;Helm&lt;/a&gt; - a framework for creating, executing and managing Kubernetes deployment templates. What follows is a very high-level demonstration of how Helm can be used to deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; model-scoring service - for a comprehensive discussion of Helm&amp;#8217;s full capabilities (and there are a &lt;strong&gt;lot&lt;/strong&gt; of them), please refer to the &lt;a href="https://docs.helm.sh"&gt;official documentation&lt;/a&gt;. Seldon-Core can also be deployed using Helm and we will cover this in more detail later&amp;nbsp;on.&lt;/p&gt;
+&lt;h2&gt;Using Helm Charts to Define and Deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring&amp;nbsp;Service&lt;/h2&gt;
+&lt;p&gt;Writing &lt;span class="caps"&gt;YAML&lt;/span&gt; files for Kubernetes can get repetitive and hard to manage, especially if there is a lot of &amp;#8216;copy-paste&amp;#8217; involved, when only a handful of parameters need to be changed from one deployment to the next,  but there is a &amp;#8216;wall of &lt;span class="caps"&gt;YAML&lt;/span&gt;&amp;#8217; that needs to be modified. Enter &lt;a href="https://helm.sh//"&gt;Helm&lt;/a&gt; - a framework for creating, executing and managing Kubernetes deployment templates. What follows is a very high-level demonstration of how Helm can be used to deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service - for a comprehensive discussion of Helm&amp;#8217;s full capabilities (and here are a lot of them), please refer to the &lt;a href="https://docs.helm.sh"&gt;official documentation&lt;/a&gt;. Seldon-Core can also be deployed using Helm and we will cover this in more detail later&amp;nbsp;on.&lt;/p&gt;
 &lt;h3&gt;Installing&amp;nbsp;Helm&lt;/h3&gt;
 &lt;p&gt;As before, the easiest way to install Helm onto Mac &lt;span class="caps"&gt;OS&lt;/span&gt; X is to use the Homebrew package&amp;nbsp;manager,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;brew install kubernetes-helm
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Helm relies on a dedicated deployment server, referred to as the &amp;#8216;Tiller&amp;#8217;, to be running within the same Kubernetes cluster we wish to deploy our applications to. Before we deploy Tiller we need to create a cluster-wide super-user role to assign to it (via a dedicated service&amp;nbsp;account),&lt;/p&gt;
+&lt;p&gt;Helm relies on a dedicated deployment server, referred to as the &amp;#8216;Tiller&amp;#8217;, to be running within the same Kubernetes cluster we wish to deploy our applications to. Before we deploy Tiller we need to create a cluster-wide super-user role to assign to it, so that it can create and modify Kubernetes resources in any namespace. To achieve this, we start by creating a &lt;a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/"&gt;Service Account&lt;/a&gt; that is destined for our tiller. A Service Account is a means by which a pod (and any service running within it), when associated with a Service Accoutn, can authenticate itself to the Kubernetes &lt;span class="caps"&gt;API&lt;/span&gt;, to be able to view, create and modify resources. We create this in the &lt;code&gt;kube-system&lt;/code&gt; namespace (a common convention) as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl --namespace kube-system create serviceaccount tiller
-kubectl create clusterrolebinding tiller &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We then create a binding between this Service Account and the &lt;code&gt;cluster-admin&lt;/code&gt; &lt;a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/"&gt;Cluster Role&lt;/a&gt;, which as the name suggest grants cluster-wide admin&amp;nbsp;rights,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create clusterrolebinding tiller &lt;span class="se"&gt;\&lt;/span&gt;
     --clusterrole cluster-admin &lt;span class="se"&gt;\&lt;/span&gt;
     --serviceaccount&lt;span class="o"&gt;=&lt;/span&gt;kube-system:tiller
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;We can now deploy the Helm Tiller to your Kubernetes cluster&amp;nbsp;using,&lt;/p&gt;
+&lt;p&gt;We can now deploy the Helm Tiller to a Kubernetes cluster, with the desired access rights&amp;nbsp;using,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm init --service-account tiller
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Deploying the &lt;span class="caps"&gt;ML&lt;/span&gt; Model-Scoring&amp;nbsp;Service&lt;/h3&gt;
-&lt;p&gt;To initiate a new deployment - referred to as a &amp;#8216;chart&amp;#8217; in Helm terminology -&amp;nbsp;run,&lt;/p&gt;
+&lt;h3&gt;Deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring&amp;nbsp;Service&lt;/h3&gt;
+&lt;p&gt;To create a fresh Helm deployment definition - referred to as a &amp;#8216;chart&amp;#8217; in Helm terminology -&amp;nbsp;run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm create NAME-OF-YOUR-HELM-CHART
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This creates a new directory - e.g. &lt;code&gt;helm-ml-score-app&lt;/code&gt; as included with this repository - with the following high-level directory&amp;nbsp;structure,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm-ml-score-app/
- | -- charts/
- | -- templates/
- | Chart.yaml
- | values.yaml
+ &lt;span class="p"&gt;|&lt;/span&gt; -- charts/
+ &lt;span class="p"&gt;|&lt;/span&gt; -- templates/
+ &lt;span class="p"&gt;|&lt;/span&gt; Chart.yaml
+ &lt;span class="p"&gt;|&lt;/span&gt; values.yaml
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Briefly, the &lt;code&gt;charts&lt;/code&gt; directory contains other charts that our new chart will depend on (we will not make use of this), the &lt;code&gt;templates&lt;/code&gt; directory contains our Helm templates, &lt;code&gt;Chart.yaml&lt;/code&gt; contains core information for our chart (e.g. name and version information) and &lt;code&gt;values.yaml&lt;/code&gt; contains default values to render our templates with, in the case that no values are passed from the command line - for&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-score&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;env&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;prod&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;namespace&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;test-ml-app&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;image&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;alexioannides/test-ml-score-api&lt;/span&gt;
-
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;replicas&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;2&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;containerPort&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;5000&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;targetPort&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;5000&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;p&gt;Briefly, the &lt;code&gt;charts&lt;/code&gt; directory contains other charts that our new chart will depend on (we will not make use of this), the &lt;code&gt;templates&lt;/code&gt; directory contains our Helm templates, &lt;code&gt;Chart.yaml&lt;/code&gt; contains core information for our chart (e.g. name and version information) and &lt;code&gt;values.yaml&lt;/code&gt; contains default values to render our templates with (in the case that no values are set from the command&amp;nbsp;line).&lt;/p&gt;
 &lt;p&gt;The next step is to delete all of the files in the &lt;code&gt;templates&lt;/code&gt; directory (apart from &lt;code&gt;NOTES.txt&lt;/code&gt;), and to replace them with our own. We start with &lt;code&gt;namespace.yaml&lt;/code&gt; for declaring a namespace for our&amp;nbsp;app,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;apiVersion&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v1&lt;/span&gt;
 &lt;span class="l l-Scalar l-Scalar-Plain"&gt;kind&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Namespace&lt;/span&gt;
@@ -380,27 +345,29 @@ kubectl create clusterrolebinding tiller &lt;span class="se"&gt;\&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Anyone familiar with &lt;span class="caps"&gt;HTML&lt;/span&gt; template frameworks (e.g. Jinja), will be familiar with the use of &lt;code&gt;{{}}&lt;/code&gt; for defining values that will be injected into the rendered template. In this specific instance &lt;code&gt;.Values.app.namespace&lt;/code&gt; injects the &lt;code&gt;app.namespace&lt;/code&gt; variable, whose default value defined in &lt;code&gt;values.yaml&lt;/code&gt;. Next we define the contents of our pod in &lt;code&gt;pod.yaml&lt;/code&gt;,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;apiVersion&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v1&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;kind&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;ReplicationController&lt;/span&gt;
+&lt;p&gt;Anyone familiar with &lt;span class="caps"&gt;HTML&lt;/span&gt; template frameworks (e.g. Jinja), will be familiar with the use of &lt;code&gt;{{}}&lt;/code&gt; for defining values that will be injected into the rendered template. In this specific instance &lt;code&gt;.Values.app.namespace&lt;/code&gt; injects the &lt;code&gt;app.namespace&lt;/code&gt; variable, whose default value defined in &lt;code&gt;values.yaml&lt;/code&gt;. Next we define a deployment of pods in &lt;code&gt;deployment.yaml&lt;/code&gt;,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;apiVersion&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;apps/v1&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;kind&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Deployment&lt;/span&gt;
 &lt;span class="l l-Scalar l-Scalar-Plain"&gt;metadata&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;-rc&lt;/span&gt;
   &lt;span class="l l-Scalar l-Scalar-Plain"&gt;labels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
     &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
     &lt;span class="l l-Scalar l-Scalar-Plain"&gt;env&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.env&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
   &lt;span class="l l-Scalar l-Scalar-Plain"&gt;namespace&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.namespace&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
 &lt;span class="l l-Scalar l-Scalar-Plain"&gt;spec&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;replicas&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.replicas&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;replicas&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;1&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;selector&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;matchLabels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+      &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
   &lt;span class="l l-Scalar l-Scalar-Plain"&gt;template&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
     &lt;span class="l l-Scalar l-Scalar-Plain"&gt;metadata&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
       &lt;span class="l l-Scalar l-Scalar-Plain"&gt;labels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
         &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
         &lt;span class="l l-Scalar l-Scalar-Plain"&gt;env&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.env&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-      &lt;span class="l l-Scalar l-Scalar-Plain"&gt;namespace&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.namespace&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
     &lt;span class="l l-Scalar l-Scalar-Plain"&gt;spec&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
       &lt;span class="l l-Scalar l-Scalar-Plain"&gt;containers&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
       &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;image&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.image&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;-api&lt;/span&gt;
+        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
         &lt;span class="l l-Scalar l-Scalar-Plain"&gt;ports&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
         &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;containerPort&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.containerPort&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
           &lt;span class="l l-Scalar l-Scalar-Plain"&gt;protocol&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;TCP&lt;/span&gt;
@@ -431,7 +398,7 @@ kubectl create clusterrolebinding tiller &lt;span class="se"&gt;\&lt;/span&gt;
 
 
 &lt;p&gt;If you are happy with the results of the &amp;#8216;dry run&amp;#8217;, then execute the deployment and generate a release from the chart&amp;nbsp;using,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm install helm-ml-score-app
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm install helm-ml-score-app --name test-ml-app
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -441,168 +408,143 @@ kubectl create clusterrolebinding tiller &lt;span class="se"&gt;\&lt;/span&gt;
 
 
 &lt;p&gt;And to the status of all their constituent components (e.g. pods, replication controllers, service, etc.) use for&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm status willing-yak
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm status test-ml-app
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;The &lt;span class="caps"&gt;ML&lt;/span&gt; scoring service can now be tested in exactly the same way as we have done previously (above). Once you have convinced yourself that it&amp;#8217;s working as expected, the release can be deleted&amp;nbsp;using,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm delete willing-way
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm delete test-ml-app
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Using Seldon to Deploy a &lt;span class="caps"&gt;ML&lt;/span&gt; Model-Scoring Service on&amp;nbsp;Kubernetes&lt;/h2&gt;
-&lt;p&gt;Seldon&amp;#8217;s core mission is to simplify the deployment of complex &lt;span class="caps"&gt;ML&lt;/span&gt; prediction pipelines on top of Kubernetes. In this demonstration we are going to focus on the simplest possible example - i.e. the simple &lt;span class="caps"&gt;ML&lt;/span&gt; model-scoring &lt;span class="caps"&gt;API&lt;/span&gt; we have already been&amp;nbsp;using.&lt;/p&gt;
-&lt;h3&gt;Installing&amp;nbsp;Source-to-Image&lt;/h3&gt;
-&lt;p&gt;Seldon-core depends heavily on &lt;a href="https://github.com/openshift/source-to-image"&gt;Source-to-Image&lt;/a&gt; - a tool for automating the process of building code artifacts from source and injecting them into docker images. For Seldon, the artifacts are the different pieces of an &lt;span class="caps"&gt;ML&lt;/span&gt; pipeline. We use Homebrew to install Source-to-Image on Mac &lt;span class="caps"&gt;OS&lt;/span&gt;&amp;nbsp;X,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;brew install source-to-image
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;To confirm that it has been installed correctly&amp;nbsp;run,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;s2i version
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h3&gt;Install the Seldon-Core Python&amp;nbsp;Package&lt;/h3&gt;
-&lt;p&gt;We&amp;#8217;re using &lt;a href="https://pipenv.readthedocs.io/en/latest/"&gt;Pipenv&lt;/a&gt; to manage the Python dependencies for this project. To install &lt;code&gt;seldon-core&lt;/code&gt; into a virtual environment managed by Pipenv for use only by this project&amp;nbsp;use,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv install --python &lt;span class="m"&gt;3&lt;/span&gt;.6 seldon-core
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Note, that we are specifying Python 3.6 explicitly, as at the time of writing Seldon-Core does not work with Python 3.7. If you don&amp;#8217;t wish to use &lt;code&gt;pipenv&lt;/code&gt; you can install &lt;code&gt;seldon-core&lt;/code&gt; using &lt;code&gt;pip&lt;/code&gt; into whatever environment is most convenient and then drop the use of &lt;code&gt;pipenv run&lt;/code&gt; when testing with Seldon-Core&amp;nbsp;(below).&lt;/p&gt;
+&lt;h2&gt;Using Seldon to Deploy a &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service on&amp;nbsp;Kubernetes&lt;/h2&gt;
+&lt;p&gt;Seldon&amp;#8217;s core mission is to simplify the repeated deployment and management of complex &lt;span class="caps"&gt;ML&lt;/span&gt; prediction pipelines on top of Kubernetes. In this demonstration we are going to focus on the simplest possible example - i.e. the simple &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring &lt;span class="caps"&gt;API&lt;/span&gt; we have already been&amp;nbsp;using.&lt;/p&gt;
 &lt;h3&gt;Building an &lt;span class="caps"&gt;ML&lt;/span&gt; Component for&amp;nbsp;Seldon&lt;/h3&gt;
-&lt;p&gt;To deploy a &lt;span class="caps"&gt;ML&lt;/span&gt; component using Seldon, we need to create Seldon-compatible Docker images. We start by following &lt;a href="https://github.com/SeldonIO/seldon-core/blob/master/docs/wrappers/python.md"&gt;these guidelines&lt;/a&gt; for defining a Python class that wraps an &lt;span class="caps"&gt;ML&lt;/span&gt; model targeted for deployment with Seldon. This is contained within the &lt;code&gt;seldon-ml-score-component&lt;/code&gt; directory. In essence, this replaces the need to define RESTful APIs, which we did in the above examples using Flask. Firstly, ensure that the docker daemon is running locally and then&amp;nbsp;run,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;s2i build seldon-ml-score-component &lt;span class="se"&gt;\&lt;/span&gt;
-    seldonio/seldon-core-s2i-python3:0.4 &lt;span class="se"&gt;\&lt;/span&gt;
-    alexioannides/seldon-ml-score-component
+&lt;p&gt;To deploy a &lt;span class="caps"&gt;ML&lt;/span&gt; component using Seldon, we need to create Seldon-compatible Docker images. We start by following &lt;a href="https://docs.seldon.io/projects/seldon-core/en/latest/python/python_wrapping_docker.html"&gt;these guidelines&lt;/a&gt; for defining a Python class that wraps an &lt;span class="caps"&gt;ML&lt;/span&gt; model targeted for deployment with Seldon. This is contained within the &lt;code&gt;seldon-ml-score-component&lt;/code&gt; directory.&lt;/p&gt;
+&lt;h4&gt;Building the Docker Image for use with&amp;nbsp;Seldon&lt;/h4&gt;
+&lt;p&gt;Seldon requires that the Docker image for the &lt;span class="caps"&gt;ML&lt;/span&gt; scoring service be structured in a particular&amp;nbsp;way:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the &lt;span class="caps"&gt;ML&lt;/span&gt; model has to be wrapped in a Python class with a &lt;code&gt;predict&lt;/code&gt; method with a particular signature (or&amp;nbsp;interface);&lt;/li&gt;
+&lt;li&gt;the &lt;code&gt;seldon-core&lt;/code&gt; Python package must be installed (we use &lt;code&gt;pipenv&lt;/code&gt; to manage dependencies as discussed above and in the Appendix below);&amp;nbsp;and,&lt;/li&gt;
+&lt;li&gt;the container starts by running the Seldon service using the &lt;code&gt;seldon-core-microservice&lt;/code&gt; entry-point provided by the &lt;code&gt;seldon-core&lt;/code&gt; package.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For the precise details, see &lt;code&gt;MLScore.py&lt;/code&gt; and &lt;code&gt;Dockefile&lt;/code&gt; in the &lt;code&gt;seldon-ml-score-component&lt;/code&gt; directory. Next, build this&amp;nbsp;image,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker build seldon-ml-score-component -t alexioannides/test-ml-score-seldon-api:latest
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Launch the container using Docker&amp;nbsp;locally,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker run --name seldon-s2i-test -p &lt;span class="m"&gt;5000&lt;/span&gt;:5000 -d alexioannides/seldon-ml-score-component
+&lt;p&gt;Before we push this image to our registry, we need to make sure that it&amp;#8217;s working as expected. Start the image on the local Docker&amp;nbsp;daemon,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker run --rm -p &lt;span class="m"&gt;5000&lt;/span&gt;:5000 -d alexioannides/test-ml-score-seldon-api:latest
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;And then test the resulting Seldon component using the dedicated testing application from the &lt;code&gt;seldon-core&lt;/code&gt; Python&amp;nbsp;package,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv run seldon-core-tester seldon-ml-score-component/contract.json localhost &lt;span class="m"&gt;5000&lt;/span&gt; -p
+&lt;p&gt;And then send it a request (using a different request format to the ones we&amp;#8217;ve used thus&amp;nbsp;far),&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl -g http://localhost:5000/predict &lt;span class="se"&gt;\&lt;/span&gt;
+    --data-urlencode &lt;span class="s1"&gt;&amp;#39;json={&amp;quot;data&amp;quot;:{&amp;quot;names&amp;quot;:[&amp;quot;a&amp;quot;,&amp;quot;b&amp;quot;],&amp;quot;tensor&amp;quot;:{&amp;quot;shape&amp;quot;:[2,2],&amp;quot;values&amp;quot;:[0,0,1,1]}}}&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;If it works as expected (i.e. without throwing any errors), push it to an image registry - for&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker push alexioannides/seldon-ml-score-component
+&lt;p&gt;If response is as expected (i.e. it contains the same payload as the request), then push the&amp;nbsp;image,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker push alexioannides/test-ml-score-seldon-api:latest
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Configuring Kubernetes for&amp;nbsp;Seldon-Core&lt;/h3&gt;
-&lt;p&gt;Before we can proceed any further, we will need to grant a cluster-wide super-user role to our user, using Role-Based Access Control (&lt;span class="caps"&gt;RBAC&lt;/span&gt;). On &lt;span class="caps"&gt;GCP&lt;/span&gt; this is achieved&amp;nbsp;with,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create clusterrolebinding kube-system-cluster-admin &lt;span class="se"&gt;\&lt;/span&gt;
-    --clusterrole cluster-admin &lt;span class="se"&gt;\&lt;/span&gt;
-    --serviceaccount kube-system:default &lt;span class="se"&gt;\&lt;/span&gt;
-    --user &lt;span class="k"&gt;$(&lt;/span&gt;gcloud info --format&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;value(config.account)&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;h3&gt;Deploying a &lt;span class="caps"&gt;ML&lt;/span&gt; Component with&amp;nbsp;Seldon-Core&lt;/h3&gt;
+&lt;p&gt;We now move on to deploying our Seldon compatible &lt;span class="caps"&gt;ML&lt;/span&gt; component to a Kubernetes cluster and creating a fault-tolerant and scalable service from it. To achieve this, we will &lt;a href="https://docs.seldon.io/projects/seldon-core/en/latest/workflow/install.html"&gt;deploy Seldon-Core using Helm charts&lt;/a&gt;. We start by creating a namespace that will contain the &lt;code&gt;seldon-core-operator&lt;/code&gt;, a custom Kubernetes resource required to deploy any &lt;span class="caps"&gt;ML&lt;/span&gt; model using&amp;nbsp;Seldon,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create namespace seldon-core
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;And for Minikube&amp;nbsp;with,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create clusterrolebinding kube-system-cluster-admin &lt;span class="se"&gt;\&lt;/span&gt;
-    --clusterrole cluster-admin &lt;span class="se"&gt;\&lt;/span&gt;
-    --serviceaccount kube-system:default
+&lt;p&gt;Then we deploy Seldon-Core using Helm and the official Seldon Helm chart repository hosted at &lt;code&gt;https://storage.googleapis.com/seldon-charts&lt;/code&gt;,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm install seldon-core-operator &lt;span class="se"&gt;\&lt;/span&gt;
+  --name seldon-core &lt;span class="se"&gt;\&lt;/span&gt;
+  --repo https://storage.googleapis.com/seldon-charts &lt;span class="se"&gt;\&lt;/span&gt;
+  --set usageMetrics.enabled&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;false&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+  --namespace seldon-core
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Next, we create a Kubernetes namespace for all Seldon components that we will&amp;nbsp;deploy,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create namespace seldon
+&lt;p&gt;Next, we deploy the Ambassador &lt;span class="caps"&gt;API&lt;/span&gt; gateway for Kubernetes, that will act as a single point of entry into our Kubernetes cluster and will be able to route requests to any &lt;span class="caps"&gt;ML&lt;/span&gt; model we have deployed using Seldon. We will create a dedicate namespace for the Ambassador&amp;nbsp;deployment,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create namespace ambassador
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;And we then set it as a default for the current kubectl&amp;nbsp;context,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl config set-context &lt;span class="k"&gt;$(&lt;/span&gt;kubectl config current-context&lt;span class="k"&gt;)&lt;/span&gt; --namespace&lt;span class="o"&gt;=&lt;/span&gt;seldon
+&lt;p&gt;And then deploy Ambassador using the most recent charts in the official Helm&amp;nbsp;repository,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm install stable/ambassador &lt;span class="se"&gt;\&lt;/span&gt;
+  --name ambassador &lt;span class="se"&gt;\&lt;/span&gt;
+  --set crds.keep&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;false&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+  --namespace ambassador
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;So that whenever we run a kubectl command it will now explicitly reference the &lt;code&gt;seldon&lt;/code&gt; namespace.&lt;/p&gt;
-&lt;h3&gt;Deploying a &lt;span class="caps"&gt;ML&lt;/span&gt; Component with Seldon-Core via Helm&amp;nbsp;Charts&lt;/h3&gt;
-&lt;p&gt;We now move on to deploying our Seldon compatible &lt;span class="caps"&gt;ML&lt;/span&gt; component and creating a service from it. To achieve this, we will start by demonstrating how to &lt;a href="https://github.com/SeldonIO/seldon-core/blob/master/docs/install.md#with-helm"&gt;deploy Seldon-Core using Helm charts&lt;/a&gt;. To deploy Seldon-Core using Helm and Helm charts, we start by deploying the Seldon Custom Resource Definitions (&lt;span class="caps"&gt;CRD&lt;/span&gt;), directly from the Seldon chart repository hosted at &lt;code&gt;https://storage.googleapis.com/seldon-charts&lt;/code&gt;,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm install seldon-core-crd &lt;span class="se"&gt;\&lt;/span&gt;
-    --name seldon-core-crd &lt;span class="se"&gt;\&lt;/span&gt;
-    --repo https://storage.googleapis.com/seldon-charts &lt;span class="se"&gt;\&lt;/span&gt;
-    --set usage_metrics.enabled&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;p&gt;If we now run &lt;code&gt;helm list --namespace seldon-core&lt;/code&gt; we should see that Seldon-Core has been deployed and is waiting for Seldon &lt;span class="caps"&gt;ML&lt;/span&gt; components to be deployed. To deploy our Seldon &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service we create a separate namespace for&amp;nbsp;it,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create namespace test-ml-seldon-app
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;We then do the same for&amp;nbsp;Seldon-Core,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm install seldon-core &lt;span class="se"&gt;\&lt;/span&gt;
-    --name seldon-core &lt;span class="se"&gt;\&lt;/span&gt;
-    --repo https://storage.googleapis.com/seldon-charts &lt;span class="se"&gt;\&lt;/span&gt;
-    --set apife.enabled&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;false&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-    --set rbac.enabled&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-    --set ambassador.enabled&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-    --set &lt;span class="nv"&gt;single_namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-    --set &lt;span class="nv"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;seldon
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;If we now run &lt;code&gt;helm list --namespace seldon&lt;/code&gt; we should see that Seldon-Core has been deployed and is waiting for Seldon &lt;span class="caps"&gt;ML&lt;/span&gt; components to be deployed alongside it. To deploy our Seldon-compatible &lt;span class="caps"&gt;ML&lt;/span&gt; model score service we configure and deploy another Seldon chart as&amp;nbsp;follows,&lt;/p&gt;
+&lt;p&gt;And then configure and deploy another official Seldon Helm chart as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm install seldon-single-model &lt;span class="se"&gt;\&lt;/span&gt;
-    --name test-seldon-ml-score-api &lt;span class="se"&gt;\&lt;/span&gt;
-    --repo https://storage.googleapis.com/seldon-charts &lt;span class="se"&gt;\&lt;/span&gt;
-    --set model.image.name&lt;span class="o"&gt;=&lt;/span&gt;alexioannides/seldon-ml-score-component
+  --name test-ml-seldon-app &lt;span class="se"&gt;\&lt;/span&gt;
+  --repo https://storage.googleapis.com/seldon-charts &lt;span class="se"&gt;\&lt;/span&gt;
+  --set model.image.name&lt;span class="o"&gt;=&lt;/span&gt;alexioannides/test-ml-score-seldon-api:latest &lt;span class="se"&gt;\&lt;/span&gt;
+  --namespace test-ml-seldon-app
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Testing the &lt;span class="caps"&gt;API&lt;/span&gt;&lt;/h3&gt;
-&lt;p&gt;We will test our Seldon-Core based deployment with the same approaches that we have been using&amp;nbsp;above.&lt;/p&gt;
-&lt;h4&gt;Via Port&amp;nbsp;Forwarding&lt;/h4&gt;
-&lt;p&gt;We follow the same general approach as we did for our first-principles Kubernetes deployments above, but using embedded bash commands to find the Ambassador &lt;span class="caps"&gt;API&lt;/span&gt; gateway component we need to target for port-forwarding. Regardless of whether or not we working with &lt;span class="caps"&gt;GCP&lt;/span&gt; or Minikube&amp;nbsp;use,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl port-forward &lt;span class="se"&gt;\&lt;/span&gt;
-    &lt;span class="k"&gt;$(&lt;/span&gt;kubectl get pods -n seldon -l &lt;span class="nv"&gt;service&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;ambassador -o &lt;span class="nv"&gt;jsonpath&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{.items[0].metadata.name}&amp;#39;&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-    -n seldon &lt;span class="m"&gt;8003&lt;/span&gt;:8080
+&lt;p&gt;Note, that multiple &lt;span class="caps"&gt;ML&lt;/span&gt; models can now be deployed using Seldon by repeating the last two steps and they will all be automatically reachable via the same Ambassador &lt;span class="caps"&gt;API&lt;/span&gt; gateway, which we will now use to test our Seldon &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring&amp;nbsp;service.&lt;/p&gt;
+&lt;h3&gt;Testing the &lt;span class="caps"&gt;API&lt;/span&gt; via the Ambassador Gateway &lt;span class="caps"&gt;API&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;To test the Seldon-based &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service, we follow the same general approach as we did for our first-principles Kubernetes deployments above, but we will route our requests via the Ambassador &lt;span class="caps"&gt;API&lt;/span&gt; gateway. To find the &lt;span class="caps"&gt;IP&lt;/span&gt; address for Ambassador service&amp;nbsp;run,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl -n ambassador get service ambassador
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;We can then test the model-scoring &lt;span class="caps"&gt;API&lt;/span&gt; deployed via Seldon-Core, using the &lt;span class="caps"&gt;API&lt;/span&gt; defined by&amp;nbsp;Seldon-Core,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl http://localhost:8003/seldon/test-seldon-ml-score-api/api/v0.1/predictions &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;p&gt;Which will be &lt;code&gt;localhost:80&lt;/code&gt; if using Docker Desktop, or an &lt;span class="caps"&gt;IP&lt;/span&gt; address if running on &lt;span class="caps"&gt;GCP&lt;/span&gt; or Minikube (were you will need to remember to use &lt;code&gt;minikuke service list&lt;/code&gt; in the latter case). Now test the prediction end-point - for&amp;nbsp;example,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl http://35.246.28.247:80/seldon/test-ml-seldon-app/test-ml-seldon-app/api/v0.1/predictions &lt;span class="se"&gt;\&lt;/span&gt;
     --request POST &lt;span class="se"&gt;\&lt;/span&gt;
     --header &lt;span class="s2"&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
     --data &lt;span class="s1"&gt;&amp;#39;{&amp;quot;data&amp;quot;:{&amp;quot;names&amp;quot;:[&amp;quot;a&amp;quot;,&amp;quot;b&amp;quot;],&amp;quot;tensor&amp;quot;:{&amp;quot;shape&amp;quot;:[2,2],&amp;quot;values&amp;quot;:[0,0,1,1]}}}&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h4&gt;Via the Public&amp;nbsp;Internet&lt;/h4&gt;
-&lt;p&gt;Firstly, we need to expose the service to the public internet. If working on &lt;span class="caps"&gt;GCP&lt;/span&gt; we can expose the service via the &lt;code&gt;ambassador&lt;/code&gt; &lt;a href="https://microservices.io/patterns/apigateway.html"&gt;&lt;span class="caps"&gt;API&lt;/span&gt; gateway&lt;/a&gt; component deployed as part of&amp;nbsp;Seldon-Core,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl expose deployment seldon-core-ambassador &lt;span class="se"&gt;\&lt;/span&gt;
-    --type&lt;span class="o"&gt;=&lt;/span&gt;LoadBalancer &lt;span class="se"&gt;\&lt;/span&gt;
-    --name&lt;span class="o"&gt;=&lt;/span&gt;seldon-core-ambassador-external
+&lt;p&gt;If you want to understand the full logic behind the routing see the &lt;a href="https://docs.seldon.io/projects/seldon-core/en/latest/workflow/serving.html"&gt;Seldon documentation&lt;/a&gt;, but the &lt;span class="caps"&gt;URL&lt;/span&gt; is essentially assembled&amp;nbsp;using,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;http://&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;ambassadorEndpoint&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;/seldon/&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;namespace&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;/&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;deploymentName&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;/api/v0.1/predictions
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;And then to retrieve the external &lt;span class="caps"&gt;IP&lt;/span&gt; for &lt;span class="caps"&gt;GCP&lt;/span&gt;&amp;nbsp;use,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl get services
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;And for Minikube&amp;nbsp;use,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;minikube service list
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;And then to test the pubic endpoint use, for&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl http://192.168.99.111:32074/seldon/test-seldon-ml-score-api/api/v0.1/predictions &lt;span class="se"&gt;\&lt;/span&gt;
-    --request POST &lt;span class="se"&gt;\&lt;/span&gt;
-    --header &lt;span class="s2"&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-    --data &lt;span class="s1"&gt;&amp;#39;{&amp;quot;data&amp;quot;:{&amp;quot;names&amp;quot;:[&amp;quot;a&amp;quot;,&amp;quot;b&amp;quot;],&amp;quot;tensor&amp;quot;:{&amp;quot;shape&amp;quot;:[2,2],&amp;quot;values&amp;quot;:[0,0,1,1]}}}&amp;#39;&lt;/span&gt;
+&lt;p&gt;If your request has been successful, then you should see a response along the lines&amp;nbsp;of,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;meta&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;puid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hsu0j9c39a4avmeonhj2ugllh9&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;tags&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;routing&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;requestPath&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;quot;classifier&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;alexioannides/test-ml-score-seldon-api:latest&amp;quot;&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;metrics&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+  &lt;span class="p"&gt;},&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;names&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;t:0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;t:1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;tensor&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;quot;shape&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;quot;values&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3&gt;Tear&amp;nbsp;Down&lt;/h3&gt;
-&lt;p&gt;To delete a Helm deployment from the Kubernetes cluster, first retrieve a list of all the releases in the Seldon&amp;nbsp;namespace,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm list --namespace seldon
+&lt;p&gt;To delete a single Seldon &lt;span class="caps"&gt;ML&lt;/span&gt; model and its namespace, deployed using the steps above,&amp;nbsp;run,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm delete test-ml-seldon-app --purge &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;
+  kubectl delete namespace test-ml-seldon-app
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;And then remove them&amp;nbsp;using,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm delete seldon-core --purge &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-helm delete seldon-core-crd --purge &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-helm delete test-seldon-ml-score-api --purge
+&lt;p&gt;Follow the same pattern to remove the Seldon Core Operator and&amp;nbsp;Ambassador,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm delete seldon-core --purge &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; kubectl delete namespace seldon-core
+helm delete ambassador --purge &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; kubectl delete namespace ambassador
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -614,4 +556,54 @@ helm delete test-seldon-ml-score-api --purge
 &lt;p&gt;And likewise if working with&amp;nbsp;Minikube,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;minikube stop
 minikube delete
-&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Dr Alex Ioannides</dc:creator><pubDate>Thu, 10 Jan 2019 00:00:00 +0000</pubDate><guid isPermaLink="false">tag:alexioannides.github.io,2019-01-10:/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/</guid><category>python</category><category>machine-learning</category><category>machine-learning-operations</category><category>kubernetes</category><category>docker</category><category>GCP</category></item></channel></rss>
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If running on Docker Desktop, navigate to &lt;code&gt;Preferences -&amp;gt; Reset&lt;/code&gt; to reset the&amp;nbsp;cluster.&lt;/p&gt;
+&lt;h2&gt;Where to go from&amp;nbsp;Here&lt;/h2&gt;
+&lt;p&gt;The following list of resources will help you dive deeply into the subjects we skimmed-over&amp;nbsp;above:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the full set of functionality provided by &lt;a href="https://www.seldon.io/open-source/"&gt;Seldon&lt;/a&gt;;&lt;/li&gt;
+&lt;li&gt;the excellent &amp;#8216;&lt;em&gt;Kubernetes in Action&lt;/em&gt;&amp;#8216; by Marko Lukša &lt;a href="https://www.manning.com/books/kubernetes-in-action"&gt;available from Manning Publications&lt;/a&gt;;&lt;/li&gt;
+&lt;li&gt;&lt;span class="quo"&gt;&amp;#8216;&lt;/span&gt;&lt;em&gt;Docker in Action&lt;/em&gt;&amp;#8216; by Jeff Nickoloff and Stephen Kuenzli &lt;a href="https://www.manning.com/books/docker-in-action-second-edition"&gt;also available from Manning Publications&lt;/a&gt;;&amp;nbsp;and,&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;span class="quo"&gt;&amp;#8216;&lt;/span&gt;Flask Web Development&amp;#8217;&lt;/em&gt; by Miguel Grinberg &lt;a href="http://shop.oreilly.com/product/0636920089056.do"&gt;O&amp;#8217;Reilly&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Appendix - Using Pipenv for Managing Python Package&amp;nbsp;Dependencies&lt;/h2&gt;
+&lt;p&gt;We use &lt;a href="https://docs.pipenv.org"&gt;pipenv&lt;/a&gt; for managing project dependencies and Python environments (i.e. virtual environments). All of the direct packages dependencies required to run the code (e.g. Flask or Seldon-Core), as well as any packages that could have been used during development (e.g. flake8 for code linting and IPython for interactive console sessions), are described in the &lt;code&gt;Pipfile&lt;/code&gt;. Their &lt;strong&gt;precise&lt;/strong&gt; downstream dependencies are described in &lt;code&gt;Pipfile.lock&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;Installing&amp;nbsp;Pipenv&lt;/h3&gt;
+&lt;p&gt;To get started with Pipenv, first of all download it - assuming that there is a global version of Python available on your system and on the &lt;span class="caps"&gt;PATH&lt;/span&gt;, then this can be achieved by running the following&amp;nbsp;command,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip3 install pipenv
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Pipenv is also available to install from many non-Python package managers. For example, on &lt;span class="caps"&gt;OS&lt;/span&gt; X it can be installed using the &lt;a href="https://brew.sh"&gt;Homebrew&lt;/a&gt; package manager, with the following terminal&amp;nbsp;command,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;brew install pipenv
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;For more information, including advanced configuration options, see the &lt;a href="https://docs.pipenv.org"&gt;official pipenv documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Installing Projects&amp;nbsp;Dependencies&lt;/h3&gt;
+&lt;p&gt;If you want to experiment with the Python code in the &lt;code&gt;py-flask-ml-score-api&lt;/code&gt; or &lt;code&gt;seldon-ml-score-component&lt;/code&gt; directories, then make sure that you&amp;#8217;re in the appropriate directory and then&amp;nbsp;run,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This will install all of the direct project&amp;nbsp;dependencies.&lt;/p&gt;
+&lt;h3&gt;Running Python, IPython and JupyterLab from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/h3&gt;
+&lt;p&gt;In order to continue development in a Python environment that precisely mimics the one the project was initially developed with, use Pipenv from the command line as&amp;nbsp;follows,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv run python3
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The &lt;code&gt;python3&lt;/code&gt; command could just as well be &lt;code&gt;seldon-core-microservice&lt;/code&gt; or any other entry-point provided by the &lt;code&gt;seldon-core&lt;/code&gt; package - for example, in the &lt;code&gt;Dockerfile&lt;/code&gt; for the &lt;code&gt;seldon-ml-score-component&lt;/code&gt; we start the Seldon-based &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service&amp;nbsp;using,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv run seldon-core-microservice ...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Pipenv&amp;nbsp;Shells&lt;/h3&gt;
+&lt;p&gt;Prepending &lt;code&gt;pipenv&lt;/code&gt; to every command you want to run within the context of your Pipenv-managed virtual environment, can get very tedious. This can be avoided by entering into a Pipenv-managed&amp;nbsp;shell,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv shell
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;which is equivalent to &amp;#8216;activating&amp;#8217; the virtual environment. Any command will now be executed within the virtual environment. Use &lt;code&gt;exit&lt;/code&gt; to leave the shell&amp;nbsp;session.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Dr Alex Ioannides</dc:creator><pubDate>Thu, 10 Jan 2019 00:00:00 +0000</pubDate><guid isPermaLink="false">tag:alexioannides.github.io,2019-01-10:/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/</guid><category>python</category><category>machine-learning</category><category>machine-learning-operations</category><category>kubernetes</category><category>docker</category><category>GCP</category></item></channel></rss>
