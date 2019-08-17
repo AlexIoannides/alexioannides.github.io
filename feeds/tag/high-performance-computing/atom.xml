@@ -8,7 +8,7 @@
 &lt;/blockquote&gt;
 &lt;p&gt;A classic example would be a request made to a web server via &lt;span class="caps"&gt;HTTP&lt;/span&gt;, that has yet to return and whose value remains unknown until it does (and which has promised to return at some point in the future). This &amp;#8216;promise&amp;#8217; is an object assigned to a variable in R like any other, and allows code execution to progress until the moment the code explicitly requires the future to be resolved (i.e. to &amp;#8216;make good&amp;#8217; on it&amp;#8217;s promise). So the code does not need to wait for the web server until the very moment that the information anticipated in its response it actually needed. In the intervening execution time we can send requests to other web servers, run some other computations, etc. Ultimately, this leads to &lt;strong&gt;faster&lt;/strong&gt; and &lt;strong&gt;more efficient code&lt;/strong&gt;. This way of working also opens the door to distributed (i.e. parallel) computation, as the computation assigned to each new future can be executed on a new thread (and executed on a different core on the same machine, or on another&amp;nbsp;machine/node).&lt;/p&gt;
 &lt;p&gt;The future &lt;span class="caps"&gt;API&lt;/span&gt; is extremely expressive and the associated documentation is excellent. My motivation here is not to repeat any of this, but rather to give a few examples to serve as inspiration for how futures could be used for day-to-day Data Science tasks in&amp;nbsp;R.&lt;/p&gt;
-&lt;h1&gt;Creating a Future to be Executed on a Different Core to that Running the Main&amp;nbsp;Script&lt;/h1&gt;
+&lt;h1 id="creating-a-future-to-be-executed-on-a-different-core-to-that-running-the-main-script"&gt;Creating a Future to be Executed on a Different Core to that Running the Main&amp;nbsp;Script&lt;/h1&gt;
 &lt;p&gt;To demonstrate the syntax and structure required to achieve this aim, I am going to delegate to a future the task of estimating the mean of 10 million random samples from the normal distribution, and ask it to spawn a new R process on a different core in order to do so. The code to achieve this is as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;future&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -48,9 +48,9 @@ f_dots&lt;span class="p"&gt;()&lt;/span&gt;
 
 
 &lt;p&gt;Here, &lt;code&gt;resolved(f)&lt;/code&gt; will return &lt;code&gt;FALSE&lt;/code&gt; until the future &lt;code&gt;f&lt;/code&gt; has finished&amp;nbsp;executing.&lt;/p&gt;
-&lt;h1&gt;Useful Use&amp;nbsp;Cases&lt;/h1&gt;
+&lt;h1 id="useful-use-cases"&gt;Useful Use&amp;nbsp;Cases&lt;/h1&gt;
 &lt;p&gt;I can recall many situations where futures would have been handy when writing R scripts. The examples below are the most obvious that come to mind. No doubt there will be many&amp;nbsp;more.&lt;/p&gt;
-&lt;h2&gt;Distributed (Parallel)&amp;nbsp;Computation&lt;/h2&gt;
+&lt;h2 id="distributed-parallel-computation"&gt;Distributed (Parallel)&amp;nbsp;Computation&lt;/h2&gt;
 &lt;p&gt;In the past, when I&amp;#8217;ve felt the need to distribute a calculation I have usually used the &lt;code&gt;mclapply&lt;/code&gt; function (i.e. multi-core &lt;code&gt;lapply&lt;/code&gt;), from the &lt;code&gt;parallel&lt;/code&gt; library that comes bundled together with base R. Computing the mean of 100 million random samples from the normal distribution would look something&amp;nbsp;like,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;parallel&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -99,7 +99,7 @@ microbenchmark&lt;span class="p"&gt;({&lt;/span&gt; samples &lt;span class="o"&g
 
 
 &lt;p&gt;We can see that the multi-threaded version is nearly 3 times faster, which is not surprising given that we&amp;#8217;re using 3 extra threads. Note that time is lost spawning the extra threads and combining their results (usually referred to as &amp;#8216;overhead&amp;#8217;), such that distributing a calculation can actually increase computation time if the benefit of parallelisation is less than the cost of the&amp;nbsp;overhead.&lt;/p&gt;
-&lt;h2&gt;Non-Blocking Asynchronous&amp;nbsp;Input/Output&lt;/h2&gt;
+&lt;h2 id="non-blocking-asynchronous-inputoutput"&gt;Non-Blocking Asynchronous&amp;nbsp;Input/Output&lt;/h2&gt;
 &lt;p&gt;I have often found myself in the situation where I need to read several large &lt;span class="caps"&gt;CSV&lt;/span&gt; files, each of which can take a long time to load. Because the files can only be loaded sequentially, I have had to wait for one file to be read before the next one can start loading, which compounds the time devoted to input. Thanks to futures, we can can now achieve &lt;a href="https://en.wikipedia.org/wiki/Asynchronous_I/O" title="Wikipedia on asynchronous io"&gt;asynchronous input and output&lt;/a&gt; as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;readr&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -159,5 +159,5 @@ values&lt;span class="p"&gt;(&lt;/span&gt;time_futures&lt;span class="p"&gt;)&lt
 
 
 &lt;p&gt;The same logic applies to accessing databases and executing &lt;span class="caps"&gt;SQL&lt;/span&gt; queries via &lt;a href="https://en.wikipedia.org/wiki/Open_Database_Connectivity" title="Wikipedia on ODBC"&gt;&lt;span class="caps"&gt;ODBC&lt;/span&gt;&lt;/a&gt; or &lt;a href="https://en.wikipedia.org/wiki/Java_Database_Connectivity" title="Wikipedia on JDBC"&gt;&lt;span class="caps"&gt;JDBC&lt;/span&gt;&lt;/a&gt;. For example, large complex queries can be split into &amp;#8216;chunks&amp;#8217; and sent asynchronously to the database server in order to have them executed on multiple server threads. The output can then be unified once the server has sent back the chunks, using R (e.g. with &lt;a href="https://github.com/hadley/dplyr" title="dplyr on GitHub"&gt;dplyr&lt;/a&gt;). This is a strategy that I have been using with Apache Spark, but I could now implement it within R. Similarly, multiple database tables can be accessed concurrently, and so&amp;nbsp;on.  &lt;/p&gt;
-&lt;h1&gt;Final&amp;nbsp;Thoughts&lt;/h1&gt;
+&lt;h1 id="final-thoughts"&gt;Final&amp;nbsp;Thoughts&lt;/h1&gt;
 &lt;p&gt;I have only really scratched the surface of what is possible with futures. For example, &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future&lt;/a&gt; supports multiple execution plans including &lt;code&gt;lazy&lt;/code&gt; and &lt;code&gt;cluster&lt;/code&gt; (for multiple machines/nodes) - I have only focused on increasing performance on a single machine with multiple cores. If this post has provided some inspiration or left you curious, then head over to the official &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future docs&lt;/a&gt; for the full details (which are a joy to read and&amp;nbsp;work-through).&lt;/p&gt;</content><category term="data-processing"></category><category term="high-performance-computing"></category></entry></feed>

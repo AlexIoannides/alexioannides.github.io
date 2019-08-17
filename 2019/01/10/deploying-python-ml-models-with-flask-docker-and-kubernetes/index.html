@@ -122,18 +122,70 @@
 <p><a href="https://kubernetes.io">Kubernetes</a> is a container orchestration platform that seeks to address these issues. Briefly, it provides a mechanism for defining <strong>entire</strong> microservice-based application deployment topologies and their service-level requirements for maintaining continuous availability. It is agnostic to the targeted cloud provider, can be run on-premises and even locally on your laptop - all that&#8217;s required is a cluster of virtual machines running Kubernetes - i.e. a Kubernetes&nbsp;cluster.</p>
 <p>This blog post is designed to be read in conjunction with the code in <a href="https://github.com/AlexIoannides/kubernetes-ml-ops">this GitHub repository</a>, that contains the Python modules, Docker configuration files and Kubernetes instructions for demonstrating how a simple Python <span class="caps">ML</span> model can be turned into a production-grade RESTful model-scoring (or prediction) <span class="caps">API</span> service, using Docker and Kubernetes - both locally and with Google Cloud Platform (<span class="caps">GCP</span>). It is not a comprehensive guide to Kubernetes, Docker or <span class="caps">ML</span> - think of it more as a &#8216;<span class="caps">ML</span> on Kubernetes 101&#8217; for demonstrating capability and allowing newcomers to Kubernetes (e.g. data scientists who are more focused on building models as opposed to deploying them), to get up-and-running quickly and become familiar with the basic concepts and&nbsp;patterns.</p>
 <p>We will demonstrate <span class="caps">ML</span> model deployment using two different approaches: a first principles approach using Docker and Kubernetes; and then a deployment using the <a href="https://www.seldon.io">Seldon-Core</a> Kubernetes native framework for streamlining the deployment of <span class="caps">ML</span> services. The former will help to appreciate the latter, which constitutes a powerful framework for deploying and performance-monitoring many complex <span class="caps">ML</span> model&nbsp;pipelines.</p>
-<h2>Containerising a Simple <span class="caps">ML</span> Model Scoring Service using&nbsp;Docker</h2>
+<p><strong>Table of&nbsp;Contents</strong></p>
+<div class="toc">
+<ul>
+<li><a href="#containerising-a-simple-ml-model-scoring-service-using-flask-and-docker">Containerising a Simple <span class="caps">ML</span> Model Scoring Service using Flask and Docker</a><ul>
+<li><a href="#defining-the-flask-service-in-the-apipy-module">Defining the Flask Service in the api.py&nbsp;Module</a></li>
+<li><a href="#defining-the-docker-image-with-the-dockerfile">Defining the Docker Image with the&nbsp;Dockerfile</a></li>
+<li><a href="#building-a-docker-image-for-the-ml-scoring-service">Building a Docker Image for the <span class="caps">ML</span> Scoring Service</a><ul>
+<li><a href="#testing">Testing</a></li>
+<li><a href="#pushing-the-image-to-the-dockerhub-registry">Pushing the Image to the DockerHub&nbsp;Registry</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#installing-kubernetes-for-local-development-and-testing">Installing Kubernetes for Local Development and Testing</a><ul>
+<li><a href="#installing-kubernetes-via-docker-desktop">Installing Kubernetes via Docker&nbsp;Desktop</a></li>
+<li><a href="#installing-kubernetes-via-minikube">Installing Kubernetes via&nbsp;Minikube</a></li>
+<li><a href="#deploying-the-containerised-ml-model-scoring-service-to-kubernetes">Deploying the Containerised <span class="caps">ML</span> Model Scoring Service to&nbsp;Kubernetes</a></li>
+</ul>
+</li>
+<li><a href="#configuring-a-multi-node-cluster-on-google-cloud-platform">Configuring a Multi-Node Cluster on Google Cloud Platform</a><ul>
+<li><a href="#getting-up-and-running-with-google-cloud-platform">Getting Up-and-Running with Google Cloud&nbsp;Platform</a></li>
+<li><a href="#initialising-a-kubernetes-cluster">Initialising a Kubernetes&nbsp;Cluster</a></li>
+<li><a href="#launching-the-containerised-ml-model-scoring-service-on-gcp">Launching the Containerised <span class="caps">ML</span> Model Scoring Service on <span class="caps">GCP</span></a></li>
+</ul>
+</li>
+<li><a href="#switching-between-kubectl-contexts">Switching Between Kubectl&nbsp;Contexts</a></li>
+<li><a href="#using-yaml-files-to-define-and-deploy-the-ml-model-scoring-service">Using <span class="caps">YAML</span> Files to Define and Deploy the <span class="caps">ML</span> Model Scoring&nbsp;Service</a></li>
+<li><a href="#using-helm-charts-to-define-and-deploy-the-ml-model-scoring-service">Using Helm Charts to Define and Deploy the <span class="caps">ML</span> Model Scoring Service</a><ul>
+<li><a href="#installing-helm">Installing&nbsp;Helm</a></li>
+<li><a href="#deploying-with-helm">Deploying with&nbsp;Helm</a></li>
+</ul>
+</li>
+<li><a href="#using-seldon-to-deploy-the-ml-model-scoring-service-to-kubernetes">Using Seldon to Deploy the <span class="caps">ML</span> Model Scoring Service to Kubernetes</a><ul>
+<li><a href="#building-an-ml-component-for-seldon">Building an <span class="caps">ML</span> Component for Seldon</a><ul>
+<li><a href="#building-the-docker-image-for-use-with-seldon">Building the Docker Image for use with&nbsp;Seldon</a></li>
+</ul>
+</li>
+<li><a href="#deploying-a-ml-component-with-seldon-core">Deploying a <span class="caps">ML</span> Component with Seldon&nbsp;Core</a></li>
+<li><a href="#testing-the-api-via-the-ambassador-gateway-api">Testing the <span class="caps">API</span> via the Ambassador Gateway <span class="caps">API</span></a></li>
+</ul>
+</li>
+<li><a href="#tear-down">Tear&nbsp;Down</a></li>
+<li><a href="#where-to-go-from-here">Where to go from&nbsp;Here</a></li>
+<li><a href="#appendix-using-pipenv-for-managing-python-package-dependencies">Appendix - Using Pipenv for Managing Python Package Dependencies</a><ul>
+<li><a href="#installing-pipenv">Installing&nbsp;Pipenv</a></li>
+<li><a href="#installing-projects-dependencies">Installing Projects&nbsp;Dependencies</a></li>
+<li><a href="#running-python-ipython-and-jupyterlab-from-the-projects-virtual-environment">Running Python, IPython and JupyterLab from the Project&#8217;s Virtual&nbsp;Environment</a></li>
+<li><a href="#pipenv-shells">Pipenv&nbsp;Shells</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="containerising-a-simple-ml-model-scoring-service-using-flask-and-docker">Containerising a Simple <span class="caps">ML</span> Model Scoring Service using Flask and&nbsp;Docker</h2>
 <p>We start by demonstrating how to achieve this basic competence using the simple Python <span class="caps">ML</span> model scoring <span class="caps">REST</span> <span class="caps">API</span> contained in the <code>api.py</code> module, together with the <code>Dockerfile</code>, both within the <code>py-flask-ml-score-api</code> directory, whose core contents are as&nbsp;follows,</p>
 <div class="highlight"><pre><span></span>py-flask-ml-score-api/
  <span class="p">|</span> Dockerfile
  <span class="p">|</span> Pipfile
  <span class="p">|</span> Pipfile.lock
- <span class="p">|</span> api.py 
+ <span class="p">|</span> api.py
 </pre></div>
 
 
 <p>If you&#8217;re already feeling lost then these files are discussed in the points below, otherwise feel free to skip to the next&nbsp;section.</p>
-<h3><code>api.py</code></h3>
+<h3 id="defining-the-flask-service-in-the-apipy-module">Defining the Flask Service in the <code>api.py</code> Module</h3>
 <p>This is a Python module that uses the <a href="http://flask.pocoo.org">Flask</a> framework for defining a web service (<code>app</code>), with a function (<code>score</code>), that executes in response to a <span class="caps">HTTP</span> request to a specific <span class="caps">URL</span> (or &#8216;route&#8217;), thanks to being wrapped by the <code>app.route</code> function. For reference, the relevant code is reproduced&nbsp;below,</p>
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">make_response</span><span class="p">,</span> <span class="n">request</span>
 
@@ -153,7 +205,7 @@
 
 <p>If running locally - e.g. by starting the web service using <code>python run api.py</code> - we would be able reach our function (or &#8216;endpoint&#8217;) at <code>http://localhost:5000/score</code>. This function takes data sent to it as <span class="caps">JSON</span> (that has been automatically de-serialised as a Python dict made available as the <code>request</code> variable in our function definition), and returns a response (automatically serialised as <span class="caps">JSON</span>).</p>
 <p>In our example function, we expect an array of features, <code>X</code>, that we pass to a <span class="caps">ML</span> model, which in our example returns those same features back to the caller - i.e. our chosen <span class="caps">ML</span> model is the identity function, which we have chosen for purely demonstrative purposes. We could just as easily have loaded a pickled SciKit-Learn or Keras model and passed the data to the approproate <code>predict</code> method, returning a score for the feature-data as <span class="caps">JSON</span> - see <a href="https://github.com/AlexIoannides/ml-workflow-automation/blob/master/deploy/py-sklearn-flask-ml-service/api.py">here</a> for an example of this in&nbsp;action.</p>
-<h3><code>Dockerfile</code></h3>
+<h3 id="defining-the-docker-image-with-the-dockerfile">Defining the Docker Image with the <code>Dockerfile</code></h3>
 <p>A <code>Dockerfile</code> is essentially the configuration file used by Docker, that allows you to define the contents and configure the operation of a Docker container, when operational. This static data, when not executed as a container, is referred to as the &#8216;image&#8217;. For reference, the <code>Dockerfile</code> is reproduced&nbsp;below,</p>
 <div class="highlight"><pre><span></span><span class="k">FROM</span><span class="s"> python:3.6-slim</span>
 <span class="k">WORKDIR</span><span class="s"> /usr/src/app</span>
@@ -161,7 +213,7 @@ COPY . .
 <span class="k">RUN</span> pip install pipenv
 <span class="k">RUN</span> pipenv install
 <span class="k">EXPOSE</span><span class="s"> 5000</span>
-<span class="k">ENTRYPOINT</span><span class="s"> [&quot;pipenv&quot;, &quot;run&quot;, &quot;python&quot;, &quot;api.py&quot;]</span>
+<span class="k">CMD</span><span class="s"> [&quot;pipenv&quot;, &quot;run&quot;, &quot;python&quot;, &quot;api.py&quot;]</span>
 </pre></div>
 
 
@@ -175,13 +227,15 @@ COPY . .
 <li>to start our Flask RESTful web service - <code>api.py</code>. Note, that here we are relying on Flask&#8217;s internal <a href="https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface"><span class="caps">WSGI</span></a> server, whereas in a production setting we would recommend on configuring a more robust option (e.g. Gunicorn), <a href="https://pythonspeed.com/articles/gunicorn-in-docker/">as discussed here</a>.</li>
 </ul>
 <p>Building this custom image and asking the Docker daemon to run it (remember that a running image is a &#8216;container&#8217;), will expose our RESTful <span class="caps">ML</span> model scoring service on port 5000 as if it were running on a dedicated virtual machine. Refer to the official <a href="https://docs.docker.com/get-started/">Docker documentation</a> for a more comprehensive discussion of these core&nbsp;concepts.</p>
-<h3>Building the Docker Image for the <span class="caps">ML</span> Scoring&nbsp;Service</h3>
+<h3 id="building-a-docker-image-for-the-ml-scoring-service">Building a Docker Image for the <span class="caps">ML</span> Scoring&nbsp;Service</h3>
 <p>We assume that <a href="https://www.docker.com">Docker is running locally</a> (both Docker client and daemon), that the client is logged into an account on <a href="https://hub.docker.com">DockerHub</a> and that there is a terminal open in the this project&#8217;s root directory. To build the image described in the <code>Dockerfile</code> run,</p>
 <div class="highlight"><pre><span></span>docker build --tag alexioannides/test-ml-score-api py-flask-ml-score-api
 </pre></div>
 
 
-<p>Where &#8216;alexioannides&#8217; refers to the name of the DockerHub account that we will push the image to, once we have tested it. To test that the image can be used to create a Docker container that functions as we expect it to&nbsp;use,</p>
+<p>Where &#8216;alexioannides&#8217; refers to the name of the DockerHub account that we will push the image to, once we have tested&nbsp;it. </p>
+<h4 id="testing">Testing</h4>
+<p>To test that the image can be used to create a Docker container that functions as we expect it to&nbsp;use,</p>
 <div class="highlight"><pre><span></span>docker run --rm --name test-api -p <span class="m">5000</span>:5000 -d alexioannides/test-ml-score-api
 </pre></div>
 
@@ -209,16 +263,16 @@ COPY . .
 </pre></div>
 
 
-<h3>Pushing a Docker Image to&nbsp;DockerHub</h3>
+<h4 id="pushing-the-image-to-the-dockerhub-registry">Pushing the Image to the DockerHub&nbsp;Registry</h4>
 <p>In order for a remote Docker host or Kubernetes cluster to have access to the image we&#8217;ve created, we need to publish it to an image registry. All cloud computing providers that offer managed Docker-based services will provide private image registries, but we will use the public image registry at DockerHub, for convenience. To push our new image to DockerHub (where my account <span class="caps">ID</span> is &#8216;alexioannides&#8217;)&nbsp;use,</p>
 <div class="highlight"><pre><span></span>docker push alexioannides/test-ml-score-api
 </pre></div>
 
 
 <p>Where we can now see that our chosen naming convention for the image is intrinsically linked to our target image registry (you will need to insert your own account <span class="caps">ID</span> where required). Once the upload is finished, log onto DockerHub to confirm that the upload has been successful via the <a href="https://hub.docker.com/u/alexioannides">DockerHub <span class="caps">UI</span></a>.</p>
-<h2>Installing Kubernetes for Local Development and&nbsp;Testing</h2>
+<h2 id="installing-kubernetes-for-local-development-and-testing">Installing Kubernetes for Local Development and&nbsp;Testing</h2>
 <p>There are two options for installing a single-node Kubernetes cluster that is suitable for local development and testing: via the <a href="https://www.docker.com/products/docker-desktop">Docker Desktop</a> client, or via <a href="https://github.com/kubernetes/minikube">Minikube</a>.</p>
-<h3>Installing Kubernetes via Docker&nbsp;Desktop</h3>
+<h3 id="installing-kubernetes-via-docker-desktop">Installing Kubernetes via Docker&nbsp;Desktop</h3>
 <p>If you have been using Docker on a Mac, then the chances are that you will have been doing this via the Docker Desktop application. If not (e.g. if you installed Docker Engine via Homebrew), then Docker Desktop can be downloaded <a href="https://www.docker.com/products/docker-desktop">here</a>. Docker Desktop now comes bundled with Kubernetes, which can be activated by going to <code>Preferences -&gt; Kubernetes</code> and selecting <code>Enable Kubernetes</code>. It will take a while for Docker Desktop to download the Docker images required to run Kubernetes, so be patient. After it has finished, go to <code>Preferences -&gt; Advanced</code> and ensure that at least 2 CPUs and 4 GiB have been allocated to the Docker Engine, which are the the minimum resources required to deploy a single Seldon <span class="caps">ML</span>&nbsp;component.</p>
 <p>To interact with the Kubernetes cluster you will need the <code>kubectl</code> Command Line Interface (<span class="caps">CLI</span>) tool, which will need to be downloaded separately. The easiest way to do this on a Mac is via Homebrew - i.e with <code>brew install kubernetes-cli</code>. Once you have <code>kubectl</code> installed and a Kubernetes cluster up-and-running, test that everything is working as expected by&nbsp;running,</p>
 <div class="highlight"><pre><span></span>kubectl cluster-info
@@ -233,7 +287,7 @@ To further debug and diagnose cluster problems, use <span class="s1">&#39;kubect
 </pre></div>
 
 
-<h3>Installing Kubernetes via&nbsp;Minikube</h3>
+<h3 id="installing-kubernetes-via-minikube">Installing Kubernetes via&nbsp;Minikube</h3>
 <p>On Mac <span class="caps">OS</span> X, the steps required to get up-and-running with Minikube are as&nbsp;follows:</p>
 <ul>
 <li>make sure the <a href="https://brew.sh">Homebrew</a> package manager for <span class="caps">OS</span> X is installed;&nbsp;then,</li>
@@ -251,7 +305,7 @@ To further debug and diagnose cluster problems, use <span class="s1">&#39;kubect
 
 
 <p>Where <code>kubectl</code> is the standard Command Line Interface (<span class="caps">CLI</span>) client for interacting with the Kubernetes <span class="caps">API</span> (which was installed as part of Minikube, but is also available&nbsp;separately).</p>
-<h3>Deploying the Containerised <span class="caps">ML</span> Model Scoring Service on&nbsp;Kubernetes</h3>
+<h3 id="deploying-the-containerised-ml-model-scoring-service-to-kubernetes">Deploying the Containerised <span class="caps">ML</span> Model Scoring Service to&nbsp;Kubernetes</h3>
 <p>To launch our test model scoring service on Kubernetes, we will start by deploying the containerised service within a Kubernetes <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/">Pod</a>, whose rollout is managed by a <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Deployment</a>, which in in-turn creates a <a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/">ReplicaSet</a> - a Kubernetes resource that ensures a minimum number of pods (or replicas), running our service are operational at any given time. This is achieved&nbsp;with,</p>
 <div class="highlight"><pre><span></span>kubectl create deployment test-ml-score-api --image<span class="o">=</span>alexioannides/test-ml-score-api:latest
 </pre></div>
@@ -304,9 +358,9 @@ kubectl delete service test-ml-score-api-lb
 </pre></div>
 
 
-<h2>Configuring a Multi-Node Cluster on Google Cloud&nbsp;Platform</h2>
+<h2 id="configuring-a-multi-node-cluster-on-google-cloud-platform">Configuring a Multi-Node Cluster on Google Cloud&nbsp;Platform</h2>
 <p>In order to perform testing on a real-world Kubernetes cluster with far greater resources than those available on a laptop, the easiest way is to use a managed Kubernetes platform from a cloud provider. We will use Kubernetes Engine on <a href="https://cloud.google.com">Google Cloud Platform (<span class="caps">GCP</span>)</a>.</p>
-<h3>Getting Up-and-Running with Google Cloud&nbsp;Platform</h3>
+<h3 id="getting-up-and-running-with-google-cloud-platform">Getting Up-and-Running with Google Cloud&nbsp;Platform</h3>
 <p>Before we can use Google Cloud Platform, sign-up for an account and create a project specifically for this work. Next, make sure that the <span class="caps">GCP</span> <span class="caps">SDK</span> is installed on your local machine -&nbsp;e.g.,</p>
 <div class="highlight"><pre><span></span>brew cask install google-cloud-sdk
 </pre></div>
@@ -323,14 +377,14 @@ kubectl delete service test-ml-score-api-lb
 
 
 <p>Which will open a browser and guide you through the necessary authentication steps. Make sure you pick the project you created, together with a default zone and region (if this has not been set via Compute Engine -&gt;&nbsp;Settings).</p>
-<h3>Initialising a Kubernetes&nbsp;Cluster</h3>
+<h3 id="initialising-a-kubernetes-cluster">Initialising a Kubernetes&nbsp;Cluster</h3>
 <p>Firstly, within the <span class="caps">GCP</span> <span class="caps">UI</span> visit the Kubernetes Engine page to trigger the Kubernetes <span class="caps">API</span> to start-up. From the command line we then start a cluster&nbsp;using,</p>
 <div class="highlight"><pre><span></span>gcloud container clusters create k8s-test-cluster --num-nodes <span class="m">3</span> --machine-type g1-small
 </pre></div>
 
 
 <p>And then go make a cup of coffee while you wait for the cluster to be created. Note, that this will automatically switch your <code>kubectl</code> context to point to the cluster on <span class="caps">GCP</span>, as you will see if you run, <code>kubectl config get-contexts</code>. To switch back to the Docker Desktop client use <code>kubectl config use-context docker-desktop</code>.</p>
-<h3>Launching the Containerised <span class="caps">ML</span> Model Scoring Service on the <span class="caps">GCP</span></h3>
+<h3 id="launching-the-containerised-ml-model-scoring-service-on-gcp">Launching the Containerised <span class="caps">ML</span> Model Scoring Service on <span class="caps">GCP</span></h3>
 <p>This is largely the same as we did for running the test service locally - run the following commands in&nbsp;sequence,</p>
 <div class="highlight"><pre><span></span>kubectl create deployment test-ml-score-api --image<span class="o">=</span>alexioannides/test-ml-score-api:latest
 kubectl expose deployment test-ml-score-api --port <span class="m">5000</span> --type<span class="o">=</span>LoadBalancer --name test-ml-score-api-lb
@@ -369,7 +423,7 @@ kubectl delete service test-ml-score-api-lb
 </pre></div>
 
 
-<h2>Switching Between Kubectl&nbsp;Contexts</h2>
+<h2 id="switching-between-kubectl-contexts">Switching Between Kubectl&nbsp;Contexts</h2>
 <p>If you are running both with Kubernetes locally and with a cluster on <span class="caps">GCP</span>, then you can switch Kubectl <a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">context</a> from one cluster to the other, as&nbsp;follows,</p>
 <div class="highlight"><pre><span></span>kubectl config use-context docker-desktop
 </pre></div>
@@ -380,7 +434,7 @@ kubectl delete service test-ml-score-api-lb
 </pre></div>
 
 
-<h2>Using <span class="caps">YAML</span> Files to Define and Deploy our <span class="caps">ML</span> Model Scoring&nbsp;Service</h2>
+<h2 id="using-yaml-files-to-define-and-deploy-the-ml-model-scoring-service">Using <span class="caps">YAML</span> Files to Define and Deploy the <span class="caps">ML</span> Model Scoring&nbsp;Service</h2>
 <p>Up to this point we have been using Kubectl commands to define and deploy a basic version of our <span class="caps">ML</span> model scoring service. This is fine for demonstrative purposes, but quickly becomes limiting, as well as unmanageable. In practice, the standard way of defining entire Kubernetes deployments is with <span class="caps">YAML</span> files,  posted to the Kubernetes <span class="caps">API</span>. The <code>py-flask-ml-score.yaml</code> file in the <code>py-flask-ml-score-api</code> directory is an example of how our <span class="caps">ML</span> model scoring service can be defined in a single <span class="caps">YAML</span> file. This can now be deployed using a single&nbsp;command,</p>
 <div class="highlight"><pre><span></span>kubectl apply -f py-flask-ml-score-api/py-flask-ml-score.yaml
 </pre></div>
@@ -412,9 +466,9 @@ kubectl delete service test-ml-score-api-lb
 
 
 <p>Which saves us from having to use multiple commands to delete each component individually. Refer to the <a href="https://kubernetes.io/docs/home/">official documentation for the Kubernetes <span class="caps">API</span></a> to understand the contents of this <span class="caps">YAML</span> file in greater&nbsp;depth.</p>
-<h2>Using Helm Charts to Define and Deploy our <span class="caps">ML</span> Model Scoring&nbsp;Service</h2>
+<h2 id="using-helm-charts-to-define-and-deploy-the-ml-model-scoring-service">Using Helm Charts to Define and Deploy the <span class="caps">ML</span> Model Scoring&nbsp;Service</h2>
 <p>Writing <span class="caps">YAML</span> files for Kubernetes can get repetitive and hard to manage, especially if there is a lot of &#8216;copy-paste&#8217; involved, when only a handful of parameters need to be changed from one deployment to the next,  but there is a &#8216;wall of <span class="caps">YAML</span>&#8217; that needs to be modified. Enter <a href="https://helm.sh//">Helm</a> - a framework for creating, executing and managing Kubernetes deployment templates. What follows is a very high-level demonstration of how Helm can be used to deploy our <span class="caps">ML</span> model scoring service - for a comprehensive discussion of Helm&#8217;s full capabilities (and here are a lot of them), please refer to the <a href="https://docs.helm.sh">official documentation</a>. Seldon-Core can also be deployed using Helm and we will cover this in more detail later&nbsp;on.</p>
-<h3>Installing&nbsp;Helm</h3>
+<h3 id="installing-helm">Installing&nbsp;Helm</h3>
 <p>As before, the easiest way to install Helm onto Mac <span class="caps">OS</span> X is to use the Homebrew package&nbsp;manager,</p>
 <div class="highlight"><pre><span></span>brew install kubernetes-helm
 </pre></div>
@@ -437,7 +491,7 @@ kubectl delete service test-ml-score-api-lb
 </pre></div>
 
 
-<h3>Deploy our <span class="caps">ML</span> Model Scoring&nbsp;Service</h3>
+<h3 id="deploying-with-helm">Deploying with&nbsp;Helm</h3>
 <p>To create a fresh Helm deployment definition - referred to as a &#8216;chart&#8217; in Helm terminology -&nbsp;run,</p>
 <div class="highlight"><pre><span></span>helm create NAME-OF-YOUR-HELM-CHART
 </pre></div>
@@ -533,11 +587,11 @@ kubectl delete service test-ml-score-api-lb
 </pre></div>
 
 
-<h2>Using Seldon to Deploy a <span class="caps">ML</span> Model Scoring Service on&nbsp;Kubernetes</h2>
+<h2 id="using-seldon-to-deploy-the-ml-model-scoring-service-to-kubernetes">Using Seldon to Deploy the <span class="caps">ML</span> Model Scoring Service to&nbsp;Kubernetes</h2>
 <p>Seldon&#8217;s core mission is to simplify the repeated deployment and management of complex <span class="caps">ML</span> prediction pipelines on top of Kubernetes. In this demonstration we are going to focus on the simplest possible example - i.e. the simple <span class="caps">ML</span> model scoring <span class="caps">API</span> we have already been&nbsp;using.</p>
-<h3>Building an <span class="caps">ML</span> Component for&nbsp;Seldon</h3>
+<h3 id="building-an-ml-component-for-seldon">Building an <span class="caps">ML</span> Component for&nbsp;Seldon</h3>
 <p>To deploy a <span class="caps">ML</span> component using Seldon, we need to create Seldon-compatible Docker images. We start by following <a href="https://docs.seldon.io/projects/seldon-core/en/latest/python/python_wrapping_docker.html">these guidelines</a> for defining a Python class that wraps an <span class="caps">ML</span> model targeted for deployment with Seldon. This is contained within the <code>seldon-ml-score-component</code> directory.</p>
-<h4>Building the Docker Image for use with&nbsp;Seldon</h4>
+<h4 id="building-the-docker-image-for-use-with-seldon">Building the Docker Image for use with&nbsp;Seldon</h4>
 <p>Seldon requires that the Docker image for the <span class="caps">ML</span> scoring service be structured in a particular&nbsp;way:</p>
 <ul>
 <li>the <span class="caps">ML</span> model has to be wrapped in a Python class with a <code>predict</code> method with a particular signature (or&nbsp;interface);</li>
@@ -565,7 +619,7 @@ kubectl delete service test-ml-score-api-lb
 </pre></div>
 
 
-<h3>Deploying a <span class="caps">ML</span> Component with&nbsp;Seldon-Core</h3>
+<h3 id="deploying-a-ml-component-with-seldon-core">Deploying a <span class="caps">ML</span> Component with Seldon&nbsp;Core</h3>
 <p>We now move on to deploying our Seldon compatible <span class="caps">ML</span> component to a Kubernetes cluster and creating a fault-tolerant and scalable service from it. To achieve this, we will <a href="https://docs.seldon.io/projects/seldon-core/en/latest/workflow/install.html">deploy Seldon-Core using Helm charts</a>. We start by creating a namespace that will contain the <code>seldon-core-operator</code>, a custom Kubernetes resource required to deploy any <span class="caps">ML</span> model using&nbsp;Seldon,</p>
 <div class="highlight"><pre><span></span>kubectl create namespace seldon-core
 </pre></div>
@@ -608,7 +662,7 @@ kubectl delete service test-ml-score-api-lb
 
 
 <p>Note, that multiple <span class="caps">ML</span> models can now be deployed using Seldon by repeating the last two steps and they will all be automatically reachable via the same Ambassador <span class="caps">API</span> gateway, which we will now use to test our Seldon <span class="caps">ML</span> model scoring&nbsp;service.</p>
-<h3>Testing the <span class="caps">API</span> via the Ambassador Gateway <span class="caps">API</span></h3>
+<h3 id="testing-the-api-via-the-ambassador-gateway-api">Testing the <span class="caps">API</span> via the Ambassador Gateway <span class="caps">API</span></h3>
 <p>To test the Seldon-based <span class="caps">ML</span> model scoring service, we follow the same general approach as we did for our first-principles Kubernetes deployments above, but we will route our requests via the Ambassador <span class="caps">API</span> gateway. To find the <span class="caps">IP</span> address for Ambassador service&nbsp;run,</p>
 <div class="highlight"><pre><span></span>kubectl -n ambassador get service ambassador
 </pre></div>
@@ -651,7 +705,7 @@ kubectl delete service test-ml-score-api-lb
 </pre></div>
 
 
-<h3>Tear&nbsp;Down</h3>
+<h2 id="tear-down">Tear&nbsp;Down</h2>
 <p>To delete a single Seldon <span class="caps">ML</span> model and its namespace, deployed using the steps above,&nbsp;run,</p>
 <div class="highlight"><pre><span></span>helm delete test-ml-seldon-app --purge <span class="o">&amp;&amp;</span>
   kubectl delete namespace test-ml-seldon-app
@@ -676,17 +730,18 @@ minikube delete
 
 
 <p>If running on Docker Desktop, navigate to <code>Preferences -&gt; Reset</code> to reset the&nbsp;cluster.</p>
-<h2>Where to go from&nbsp;Here</h2>
+<h2 id="where-to-go-from-here">Where to go from&nbsp;Here</h2>
 <p>The following list of resources will help you dive deeply into the subjects we skimmed-over&nbsp;above:</p>
 <ul>
 <li>the full set of functionality provided by <a href="https://www.seldon.io/open-source/">Seldon</a>;</li>
+<li>running multi-stage containerised workflows (e.g. for data engineering and model training) using <a href="https://argoproj.github.io/argo">Argo Workflows</a>;</li>
 <li>the excellent &#8216;<em>Kubernetes in Action</em>&#8216; by Marko Lukša <a href="https://www.manning.com/books/kubernetes-in-action">available from Manning Publications</a>;</li>
 <li><span class="quo">&#8216;</span><em>Docker in Action</em>&#8216; by Jeff Nickoloff and Stephen Kuenzli <a href="https://www.manning.com/books/docker-in-action-second-edition">also available from Manning Publications</a>;&nbsp;and,</li>
 <li><em><span class="quo">&#8216;</span>Flask Web Development&#8217;</em> by Miguel Grinberg <a href="http://shop.oreilly.com/product/0636920089056.do">O&#8217;Reilly</a>.</li>
 </ul>
-<h2>Appendix - Using Pipenv for Managing Python Package&nbsp;Dependencies</h2>
+<h2 id="appendix-using-pipenv-for-managing-python-package-dependencies">Appendix - Using Pipenv for Managing Python Package&nbsp;Dependencies</h2>
 <p>We use <a href="https://docs.pipenv.org">pipenv</a> for managing project dependencies and Python environments (i.e. virtual environments). All of the direct packages dependencies required to run the code (e.g. Flask or Seldon-Core), as well as any packages that could have been used during development (e.g. flake8 for code linting and IPython for interactive console sessions), are described in the <code>Pipfile</code>. Their <strong>precise</strong> downstream dependencies are described in <code>Pipfile.lock</code>.</p>
-<h3>Installing&nbsp;Pipenv</h3>
+<h3 id="installing-pipenv">Installing&nbsp;Pipenv</h3>
 <p>To get started with Pipenv, first of all download it - assuming that there is a global version of Python available on your system and on the <span class="caps">PATH</span>, then this can be achieved by running the following&nbsp;command,</p>
 <div class="highlight"><pre><span></span>pip3 install pipenv
 </pre></div>
@@ -698,14 +753,14 @@ minikube delete
 
 
 <p>For more information, including advanced configuration options, see the <a href="https://docs.pipenv.org">official pipenv documentation</a>.</p>
-<h3>Installing Projects&nbsp;Dependencies</h3>
+<h3 id="installing-projects-dependencies">Installing Projects&nbsp;Dependencies</h3>
 <p>If you want to experiment with the Python code in the <code>py-flask-ml-score-api</code> or <code>seldon-ml-score-component</code> directories, then make sure that you&#8217;re in the appropriate directory and then&nbsp;run,</p>
 <div class="highlight"><pre><span></span>pipenv install
 </pre></div>
 
 
 <p>This will install all of the direct project&nbsp;dependencies.</p>
-<h3>Running Python, IPython and JupyterLab from the Project&#8217;s Virtual&nbsp;Environment</h3>
+<h3 id="running-python-ipython-and-jupyterlab-from-the-projects-virtual-environment">Running Python, IPython and JupyterLab from the Project&#8217;s Virtual&nbsp;Environment</h3>
 <p>In order to continue development in a Python environment that precisely mimics the one the project was initially developed with, use Pipenv from the command line as&nbsp;follows,</p>
 <div class="highlight"><pre><span></span>pipenv run python3
 </pre></div>
@@ -716,7 +771,7 @@ minikube delete
 </pre></div>
 
 
-<h3>Pipenv&nbsp;Shells</h3>
+<h3 id="pipenv-shells">Pipenv&nbsp;Shells</h3>
 <p>Prepending <code>pipenv</code> to every command you want to run within the context of your Pipenv-managed virtual environment, can get very tedious. This can be avoided by entering into a Pipenv-managed&nbsp;shell,</p>
 <div class="highlight"><pre><span></span>pipenv shell
 </pre></div>

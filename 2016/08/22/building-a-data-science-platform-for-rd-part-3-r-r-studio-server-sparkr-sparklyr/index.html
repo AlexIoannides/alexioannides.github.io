@@ -115,7 +115,7 @@
     <p><img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"></p>
 <p><a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1">Part 1</a> and <a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2">Part 2</a> of this series dealt with setting up <span class="caps">AWS</span>, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster&#8217;s master node and use it to serve my favorite R <span class="caps">IDE</span>: R Studio.
 We will then install and configure both the <a href="http://spark.rstudio.com/index.html" title="sparklyr">Sparklyr</a> and [SparkR][sparkR] packages for connecting and interacting with Spark and our data. After this, we will be on our way to interacting with and computing on large-scale data as if it were sitting on our&nbsp;laptops.</p>
-<h1>Installing&nbsp;R</h1>
+<h1 id="installing-r">Installing&nbsp;R</h1>
 <p>Our first task is to install R onto our master node. Start by <span class="caps">SSH</span>-ing into the master node using the steps described in <a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2">Part 2</a>. Then execute the following commands in the following&nbsp;order:</p>
 <ol>
 <li><code>$ sudo yum update</code> - update all the packages on Amazon Linux machine imagine to the latest ones in the Amazon Linux&#8217;s&nbsp;repository;</li>
@@ -125,7 +125,7 @@ We will then install and configure both the <a href="http://spark.rstudio.com/in
 </ol>
 <p>If everything has worked as intended, then executing <code>$ R</code> should present you with R on the command&nbsp;line:</p>
 <p><img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/r_terminal.png" title="Command Line R"></p>
-<h1>Installing R Studio&nbsp;Server</h1>
+<h1 id="installing-r-studio-server">Installing R Studio&nbsp;Server</h1>
 <p>Installing R Studio on the same local network as the Spark cluster that we want to connect to  - in our case directly on the master node - is the recommended approach for using R Studio with a remote Spark Cluster. Using a local version of R Studio to connect to a remote Spark cluster is prone to the same networking issues as trying to use the Spark shell remotely in client-mode (see <a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2">part 2</a>).</p>
 <p>First of all we need the <span class="caps">URL</span> for the latest version of R Studio Server. Preview versions can be found <a href="https://www.rstudio.com/products/rstudio/download/preview/" title="R Studio Server Preview">here</a> while stable releases can be found <a href="https://www.rstudio.com/products/rstudio/download-server/" title="R Studio Server Current">here</a>. At the time of writing Sparklyr integration is a preview feature so I&#8217;m using the latest preview version of R Studio Server for 64bit RedHat/CentOS (should this fail at any point, then revert back to the latest stable release as all of the scripts used in this post will still run). Picking-up where we left-off in the master node&#8217;s terminal window, execute the following&nbsp;commands,</p>
 <p><code>$ wget https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-rhel-0.99.1289-i686.rpm</code>
@@ -145,7 +145,7 @@ We will then install and configure both the <a href="http://spark.rstudio.com/in
 <p>Finally, on R Studio&#8217;s command line&nbsp;run,</p>
 <p><code>&gt; install.packages("devtools")</code></p>
 <p>to install the <code>devtools</code> R package that will allow us to install packages directly from GitHub repositories (as well as many other things). If OpenSSL and Curl were installed correctly in the above steps, then this should take under a&nbsp;minute.</p>
-<h1>Connect to Spark with&nbsp;Sparklyr</h1>
+<h1 id="connect-to-spark-with-sparklyr">Connect to Spark with&nbsp;Sparklyr</h1>
 <p><a href="http://spark.rstudio.com/index.html" title="sparklyr">Sparklyr</a> is an extensible R <span class="caps">API</span> for Spark from the people at <a href="https://www.rstudio.com" title="rStudio">R Studio</a>- an alternative to the SparkR package that ships with Spark as standard. In particular, it provides a &#8216;back end&#8217; for the powerful <code>dplyr</code> data manipulation package that lets you manipulate Spark DataFrames using the same package and functions that I would use to manipulate native R data frames on my&nbsp;laptop.</p>
 <p>Sparklyr is still in it&#8217;s infancy and is not yet available on the <span class="caps">CRAN</span> archives. As such, it needs to be installed directly from its GitHub repo, which from within R Studio is done by&nbsp;executing,</p>
 <p><code>&gt; devtools::install_github("rstudio/sparklyr")</code></p>
@@ -207,7 +207,7 @@ spark_disconnect_all<span class="p">()</span>
 
 
 <p>Execute line-by-line and check the key outputs with those commented-out in the above script. Sparklyr is changing rapidly at the moment - for the latest documentation and information on: how to use it with the <code>dplyr</code> package, how to leverage Spark machine learning libraries and how to extend Sparklyr itself, head over to the <a href="http://spark.rstudio.com/index.html" title="sparklyr">Sparklyr web site</a> hosted by R&nbsp;Studio.</p>
-<h1>Connect to Spark with&nbsp;SparkR</h1>
+<h1 id="connect-to-spark-with-sparkr">Connect to Spark with&nbsp;SparkR</h1>
 <p>SparkR is shipped with Spark and as such there is no external installation process that we&#8217;re required to follow. It does, however, require R to be installed on every node in the cluster. This can be achieved by <span class="caps">SSH</span>-ing into every node in our cluster and repeating the above R installation steps, or experimenting with Flintrock&#8217;s <code>run-command</code> command that will automatically execute the same command on every node in the cluster, such&nbsp;as,</p>
 <p><code>$ ./flintrock run-command the_name_of_your_cluster 'sudo yum install -y R'</code></p>
 <p>To enable SparkR to be used via R Studio and demonstrate the same connectivity as we did above for Sparklyr, create a new script for the following&nbsp;code:</p>

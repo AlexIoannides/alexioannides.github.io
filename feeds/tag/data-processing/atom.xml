@@ -10,7 +10,28 @@
 &lt;li&gt;how to handle dependencies on other modules and packages;&amp;nbsp;and,&lt;/li&gt;
 &lt;li&gt;what constitutes a &amp;#8216;meaningful&amp;#8217; test for an &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;job.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;PySpark &lt;span class="caps"&gt;ETL&lt;/span&gt; Project&amp;nbsp;Structure&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Table of&amp;nbsp;Contents&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#pyspark-etl-project-structure"&gt;PySpark &lt;span class="caps"&gt;ETL&lt;/span&gt; Project&amp;nbsp;Structure&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#the-structure-of-an-etl-job"&gt;The Structure of an &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#passing-configuration-parameters-to-the-etl-job"&gt;Passing Configuration Parameters to the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#packaging-etl-job-dependencies"&gt;Packaging &lt;span class="caps"&gt;ETL&lt;/span&gt; Job&amp;nbsp;Dependencies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#running-the-etl-job"&gt;Running the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;job&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#debugging-spark-jobs-using-start_spark"&gt;Debugging Spark Jobs Using&amp;nbsp;start_spark&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#automated-testing"&gt;Automated&amp;nbsp;Testing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#managing-project-dependencies-using-pipenv"&gt;Managing Project Dependencies using Pipenv&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#installing-pipenv"&gt;Installing&amp;nbsp;Pipenv&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#installing-this-projects-dependencies"&gt;Installing this Projects&amp;#8217;&amp;nbsp;Dependencies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#running-python-and-ipython-from-the-projects-virtual-environment"&gt;Running Python and IPython from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#pipenv-shells"&gt;Pipenv&amp;nbsp;Shells&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#automatic-loading-of-environment-variables"&gt;Automatic Loading of Environment&amp;nbsp;Variables&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#summary"&gt;Summary&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h2 id="pyspark-etl-project-structure"&gt;PySpark &lt;span class="caps"&gt;ETL&lt;/span&gt; Project&amp;nbsp;Structure&lt;/h2&gt;
 &lt;p&gt;The basic project structure is as&amp;nbsp;follows:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;root/
 &lt;span class="p"&gt;|&lt;/span&gt;-- configs/
@@ -33,7 +54,7 @@
 
 
 &lt;p&gt;The main Python module containing the &lt;span class="caps"&gt;ETL&lt;/span&gt; job (which will be sent to the Spark cluster), is &lt;code&gt;jobs/etl_job.py&lt;/code&gt;. Any external configuration parameters required by &lt;code&gt;etl_job.py&lt;/code&gt; are stored in &lt;span class="caps"&gt;JSON&lt;/span&gt; format in &lt;code&gt;configs/etl_config.json&lt;/code&gt;. Additional modules that support this job can be kept in the &lt;code&gt;dependencies&lt;/code&gt; folder (more on this later). In the project&amp;#8217;s root we include &lt;code&gt;build_dependencies.sh&lt;/code&gt; - a bash script for building these dependencies into a zip-file to be sent to the cluster (&lt;code&gt;packages.zip&lt;/code&gt;). Unit test modules are kept in the &lt;code&gt;tests&lt;/code&gt; folder and small chunks of representative input and output data, to be use with the tests, are kept in &lt;code&gt;tests/test_data&lt;/code&gt; folder.&lt;/p&gt;
-&lt;h2&gt;The Structure of an &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/h2&gt;
+&lt;h2 id="the-structure-of-an-etl-job"&gt;The Structure of an &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/h2&gt;
 &lt;p&gt;In order to facilitate easy debugging and testing, we recommend that the &amp;#8216;Transformation&amp;#8217; step be isolated from the &amp;#8216;Extract&amp;#8217; and &amp;#8216;Load&amp;#8217; steps, into it&amp;#8217;s own function - taking input data arguments in the form of DataFrames and returning the transformed data as a single DataFrame. For example, in the &lt;code&gt;main()&lt;/code&gt; job function from &lt;code&gt;jobs/etl_job.py&lt;/code&gt; we&amp;nbsp;have,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;extract_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;data_transformed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;transform_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -47,7 +68,7 @@
 &lt;p&gt;the repeated application of the transformation function to the input data, should have no impact on the fundamental state of output data, until the instance when the input data&amp;nbsp;changes. &lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;One of the key advantages of idempotent &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs, is that they can be set to run repeatedly (e.g. by using &lt;code&gt;cron&lt;/code&gt; to trigger the &lt;code&gt;spark-submit&lt;/code&gt; command on a pre-defined schedule), rather than having to factor-in potential dependencies on other &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs completing&amp;nbsp;successfully.&lt;/p&gt;
-&lt;h2&gt;Passing Configuration Parameters to the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/h2&gt;
+&lt;h2 id="passing-configuration-parameters-to-the-etl-job"&gt;Passing Configuration Parameters to the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/h2&gt;
 &lt;p&gt;Although it is possible to pass arguments to &lt;code&gt;etl_job.py&lt;/code&gt;, as you would for any generic Python module running as a &amp;#8216;main&amp;#8217; program  - by specifying them after the module&amp;#8217;s filename and then parsing these command line arguments - this can get very complicated, &lt;strong&gt;very quickly&lt;/strong&gt;, especially when there are lot of parameters (e.g. credentials for multiple databases, table names, &lt;span class="caps"&gt;SQL&lt;/span&gt; snippets, etc.). This also makes debugging the code from within a Python interpreter extremely awkward, as you don&amp;#8217;t have access to the command line arguments that would ordinarily be passed to the code, when calling it from the command&amp;nbsp;line.&lt;/p&gt;
 &lt;p&gt;A much more effective solution is to send Spark a separate file - e.g. using the &lt;code&gt;--files configs/etl_config.json&lt;/code&gt; flag with &lt;code&gt;spark-submit&lt;/code&gt; - containing the configuration in &lt;span class="caps"&gt;JSON&lt;/span&gt; format, which can be parsed into a Python dictionary in one line of code with &lt;code&gt;json.loads(config_file_contents)&lt;/code&gt;. Testing the code from within a Python interactive console session is also greatly simplified, as all one has to do to access configuration parameters for testing, is to copy and paste the contents of the file -&amp;nbsp;e.g.,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
@@ -58,7 +79,7 @@
 
 &lt;p&gt;This also has the added bonus that the &lt;span class="caps"&gt;ETL&lt;/span&gt; job configuration can be explicitly version controlled within the same project structure, avoiding the risk that configuration parameters escape any type of version control - e.g. because they are passed as arguments in bash scripts written by separate teams, whose responsibility is deploying the code, not writing&amp;nbsp;it.  &lt;/p&gt;
 &lt;p&gt;For the exact details of how the configuration file is located, opened and parsed, please see the &lt;code&gt;start_spark()&lt;/code&gt; function in &lt;code&gt;dependencies/spark.py&lt;/code&gt; (also discussed in more detail below), which in addition to parsing the configuration file sent to Spark (and returning it as a Python dictionary), also launches the Spark driver program (the application) on the cluster and retrieves the Spark logger at the same&amp;nbsp;time.&lt;/p&gt;
-&lt;h2&gt;Packaging &lt;span class="caps"&gt;ETL&lt;/span&gt; Job&amp;nbsp;Dependencies&lt;/h2&gt;
+&lt;h2 id="packaging-etl-job-dependencies"&gt;Packaging &lt;span class="caps"&gt;ETL&lt;/span&gt; Job&amp;nbsp;Dependencies&lt;/h2&gt;
 &lt;p&gt;In this project, functions that can be used across different &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs are kept in a module called &lt;code&gt;dependencies&lt;/code&gt; and referenced in specific job modules using, for&amp;nbsp;example,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;dependencies.spark&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;start_spark&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -74,7 +95,7 @@
 &lt;blockquote&gt;
 &lt;p&gt;Note, that dependencies (e.g. NumPy) requiring extensions (e.g. C code) to be compiled locally, will have to be installed manually on each node as part of the node&amp;nbsp;setup.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2&gt;Running the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;job&lt;/h2&gt;
+&lt;h2 id="running-the-etl-job"&gt;Running the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;job&lt;/h2&gt;
 &lt;p&gt;Assuming that the &lt;code&gt;$SPARK_HOME&lt;/code&gt; environment variable points to your local Spark installation folder, then the &lt;span class="caps"&gt;ETL&lt;/span&gt; job can be run from the project&amp;#8217;s root directory using the following command from the&amp;nbsp;terminal,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$SPARK_HOME&lt;/span&gt;/bin/spark-submit &lt;span class="se"&gt;\&lt;/span&gt;
 --master local&lt;span class="o"&gt;[&lt;/span&gt;*&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
@@ -94,7 +115,7 @@ jobs/etl_job.py
 &lt;li&gt;&lt;code&gt;jobs/etl_job.py&lt;/code&gt; - the Python module file containing the &lt;span class="caps"&gt;ETL&lt;/span&gt; job to&amp;nbsp;execute.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Full details of all possible options can be found &lt;a href="http://spark.apache.org/docs/latest/submitting-applications.html"&gt;here&lt;/a&gt;. Note, that we have left some options to be defined within the job (which is actually a Spark application) - e.g. &lt;code&gt;spark.cores.max&lt;/code&gt; and &lt;code&gt;spark.executor.memory&lt;/code&gt; are defined in the Python script as it is felt that the job should explicitly contain the requests for the required cluster&amp;nbsp;resources.&lt;/p&gt;
-&lt;h2&gt;Debugging Spark Jobs Using &lt;code&gt;start_spark&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id="debugging-spark-jobs-using-start_spark"&gt;Debugging Spark Jobs Using &lt;code&gt;start_spark&lt;/code&gt;&lt;/h2&gt;
 &lt;p&gt;It is not practical to test and debug Spark jobs by sending them to a cluster using &lt;code&gt;spark-submit&lt;/code&gt; and examining stack traces for clues on what went wrong. A more productive workflow is to use an interactive console session (e.g. IPython) or a debugger (e.g. the &lt;code&gt;pdb&lt;/code&gt; package in the Python standard library or the Python debugger in Visual Studio Code). In practice, however, it can be hard to test and debug Spark jobs in this way, as they can implicitly rely on arguments that are sent to &lt;code&gt;spark-submit&lt;/code&gt;, which are not available in a console or debug&amp;nbsp;session.&lt;/p&gt;
 &lt;p&gt;We wrote the &lt;code&gt;start_spark&lt;/code&gt; function - found in &lt;code&gt;dependencies/spark.py&lt;/code&gt; - to facilitate the development of Spark jobs that are aware of the context in which they are being executed - i.e. as &lt;code&gt;spark-submit&lt;/code&gt; jobs or within an IPython console, etc. The expected location of the Spark and job configuration parameters required by the job, is contingent on which execution context has been detected. The doscstring for &lt;code&gt;start_spark&lt;/code&gt; gives the precise&amp;nbsp;details,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;start_spark&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;my_spark_app&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;master&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;local[*]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jar_packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[],&lt;/span&gt;
@@ -160,7 +181,7 @@ jobs/etl_job.py
 &lt;blockquote&gt;
 &lt;p&gt;Note, if you are using the local PySpark package - e.g. if running from an interactive console session or debugger - on a machine that also has the &lt;code&gt;SPARK_HOME&lt;/code&gt; environment variable set to a local install of Spark, then the two versions will need to match as PySpark appears to pick-up on SPARK_HOME automatically, with version conflicts leading to (unintuitive)&amp;nbsp;errors.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2&gt;Automated&amp;nbsp;Testing&lt;/h2&gt;
+&lt;h2 id="automated-testing"&gt;Automated&amp;nbsp;Testing&lt;/h2&gt;
 &lt;p&gt;In order to test with Spark, we use the &lt;code&gt;pyspark&lt;/code&gt; Python package, which is bundled with the Spark JARs required to programmatically start-up and tear-down a local Spark instance, on a per-test-suite basis (we recommend using the &lt;code&gt;setUp&lt;/code&gt; and &lt;code&gt;tearDown&lt;/code&gt; methods in &lt;code&gt;unittest.TestCase&lt;/code&gt; to do this once per test-suite). Note, that using &lt;code&gt;pyspark&lt;/code&gt; to run Spark is an alternative way of developing with Spark as opposed to using the PySpark shell or &lt;code&gt;spark-submit&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Given that we have chosen to structure our &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs in such a way as to isolate the &amp;#8216;Transformation&amp;#8217; step into its own function (see &amp;#8216;Structure of an &lt;span class="caps"&gt;ETL&lt;/span&gt; job&amp;#8217; above), we are free to feed it a small slice of &amp;#8216;real-world&amp;#8217; production data that has been persisted locally - e.g. in &lt;code&gt;tests/test_data&lt;/code&gt; or some easily accessible network directory - and check it against known results (e.g. computed manually or interactively within a Python interactive console session), as demonstrated in this extract from &lt;code&gt;tests/test_etl_job.py&lt;/code&gt;,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# assemble&lt;/span&gt;
@@ -208,9 +229,9 @@ jobs/etl_job.py
 
 
 &lt;p&gt;If you&amp;#8217;re wondering what the &lt;code&gt;pipenv&lt;/code&gt; command is, then read the next&amp;nbsp;section.&lt;/p&gt;
-&lt;h2&gt;Managing Project Dependencies using&amp;nbsp;Pipenv&lt;/h2&gt;
+&lt;h2 id="managing-project-dependencies-using-pipenv"&gt;Managing Project Dependencies using&amp;nbsp;Pipenv&lt;/h2&gt;
 &lt;p&gt;We use &lt;a href="https://docs.pipenv.org"&gt;Pipenv&lt;/a&gt; for managing project dependencies and Python environments (i.e. virtual environments). All direct packages dependencies (e.g. NumPy may be used in a User Defined Function), as well as all the packages used during development (e.g. PySpark, flake8 for code linting, IPython for interactive console sessions, etc.), are described in the &lt;code&gt;Pipfile&lt;/code&gt;. Their &lt;strong&gt;precise&lt;/strong&gt; downstream dependencies are described and frozen in &lt;code&gt;Pipfile.lock&lt;/code&gt; (generated automatically by Pipenv, given a&amp;nbsp;Pipfile).&lt;/p&gt;
-&lt;h3&gt;Installing&amp;nbsp;Pipenv&lt;/h3&gt;
+&lt;h3 id="installing-pipenv"&gt;Installing&amp;nbsp;Pipenv&lt;/h3&gt;
 &lt;p&gt;To get started with Pipenv, first of all download it - assuming that there is a global version of Python available on your system and on the &lt;span class="caps"&gt;PATH&lt;/span&gt;, then this can be achieved by running the following&amp;nbsp;command,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip3 install pipenv
 &lt;/pre&gt;&lt;/div&gt;
@@ -222,14 +243,14 @@ jobs/etl_job.py
 
 
 &lt;p&gt;For more information, including advanced configuration options, see the &lt;a href="https://docs.pipenv.org"&gt;official Pipenv documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Installing this Projects&amp;#8217;&amp;nbsp;Dependencies&lt;/h3&gt;
+&lt;h3 id="installing-this-projects-dependencies"&gt;Installing this Projects&amp;#8217;&amp;nbsp;Dependencies&lt;/h3&gt;
 &lt;p&gt;Make sure that you&amp;#8217;re in the project&amp;#8217;s root directory (the same one in which the &lt;code&gt;Pipfile&lt;/code&gt; resides), and then&amp;nbsp;run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv install --dev
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This will install all of the direct project dependencies as well as the development dependencies (the latter a consequence of the &lt;code&gt;--dev&lt;/code&gt; flag).&lt;/p&gt;
-&lt;h3&gt;Running Python and IPython from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/h3&gt;
+&lt;h3 id="running-python-and-ipython-from-the-projects-virtual-environment"&gt;Running Python and IPython from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/h3&gt;
 &lt;p&gt;In order to continue development in a Python environment that precisely mimics the one the project was initially developed with, use Pipenv from the command line as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv run python3
 &lt;/pre&gt;&lt;/div&gt;
@@ -241,14 +262,14 @@ jobs/etl_job.py
 
 
 &lt;p&gt;This will fire-up an IPython console session &lt;em&gt;where the default Python 3 kernel includes all of the direct and development project dependencies&lt;/em&gt; - this is our&amp;nbsp;preference.&lt;/p&gt;
-&lt;h3&gt;Pipenv&amp;nbsp;Shells&lt;/h3&gt;
+&lt;h3 id="pipenv-shells"&gt;Pipenv&amp;nbsp;Shells&lt;/h3&gt;
 &lt;p&gt;Prepending &lt;code&gt;pipenv&lt;/code&gt; to every command you want to run within the context of your Pipenv-managed virtual environment can get very tedious. This can be avoided by entering into a Pipenv-managed&amp;nbsp;shell,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv shell
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This is equivalent to &amp;#8216;activating&amp;#8217; the virtual environment; any command will now be executed within the virtual environment. Use &lt;code&gt;exit&lt;/code&gt; to leave the shell&amp;nbsp;session.&lt;/p&gt;
-&lt;h3&gt;Automatic Loading of Environment&amp;nbsp;Variables&lt;/h3&gt;
+&lt;h3 id="automatic-loading-of-environment-variables"&gt;Automatic Loading of Environment&amp;nbsp;Variables&lt;/h3&gt;
 &lt;p&gt;Pipenv will automatically pick-up and load any environment variables declared in the &lt;code&gt;.env&lt;/code&gt; file, located in the package&amp;#8217;s root directory. For example,&amp;nbsp;adding,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;applications/spark-2.3.1/bin
 &lt;span class="nv"&gt;DEBUG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;
@@ -256,7 +277,7 @@ jobs/etl_job.py
 
 
 &lt;p&gt;Will enable access to these variables within any Python program -e.g. via a call to &lt;code&gt;os.environ['SPARK_HOME']&lt;/code&gt;. Note, that if any security credentials are placed here, then this file &lt;strong&gt;must&lt;/strong&gt; be removed from source control - i.e. add &lt;code&gt;.env&lt;/code&gt; to the &lt;code&gt;.gitignore&lt;/code&gt; file to prevent potential security&amp;nbsp;risks.&lt;/p&gt;
-&lt;h2&gt;Summary&lt;/h2&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
 &lt;p&gt;The workflow described above, together with the &lt;a href="https://github.com/AlexIoannides/pyspark-example-project"&gt;accompanying Python project&lt;/a&gt;, represents a stable foundation for writing robust &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs, regardless of their complexity and regardless of how the jobs are being executed - e.g. via use of &lt;code&gt;cron&lt;/code&gt; or more sophisticated workflow automation tools, such as &lt;a href="https://airflow.apache.org"&gt;Airflow&lt;/a&gt;. I am always interested in collating and integrating more &amp;#8216;best practices&amp;#8217; - if you have any, please submit them &lt;a href="https://github.com/AlexIoannides/pyspark-example-project/issues"&gt;here&lt;/a&gt;. &lt;/p&gt;</content><category term="data-engineering"></category><category term="data-processing"></category><category term="apache-spark"></category><category term="python"></category></entry><entry><title>Machine Learning Pipelines for R</title><link href="https://alexioannides.github.io/2017/05/08/machine-learning-pipelines-for-r/" rel="alternate"></link><published>2017-05-08T00:00:00+01:00</published><updated>2017-05-08T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2017-05-08:/2017/05/08/machine-learning-pipelines-for-r/</id><summary type="html">&lt;p&gt;&lt;img alt="pipes" src="https://alexioannides.github.io/images/r/pipeliner/pipelines1.png" title="Pipelines!"&gt;&lt;/p&gt;
 &lt;p&gt;Building machine learning and statistical models often requires pre- and post-transformation of the input and/or response variables, prior to training (or fitting) the models. For example, a model may require training on the logarithm of the response and input variables. As a consequence, fitting and then generating predictions from …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="pipes" src="https://alexioannides.github.io/images/r/pipeliner/pipelines1.png" title="Pipelines!"&gt;&lt;/p&gt;
 &lt;p&gt;Building machine learning and statistical models often requires pre- and post-transformation of the input and/or response variables, prior to training (or fitting) the models. For example, a model may require training on the logarithm of the response and input variables. As a consequence, fitting and then generating predictions from these models requires repeated application of transformation and inverse-transformation functions - to go from the domain of the original input variables to the domain of the original output variables (via the model). This is usually quite a laborious and repetitive process that leads to messy code and&amp;nbsp;notebooks.&lt;/p&gt;
@@ -271,7 +292,7 @@ jobs/etl_job.py
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Pipes in the&amp;nbsp;Pipeline&lt;/h2&gt;
+&lt;h2 id="pipes-in-the-pipeline"&gt;Pipes in the&amp;nbsp;Pipeline&lt;/h2&gt;
 &lt;p&gt;There are currently four types of pipeline section - a section being a function that wraps a user-defined function - that can be assembled into a&amp;nbsp;pipeline:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;transform_features&lt;/code&gt;: wraps a function that maps input variables (or features) to another space -&amp;nbsp;e.g.,&lt;/li&gt;
@@ -311,9 +332,9 @@ jobs/etl_job.py
 
 &lt;p&gt;As demonstrated above, each one of these functions expects as its argument another unary function of a data.frame (i.e. it has to be a function of a single data.frame). With the &lt;strong&gt;exception&lt;/strong&gt; of &lt;code&gt;estimate_model&lt;/code&gt;, which expects the input function to return an object that has a &lt;code&gt;predict.object-class-name&lt;/code&gt; method existing in the current environment (e.g. &lt;code&gt;predict.lm&lt;/code&gt; for linear models built using &lt;code&gt;lm()&lt;/code&gt;), all the other transform functions also expect their input functions to return data.frames (consisting entirely of columns &lt;strong&gt;not&lt;/strong&gt; present in the input data.frame). If any of these rules are violated then appropriately named errors will be thrown to help you locate the&amp;nbsp;issue.&lt;/p&gt;
 &lt;p&gt;If this sounds complex and convoluted then I encourage you to to skip to the examples below - this framework is &lt;strong&gt;very&lt;/strong&gt; simple to use in practice. Simplicity is the key aim&amp;nbsp;here.&lt;/p&gt;
-&lt;h2&gt;Two Interfaces to Rule Them&amp;nbsp;All&lt;/h2&gt;
+&lt;h2 id="two-interfaces-to-rule-them-all"&gt;Two Interfaces to Rule Them&amp;nbsp;All&lt;/h2&gt;
 &lt;p&gt;I am a great believer and protagonist for functional programming - especially for data-related tasks like building machine learning models. At the same time the notion of a &amp;#8216;machine learning pipeline&amp;#8217; is well represented with a simple object-oriented class hierarchy (which is how it is implemented in &lt;a href="http://spark.apache.org/docs/latest/ml-pipeline.html" title="Pipelines in Apache Spark MLib"&gt;Apache Spark&amp;#8217;s&lt;/a&gt;). I couldn&amp;#8217;t decide which style of interface was best, so I implemented both within &lt;code&gt;pipeliner&lt;/code&gt; (using the same underlying code) and ensured their output can be used interchangeably. To keep this introduction simple, however, I&amp;#8217;m only going to talk about the functional interface - those interested in the (more) object-oriented approach are encouraged to read the manual pages for the &lt;code&gt;ml_pipeline_builder&lt;/code&gt; &lt;span class="quo"&gt;&amp;#8216;&lt;/span&gt;class&amp;#8217;.&lt;/p&gt;
-&lt;h3&gt;Example Usage with a Functional&amp;nbsp;Flavor&lt;/h3&gt;
+&lt;h3 id="example-usage-with-a-functional-flavor"&gt;Example Usage with a Functional&amp;nbsp;Flavor&lt;/h3&gt;
 &lt;p&gt;We use the &lt;code&gt;faithful&lt;/code&gt; dataset shipped with R, together with the &lt;code&gt;pipeliner&lt;/code&gt; package to estimate a linear regression model for the eruption duration of &amp;#8216;Old Faithful&amp;#8217; as a function of the inter-eruption waiting time. The transformations we apply to the input and response variables - before we estimate the model - are simple scaling by the mean and standard deviation (i.e. mapping the variables to&amp;nbsp;z-scores).&lt;/p&gt;
 &lt;p&gt;The end-to-end process for building the pipeline, estimating the model and generating in-sample predictions (that include all interim variable transformations), is as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;pipeliner&lt;span class="p"&gt;)&lt;/span&gt;
@@ -352,7 +373,7 @@ in_sample_predictions &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; predict&lt;sp
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Accessing Inner Models &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Prediction&amp;nbsp;Functions&lt;/h3&gt;
+&lt;h3 id="accessing-inner-models-prediction-functions"&gt;Accessing Inner Models &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Prediction&amp;nbsp;Functions&lt;/h3&gt;
 &lt;p&gt;We can access the estimated inner models directly and compute summaries, etc - for&amp;nbsp;example,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kp"&gt;summary&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;lm_pipeline&lt;span class="o"&gt;$&lt;/span&gt;inner_model&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="c1"&gt;##&lt;/span&gt;
@@ -391,7 +412,7 @@ predictions &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; pred_function&lt;span c
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h1&gt;Turbo-Charged Pipelines in the&amp;nbsp;Tidyverse&lt;/h1&gt;
+&lt;h1 id="turbo-charged-pipelines-in-the-tidyverse"&gt;Turbo-Charged Pipelines in the&amp;nbsp;Tidyverse&lt;/h1&gt;
 &lt;p&gt;The &lt;code&gt;pipeliner&lt;/code&gt; approach to building models becomes even more concise when combined with the set of packages in the &lt;a href="http://tidyverse.org" title="Welcome to The Tidyverse!"&gt;tidyverse&lt;/a&gt;. For example, the &amp;#8216;Old Faithful&amp;#8217; pipeline could be rewritten&amp;nbsp;as,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;tidyverse&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -420,7 +441,7 @@ lm_pipeline &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; data &lt;span class="o"
 
 
 &lt;p&gt;Nice, compact and expressive (if I don&amp;#8217;t say so&amp;nbsp;myself)!&lt;/p&gt;
-&lt;h3&gt;Compact&amp;nbsp;Cross-validation&lt;/h3&gt;
+&lt;h3 id="compact-cross-validation"&gt;Compact&amp;nbsp;Cross-validation&lt;/h3&gt;
 &lt;p&gt;If we now introduce the &lt;code&gt;modelr&lt;/code&gt; package into this workflow and adopt the the list-columns pattern described in Hadley Wickham&amp;#8217;s &lt;a href="http://r4ds.had.co.nz/many-models.html#list-columns-1" title="R 4 Data Science - Many Models &amp;amp; List Columns"&gt;R for Data Science&lt;/a&gt;, we can also achieve wonderfully compact end-to-end model estimation and&amp;nbsp;cross-validation,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;modelr&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -462,7 +483,7 @@ cv_rmse
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h1&gt;Forthcoming&amp;nbsp;Attractions&lt;/h1&gt;
+&lt;h1 id="forthcoming-attractions"&gt;Forthcoming&amp;nbsp;Attractions&lt;/h1&gt;
 &lt;p&gt;I built &lt;code&gt;pipeliner&lt;/code&gt; largely to fill a hole in my own workflows. Up until now I&amp;#8217;ve used Max Kuhn&amp;#8217;s excellent &lt;a href="http://topepo.github.io/caret/index.html" title="Caret"&gt;caret package&lt;/a&gt; quite a bit, but for in-the-moment model building (e.g. within a R Notebook) it wasn&amp;#8217;t simplifying the code &lt;em&gt;that&lt;/em&gt; much, and the style doesn&amp;#8217;t quite fit with the tidy and functional world that I now inhabit most of the time. So, I plugged the hole by myself. I intend to live with &lt;code&gt;pipeliner&lt;/code&gt; for a while to get an idea of where it might go next, but I am always open to suggestions (and bug notifications) - please &lt;a href="https://github.com/AlexIoannides/pipeliner/issues" title="Pipeliner Issues on GitHub"&gt;leave any ideas here&lt;/a&gt;.&lt;/p&gt;</content><category term="machine-learning"></category><category term="data-processing"></category></entry><entry><title>elasticsearchr - a Lightweight Elasticsearch Client for R</title><link href="https://alexioannides.github.io/2016/11/28/elasticsearchr-a-lightweight-elasticsearch-client-for-r/" rel="alternate"></link><published>2016-11-28T00:00:00+00:00</published><updated>2016-11-28T00:00:00+00:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-11-28:/2016/11/28/elasticsearchr-a-lightweight-elasticsearch-client-for-r/</id><summary type="html">&lt;p&gt;&lt;img alt="elasticsearchr" src="https://alexioannides.github.io/images/r/elasticsearchr/elasticsearchr2.png" title="Elasticsearchr"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.elastic.co/products/elasticsearch" title="Elasticsearch"&gt;Elasticsearch&lt;/a&gt; is a distributed &lt;a href="https://en.wikipedia.org/wiki/NoSQL" title="What is NoSQL?"&gt;NoSQL&lt;/a&gt; document store search-engine and &lt;a href="https://www.elastic.co/blog/elasticsearch-as-a-column-store" title="Elasticsearch as a Column Store"&gt;column-oriented database&lt;/a&gt;, whose &lt;strong&gt;fast&lt;/strong&gt; (near real-time) reads and powerful aggregation engine make it an excellent choice as an &amp;#8216;analytics database&amp;#8217; for R&amp;amp;D, production-use or both. Installation is simple, it ships with default settings that allow it to work effectively out-of-the-box …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="elasticsearchr" src="https://alexioannides.github.io/images/r/elasticsearchr/elasticsearchr2.png" title="Elasticsearchr"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.elastic.co/products/elasticsearch" title="Elasticsearch"&gt;Elasticsearch&lt;/a&gt; is a distributed &lt;a href="https://en.wikipedia.org/wiki/NoSQL" title="What is NoSQL?"&gt;NoSQL&lt;/a&gt; document store search-engine and &lt;a href="https://www.elastic.co/blog/elasticsearch-as-a-column-store" title="Elasticsearch as a Column Store"&gt;column-oriented database&lt;/a&gt;, whose &lt;strong&gt;fast&lt;/strong&gt; (near real-time) reads and powerful aggregation engine make it an excellent choice as an &amp;#8216;analytics database&amp;#8217; for R&amp;amp;D, production-use or both. Installation is simple, it ships with default settings that allow it to work effectively out-of-the-box, and all interaction is made via a set of intuitive and extremely &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;well documented&lt;/a&gt; &lt;a href="https://en.wikipedia.org/wiki/Representational_state_transfer" title="RESTful?"&gt;RESTful&lt;/a&gt; APIs. I&amp;#8217;ve been using it for two years now and I am&amp;nbsp;evangelical.&lt;/p&gt;
@@ -473,7 +494,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Installing&amp;nbsp;Elasticsearch&lt;/h2&gt;
+&lt;h2 id="installing-elasticsearch"&gt;Installing&amp;nbsp;Elasticsearch&lt;/h2&gt;
 &lt;p&gt;Elasticsearch can be downloaded &lt;a href="https://www.elastic.co/downloads/elasticsearch" title="Download"&gt;here&lt;/a&gt;, where the instructions for installing and starting it can also be found. &lt;span class="caps"&gt;OS&lt;/span&gt; X users (such as myself) can also make use of &lt;a href="http://brew.sh/" title="Homebrew for OS X"&gt;Homebrew&lt;/a&gt; to install it with the&amp;nbsp;command,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ brew install elasticsearch
 &lt;/pre&gt;&lt;/div&gt;
@@ -495,7 +516,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Elasticsearch&amp;nbsp;101&lt;/h2&gt;
+&lt;h2 id="elasticsearch-101"&gt;Elasticsearch&amp;nbsp;101&lt;/h2&gt;
 &lt;p&gt;If you followed the installation steps above, you have just installed a single Elasticsearch &amp;#8216;node&amp;#8217;. When &lt;strong&gt;not&lt;/strong&gt; testing on your laptop, Elasticsearch usually comes in clusters of nodes (usually there are at least 3). The easiest easy way to get access to a managed Elasticsearch cluster is by using the &lt;a href="https://www.elastic.co/cloud/as-a-service" title="Elastic Cloud"&gt;Elastic Cloud&lt;/a&gt; managed service provided by &lt;a href="https://www.elastic.co" title="Elastic corp."&gt;Elastic&lt;/a&gt; (Amazon Web Services offer something similar too). For the rest of this brief tutorial I will assuming you&amp;#8217;re running a single node on your&amp;nbsp;laptop.&lt;/p&gt;
 &lt;p&gt;In Elasticsearch a &amp;#8216;row&amp;#8217; of data is stored as a &amp;#8216;document&amp;#8217;. A document is a &lt;a href="https://en.wikipedia.org/wiki/JSON" title="JSON"&gt;&lt;span class="caps"&gt;JSON&lt;/span&gt;&lt;/a&gt; object - for example, the first row of R&amp;#8217;s &lt;code&gt;iris&lt;/code&gt; dataset,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#   sepal_length sepal_width petal_length petal_width species&lt;/span&gt;
@@ -520,9 +541,9 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;p&gt;For example, the above &lt;code&gt;iris&lt;/code&gt; document could be living&amp;nbsp;at&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;http://localhost:9200/iris/data/1&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Although Elasticsearch - like most NoSQL databases - is often referred to as being &amp;#8216;schema free&amp;#8217;, as we have already see this is not entirely correct. What is true, however, is that the schema - or &amp;#8216;mapping&amp;#8217; as it&amp;#8217;s called in Elasticsearch - does not &lt;em&gt;need&lt;/em&gt; to be declared up-front (although you certainly can do this). Elasticsearch is more than capable of guessing the types of fields based on new data indexed for the first time. For more information on any of these basic concepts take a look &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/_basic_concepts.html" title="Basic Concepts"&gt;here&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;elasticsearchr: a Quick&amp;nbsp;Start&lt;/h2&gt;
+&lt;h2 id="elasticsearchr-a-quick-start"&gt;elasticsearchr: a Quick&amp;nbsp;Start&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;elasticsearchr&lt;/code&gt; is a &lt;strong&gt;lightweight&lt;/strong&gt; client - by this I mean that it only aims to do &amp;#8216;just enough&amp;#8217; work to make using Elasticsearch with R easy and intuitive. You will still need to read the &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;Elasticsearch documentation&lt;/a&gt; to understand how to compose queries and aggregations. What follows is a quick summary of what is&amp;nbsp;possible.&lt;/p&gt;
-&lt;h3&gt;Resources&lt;/h3&gt;
+&lt;h3 id="resources"&gt;Resources&lt;/h3&gt;
 &lt;p&gt;Elasticsearch resources, as defined by the URLs described above, are defined as &lt;code&gt;elastic&lt;/code&gt; objects in &lt;code&gt;elasticsearchr&lt;/code&gt;. For&amp;nbsp;example,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;es &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -531,14 +552,14 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;p&gt;Refers to documents of types &amp;#8216;data&amp;#8217; in the &amp;#8216;iris&amp;#8217; index located on an Elasticsearch node on my laptop. Note that:
 - it is possible to leave the document type empty if you need to refer to all documents in an index; and,
 - &lt;code&gt;elastic&lt;/code&gt; objects can be defined even if the underling resources have yet to be brought into&amp;nbsp;existence.&lt;/p&gt;
-&lt;h3&gt;Indexing New&amp;nbsp;Data&lt;/h3&gt;
+&lt;h3 id="indexing-new-data"&gt;Indexing New&amp;nbsp;Data&lt;/h3&gt;
 &lt;p&gt;To index (insert) data from a data frame, use the &lt;code&gt;%index%&lt;/code&gt; operator as&amp;nbsp;follows:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%index%&lt;/span&gt; iris
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;In this example, the &lt;code&gt;iris&lt;/code&gt; dataset is indexed into the &amp;#8216;iris&amp;#8217; index and given a document type called &amp;#8216;data&amp;#8217;. Note that I have not provided any document ids here. &lt;strong&gt;To explicitly specify document ids there must be a column in the data frame that is labelled &lt;code&gt;id&lt;/code&gt;&lt;/strong&gt;, from which the document ids will be&amp;nbsp;taken.&lt;/p&gt;
-&lt;h3&gt;Deleting&amp;nbsp;Data&lt;/h3&gt;
+&lt;h3 id="deleting-data"&gt;Deleting&amp;nbsp;Data&lt;/h3&gt;
 &lt;p&gt;Documents can be deleted in three different ways using the &lt;code&gt;%delete%&lt;/code&gt; operator. Firstly, an entire index (including the mapping information) can be erased by referencing just the index in the resource -&amp;nbsp;e.g.,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -554,7 +575,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Queries&lt;/h3&gt;
+&lt;h3 id="queries"&gt;Queries&lt;/h3&gt;
 &lt;p&gt;Any type of query that Elasticsearch makes available can be defined in a &lt;code&gt;query&lt;/code&gt; object using the native Elasticsearch &lt;span class="caps"&gt;JSON&lt;/span&gt; syntax - e.g. to match every document we could use the &lt;code&gt;match_all&lt;/code&gt; query,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;for_everything &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; query&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
 &lt;span class="s"&gt;  &amp;quot;match_all&amp;quot;: {}&lt;/span&gt;
@@ -576,7 +597,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Sorting Query&amp;nbsp;Results&lt;/h3&gt;
+&lt;h3 id="sorting-query-results"&gt;Sorting Query&amp;nbsp;Results&lt;/h3&gt;
 &lt;p&gt;Query results can be sorted on multiple fields by defining a &lt;code&gt;sort&lt;/code&gt; object using the same Elasticsearch &lt;span class="caps"&gt;JSON&lt;/span&gt; syntax - e.g. to sort by &lt;code&gt;sepal_width&lt;/code&gt; in ascending order the required &lt;code&gt;sort&lt;/code&gt; object would be defined&amp;nbsp;as,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;by_sepal_width &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&amp;quot;sepal_width&amp;quot;: {&amp;quot;order&amp;quot;: &amp;quot;asc&amp;quot;}}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -596,7 +617,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Aggregations&lt;/h3&gt;
+&lt;h3 id="aggregations"&gt;Aggregations&lt;/h3&gt;
 &lt;p&gt;Similarly, any type of aggregation that Elasticsearch makes available can be defined in an &lt;code&gt;aggs&lt;/code&gt; object - e.g. to compute the average &lt;code&gt;sepal_width&lt;/code&gt; per-species of flower we would specify the following&amp;nbsp;aggregation,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;avg_sepal_width &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; aggs&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
 &lt;span class="s"&gt;  &amp;quot;avg_sepal_width_per_species&amp;quot;: {&lt;/span&gt;
@@ -667,16 +688,16 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 
 
 &lt;p&gt;For comprehensive coverage of all query and aggregations types please refer to the rather excellent &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;official documentation&lt;/a&gt; (newcomers to Elasticsearch are advised to start with the &amp;#8216;Query String&amp;#8217;&amp;nbsp;query).&lt;/p&gt;
-&lt;h3&gt;Mappings&lt;/h3&gt;
+&lt;h3 id="mappings"&gt;Mappings&lt;/h3&gt;
 &lt;p&gt;Finally, I have included the ability to create an empty index with a custom mapping, using the &lt;code&gt;%create%&lt;/code&gt; operator -&amp;nbsp;e.g.,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%create%&lt;/span&gt; mapping_default_simple&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Where in this instance &lt;code&gt;mapping_default_simple()&lt;/code&gt; is a default mapping that I have shipped with &lt;code&gt;elasticsearchr&lt;/code&gt;. It switches-off the text analyser for all fields of type &amp;#8216;string&amp;#8217; (i.e. switches off free text search), allows all text search to work with case-insensitive lower-case terms, and maps any field with the name &amp;#8216;timestamp&amp;#8217; to type &amp;#8216;date&amp;#8217;, so long as it has the appropriate string or long&amp;nbsp;format.&lt;/p&gt;
-&lt;h2&gt;Forthcoming&amp;nbsp;Attractions&lt;/h2&gt;
+&lt;h2 id="forthcoming-attractions"&gt;Forthcoming&amp;nbsp;Attractions&lt;/h2&gt;
 &lt;p&gt;I do not have a grand vision for &lt;code&gt;elasticsearchr&lt;/code&gt; - I want to keep it a lightweight client that requires knowledge of Elasticsearch - but I would like to add the ability to compose major query and aggregation types, without having to type-out lots of &lt;span class="caps"&gt;JSON&lt;/span&gt;, and to be able to retrieve simple information like the names of all indices in a cluster, and all the document types within an index, etc. Future development will likely be focused in these&amp;nbsp;areas.&lt;/p&gt;
-&lt;h2&gt;Acknowledgements&lt;/h2&gt;
+&lt;h2 id="acknowledgements"&gt;Acknowledgements&lt;/h2&gt;
 &lt;p&gt;A big thank you to Hadley Wickham and Jeroen Ooms, the authors of the &lt;code&gt;httr&lt;/code&gt; and &lt;code&gt;jsonlite&lt;/code&gt; packages that &lt;code&gt;elasticsearchr&lt;/code&gt; leans upon &lt;em&gt;heavily&lt;/em&gt;.&lt;/p&gt;</content><category term="data-processing"></category><category term="data-stores"></category></entry><entry><title>Asynchronous and Distributed Programming in R with the Future Package</title><link href="https://alexioannides.github.io/2016/11/02/asynchronous-and-distributed-programming-in-r-with-the-future-package/" rel="alternate"></link><published>2016-11-02T00:00:00+00:00</published><updated>2016-11-02T00:00:00+00:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-11-02:/2016/11/02/asynchronous-and-distributed-programming-in-r-with-the-future-package/</id><summary type="html">&lt;p&gt;&lt;img alt="Future!" src="https://alexioannides.github.io/images/r/future/the_future.jpg" title="the_future"&gt;&lt;/p&gt;
 &lt;p&gt;Every now and again someone comes along and writes an R package that I consider to be a &amp;#8216;game changer&amp;#8217; for the language and it&amp;#8217;s application to Data Science. For example, I consider &lt;a href="https://github.com/hadley/dplyr" title="dplyr on GitHub"&gt;dplyr&lt;/a&gt; one such package as it has made data munging/manipulation &lt;em&gt;that&lt;/em&gt; more intuitive and more …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Future!" src="https://alexioannides.github.io/images/r/future/the_future.jpg" title="the_future"&gt;&lt;/p&gt;
 &lt;p&gt;Every now and again someone comes along and writes an R package that I consider to be a &amp;#8216;game changer&amp;#8217; for the language and it&amp;#8217;s application to Data Science. For example, I consider &lt;a href="https://github.com/hadley/dplyr" title="dplyr on GitHub"&gt;dplyr&lt;/a&gt; one such package as it has made data munging/manipulation &lt;em&gt;that&lt;/em&gt; more intuitive and more productive than it had been before. Although I only first read about it at the beginning of this week, my instinct tells me that in &lt;a href="https://www.linkedin.com/in/henrikbengtsson" title="Henrik Bengtsson on LinkedIn"&gt;Henrik Bengtsson&amp;#8217;s&lt;/a&gt; &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future&lt;/a&gt; package we might have another such game-changing R&amp;nbsp;package.&lt;/p&gt;
@@ -686,7 +707,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/blockquote&gt;
 &lt;p&gt;A classic example would be a request made to a web server via &lt;span class="caps"&gt;HTTP&lt;/span&gt;, that has yet to return and whose value remains unknown until it does (and which has promised to return at some point in the future). This &amp;#8216;promise&amp;#8217; is an object assigned to a variable in R like any other, and allows code execution to progress until the moment the code explicitly requires the future to be resolved (i.e. to &amp;#8216;make good&amp;#8217; on it&amp;#8217;s promise). So the code does not need to wait for the web server until the very moment that the information anticipated in its response it actually needed. In the intervening execution time we can send requests to other web servers, run some other computations, etc. Ultimately, this leads to &lt;strong&gt;faster&lt;/strong&gt; and &lt;strong&gt;more efficient code&lt;/strong&gt;. This way of working also opens the door to distributed (i.e. parallel) computation, as the computation assigned to each new future can be executed on a new thread (and executed on a different core on the same machine, or on another&amp;nbsp;machine/node).&lt;/p&gt;
 &lt;p&gt;The future &lt;span class="caps"&gt;API&lt;/span&gt; is extremely expressive and the associated documentation is excellent. My motivation here is not to repeat any of this, but rather to give a few examples to serve as inspiration for how futures could be used for day-to-day Data Science tasks in&amp;nbsp;R.&lt;/p&gt;
-&lt;h1&gt;Creating a Future to be Executed on a Different Core to that Running the Main&amp;nbsp;Script&lt;/h1&gt;
+&lt;h1 id="creating-a-future-to-be-executed-on-a-different-core-to-that-running-the-main-script"&gt;Creating a Future to be Executed on a Different Core to that Running the Main&amp;nbsp;Script&lt;/h1&gt;
 &lt;p&gt;To demonstrate the syntax and structure required to achieve this aim, I am going to delegate to a future the task of estimating the mean of 10 million random samples from the normal distribution, and ask it to spawn a new R process on a different core in order to do so. The code to achieve this is as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;future&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -726,9 +747,9 @@ f_dots&lt;span class="p"&gt;()&lt;/span&gt;
 
 
 &lt;p&gt;Here, &lt;code&gt;resolved(f)&lt;/code&gt; will return &lt;code&gt;FALSE&lt;/code&gt; until the future &lt;code&gt;f&lt;/code&gt; has finished&amp;nbsp;executing.&lt;/p&gt;
-&lt;h1&gt;Useful Use&amp;nbsp;Cases&lt;/h1&gt;
+&lt;h1 id="useful-use-cases"&gt;Useful Use&amp;nbsp;Cases&lt;/h1&gt;
 &lt;p&gt;I can recall many situations where futures would have been handy when writing R scripts. The examples below are the most obvious that come to mind. No doubt there will be many&amp;nbsp;more.&lt;/p&gt;
-&lt;h2&gt;Distributed (Parallel)&amp;nbsp;Computation&lt;/h2&gt;
+&lt;h2 id="distributed-parallel-computation"&gt;Distributed (Parallel)&amp;nbsp;Computation&lt;/h2&gt;
 &lt;p&gt;In the past, when I&amp;#8217;ve felt the need to distribute a calculation I have usually used the &lt;code&gt;mclapply&lt;/code&gt; function (i.e. multi-core &lt;code&gt;lapply&lt;/code&gt;), from the &lt;code&gt;parallel&lt;/code&gt; library that comes bundled together with base R. Computing the mean of 100 million random samples from the normal distribution would look something&amp;nbsp;like,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;parallel&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -777,7 +798,7 @@ microbenchmark&lt;span class="p"&gt;({&lt;/span&gt; samples &lt;span class="o"&g
 
 
 &lt;p&gt;We can see that the multi-threaded version is nearly 3 times faster, which is not surprising given that we&amp;#8217;re using 3 extra threads. Note that time is lost spawning the extra threads and combining their results (usually referred to as &amp;#8216;overhead&amp;#8217;), such that distributing a calculation can actually increase computation time if the benefit of parallelisation is less than the cost of the&amp;nbsp;overhead.&lt;/p&gt;
-&lt;h2&gt;Non-Blocking Asynchronous&amp;nbsp;Input/Output&lt;/h2&gt;
+&lt;h2 id="non-blocking-asynchronous-inputoutput"&gt;Non-Blocking Asynchronous&amp;nbsp;Input/Output&lt;/h2&gt;
 &lt;p&gt;I have often found myself in the situation where I need to read several large &lt;span class="caps"&gt;CSV&lt;/span&gt; files, each of which can take a long time to load. Because the files can only be loaded sequentially, I have had to wait for one file to be read before the next one can start loading, which compounds the time devoted to input. Thanks to futures, we can can now achieve &lt;a href="https://en.wikipedia.org/wiki/Asynchronous_I/O" title="Wikipedia on asynchronous io"&gt;asynchronous input and output&lt;/a&gt; as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;readr&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -837,25 +858,25 @@ values&lt;span class="p"&gt;(&lt;/span&gt;time_futures&lt;span class="p"&gt;)&lt
 
 
 &lt;p&gt;The same logic applies to accessing databases and executing &lt;span class="caps"&gt;SQL&lt;/span&gt; queries via &lt;a href="https://en.wikipedia.org/wiki/Open_Database_Connectivity" title="Wikipedia on ODBC"&gt;&lt;span class="caps"&gt;ODBC&lt;/span&gt;&lt;/a&gt; or &lt;a href="https://en.wikipedia.org/wiki/Java_Database_Connectivity" title="Wikipedia on JDBC"&gt;&lt;span class="caps"&gt;JDBC&lt;/span&gt;&lt;/a&gt;. For example, large complex queries can be split into &amp;#8216;chunks&amp;#8217; and sent asynchronously to the database server in order to have them executed on multiple server threads. The output can then be unified once the server has sent back the chunks, using R (e.g. with &lt;a href="https://github.com/hadley/dplyr" title="dplyr on GitHub"&gt;dplyr&lt;/a&gt;). This is a strategy that I have been using with Apache Spark, but I could now implement it within R. Similarly, multiple database tables can be accessed concurrently, and so&amp;nbsp;on.  &lt;/p&gt;
-&lt;h1&gt;Final&amp;nbsp;Thoughts&lt;/h1&gt;
+&lt;h1 id="final-thoughts"&gt;Final&amp;nbsp;Thoughts&lt;/h1&gt;
 &lt;p&gt;I have only really scratched the surface of what is possible with futures. For example, &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future&lt;/a&gt; supports multiple execution plans including &lt;code&gt;lazy&lt;/code&gt; and &lt;code&gt;cluster&lt;/code&gt; (for multiple machines/nodes) - I have only focused on increasing performance on a single machine with multiple cores. If this post has provided some inspiration or left you curious, then head over to the official &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future docs&lt;/a&gt; for the full details (which are a joy to read and&amp;nbsp;work-through).&lt;/p&gt;</content><category term="data-processing"></category><category term="high-performance-computing"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 4 - Apache Zeppelin &amp; Scala Notebooks</title><link href="https://alexioannides.github.io/2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/" rel="alternate"></link><published>2016-08-29T00:00:00+01:00</published><updated>2016-08-29T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-29:/2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/</id><summary type="html">&lt;p&gt;&lt;img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"&gt;&lt;/p&gt;
 &lt;p&gt;Parts &lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;one&lt;/a&gt;, &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;two&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3"&gt;three&lt;/a&gt; of this series of posts have taken us from creating an account on &lt;span class="caps"&gt;AWS&lt;/span&gt; to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;amp;D is nearly complete - the only outstanding component is …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"&gt;&lt;/p&gt;
 &lt;p&gt;Parts &lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;one&lt;/a&gt;, &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;two&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3"&gt;three&lt;/a&gt; of this series of posts have taken us from creating an account on &lt;span class="caps"&gt;AWS&lt;/span&gt; to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;amp;D is nearly complete - the only outstanding component is the ability to interact (&lt;span class="caps"&gt;REPL&lt;/span&gt;-style) with Spark using code written in Scala and to run this on some sort of scheduled basis. So, for this last part I am going to focus on getting &lt;a href="http://zeppelin.apache.org" title="Apache Zeppelin"&gt;Apache Zeppelin&lt;/a&gt;&amp;nbsp;up-and-running.&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://zeppelin.apache.org" title="Apache Zeppelin"&gt;Zeppelin&lt;/a&gt; is a notebook server in a similar vein as the Jupyter or Beaker notebooks (and very similar to those available on Databricks). Code is submitted and executed in &amp;#8216;chunks&amp;#8217; with interim output (e.g. charts and tables) displayed after it has been computed. Where Zeppelin differs from the other, is its first-class support for Spark and it&amp;#8217;s ability to run notebooks (and thereby &lt;span class="caps"&gt;ETL&lt;/span&gt; process) on a schedule (in essence it uses &lt;code&gt;chron&lt;/code&gt; for scheduling and&amp;nbsp;execution).&lt;/p&gt;
-&lt;h1&gt;Installing Apache&amp;nbsp;Zeppelin&lt;/h1&gt;
+&lt;h1 id="installing-apache-zeppelin"&gt;Installing Apache&amp;nbsp;Zeppelin&lt;/h1&gt;
 &lt;p&gt;Following the steps laid-out in previous posts, &lt;span class="caps"&gt;SSH&lt;/span&gt; into our Spark cluster&amp;#8217;s master node (or use &lt;code&gt;$ ./flintrock login my-cluster&lt;/code&gt; for extra convenience). Just like we did for R Studio Server we&amp;#8217;re going to install Zeppelin here as well. Find the &lt;span class="caps"&gt;URL&lt;/span&gt; for the latest version of Zeppelin &lt;a href="http://www.apache.org/dyn/closer.cgi/zeppelin/zeppelin-0.6.1/zeppelin-0.6.1-bin-all.tgz" title="Download Zeppelin"&gt;here&lt;/a&gt; and then from the master node&amp;#8217;s shell&amp;nbsp;execute,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ cd /home/ec2-user&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ wget http://apache.mirror.anlx.net/zeppelin/zeppelin-0.6.1/zeppelin-0.6.1-bin-all.tgz&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ tar -xzf zeppelin-0.6.1-bin-all.tgz&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ rm zeppelin-0.6.1-bin-all.tgz&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Note that I have chosen to install the binaries that contain all of the available language interpreters - there is no restriction on choice of language and you could just as easily use R or Python for interacting with&amp;nbsp;Spark.&lt;/p&gt;
-&lt;h1&gt;Configuring&amp;nbsp;Zeppelin&lt;/h1&gt;
+&lt;h1 id="configuring-zeppelin"&gt;Configuring&amp;nbsp;Zeppelin&lt;/h1&gt;
 &lt;p&gt;Before we can start-up and test Zeppelin, we will need to configure it. Templates for configuration files can be found in the &lt;code&gt;conf&lt;/code&gt; directory of the Zeppelin folder. Makes copies of these by executing the following&amp;nbsp;commands,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ cd /home/ec2-user/zeppelin-0.6.1-bin-all/conf&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ cp zeppelin-env.sh.template zeppelin-env.sh&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ cp zeppelin-site.xml.template zeppelin-site.xml&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Then using a text editor such as &lt;a href="https://en.wikipedia.org/wiki/Vi" title="vi Wiki"&gt;vi&lt;/a&gt; - e.g. &lt;code&gt;$ vi zeppelin-env.sh&lt;/code&gt; - to edit each file making the changes described&amp;nbsp;below.&lt;/p&gt;
-&lt;h2&gt;zeppelin-env.sh&lt;/h2&gt;
+&lt;h2 id="zeppelin-envsh"&gt;zeppelin-env.sh&lt;/h2&gt;
 &lt;p&gt;Find the following variable exports, uncomment them, and then make the following&amp;nbsp;assignments:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;MASTER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;spark://ip-172-31-6-33:7077 &lt;span class="c1"&gt;# use the appropriate local IP address here&lt;/span&gt;
 &lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/usr/local/lib/spark
@@ -864,7 +885,7 @@ values&lt;span class="p"&gt;(&lt;/span&gt;time_futures&lt;span class="p"&gt;)&lt
 
 
 &lt;p&gt;Most of these options should be familiar to you by now so I won&amp;#8217;t go-over again&amp;nbsp;here.&lt;/p&gt;
-&lt;h2&gt;zeppelin-site.xml&lt;/h2&gt;
+&lt;h2 id="zeppelin-sitexml"&gt;zeppelin-site.xml&lt;/h2&gt;
 &lt;p&gt;Find the following property name and change it to the value&amp;nbsp;below:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
   &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.server.port&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
@@ -881,7 +902,7 @@ values&lt;span class="p"&gt;(&lt;/span&gt;time_futures&lt;span class="p"&gt;)&lt
 &lt;p&gt;&lt;img alt="zeppelin-home" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-home.png" title="Zeppelin Home"&gt;&lt;/p&gt;
 &lt;p&gt;To shut Zeppelin down return to the master node&amp;#8217;s shell and&amp;nbsp;execute,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ ./zeppelin-daemon stop&lt;/code&gt;.&lt;/p&gt;
-&lt;h1&gt;Running Zeppelin with a Service&amp;nbsp;Manager&lt;/h1&gt;
+&lt;h1 id="running-zeppelin-with-a-service-manager"&gt;Running Zeppelin with a Service&amp;nbsp;Manager&lt;/h1&gt;
 &lt;p&gt;Unlike R Studio server that automatically configures and starts-up a &lt;a href="https://en.wikipedia.org/wiki/Daemon_(computing)" title="daemon Wiki"&gt;daemon&lt;/a&gt; that will shut-down and re-start with our master node when required, we will have to configure and perform these steps manually for Zeppelin - otherwise it will need to be manually started-up every time the cluster is started after being stopped (and I&amp;#8217;m far too lazy for this&amp;nbsp;inconvenience).&lt;/p&gt;
 &lt;p&gt;To make this happen on Amazon Linux we will make use of &lt;a href="https://en.wikipedia.org/wiki/Upstart" title="Upstart"&gt;Upstart&lt;/a&gt; and the &lt;code&gt;initctl&lt;/code&gt; command. But first of all we will need to create a configuration file in the &lt;code&gt;/etc/init&lt;/code&gt; directory,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ cd /etc/init&lt;/code&gt;&lt;/p&gt;
@@ -911,13 +932,13 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 &lt;p&gt;To test our script return to the shell and&amp;nbsp;execute,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ sudo initctl start zeppelin&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;And return to the browser to check that Zeppelin is up-and-running. You can check that this works by stopping the cluster and then starting it&amp;nbsp;again.&lt;/p&gt;
-&lt;h1&gt;Scala&amp;nbsp;Notebooks&lt;/h1&gt;
+&lt;h1 id="scala-notebooks"&gt;Scala&amp;nbsp;Notebooks&lt;/h1&gt;
 &lt;p&gt;From the Zeppelin home page select the &amp;#8216;Zeppelin Tutorial&amp;#8217;, accept the interpreter options and you should be presented with the following&amp;nbsp;notebook:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="zeppeling-nb" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-nb.png" title="Zeppelin Scala Notebook"&gt;&lt;/p&gt;
 &lt;p&gt;Click into the first code chunk and hit &lt;code&gt;shift + enter&lt;/code&gt; to run it. If everything has been configured correctly then the code will run and the Zeppelin application will be listed in the Spark master node&amp;#8217;s web &lt;span class="caps"&gt;UI&lt;/span&gt;. We then test our connectivity to S3 by attempting to access our data there in the usual&amp;nbsp;way:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="zeppelin-s3" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-s3-nb.png" title="Connecting to S3"&gt;&lt;/p&gt;
 &lt;p&gt;Note that this notebook, as well as any other, can be set to execute on a schedule defined using the &amp;#8216;Run Scheduler&amp;#8217; from the notebook&amp;#8217;s menu bar. This will happen irrespective of whether or not you have it loaded in the browser - so long as the Zeppelin daemon is running the notebooks will run on their defined&amp;nbsp;schedule.&lt;/p&gt;
-&lt;h1&gt;Storing Zeppelin Notebooks on&amp;nbsp;S3&lt;/h1&gt;
+&lt;h1 id="storing-zeppelin-notebooks-on-s3"&gt;Storing Zeppelin Notebooks on&amp;nbsp;S3&lt;/h1&gt;
 &lt;p&gt;By default Zeppelin will store all notebooks locally. This is likely to be fine under most circumstances (as it is also very easy to export them), but it makes sense to exploit the ability to have them stored in an S3 bucket instead. For example, if you have amassed a lot of notebooks working on one cluster and you&amp;#8217;d like to run them on another (maybe much larger) cluster, then it makes sense not to have to manually export them all from one cluster to&amp;nbsp;another.&lt;/p&gt;
 &lt;p&gt;Enabling access to S3 is relatively easy as we already have S3-enabled &lt;span class="caps"&gt;IAM&lt;/span&gt; roles assigned to our nodes (via Flintrock configuration). Start by creating a new bucket to store them in - e.g. &lt;code&gt;my.zeppelin.notebooks&lt;/code&gt;. Then create a folder within this bucket - e.g. &lt;code&gt;userone&lt;/code&gt; - and another one within that called &lt;code&gt;notebook&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Next, &lt;span class="caps"&gt;SSH&lt;/span&gt; into the master node and open the &lt;code&gt;zeppelin-site.xml&lt;/code&gt; file for editing as we did above. This time, un-comment and set the following&amp;nbsp;properties,&lt;/p&gt;
@@ -953,7 +974,7 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 &lt;p&gt;Save the changes and return to the terminal. Finally,&amp;nbsp;execute,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ sudo initctl restart zeppelin&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;And wait a few seconds before re-loading Zeppelin in your browser. If you create a new notebook you should be able to see if you go looking for it in the &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;console.&lt;/p&gt;
-&lt;h1&gt;Basic Notebook&amp;nbsp;Security&lt;/h1&gt;
+&lt;h1 id="basic-notebook-security"&gt;Basic Notebook&amp;nbsp;Security&lt;/h1&gt;
 &lt;p&gt;Being able to limit access to Zeppelin as well control the read/write permissions on individual notebooks will be useful if multiple people are likely to be working on the platform and using it to trial and schedule jobs on the cluster. It&amp;#8217;s also handy if you just want to grant someone access to read results and don&amp;#8217;t want to risk them changing the code by&amp;nbsp;accident.&lt;/p&gt;
 &lt;p&gt;Enabling basic authentication is relatively straight-forwards. First, open the &lt;code&gt;zeppelin-site.xml&lt;/code&gt; file for editing and ensure that the &lt;code&gt;zeppelin.anonymous.allowed&lt;/code&gt; property is set to &lt;code&gt;false&lt;/code&gt;,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
@@ -977,16 +998,16 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 
 
 &lt;p&gt;This file also allows you to set usernames, password and groups. For a slightly more detailed explanation head-over to the &lt;a href="http://zeppelin.apache.org/docs/0.6.1/security/shiroauthentication.html" title="Shiro on Zeppelin"&gt;Zeppelin documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;h1&gt;Zeppelin as a Spark Job &lt;span class="caps"&gt;REST&lt;/span&gt;&amp;nbsp;Server&lt;/h1&gt;
+&lt;h1 id="zeppelin-as-a-spark-job-rest-server"&gt;Zeppelin as a Spark Job &lt;span class="caps"&gt;REST&lt;/span&gt;&amp;nbsp;Server&lt;/h1&gt;
 &lt;p&gt;Each notebook on a Zeppelin server can be considered as an &amp;#8216;analytics job&amp;#8217;. We have already briefly mentioned the ability to execute such &amp;#8216;jobs&amp;#8217; on a schedule - e.g. execute an &lt;span class="caps"&gt;ETL&lt;/span&gt; process every hour, etc. We can actually take this further by exploiting Zeppelin&amp;#8217;s &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; that controls pretty much any server action. So, for example, we could execute a job (as defined in a notebook), remotely and possibly on an event-driven basis. A comprehensive description of the Zeppelin &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; can be found on the &lt;a href="http://zeppelin.apache.org/docs/0.6.1/rest-api/rest-notebook.html" title="Zeppelin RESTful API"&gt;official &lt;span class="caps"&gt;API&lt;/span&gt; documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;This is the point at which I start to get excited as our R&amp;amp;D platform starts to resemble a production platform. To illustrate how one could remotely execute Zeppelin jobs I have written a few basic R function (with examples) to facilitate this using R - these can be found on &lt;a href="https://github.com/AlexIoannides/alexutilr/blob/master/R/zeppelin_utils.R" title="alexutilr"&gt;GitHub&lt;/a&gt;, a discussion of which may make a post of its own in the near&amp;nbsp;future.&lt;/p&gt;
-&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id="conclusion"&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;That&amp;#8217;s it - mission&amp;nbsp;accomplished!&lt;/p&gt;
 &lt;p&gt;I have met all of my initial aims - possibly more. I have myself a Spark-based R&amp;amp;D platform that I can interact with using my favorite R tools and Scala, all from the comfort of my laptop. And we&amp;#8217;re not far removed from being able to deploy code and &amp;#8216;analytics jobs&amp;#8217; in a production environment. All we&amp;#8217;re really missing is a database for serving analytics (e.g. Elasticsearch) and maybe another for storing data if we won&amp;#8217;t be relying on S3. More on this in another&amp;nbsp;post.&lt;/p&gt;</content><category term="AWS"></category><category term="data-processing"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 3 - R, R Studio Server, SparkR &amp; Sparklyr</title><link href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" rel="alternate"></link><published>2016-08-22T00:00:00+01:00</published><updated>2016-08-22T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-22:/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;Part 1&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;Part 2&lt;/a&gt; of this series dealt with setting up &lt;span class="caps"&gt;AWS&lt;/span&gt;, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster&amp;#8217;s master node and use it to …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;Part 1&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;Part 2&lt;/a&gt; of this series dealt with setting up &lt;span class="caps"&gt;AWS&lt;/span&gt;, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster&amp;#8217;s master node and use it to serve my favorite R &lt;span class="caps"&gt;IDE&lt;/span&gt;: R Studio.
 We will then install and configure both the &lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr&lt;/a&gt; and [SparkR][sparkR] packages for connecting and interacting with Spark and our data. After this, we will be on our way to interacting with and computing on large-scale data as if it were sitting on our&amp;nbsp;laptops.&lt;/p&gt;
-&lt;h1&gt;Installing&amp;nbsp;R&lt;/h1&gt;
+&lt;h1 id="installing-r"&gt;Installing&amp;nbsp;R&lt;/h1&gt;
 &lt;p&gt;Our first task is to install R onto our master node. Start by &lt;span class="caps"&gt;SSH&lt;/span&gt;-ing into the master node using the steps described in &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;Part 2&lt;/a&gt;. Then execute the following commands in the following&amp;nbsp;order:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;$ sudo yum update&lt;/code&gt; - update all the packages on Amazon Linux machine imagine to the latest ones in the Amazon Linux&amp;#8217;s&amp;nbsp;repository;&lt;/li&gt;
@@ -996,7 +1017,7 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;/ol&gt;
 &lt;p&gt;If everything has worked as intended, then executing &lt;code&gt;$ R&lt;/code&gt; should present you with R on the command&amp;nbsp;line:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/r_terminal.png" title="Command Line R"&gt;&lt;/p&gt;
-&lt;h1&gt;Installing R Studio&amp;nbsp;Server&lt;/h1&gt;
+&lt;h1 id="installing-r-studio-server"&gt;Installing R Studio&amp;nbsp;Server&lt;/h1&gt;
 &lt;p&gt;Installing R Studio on the same local network as the Spark cluster that we want to connect to  - in our case directly on the master node - is the recommended approach for using R Studio with a remote Spark Cluster. Using a local version of R Studio to connect to a remote Spark cluster is prone to the same networking issues as trying to use the Spark shell remotely in client-mode (see &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;part 2&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;First of all we need the &lt;span class="caps"&gt;URL&lt;/span&gt; for the latest version of R Studio Server. Preview versions can be found &lt;a href="https://www.rstudio.com/products/rstudio/download/preview/" title="R Studio Server Preview"&gt;here&lt;/a&gt; while stable releases can be found &lt;a href="https://www.rstudio.com/products/rstudio/download-server/" title="R Studio Server Current"&gt;here&lt;/a&gt;. At the time of writing Sparklyr integration is a preview feature so I&amp;#8217;m using the latest preview version of R Studio Server for 64bit RedHat/CentOS (should this fail at any point, then revert back to the latest stable release as all of the scripts used in this post will still run). Picking-up where we left-off in the master node&amp;#8217;s terminal window, execute the following&amp;nbsp;commands,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ wget https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-rhel-0.99.1289-i686.rpm&lt;/code&gt;
@@ -1016,7 +1037,7 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;p&gt;Finally, on R Studio&amp;#8217;s command line&amp;nbsp;run,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;&amp;gt; install.packages("devtools")&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;to install the &lt;code&gt;devtools&lt;/code&gt; R package that will allow us to install packages directly from GitHub repositories (as well as many other things). If OpenSSL and Curl were installed correctly in the above steps, then this should take under a&amp;nbsp;minute.&lt;/p&gt;
-&lt;h1&gt;Connect to Spark with&amp;nbsp;Sparklyr&lt;/h1&gt;
+&lt;h1 id="connect-to-spark-with-sparklyr"&gt;Connect to Spark with&amp;nbsp;Sparklyr&lt;/h1&gt;
 &lt;p&gt;&lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr&lt;/a&gt; is an extensible R &lt;span class="caps"&gt;API&lt;/span&gt; for Spark from the people at &lt;a href="https://www.rstudio.com" title="rStudio"&gt;R Studio&lt;/a&gt;- an alternative to the SparkR package that ships with Spark as standard. In particular, it provides a &amp;#8216;back end&amp;#8217; for the powerful &lt;code&gt;dplyr&lt;/code&gt; data manipulation package that lets you manipulate Spark DataFrames using the same package and functions that I would use to manipulate native R data frames on my&amp;nbsp;laptop.&lt;/p&gt;
 &lt;p&gt;Sparklyr is still in it&amp;#8217;s infancy and is not yet available on the &lt;span class="caps"&gt;CRAN&lt;/span&gt; archives. As such, it needs to be installed directly from its GitHub repo, which from within R Studio is done by&amp;nbsp;executing,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;&amp;gt; devtools::install_github("rstudio/sparklyr")&lt;/code&gt;&lt;/p&gt;
@@ -1078,7 +1099,7 @@ spark_disconnect_all&lt;span class="p"&gt;()&lt;/span&gt;
 
 
 &lt;p&gt;Execute line-by-line and check the key outputs with those commented-out in the above script. Sparklyr is changing rapidly at the moment - for the latest documentation and information on: how to use it with the &lt;code&gt;dplyr&lt;/code&gt; package, how to leverage Spark machine learning libraries and how to extend Sparklyr itself, head over to the &lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr web site&lt;/a&gt; hosted by R&amp;nbsp;Studio.&lt;/p&gt;
-&lt;h1&gt;Connect to Spark with&amp;nbsp;SparkR&lt;/h1&gt;
+&lt;h1 id="connect-to-spark-with-sparkr"&gt;Connect to Spark with&amp;nbsp;SparkR&lt;/h1&gt;
 &lt;p&gt;SparkR is shipped with Spark and as such there is no external installation process that we&amp;#8217;re required to follow. It does, however, require R to be installed on every node in the cluster. This can be achieved by &lt;span class="caps"&gt;SSH&lt;/span&gt;-ing into every node in our cluster and repeating the above R installation steps, or experimenting with Flintrock&amp;#8217;s &lt;code&gt;run-command&lt;/code&gt; command that will automatically execute the same command on every node in the cluster, such&amp;nbsp;as,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ ./flintrock run-command the_name_of_your_cluster 'sudo yum install -y R'&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;To enable SparkR to be used via R Studio and demonstrate the same connectivity as we did above for Sparklyr, create a new script for the following&amp;nbsp;code:&lt;/p&gt;
@@ -1132,12 +1153,12 @@ sparkR.session.stop&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="PartOne"&gt;Part 1&lt;/a&gt; in this series of blog posts describes how to setup &lt;span class="caps"&gt;AWS&lt;/span&gt; with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on &lt;span class="caps"&gt;AWS&lt;/span&gt; and accessing our S3 data from within&amp;nbsp;Spark.&lt;/p&gt;
 &lt;p&gt;A key part of my vision for a Spark-based R&amp;amp;D platform is being able to to launch, stop, start and then connect to a cluster from my laptop. By this I mean that I don&amp;#8217;t want to have to directly interact with &lt;span class="caps"&gt;AWS&lt;/span&gt; every time I want to switch my cluster on or off. Versions of Spark prior to v2 had a folder in the home directory, &lt;code&gt;/ec2&lt;/code&gt;, containing scripts for doing exactly this from the terminal. I was perturbed to find this folder missing in Spark 2.0 and &amp;#8216;Amazon &lt;span class="caps"&gt;EC2&lt;/span&gt;&amp;#8217; missing from the &amp;#8216;Deploying&amp;#8217; menu of the official Spark documentation. It appears that these scripts have not been actively maintained and as such they&amp;#8217;ve been moved to a separate &lt;a href="https://github.com/amplab/spark-ec2" title="ec2-tools"&gt;GitHub repo&lt;/a&gt; for the foreseeable future. I spent a little bit of time trying to get them to work, but ultimately they do not support v2 of Spark as yet. They also don&amp;#8217;t allow you the flexibility of choosing which version of Hadoop to install along with Spark and this can cause headaches when it comes to accessing data on S3 (a bit more on this&amp;nbsp;later).&lt;/p&gt;
 &lt;p&gt;I&amp;#8217;m very keen on using Spark 2.0 so I needed an alternative solution. Manually firing-up VMs on &lt;span class="caps"&gt;EC2&lt;/span&gt; and installing Spark and Hadoop on each node was out of the question, as was an ascent of the &lt;span class="caps"&gt;AWS&lt;/span&gt; DevOps learning-curve required to automate such a process. This sort of thing is not part of my day-job and I don&amp;#8217;t have the time otherwise. So I turned to Google and was &lt;strong&gt;very&lt;/strong&gt; happy to stumble upon the &lt;a href="https://github.com/nchammas/flintrock" title="Flintrock"&gt;Flintrock&lt;/a&gt; project on GitHub. Its still in its infancy, but using it I managed to achieve everything I could do with the old Spark ec2 scripts, but with far greater flexibility and speed. It is really rather good and I will be using it for Spark cluster&amp;nbsp;management.&lt;/p&gt;
-&lt;h2&gt;Download Spark&amp;nbsp;Locally&lt;/h2&gt;
+&lt;h2 id="download-spark-locally"&gt;Download Spark&amp;nbsp;Locally&lt;/h2&gt;
 &lt;p&gt;In order to be able to send jobs to our Spark cluster we will need a local version of Spark so we can use the &lt;code&gt;spark-submit&lt;/code&gt; command. In any case, its useful for development and learning as well as for small ad hoc jobs. Download Spark 2.0 &lt;a href="https://spark.apache.org/downloads.html" title="SparkDownload"&gt;here&lt;/a&gt; and choose &amp;#8216;Pre-built for Hadoop 2.7 and later&amp;#8217;. My version lives in &lt;code&gt;/applications&lt;/code&gt; and I will assume that yours does too. To check that everything is okay, open the terminal and make Spark-2.0.0 your current directory. From here&amp;nbsp;run,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ ./bin/spark-shell&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;If everything is okay you should be met with the Spark shell for Scala&amp;nbsp;interaction:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/welcome_to_spark.png" title="spark-shell"&gt;&lt;/p&gt;
-&lt;h2&gt;Install&amp;nbsp;Flintrock&lt;/h2&gt;
+&lt;h2 id="install-flintrock"&gt;Install&amp;nbsp;Flintrock&lt;/h2&gt;
 &lt;p&gt;Exit the Spark shell (ctrl-d on a Mac, just in case you didn&amp;#8217;t know&amp;#8230;) and return to Spark&amp;#8217;s home directory. For convenience, I&amp;#8217;m going to download Flintrock to here as well - where the old ec2 scripts used to be. The steps for downloading the Flintrock binaries - taken verbatim from the Flinkrock repo&amp;#8217;s &lt;span class="caps"&gt;README&lt;/span&gt; - are as&amp;nbsp;follows:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nv"&gt;flintrock_version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0.5.0&amp;quot;&lt;/span&gt;
 
@@ -1150,7 +1171,7 @@ $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
 &lt;p&gt;And test that it works by&amp;nbsp;running,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ ./flintrock --help&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;It&amp;#8217;s worth familiarizing yourself with the available commands. We&amp;#8217;ll only be using a small sub-set of these, but there&amp;#8217;s a lot more you can do with&amp;nbsp;Flintrock.&lt;/p&gt;
-&lt;h2&gt;Configure&amp;nbsp;Flintrock&lt;/h2&gt;
+&lt;h2 id="configure-flintrock"&gt;Configure&amp;nbsp;Flintrock&lt;/h2&gt;
 &lt;p&gt;The configuration details of the default cluster are kept in a &lt;span class="caps"&gt;YAML&lt;/span&gt; file that will be opened in your favorite text editor if you&amp;nbsp;run&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ ./flintrock configure&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/figure_configure.png" title="FlintrockConfig"&gt;&lt;/p&gt;
@@ -1181,7 +1202,7 @@ $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
 &lt;p&gt;&lt;code&gt;install-hdfs&lt;/code&gt; - should Hadoop be installed on each machine alongside Spark? We want to access data in S3 and Hadoop is also a convenient way of making files and JARs visible to all nodes. So it&amp;#8217;s a &amp;#8216;True&amp;#8217; for&amp;nbsp;me.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Launch&amp;nbsp;Cluster&lt;/h2&gt;
+&lt;h2 id="launch-cluster"&gt;Launch&amp;nbsp;Cluster&lt;/h2&gt;
 &lt;p&gt;Once you&amp;#8217;ve decided on the cluster&amp;#8217;s configuration, head back to the terminal and launch a cluster&amp;nbsp;using,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ ./flintrock launch the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;This took me under 3 minutes, which is an &lt;em&gt;enormous&lt;/em&gt; improvement on the old ec2 scripts. Once Flintrock issues it&amp;#8217;s health report and returns control of the terminal back to you, login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console and head over to the &lt;span class="caps"&gt;EC2&lt;/span&gt; page to see the VMs that have been created for&amp;nbsp;you:&lt;/p&gt;
@@ -1197,7 +1218,7 @@ $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
 &lt;li&gt;22 - the default port for connecting via &lt;span class="caps"&gt;SSH&lt;/span&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Edit this list and add another Custom &lt;span class="caps"&gt;TCP&lt;/span&gt; rule to allow port 8787 to be accessed by your &lt;span class="caps"&gt;IP&lt;/span&gt; address. We will use this port to connect to R Studio when we set that up in the next post in this&amp;nbsp;series.&lt;/p&gt;
-&lt;h2&gt;Connect to&amp;nbsp;Cluster&lt;/h2&gt;
+&lt;h2 id="connect-to-cluster"&gt;Connect to&amp;nbsp;Cluster&lt;/h2&gt;
 &lt;p&gt;Find the Public &lt;span class="caps"&gt;IP&lt;/span&gt; address of the master node from the Instances tab of the &lt;span class="caps"&gt;EC2&lt;/span&gt; Dashboard. Enter this into a browser followed by &lt;code&gt;:8080&lt;/code&gt;, which should allow us to access the Spark master node&amp;#8217;s web &lt;span class="caps"&gt;UI&lt;/span&gt;:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/spark_web_ui.png" title="SparkBebUI"&gt;&lt;/p&gt;
 &lt;p&gt;If everything has worked correctly then you should see one worker node registered with the&amp;nbsp;master.&lt;/p&gt;
@@ -1220,7 +1241,7 @@ val rddArraySum = rddArray.reduce((x, y) =&amp;gt; x + y)
 &lt;p&gt;Note that the &lt;code&gt;--master&lt;/code&gt; option takes the local &lt;span class="caps"&gt;IP&lt;/span&gt; address of the master node within our network in &lt;span class="caps"&gt;AWS&lt;/span&gt;. An alternative method is to send our &lt;span class="caps"&gt;JAR&lt;/span&gt; file directly from our local machine using Spark in &amp;#8216;cluster&amp;#8217;&amp;nbsp;mode,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ bin/spark-submit --master spark://52.48.93.43:6066 --deploy-mode cluster --class org.apache.spark.examples.SparkPi examples/jars/spark-examples_2.11-2.0.0.jar 10&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;A common pattern is to use the latter when the application both reads data and writes output to and from S3 or some other data repository (or database) in our &lt;span class="caps"&gt;AWS&lt;/span&gt; network. I have not had any luck running an application on the cluster from my local machine in &amp;#8216;client&amp;#8217; mode. I haven&amp;#8217;t been able to make the master node &amp;#8216;see&amp;#8217; my laptop - pinging the latter from the former always fails and in client mode the Spark master node must be able to reach the machine that is running the driver application (which in client mode, in this context, is my laptop). I&amp;#8217;m sure that I could circumnavigate this issue if I setup a &lt;span class="caps"&gt;VPN&lt;/span&gt; or an &lt;span class="caps"&gt;SSH&lt;/span&gt;-tunnel between my laptop and the &lt;span class="caps"&gt;AWS&lt;/span&gt; cluster, but this seem like more hassle than it&amp;#8217;s worth considering that most of my interaction with Spark will be via R Studio or Zeppelin that I will setup to access&amp;nbsp;remotely.&lt;/p&gt;
-&lt;h2&gt;Read S3 Data from&amp;nbsp;Spark&lt;/h2&gt;
+&lt;h2 id="read-s3-data-from-spark"&gt;Read S3 Data from&amp;nbsp;Spark&lt;/h2&gt;
 &lt;p&gt;In order to access our S3 data from Spark (via Hadoop), we need to make a couple of packages (&lt;span class="caps"&gt;JAR&lt;/span&gt; files and their dependencies) available to all nodes in our cluster. The easiest way to do this, is to start the spark-shell with the following&amp;nbsp;options:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ spark-shell --packages com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Once the cluster has downloaded everything it needs and the shell has started, run the following program that &amp;#8216;opens&amp;#8217; the &lt;span class="caps"&gt;README&lt;/span&gt; file we uploaded to S3 in Part 1 of this series of blogs, and &amp;#8216;collects&amp;#8217; it back to the master node from its distributed (&lt;span class="caps"&gt;RDD&lt;/span&gt;)&amp;nbsp;representation:&lt;/p&gt;
@@ -1231,7 +1252,7 @@ data.collect
 
 &lt;p&gt;If everything is successful then you should see the contents of the file printed to&amp;nbsp;screen.&lt;/p&gt;
 &lt;p&gt;If you have read elsewhere about accessing data on S3, you may have seen references made to connection strings that start with &lt;code&gt;"s3n://...&lt;/code&gt; or maybe even &lt;code&gt;"s3://...&lt;/code&gt; with accompanying discussions about passing credentials either as part of the connection string or by setting system variables, etc. Because we are using a recent version of Hadoop and the Amazon packages required to map S3 objects onto Hadoop, and because we have assigned our nodes &lt;span class="caps"&gt;IAM&lt;/span&gt; roles that have permission to access S3, we do not need to negotiate any of these (sometimes painful)&amp;nbsp;issues.&lt;/p&gt;
-&lt;h2&gt;Stopping, Starting and Destroying&amp;nbsp;Clusters&lt;/h2&gt;
+&lt;h2 id="stopping-starting-and-destroying-clusters"&gt;Stopping, Starting and Destroying&amp;nbsp;Clusters&lt;/h2&gt;
 &lt;p&gt;Stopping a cluster - shutting it down to be re-started in the state you left it in - and preventing any further costs from accumulating is as simple as asking Flintrock&amp;nbsp;to,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ ./flintrock stop the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;and similarly for starting and destroying (terminating the cluster VMs and their state&amp;#8217;s&amp;nbsp;forever),&lt;/p&gt;
@@ -1260,13 +1281,13 @@ data.collect
 &lt;/ul&gt;
 &lt;p&gt;I&amp;#8217;m running on Mac &lt;span class="caps"&gt;OS&lt;/span&gt; X so this will be my frame of reference, but the Unix/Linux terminal-based parts of these posts should play nicely with all Linux distributions. I have no idea about&amp;nbsp;Windows.&lt;/p&gt;
 &lt;p&gt;You might be wondering why I don&amp;#8217;t use &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;#8217;s &lt;a href="https://aws.amazon.com/emr/"&gt;Elastic Map Reduce&lt;/a&gt; (&lt;span class="caps"&gt;EMR&lt;/span&gt;) service that can also run a Spark cluster with Zeppelin. I did try, but I found that it wasn&amp;#8217;t really suited to ad hoc R&amp;amp;D - I couldn&amp;#8217;t configure it with all my favorite tools (e.g. RStudio) and then easily &amp;#8216;pause&amp;#8217; the cluster when I&amp;#8217;m done for the day. I&amp;#8217;d be forced to stop the cluster and re-install my tools when I start another cluster up. &lt;span class="caps"&gt;EMR&lt;/span&gt; clusters appear to be better suited to being programmatically brought up and down as and when required, or for long-running clusters - excellent for a production environment. Not quite so good for R&amp;amp;D. Costs more too, which is the main reason &lt;a href="https://databricks.com/"&gt;Databricks&lt;/a&gt; doesn&amp;#8217;t work for me&amp;nbsp;either.&lt;/p&gt;
-&lt;h2&gt;Sign-Up for an &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;Account!&lt;/h2&gt;
+&lt;h2 id="sign-up-for-an-aws-account"&gt;Sign-Up for an &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;Account!&lt;/h2&gt;
 &lt;p&gt;This is obvious, but nevertheless for completeness head over to &lt;a href="https://aws.amazon.com/"&gt;aws.amazon.com&lt;/a&gt; and create an&amp;nbsp;account:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/1_aws_create_account.png" title="AWS"&gt;&lt;/p&gt;
 &lt;p&gt;Once you&amp;#8217;ve entered your credentials and payment details you&amp;#8217;ll be brought to the main &lt;span class="caps"&gt;AWS&lt;/span&gt; Management Console that lists all the services at your disposal. The &lt;a href="https://aws.amazon.com/documentation"&gt;&lt;span class="caps"&gt;AWS&lt;/span&gt; documentation&lt;/a&gt; is excellent and a great way to get an understanding of what everything is and how you might use&amp;nbsp;it.&lt;/p&gt;
 &lt;p&gt;This is also a good point to choose the region you want your services to be created in. I live in the &lt;span class="caps"&gt;UK&lt;/span&gt; so it makes sense for me to choose Ireland (aka&amp;nbsp;eu-west-1):&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/0_region.png" title="Region"&gt;&lt;/p&gt;
-&lt;h2&gt;Setup Users and Grant them&amp;nbsp;Roles&lt;/h2&gt;
+&lt;h2 id="setup-users-and-grant-them-roles"&gt;Setup Users and Grant them&amp;nbsp;Roles&lt;/h2&gt;
 &lt;p&gt;It is considered bad practice to login to &lt;span class="caps"&gt;AWS&lt;/span&gt; as the root user (i.e. the one that opened the account). So it&amp;#8217;s worth knowing how to setup users, restrict their access to the platform and assign them credentials. This is also easy to&amp;nbsp;to.&lt;/p&gt;
 &lt;p&gt;For now I&amp;#8217;m just going to create an &amp;#8216;admin&amp;#8217; user that has more-or-less the same privileges as the root user, but is unable to delete the account or change the billing details,&amp;nbsp;etc.&lt;/p&gt;
 &lt;p&gt;To begin with, login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console as the root user and navigate to Identity and Access Management (&lt;span class="caps"&gt;IAM&lt;/span&gt;) under Security and Identity. Click on the Users tab and then Create New User. Enter a new user name and then Create. You should then see the following confirmation together with new users&amp;#8217;&amp;nbsp;credentials:&lt;/p&gt;
@@ -1281,9 +1302,9 @@ data.collect
 &lt;p&gt;Note, that non-root users need to login via a difference &lt;span class="caps"&gt;URL&lt;/span&gt; that can be found at the top of the &lt;span class="caps"&gt;IAM&lt;/span&gt;&amp;nbsp;Dashboard:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt1/7_user_login_link.png" title="UserLogin"&gt;&lt;/p&gt;
 &lt;p&gt;Log out of the console and then back in again using this link, as your new admin user. It&amp;#8217;s worth noting that the &lt;span class="caps"&gt;IAM&lt;/span&gt; Dashboard encourages you to follow a series of steps for securing your platform. The steps above represent a sub-set of what is required to get the &amp;#8216;green light&amp;#8217; and I recommend that you work your way through all of them once you know your way around. For example, Multi-Factor Authentication (&lt;span class="caps"&gt;MFA&lt;/span&gt;) for the root user makes a lot of&amp;nbsp;sense.&lt;/p&gt;
-&lt;h2&gt;Generate &lt;span class="caps"&gt;EC2&lt;/span&gt; Key&amp;nbsp;Pairs&lt;/h2&gt;
+&lt;h2 id="generate-ec2-key-pairs"&gt;Generate &lt;span class="caps"&gt;EC2&lt;/span&gt; Key&amp;nbsp;Pairs&lt;/h2&gt;
 &lt;p&gt;In order for you to remotely access &lt;span class="caps"&gt;AWS&lt;/span&gt; services - e.g. data in in S3 and virtual machines on &lt;span class="caps"&gt;EC2&lt;/span&gt; from the comfort of your laptop - you will need to authenticate yourself. This is achieved using Key Pairs. Cryptography has never been a strong point, so if you want to know more about how this works I suggest taking a look &lt;a href="https://en.wikipedia.org/wiki/Public-key_cryptography"&gt;here&lt;/a&gt;. To generate our Key Pair and download the private key we use for authentication, start by navigating from the main console page to the &lt;span class="caps"&gt;EC2&lt;/span&gt; dashboard under Compute, and then to Key Pairs under Network &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Security. Once there, Create Key Pair and name it (e.g. &amp;#8216;spark_cluster&amp;#8217;). The file containing your private key will be automatically downloaded. Stash it somewhere safe like your home directory ,or even better in a hidden folder like &lt;code&gt;~/.ssh&lt;/code&gt;. We will ultimately assign these Key Pairs to Virtual Machines (VMs) and other services we want to setup and access&amp;nbsp;remotely.&lt;/p&gt;
-&lt;h2&gt;Install the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt;&amp;nbsp;Tools&lt;/h2&gt;
+&lt;h2 id="install-the-aws-cli-tools"&gt;Install the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt;&amp;nbsp;Tools&lt;/h2&gt;
 &lt;p&gt;By no means an essential step, but the &lt;span class="caps"&gt;AWS&lt;/span&gt; terminal tools are useful - e.g. for copying files to S3 or starting and stopping &lt;span class="caps"&gt;EMR&lt;/span&gt; clusters without having to login to the &lt;span class="caps"&gt;AWS&lt;/span&gt; console and click&amp;nbsp;buttons.&lt;/p&gt;
 &lt;p&gt;I think the easiest way to install the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt; tools is to use &lt;a href="https://brew.sh"&gt;Homebrew&lt;/a&gt;, a package manager for &lt;span class="caps"&gt;OS&lt;/span&gt; X (like &lt;span class="caps"&gt;APT&lt;/span&gt; or &lt;span class="caps"&gt;RPM&lt;/span&gt; for Mac). With Homebrew, installation is as easy as&amp;nbsp;executing,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ brew install awscli&lt;/code&gt;&lt;/p&gt;
@@ -1292,7 +1313,7 @@ data.collect
 &lt;p&gt;This will ask you for, in sequence: Access Key &lt;span class="caps"&gt;ID&lt;/span&gt; (copy from credentials file), Secret Access Key (copy from credentials file), Default region name (I use eu-west-1 in Ireland), and default output (I prefer &lt;span class="caps"&gt;JSON&lt;/span&gt;). To test that everything is working&amp;nbsp;execute,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ aws s3 ls&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;to list all the buckets we&amp;#8217;ve made in S3 (currently&amp;nbsp;none).&lt;/p&gt;
-&lt;h2&gt;Upload Data to&amp;nbsp;S3&lt;/h2&gt;
+&lt;h2 id="upload-data-to-s3"&gt;Upload Data to&amp;nbsp;S3&lt;/h2&gt;
 &lt;p&gt;Finally, it&amp;#8217;s time to do something data science-y - loading data. Before we can do this we need to create a &amp;#8216;bucket&amp;#8217; in S3 to put our data objects in. Using the &lt;span class="caps"&gt;AWS&lt;/span&gt; &lt;span class="caps"&gt;CLI&lt;/span&gt; tools we&amp;nbsp;execute,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ aws s3 mb s3://alex.data&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;to create the &lt;code&gt;alex.data&lt;/code&gt; bucket. &lt;span class="caps"&gt;AWS&lt;/span&gt; is quite strict about what names are valid (i.e. no underscores), so it&amp;#8217;s worth reading the &lt;span class="caps"&gt;AWS&lt;/span&gt; documentation on S3 if you get any errors. We can then copy a file over to our new bucket by&amp;nbsp;executing,&lt;/p&gt;

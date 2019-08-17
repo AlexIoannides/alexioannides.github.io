@@ -8,7 +8,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Installing&amp;nbsp;Elasticsearch&lt;/h2&gt;
+&lt;h2 id="installing-elasticsearch"&gt;Installing&amp;nbsp;Elasticsearch&lt;/h2&gt;
 &lt;p&gt;Elasticsearch can be downloaded &lt;a href="https://www.elastic.co/downloads/elasticsearch" title="Download"&gt;here&lt;/a&gt;, where the instructions for installing and starting it can also be found. &lt;span class="caps"&gt;OS&lt;/span&gt; X users (such as myself) can also make use of &lt;a href="http://brew.sh/" title="Homebrew for OS X"&gt;Homebrew&lt;/a&gt; to install it with the&amp;nbsp;command,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ brew install elasticsearch
 &lt;/pre&gt;&lt;/div&gt;
@@ -30,7 +30,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Elasticsearch&amp;nbsp;101&lt;/h2&gt;
+&lt;h2 id="elasticsearch-101"&gt;Elasticsearch&amp;nbsp;101&lt;/h2&gt;
 &lt;p&gt;If you followed the installation steps above, you have just installed a single Elasticsearch &amp;#8216;node&amp;#8217;. When &lt;strong&gt;not&lt;/strong&gt; testing on your laptop, Elasticsearch usually comes in clusters of nodes (usually there are at least 3). The easiest easy way to get access to a managed Elasticsearch cluster is by using the &lt;a href="https://www.elastic.co/cloud/as-a-service" title="Elastic Cloud"&gt;Elastic Cloud&lt;/a&gt; managed service provided by &lt;a href="https://www.elastic.co" title="Elastic corp."&gt;Elastic&lt;/a&gt; (Amazon Web Services offer something similar too). For the rest of this brief tutorial I will assuming you&amp;#8217;re running a single node on your&amp;nbsp;laptop.&lt;/p&gt;
 &lt;p&gt;In Elasticsearch a &amp;#8216;row&amp;#8217; of data is stored as a &amp;#8216;document&amp;#8217;. A document is a &lt;a href="https://en.wikipedia.org/wiki/JSON" title="JSON"&gt;&lt;span class="caps"&gt;JSON&lt;/span&gt;&lt;/a&gt; object - for example, the first row of R&amp;#8217;s &lt;code&gt;iris&lt;/code&gt; dataset,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#   sepal_length sepal_width petal_length petal_width species&lt;/span&gt;
@@ -55,9 +55,9 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;p&gt;For example, the above &lt;code&gt;iris&lt;/code&gt; document could be living&amp;nbsp;at&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;http://localhost:9200/iris/data/1&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Although Elasticsearch - like most NoSQL databases - is often referred to as being &amp;#8216;schema free&amp;#8217;, as we have already see this is not entirely correct. What is true, however, is that the schema - or &amp;#8216;mapping&amp;#8217; as it&amp;#8217;s called in Elasticsearch - does not &lt;em&gt;need&lt;/em&gt; to be declared up-front (although you certainly can do this). Elasticsearch is more than capable of guessing the types of fields based on new data indexed for the first time. For more information on any of these basic concepts take a look &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/_basic_concepts.html" title="Basic Concepts"&gt;here&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;elasticsearchr: a Quick&amp;nbsp;Start&lt;/h2&gt;
+&lt;h2 id="elasticsearchr-a-quick-start"&gt;elasticsearchr: a Quick&amp;nbsp;Start&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;elasticsearchr&lt;/code&gt; is a &lt;strong&gt;lightweight&lt;/strong&gt; client - by this I mean that it only aims to do &amp;#8216;just enough&amp;#8217; work to make using Elasticsearch with R easy and intuitive. You will still need to read the &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;Elasticsearch documentation&lt;/a&gt; to understand how to compose queries and aggregations. What follows is a quick summary of what is&amp;nbsp;possible.&lt;/p&gt;
-&lt;h3&gt;Resources&lt;/h3&gt;
+&lt;h3 id="resources"&gt;Resources&lt;/h3&gt;
 &lt;p&gt;Elasticsearch resources, as defined by the URLs described above, are defined as &lt;code&gt;elastic&lt;/code&gt; objects in &lt;code&gt;elasticsearchr&lt;/code&gt;. For&amp;nbsp;example,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;es &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -66,14 +66,14 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;p&gt;Refers to documents of types &amp;#8216;data&amp;#8217; in the &amp;#8216;iris&amp;#8217; index located on an Elasticsearch node on my laptop. Note that:
 - it is possible to leave the document type empty if you need to refer to all documents in an index; and,
 - &lt;code&gt;elastic&lt;/code&gt; objects can be defined even if the underling resources have yet to be brought into&amp;nbsp;existence.&lt;/p&gt;
-&lt;h3&gt;Indexing New&amp;nbsp;Data&lt;/h3&gt;
+&lt;h3 id="indexing-new-data"&gt;Indexing New&amp;nbsp;Data&lt;/h3&gt;
 &lt;p&gt;To index (insert) data from a data frame, use the &lt;code&gt;%index%&lt;/code&gt; operator as&amp;nbsp;follows:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%index%&lt;/span&gt; iris
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;In this example, the &lt;code&gt;iris&lt;/code&gt; dataset is indexed into the &amp;#8216;iris&amp;#8217; index and given a document type called &amp;#8216;data&amp;#8217;. Note that I have not provided any document ids here. &lt;strong&gt;To explicitly specify document ids there must be a column in the data frame that is labelled &lt;code&gt;id&lt;/code&gt;&lt;/strong&gt;, from which the document ids will be&amp;nbsp;taken.&lt;/p&gt;
-&lt;h3&gt;Deleting&amp;nbsp;Data&lt;/h3&gt;
+&lt;h3 id="deleting-data"&gt;Deleting&amp;nbsp;Data&lt;/h3&gt;
 &lt;p&gt;Documents can be deleted in three different ways using the &lt;code&gt;%delete%&lt;/code&gt; operator. Firstly, an entire index (including the mapping information) can be erased by referencing just the index in the resource -&amp;nbsp;e.g.,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -89,7 +89,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Queries&lt;/h3&gt;
+&lt;h3 id="queries"&gt;Queries&lt;/h3&gt;
 &lt;p&gt;Any type of query that Elasticsearch makes available can be defined in a &lt;code&gt;query&lt;/code&gt; object using the native Elasticsearch &lt;span class="caps"&gt;JSON&lt;/span&gt; syntax - e.g. to match every document we could use the &lt;code&gt;match_all&lt;/code&gt; query,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;for_everything &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; query&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
 &lt;span class="s"&gt;  &amp;quot;match_all&amp;quot;: {}&lt;/span&gt;
@@ -111,7 +111,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Sorting Query&amp;nbsp;Results&lt;/h3&gt;
+&lt;h3 id="sorting-query-results"&gt;Sorting Query&amp;nbsp;Results&lt;/h3&gt;
 &lt;p&gt;Query results can be sorted on multiple fields by defining a &lt;code&gt;sort&lt;/code&gt; object using the same Elasticsearch &lt;span class="caps"&gt;JSON&lt;/span&gt; syntax - e.g. to sort by &lt;code&gt;sepal_width&lt;/code&gt; in ascending order the required &lt;code&gt;sort&lt;/code&gt; object would be defined&amp;nbsp;as,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;by_sepal_width &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&amp;quot;sepal_width&amp;quot;: {&amp;quot;order&amp;quot;: &amp;quot;asc&amp;quot;}}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -131,7 +131,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Aggregations&lt;/h3&gt;
+&lt;h3 id="aggregations"&gt;Aggregations&lt;/h3&gt;
 &lt;p&gt;Similarly, any type of aggregation that Elasticsearch makes available can be defined in an &lt;code&gt;aggs&lt;/code&gt; object - e.g. to compute the average &lt;code&gt;sepal_width&lt;/code&gt; per-species of flower we would specify the following&amp;nbsp;aggregation,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;avg_sepal_width &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; aggs&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
 &lt;span class="s"&gt;  &amp;quot;avg_sepal_width_per_species&amp;quot;: {&lt;/span&gt;
@@ -202,14 +202,14 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 
 
 &lt;p&gt;For comprehensive coverage of all query and aggregations types please refer to the rather excellent &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;official documentation&lt;/a&gt; (newcomers to Elasticsearch are advised to start with the &amp;#8216;Query String&amp;#8217;&amp;nbsp;query).&lt;/p&gt;
-&lt;h3&gt;Mappings&lt;/h3&gt;
+&lt;h3 id="mappings"&gt;Mappings&lt;/h3&gt;
 &lt;p&gt;Finally, I have included the ability to create an empty index with a custom mapping, using the &lt;code&gt;%create%&lt;/code&gt; operator -&amp;nbsp;e.g.,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%create%&lt;/span&gt; mapping_default_simple&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Where in this instance &lt;code&gt;mapping_default_simple()&lt;/code&gt; is a default mapping that I have shipped with &lt;code&gt;elasticsearchr&lt;/code&gt;. It switches-off the text analyser for all fields of type &amp;#8216;string&amp;#8217; (i.e. switches off free text search), allows all text search to work with case-insensitive lower-case terms, and maps any field with the name &amp;#8216;timestamp&amp;#8217; to type &amp;#8216;date&amp;#8217;, so long as it has the appropriate string or long&amp;nbsp;format.&lt;/p&gt;
-&lt;h2&gt;Forthcoming&amp;nbsp;Attractions&lt;/h2&gt;
+&lt;h2 id="forthcoming-attractions"&gt;Forthcoming&amp;nbsp;Attractions&lt;/h2&gt;
 &lt;p&gt;I do not have a grand vision for &lt;code&gt;elasticsearchr&lt;/code&gt; - I want to keep it a lightweight client that requires knowledge of Elasticsearch - but I would like to add the ability to compose major query and aggregation types, without having to type-out lots of &lt;span class="caps"&gt;JSON&lt;/span&gt;, and to be able to retrieve simple information like the names of all indices in a cluster, and all the document types within an index, etc. Future development will likely be focused in these&amp;nbsp;areas.&lt;/p&gt;
-&lt;h2&gt;Acknowledgements&lt;/h2&gt;
+&lt;h2 id="acknowledgements"&gt;Acknowledgements&lt;/h2&gt;
 &lt;p&gt;A big thank you to Hadley Wickham and Jeroen Ooms, the authors of the &lt;code&gt;httr&lt;/code&gt; and &lt;code&gt;jsonlite&lt;/code&gt; packages that &lt;code&gt;elasticsearchr&lt;/code&gt; leans upon &lt;em&gt;heavily&lt;/em&gt;.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Dr Alex Ioannides</dc:creator><pubDate>Mon, 28 Nov 2016 00:00:00 +0000</pubDate><guid isPermaLink="false">tag:alexioannides.github.io,2016-11-28:/2016/11/28/elasticsearchr-a-lightweight-elasticsearch-client-for-r/</guid><category>data-processing</category><category>data-stores</category></item></channel></rss>

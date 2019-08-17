@@ -9,7 +9,28 @@
 &lt;li&gt;how to handle dependencies on other modules and packages;&amp;nbsp;and,&lt;/li&gt;
 &lt;li&gt;what constitutes a &amp;#8216;meaningful&amp;#8217; test for an &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;job.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;PySpark &lt;span class="caps"&gt;ETL&lt;/span&gt; Project&amp;nbsp;Structure&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Table of&amp;nbsp;Contents&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#pyspark-etl-project-structure"&gt;PySpark &lt;span class="caps"&gt;ETL&lt;/span&gt; Project&amp;nbsp;Structure&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#the-structure-of-an-etl-job"&gt;The Structure of an &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#passing-configuration-parameters-to-the-etl-job"&gt;Passing Configuration Parameters to the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#packaging-etl-job-dependencies"&gt;Packaging &lt;span class="caps"&gt;ETL&lt;/span&gt; Job&amp;nbsp;Dependencies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#running-the-etl-job"&gt;Running the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;job&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#debugging-spark-jobs-using-start_spark"&gt;Debugging Spark Jobs Using&amp;nbsp;start_spark&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#automated-testing"&gt;Automated&amp;nbsp;Testing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#managing-project-dependencies-using-pipenv"&gt;Managing Project Dependencies using Pipenv&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#installing-pipenv"&gt;Installing&amp;nbsp;Pipenv&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#installing-this-projects-dependencies"&gt;Installing this Projects&amp;#8217;&amp;nbsp;Dependencies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#running-python-and-ipython-from-the-projects-virtual-environment"&gt;Running Python and IPython from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#pipenv-shells"&gt;Pipenv&amp;nbsp;Shells&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#automatic-loading-of-environment-variables"&gt;Automatic Loading of Environment&amp;nbsp;Variables&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#summary"&gt;Summary&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h2 id="pyspark-etl-project-structure"&gt;PySpark &lt;span class="caps"&gt;ETL&lt;/span&gt; Project&amp;nbsp;Structure&lt;/h2&gt;
 &lt;p&gt;The basic project structure is as&amp;nbsp;follows:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;root/
 &lt;span class="p"&gt;|&lt;/span&gt;-- configs/
@@ -32,7 +53,7 @@
 
 
 &lt;p&gt;The main Python module containing the &lt;span class="caps"&gt;ETL&lt;/span&gt; job (which will be sent to the Spark cluster), is &lt;code&gt;jobs/etl_job.py&lt;/code&gt;. Any external configuration parameters required by &lt;code&gt;etl_job.py&lt;/code&gt; are stored in &lt;span class="caps"&gt;JSON&lt;/span&gt; format in &lt;code&gt;configs/etl_config.json&lt;/code&gt;. Additional modules that support this job can be kept in the &lt;code&gt;dependencies&lt;/code&gt; folder (more on this later). In the project&amp;#8217;s root we include &lt;code&gt;build_dependencies.sh&lt;/code&gt; - a bash script for building these dependencies into a zip-file to be sent to the cluster (&lt;code&gt;packages.zip&lt;/code&gt;). Unit test modules are kept in the &lt;code&gt;tests&lt;/code&gt; folder and small chunks of representative input and output data, to be use with the tests, are kept in &lt;code&gt;tests/test_data&lt;/code&gt; folder.&lt;/p&gt;
-&lt;h2&gt;The Structure of an &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/h2&gt;
+&lt;h2 id="the-structure-of-an-etl-job"&gt;The Structure of an &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/h2&gt;
 &lt;p&gt;In order to facilitate easy debugging and testing, we recommend that the &amp;#8216;Transformation&amp;#8217; step be isolated from the &amp;#8216;Extract&amp;#8217; and &amp;#8216;Load&amp;#8217; steps, into it&amp;#8217;s own function - taking input data arguments in the form of DataFrames and returning the transformed data as a single DataFrame. For example, in the &lt;code&gt;main()&lt;/code&gt; job function from &lt;code&gt;jobs/etl_job.py&lt;/code&gt; we&amp;nbsp;have,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;extract_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;data_transformed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;transform_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -46,7 +67,7 @@
 &lt;p&gt;the repeated application of the transformation function to the input data, should have no impact on the fundamental state of output data, until the instance when the input data&amp;nbsp;changes. &lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;One of the key advantages of idempotent &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs, is that they can be set to run repeatedly (e.g. by using &lt;code&gt;cron&lt;/code&gt; to trigger the &lt;code&gt;spark-submit&lt;/code&gt; command on a pre-defined schedule), rather than having to factor-in potential dependencies on other &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs completing&amp;nbsp;successfully.&lt;/p&gt;
-&lt;h2&gt;Passing Configuration Parameters to the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/h2&gt;
+&lt;h2 id="passing-configuration-parameters-to-the-etl-job"&gt;Passing Configuration Parameters to the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/h2&gt;
 &lt;p&gt;Although it is possible to pass arguments to &lt;code&gt;etl_job.py&lt;/code&gt;, as you would for any generic Python module running as a &amp;#8216;main&amp;#8217; program  - by specifying them after the module&amp;#8217;s filename and then parsing these command line arguments - this can get very complicated, &lt;strong&gt;very quickly&lt;/strong&gt;, especially when there are lot of parameters (e.g. credentials for multiple databases, table names, &lt;span class="caps"&gt;SQL&lt;/span&gt; snippets, etc.). This also makes debugging the code from within a Python interpreter extremely awkward, as you don&amp;#8217;t have access to the command line arguments that would ordinarily be passed to the code, when calling it from the command&amp;nbsp;line.&lt;/p&gt;
 &lt;p&gt;A much more effective solution is to send Spark a separate file - e.g. using the &lt;code&gt;--files configs/etl_config.json&lt;/code&gt; flag with &lt;code&gt;spark-submit&lt;/code&gt; - containing the configuration in &lt;span class="caps"&gt;JSON&lt;/span&gt; format, which can be parsed into a Python dictionary in one line of code with &lt;code&gt;json.loads(config_file_contents)&lt;/code&gt;. Testing the code from within a Python interactive console session is also greatly simplified, as all one has to do to access configuration parameters for testing, is to copy and paste the contents of the file -&amp;nbsp;e.g.,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
@@ -57,7 +78,7 @@
 
 &lt;p&gt;This also has the added bonus that the &lt;span class="caps"&gt;ETL&lt;/span&gt; job configuration can be explicitly version controlled within the same project structure, avoiding the risk that configuration parameters escape any type of version control - e.g. because they are passed as arguments in bash scripts written by separate teams, whose responsibility is deploying the code, not writing&amp;nbsp;it.  &lt;/p&gt;
 &lt;p&gt;For the exact details of how the configuration file is located, opened and parsed, please see the &lt;code&gt;start_spark()&lt;/code&gt; function in &lt;code&gt;dependencies/spark.py&lt;/code&gt; (also discussed in more detail below), which in addition to parsing the configuration file sent to Spark (and returning it as a Python dictionary), also launches the Spark driver program (the application) on the cluster and retrieves the Spark logger at the same&amp;nbsp;time.&lt;/p&gt;
-&lt;h2&gt;Packaging &lt;span class="caps"&gt;ETL&lt;/span&gt; Job&amp;nbsp;Dependencies&lt;/h2&gt;
+&lt;h2 id="packaging-etl-job-dependencies"&gt;Packaging &lt;span class="caps"&gt;ETL&lt;/span&gt; Job&amp;nbsp;Dependencies&lt;/h2&gt;
 &lt;p&gt;In this project, functions that can be used across different &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs are kept in a module called &lt;code&gt;dependencies&lt;/code&gt; and referenced in specific job modules using, for&amp;nbsp;example,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;dependencies.spark&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;start_spark&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -73,7 +94,7 @@
 &lt;blockquote&gt;
 &lt;p&gt;Note, that dependencies (e.g. NumPy) requiring extensions (e.g. C code) to be compiled locally, will have to be installed manually on each node as part of the node&amp;nbsp;setup.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2&gt;Running the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;job&lt;/h2&gt;
+&lt;h2 id="running-the-etl-job"&gt;Running the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;job&lt;/h2&gt;
 &lt;p&gt;Assuming that the &lt;code&gt;$SPARK_HOME&lt;/code&gt; environment variable points to your local Spark installation folder, then the &lt;span class="caps"&gt;ETL&lt;/span&gt; job can be run from the project&amp;#8217;s root directory using the following command from the&amp;nbsp;terminal,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$SPARK_HOME&lt;/span&gt;/bin/spark-submit &lt;span class="se"&gt;\&lt;/span&gt;
 --master local&lt;span class="o"&gt;[&lt;/span&gt;*&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
@@ -93,7 +114,7 @@ jobs/etl_job.py
 &lt;li&gt;&lt;code&gt;jobs/etl_job.py&lt;/code&gt; - the Python module file containing the &lt;span class="caps"&gt;ETL&lt;/span&gt; job to&amp;nbsp;execute.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Full details of all possible options can be found &lt;a href="http://spark.apache.org/docs/latest/submitting-applications.html"&gt;here&lt;/a&gt;. Note, that we have left some options to be defined within the job (which is actually a Spark application) - e.g. &lt;code&gt;spark.cores.max&lt;/code&gt; and &lt;code&gt;spark.executor.memory&lt;/code&gt; are defined in the Python script as it is felt that the job should explicitly contain the requests for the required cluster&amp;nbsp;resources.&lt;/p&gt;
-&lt;h2&gt;Debugging Spark Jobs Using &lt;code&gt;start_spark&lt;/code&gt;&lt;/h2&gt;
+&lt;h2 id="debugging-spark-jobs-using-start_spark"&gt;Debugging Spark Jobs Using &lt;code&gt;start_spark&lt;/code&gt;&lt;/h2&gt;
 &lt;p&gt;It is not practical to test and debug Spark jobs by sending them to a cluster using &lt;code&gt;spark-submit&lt;/code&gt; and examining stack traces for clues on what went wrong. A more productive workflow is to use an interactive console session (e.g. IPython) or a debugger (e.g. the &lt;code&gt;pdb&lt;/code&gt; package in the Python standard library or the Python debugger in Visual Studio Code). In practice, however, it can be hard to test and debug Spark jobs in this way, as they can implicitly rely on arguments that are sent to &lt;code&gt;spark-submit&lt;/code&gt;, which are not available in a console or debug&amp;nbsp;session.&lt;/p&gt;
 &lt;p&gt;We wrote the &lt;code&gt;start_spark&lt;/code&gt; function - found in &lt;code&gt;dependencies/spark.py&lt;/code&gt; - to facilitate the development of Spark jobs that are aware of the context in which they are being executed - i.e. as &lt;code&gt;spark-submit&lt;/code&gt; jobs or within an IPython console, etc. The expected location of the Spark and job configuration parameters required by the job, is contingent on which execution context has been detected. The doscstring for &lt;code&gt;start_spark&lt;/code&gt; gives the precise&amp;nbsp;details,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;start_spark&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;my_spark_app&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;master&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;local[*]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jar_packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[],&lt;/span&gt;
@@ -159,7 +180,7 @@ jobs/etl_job.py
 &lt;blockquote&gt;
 &lt;p&gt;Note, if you are using the local PySpark package - e.g. if running from an interactive console session or debugger - on a machine that also has the &lt;code&gt;SPARK_HOME&lt;/code&gt; environment variable set to a local install of Spark, then the two versions will need to match as PySpark appears to pick-up on SPARK_HOME automatically, with version conflicts leading to (unintuitive)&amp;nbsp;errors.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2&gt;Automated&amp;nbsp;Testing&lt;/h2&gt;
+&lt;h2 id="automated-testing"&gt;Automated&amp;nbsp;Testing&lt;/h2&gt;
 &lt;p&gt;In order to test with Spark, we use the &lt;code&gt;pyspark&lt;/code&gt; Python package, which is bundled with the Spark JARs required to programmatically start-up and tear-down a local Spark instance, on a per-test-suite basis (we recommend using the &lt;code&gt;setUp&lt;/code&gt; and &lt;code&gt;tearDown&lt;/code&gt; methods in &lt;code&gt;unittest.TestCase&lt;/code&gt; to do this once per test-suite). Note, that using &lt;code&gt;pyspark&lt;/code&gt; to run Spark is an alternative way of developing with Spark as opposed to using the PySpark shell or &lt;code&gt;spark-submit&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Given that we have chosen to structure our &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs in such a way as to isolate the &amp;#8216;Transformation&amp;#8217; step into its own function (see &amp;#8216;Structure of an &lt;span class="caps"&gt;ETL&lt;/span&gt; job&amp;#8217; above), we are free to feed it a small slice of &amp;#8216;real-world&amp;#8217; production data that has been persisted locally - e.g. in &lt;code&gt;tests/test_data&lt;/code&gt; or some easily accessible network directory - and check it against known results (e.g. computed manually or interactively within a Python interactive console session), as demonstrated in this extract from &lt;code&gt;tests/test_etl_job.py&lt;/code&gt;,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# assemble&lt;/span&gt;
@@ -207,9 +228,9 @@ jobs/etl_job.py
 
 
 &lt;p&gt;If you&amp;#8217;re wondering what the &lt;code&gt;pipenv&lt;/code&gt; command is, then read the next&amp;nbsp;section.&lt;/p&gt;
-&lt;h2&gt;Managing Project Dependencies using&amp;nbsp;Pipenv&lt;/h2&gt;
+&lt;h2 id="managing-project-dependencies-using-pipenv"&gt;Managing Project Dependencies using&amp;nbsp;Pipenv&lt;/h2&gt;
 &lt;p&gt;We use &lt;a href="https://docs.pipenv.org"&gt;Pipenv&lt;/a&gt; for managing project dependencies and Python environments (i.e. virtual environments). All direct packages dependencies (e.g. NumPy may be used in a User Defined Function), as well as all the packages used during development (e.g. PySpark, flake8 for code linting, IPython for interactive console sessions, etc.), are described in the &lt;code&gt;Pipfile&lt;/code&gt;. Their &lt;strong&gt;precise&lt;/strong&gt; downstream dependencies are described and frozen in &lt;code&gt;Pipfile.lock&lt;/code&gt; (generated automatically by Pipenv, given a&amp;nbsp;Pipfile).&lt;/p&gt;
-&lt;h3&gt;Installing&amp;nbsp;Pipenv&lt;/h3&gt;
+&lt;h3 id="installing-pipenv"&gt;Installing&amp;nbsp;Pipenv&lt;/h3&gt;
 &lt;p&gt;To get started with Pipenv, first of all download it - assuming that there is a global version of Python available on your system and on the &lt;span class="caps"&gt;PATH&lt;/span&gt;, then this can be achieved by running the following&amp;nbsp;command,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip3 install pipenv
 &lt;/pre&gt;&lt;/div&gt;
@@ -221,14 +242,14 @@ jobs/etl_job.py
 
 
 &lt;p&gt;For more information, including advanced configuration options, see the &lt;a href="https://docs.pipenv.org"&gt;official Pipenv documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Installing this Projects&amp;#8217;&amp;nbsp;Dependencies&lt;/h3&gt;
+&lt;h3 id="installing-this-projects-dependencies"&gt;Installing this Projects&amp;#8217;&amp;nbsp;Dependencies&lt;/h3&gt;
 &lt;p&gt;Make sure that you&amp;#8217;re in the project&amp;#8217;s root directory (the same one in which the &lt;code&gt;Pipfile&lt;/code&gt; resides), and then&amp;nbsp;run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv install --dev
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This will install all of the direct project dependencies as well as the development dependencies (the latter a consequence of the &lt;code&gt;--dev&lt;/code&gt; flag).&lt;/p&gt;
-&lt;h3&gt;Running Python and IPython from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/h3&gt;
+&lt;h3 id="running-python-and-ipython-from-the-projects-virtual-environment"&gt;Running Python and IPython from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/h3&gt;
 &lt;p&gt;In order to continue development in a Python environment that precisely mimics the one the project was initially developed with, use Pipenv from the command line as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv run python3
 &lt;/pre&gt;&lt;/div&gt;
@@ -240,14 +261,14 @@ jobs/etl_job.py
 
 
 &lt;p&gt;This will fire-up an IPython console session &lt;em&gt;where the default Python 3 kernel includes all of the direct and development project dependencies&lt;/em&gt; - this is our&amp;nbsp;preference.&lt;/p&gt;
-&lt;h3&gt;Pipenv&amp;nbsp;Shells&lt;/h3&gt;
+&lt;h3 id="pipenv-shells"&gt;Pipenv&amp;nbsp;Shells&lt;/h3&gt;
 &lt;p&gt;Prepending &lt;code&gt;pipenv&lt;/code&gt; to every command you want to run within the context of your Pipenv-managed virtual environment can get very tedious. This can be avoided by entering into a Pipenv-managed&amp;nbsp;shell,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv shell
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This is equivalent to &amp;#8216;activating&amp;#8217; the virtual environment; any command will now be executed within the virtual environment. Use &lt;code&gt;exit&lt;/code&gt; to leave the shell&amp;nbsp;session.&lt;/p&gt;
-&lt;h3&gt;Automatic Loading of Environment&amp;nbsp;Variables&lt;/h3&gt;
+&lt;h3 id="automatic-loading-of-environment-variables"&gt;Automatic Loading of Environment&amp;nbsp;Variables&lt;/h3&gt;
 &lt;p&gt;Pipenv will automatically pick-up and load any environment variables declared in the &lt;code&gt;.env&lt;/code&gt; file, located in the package&amp;#8217;s root directory. For example,&amp;nbsp;adding,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;applications/spark-2.3.1/bin
 &lt;span class="nv"&gt;DEBUG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;
@@ -255,7 +276,7 @@ jobs/etl_job.py
 
 
 &lt;p&gt;Will enable access to these variables within any Python program -e.g. via a call to &lt;code&gt;os.environ['SPARK_HOME']&lt;/code&gt;. Note, that if any security credentials are placed here, then this file &lt;strong&gt;must&lt;/strong&gt; be removed from source control - i.e. add &lt;code&gt;.env&lt;/code&gt; to the &lt;code&gt;.gitignore&lt;/code&gt; file to prevent potential security&amp;nbsp;risks.&lt;/p&gt;
-&lt;h2&gt;Summary&lt;/h2&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
 &lt;p&gt;The workflow described above, together with the &lt;a href="https://github.com/AlexIoannides/pyspark-example-project"&gt;accompanying Python project&lt;/a&gt;, represents a stable foundation for writing robust &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs, regardless of their complexity and regardless of how the jobs are being executed - e.g. via use of &lt;code&gt;cron&lt;/code&gt; or more sophisticated workflow automation tools, such as &lt;a href="https://airflow.apache.org"&gt;Airflow&lt;/a&gt;. I am always interested in collating and integrating more &amp;#8216;best practices&amp;#8217; - if you have any, please submit them &lt;a href="https://github.com/AlexIoannides/pyspark-example-project/issues"&gt;here&lt;/a&gt;. &lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Dr Alex Ioannides</dc:creator><pubDate>Sun, 28 Jul 2019 00:00:00 +0100</pubDate><guid isPermaLink="false">tag:alexioannides.github.io,2019-07-28:/2019/07/28/best-practices-for-pyspark-etl-projects/</guid><category>data-engineering</category><category>data-processing</category><category>apache-spark</category><category>python</category></item><item><title>Stochastic Process Calibration using Bayesian Inference &amp; Probabilistic Programs</title><link>https://alexioannides.github.io/2019/01/18/stochastic-process-calibration-using-bayesian-inference-probabilistic-programs/</link><description>&lt;p&gt;&lt;img alt="jpeg" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/trading_screen.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;Stochastic processes are used extensively throughout quantitative finance - for example, to simulate asset prices in risk models that aim to estimate key risk metrics such as Value-at-Risk (VaR), Expected Shortfall (&lt;span class="caps"&gt;ES&lt;/span&gt;) and Potential Future Exposure (&lt;span class="caps"&gt;PFE&lt;/span&gt;). Estimating the parameters of a stochastic processes - referred to as &amp;#8216;calibration&amp;#8217; in the parlance of quantitative finance -usually&amp;nbsp;involves:&lt;/p&gt;
 &lt;ul&gt;
@@ -272,7 +293,33 @@ jobs/etl_job.py
 &lt;li&gt;naturally incorporating parameter uncertainty into risk&amp;nbsp;metrics. &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;By simulating a Geometric Brownian Motion (&lt;span class="caps"&gt;GBM&lt;/span&gt;) and then estimating the parameters based on the randomly generated observations, we will quantify the impact of using Bayesian Inference against traditional &lt;span class="caps"&gt;ML&lt;/span&gt; estimation, when the available data is both plentiful and scarce - the latter being a scenario in which Bayesian Inference is shown to be especially&amp;nbsp;powerful.&lt;/p&gt;
-&lt;h2&gt;Imports and Global&amp;nbsp;Settings&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Table of&amp;nbsp;Contents&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#imports-and-global-settings"&gt;Imports and Global&amp;nbsp;Settings&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#synthetic-data-generation-using-geometric-brownian-motion"&gt;Synthetic Data Generation using Geometric Brownian&amp;nbsp;Motion&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#the-traditional-approach-to-parameter-estimation"&gt;The Traditional Approach to Parameter Estimation&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#parameter-estimation-when-data-is-plentiful"&gt;Parameter Estimation when Data is&amp;nbsp;Plentiful&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#parameter-estimation-when-data-is-scarce"&gt;Parameter Estimation when Data is&amp;nbsp;Scarce&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#parameter-estimation-using-bayesian-inference-and-probabilistic-programming"&gt;Parameter Estimation using Bayesian Inference and Probabilistic Programming&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#selecting-suitable-prior-distributions"&gt;Selecting Suitable Prior Distributions&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#choosing-a-prior-distribution-for-the-expected-return-of-daily-returns"&gt;Choosing a Prior Distribution for the Expected Return of Daily&amp;nbsp;Returns&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#choosing-a-prior-distribution-for-the-volatility-of-daily-returns"&gt;Choosing a Prior Distribution for the Volatility of Daily&amp;nbsp;Returns&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#inference-using-a-probabilistic-program-markov-chain-monte-carlo-mcmc"&gt;Inference using a Probabilistic Program &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Markov Chain Monte Carlo (&lt;span class="caps"&gt;MCMC&lt;/span&gt;)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#making-predictions"&gt;Making Predictions&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#impact-on-risk-metrics-value-at-risk-var"&gt;Impact on Risk Metrics - Value-at-Risk&amp;nbsp;(VaR)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#summary"&gt;Summary&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h2 id="imports-and-global-settings"&gt;Imports and Global&amp;nbsp;Settings&lt;/h2&gt;
 &lt;p&gt;Before we get going in earnest, we follow the convention of declaring all imports at the top of the&amp;nbsp;notebook.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;warnings&lt;/span&gt;
 
@@ -293,7 +340,7 @@ jobs/etl_job.py
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Synthetic Data Generation using Geometric Brownian&amp;nbsp;Motion&lt;/h2&gt;
+&lt;h2 id="synthetic-data-generation-using-geometric-brownian-motion"&gt;Synthetic Data Generation using Geometric Brownian&amp;nbsp;Motion&lt;/h2&gt;
 &lt;p&gt;We start by defining a function for simulating a single path from a &lt;span class="caps"&gt;GBM&lt;/span&gt; - perhaps the most commonly used stochastic process for modelling the time-series of asset prices. We make use of the &lt;a href="https://en.wikipedia.org/wiki/Geometric_Brownian_motion"&gt;following equation&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="math"&gt;$$
 \tilde{S_t} = S_0 \exp \left\{ \left(\mu - \frac{\sigma^2}{2} \right) t + \sigma \tilde{W_t}\right\}
@@ -358,7 +405,7 @@ $$&lt;/div&gt;
 
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_10_0.png"&gt;&lt;/p&gt;
-&lt;h2&gt;The Traditional Approach to Parameter&amp;nbsp;Estimation&lt;/h2&gt;
+&lt;h2 id="the-traditional-approach-to-parameter-estimation"&gt;The Traditional Approach to Parameter&amp;nbsp;Estimation&lt;/h2&gt;
 &lt;p&gt;Traditionally, the parameters are estimated using the empirical mean and standard deviation of the daily logarithmic (or geometric) returns. The reasoning behind this can be seen by re-arranging the above equation for &lt;span class="math"&gt;\(\tilde{S_t}\)&lt;/span&gt; as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="math"&gt;$$
 \log \left( \frac{S_t}{S_{t-1}} \right) = \left(\mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma \tilde{\Delta W_t}
@@ -372,7 +419,7 @@ $$&lt;/div&gt;
 \Delta t = \frac{1}{365}
 $$&lt;/div&gt;
 &lt;p&gt;From which it is possible to solve the implied simultaneous equations for &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt;, as functions of the mean and standard deviation of the geometric (i.e. logarithmic) returns. Once again, for a more in-depth discussion we refer the reader to &lt;a href="https://arxiv.org/abs/0812.4210"&gt;&amp;#8216;A Stochastic Processes Toolkit for Risk Management&amp;#8217;, by Damiano Brigo &lt;em&gt;et al.&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Parameter Estimation when Data is&amp;nbsp;Plentiful&lt;/h3&gt;
+&lt;h3 id="parameter-estimation-when-data-is-plentiful"&gt;Parameter Estimation when Data is&amp;nbsp;Plentiful&lt;/h3&gt;
 &lt;p&gt;An example computation, using the whole time-series generated above (364 observations of daily returns), is shown below. We start by taking a look at the distribution of daily&amp;nbsp;returns.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;returns_geo_full&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
     &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;example_data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -402,7 +449,7 @@ empirical estimate of sigma = 0.1423
 
 
 &lt;p&gt;We can see that the empirical estimate of &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is close to the &lt;em&gt;ex ante&lt;/em&gt; paramter value we chose, but that the estimate of &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is poor - estimating the drift of a stochastic process is notoriously&amp;nbsp;hard.&lt;/p&gt;
-&lt;h3&gt;Parameter Estimation when Data is&amp;nbsp;Scarce&lt;/h3&gt;
+&lt;h3 id="parameter-estimation-when-data-is-scarce"&gt;Parameter Estimation when Data is&amp;nbsp;Scarce&lt;/h3&gt;
 &lt;p&gt;Very often data is scare - we may not have 364 observations of geometric returns. To demonstrate the impact this can have on parameter estimation, we sub-sample the distribution of geometric returns by picking 12 returns by random - e.g. to simulate the impact of having only 12 monthly returns to base the estimation&amp;nbsp;on.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;n_observations&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -434,7 +481,7 @@ empirical estimate of sigma = 0.1080
 
 
 &lt;p&gt;We can clearly see that now estimates of &lt;strong&gt;both&lt;/strong&gt; &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; are&amp;nbsp;poor.&lt;/p&gt;
-&lt;h2&gt;Parameter Estimation using Bayesian Inference and Probabilistic&amp;nbsp;Programming&lt;/h2&gt;
+&lt;h2 id="parameter-estimation-using-bayesian-inference-and-probabilistic-programming"&gt;Parameter Estimation using Bayesian Inference and Probabilistic&amp;nbsp;Programming&lt;/h2&gt;
 &lt;p&gt;Like statistical data analysis more broadly, the main aim of Bayesian Data Analysis (&lt;span class="caps"&gt;BDA&lt;/span&gt;) is to infer unknown parameters for models of observed data, in order to test hypotheses about the physical processes that lead to the observations. Bayesian data analysis deviates from traditional statistics - on a practical level - when it comes to the explicit assimilation of prior knowledge regarding the uncertainty of the model parameters, into the statistical inference process and overall analysis workflow. To this end, &lt;span class="caps"&gt;BDA&lt;/span&gt; focuses on the posterior&amp;nbsp;distribution,&lt;/p&gt;
 &lt;div class="math"&gt;$$
 p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}
@@ -448,10 +495,10 @@ $$&lt;/div&gt;
 &lt;/ul&gt;
 &lt;p&gt;For an &lt;strong&gt;excellent&lt;/strong&gt; (inspirational) introduction to practical &lt;span class="caps"&gt;BDA&lt;/span&gt;, take a look at &lt;a href="https://xcelab.net/rm/statistical-rethinking/"&gt;Statistical Rethinking by Richard McElreath&lt;/a&gt;, or for a more theoretical treatment try &lt;a href="http://www.stat.columbia.edu/~gelman/book/"&gt;Bayesian Data Analysis by Gelman &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; co.&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;We will use &lt;span class="caps"&gt;BDA&lt;/span&gt; to estimate the &lt;span class="caps"&gt;GBM&lt;/span&gt; parameters from our time series with &lt;strong&gt;scare data&lt;/strong&gt;, to demonstrate the benefits of incorporating prior knowledge into the inference process and then compare these results with those derived using &lt;span class="caps"&gt;ML&lt;/span&gt; estimation (discussed&amp;nbsp;above).&lt;/p&gt;
-&lt;h3&gt;Selecting Suitable Prior&amp;nbsp;Distributions&lt;/h3&gt;
+&lt;h3 id="selecting-suitable-prior-distributions"&gt;Selecting Suitable Prior&amp;nbsp;Distributions&lt;/h3&gt;
 &lt;p&gt;We will choose regularising priors that are also in-line with our prior knowledge of the time-series - that is, priors that place the bulk of their probability mass near zero, but allow for enough variation to make &amp;#8216;reasonable&amp;#8217; parameter values viable for our liquid stock in a &amp;#8216;flat&amp;#8217; (or drift-less)&amp;nbsp;market.&lt;/p&gt;
 &lt;p&gt;Note, that in the discussion that follows, we will reason about the priors in terms of our real-world experience of daily price returns, their expected returns and volatility - i.e. the mean and standard deviation of our likelihood&amp;nbsp;function.&lt;/p&gt;
-&lt;h4&gt;Choosing a Prior Distribution for the Expected Return of Daily&amp;nbsp;Returns&lt;/h4&gt;
+&lt;h4 id="choosing-a-prior-distribution-for-the-expected-return-of-daily-returns"&gt;Choosing a Prior Distribution for the Expected Return of Daily&amp;nbsp;Returns&lt;/h4&gt;
 &lt;p&gt;We choose a Normal distribution for this prior distribution, centered at 0 (i.e. regularising), but with a standard deviation of 0.0001 (i.e. 1 basis-point or 0.01%), to render a 3-4% annualised return a less than 1% probability - consistent with a market for a liquid stock trading&amp;nbsp;&amp;#8216;flat&amp;#8217;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;prior_mean_mu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
 &lt;span class="n"&gt;prior_mean_sigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.0001&lt;/span&gt;
@@ -470,7 +517,7 @@ $$&lt;/div&gt;
 
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_29_0.png"&gt;&lt;/p&gt;
-&lt;h4&gt;Choosing a Prior Distribution for the Volatility of Daily&amp;nbsp;Returns&lt;/h4&gt;
+&lt;h4 id="choosing-a-prior-distribution-for-the-volatility-of-daily-returns"&gt;Choosing a Prior Distribution for the Volatility of Daily&amp;nbsp;Returns&lt;/h4&gt;
 &lt;p&gt;We choose a positive &lt;a href="https://en.wikipedia.org/wiki/Half-normal_distribution"&gt;Half-Normal distribution&lt;/a&gt; for this prior distribution. Most of the mass is near 0 (i.e. regularising), but with a standard deviation of 0.0188 that corresponds to an expected daily volatility of ~0.015 (or&amp;nbsp;1.5%).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;prior_vol_sigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.0188&lt;/span&gt;
 
@@ -488,7 +535,7 @@ $$&lt;/div&gt;
 
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_33_0.png"&gt;&lt;/p&gt;
-&lt;h3&gt;Inference using a Probabilistic Program &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Markov Chain Monte Carlo (&lt;span class="caps"&gt;MCMC&lt;/span&gt;)&lt;/h3&gt;
+&lt;h3 id="inference-using-a-probabilistic-program-markov-chain-monte-carlo-mcmc"&gt;Inference using a Probabilistic Program &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Markov Chain Monte Carlo (&lt;span class="caps"&gt;MCMC&lt;/span&gt;)&lt;/h3&gt;
 &lt;p&gt;Performing Bayesian inference usually requires some form of Probabilistic Programming Language (&lt;span class="caps"&gt;PPL&lt;/span&gt;), unless analytical approaches (e.g. based on conjugate prior models), are appropriate for the task at hand. More often than not, PPLs such as &lt;a href="https://docs.pymc.io"&gt;&lt;span class="caps"&gt;PYMC3&lt;/span&gt;&lt;/a&gt; implement Markov Chain Monte Carlo (&lt;span class="caps"&gt;MCMC&lt;/span&gt;) algorithms that allow one to draw samples and make inferences from the posterior distribution implied by the choice of model - the likelihood and prior distributions for its parameters - conditional on the observed&amp;nbsp;data.&lt;/p&gt;
 &lt;p&gt;We will make use of the default &lt;span class="caps"&gt;MCMC&lt;/span&gt; method in &lt;span class="caps"&gt;PYMC3&lt;/span&gt;&amp;#8217;s &lt;code&gt;sample&lt;/code&gt; function, which is Hamiltonian Monte Carlo (&lt;span class="caps"&gt;HMC&lt;/span&gt;). Those interested in the precise details of the &lt;span class="caps"&gt;HMC&lt;/span&gt; algorithm are directed to the &lt;a href="https://arxiv.org/abs/1701.02434"&gt;excellent paper Michael Betancourt&lt;/a&gt;. Briefly, &lt;span class="caps"&gt;MCMC&lt;/span&gt; algorithms work by defining multi-dimensional Markovian stochastic processes, that when simulated (using Monte Carlo methods), will eventually converge to a state where successive simulations will be equivalent to drawing random samples from the posterior distribution of the model we wish to&amp;nbsp;estimate.&lt;/p&gt;
 &lt;p&gt;The posterior distribution has one dimension for each model parameter, so we can then use the distribution of samples for each parameter to infer the range of possible values and/or compute point estimates (e.g. by taking the mean of all&amp;nbsp;samples).&lt;/p&gt;
@@ -621,7 +668,7 @@ bayesian estimate of sigma = 0.1407
 
 
 &lt;p&gt;The estimate for &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is far better than both &lt;span class="caps"&gt;ML&lt;/span&gt; estimates (full and partial data) and the estimate for &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is considerably better than the &lt;span class="caps"&gt;ML&lt;/span&gt; estimate with partial data and approaching that with full&amp;nbsp;data.&lt;/p&gt;
-&lt;h2&gt;Making&amp;nbsp;Predictions&lt;/h2&gt;
+&lt;h2 id="making-predictions"&gt;Making&amp;nbsp;Predictions&lt;/h2&gt;
 &lt;p&gt;Perhaps most importantly, how do the differences in parameter inference methodology translate into predictions for future distributions of geometric returns? We compare a (Normal) distribution of daily geometric returns simulated using the constant empirical parameter estimates with partial data (black line in the plot below), to that simulated by using random draws of Bayesian parameter estimates from the marginal posterior distributions (red line in the plot&amp;nbsp;below).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;n_samples&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;
 &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;42&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -643,7 +690,7 @@ bayesian estimate of sigma = 0.1407
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_52_1.png"&gt;&lt;/p&gt;
 &lt;p&gt;We can clearly see that taking a Bayesian Inference approach to calibrating stochastic processes leads to more probability mass in the &amp;#8216;tails&amp;#8217; of the distribution of geomtric&amp;nbsp;returns.&lt;/p&gt;
-&lt;h3&gt;Impact on Risk Metrics - Value-at-Risk&amp;nbsp;(VaR)&lt;/h3&gt;
+&lt;h3 id="impact-on-risk-metrics-value-at-risk-var"&gt;Impact on Risk Metrics - Value-at-Risk&amp;nbsp;(VaR)&lt;/h3&gt;
 &lt;p&gt;We now quantify the impact that the difference in these distributions has on the VaR for a single unit of the stock, at the 1% and 99% percentile levels - i.e. on 1/100 chance&amp;nbsp;events.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;var_ml&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;percentile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;returns_geo_ml&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;99&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;span class="n"&gt;var_bayes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;percentile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;returns_geo_bayes&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;99&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
@@ -673,7 +720,7 @@ bayesian = 0.019038871195300778
 
 
 &lt;p&gt;We can see that maximum likelihood estimation in our setup would underestimate risk for both long (VaR-1%) and short (VaR-99%) positions, but particularly for short position where the difference is by over&amp;nbsp;100%.&lt;/p&gt;
-&lt;h2&gt;Summary&lt;/h2&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Bayesian inference can exploit relevant prior knowledge to yield more precise parameter estimate for stochastic processes, especially when data is&amp;nbsp;scarce;&lt;/li&gt;
 &lt;li&gt;because it doesn&amp;#8217;t rely on point-estimates of parameters and is intrinsically stochastic in nature, it is a natural unified framework for parameter inference and simulation, under uncertainty;&amp;nbsp;and,&lt;/li&gt;
@@ -740,18 +787,70 @@ bayesian = 0.019038871195300778
 &lt;p&gt;&lt;a href="https://kubernetes.io"&gt;Kubernetes&lt;/a&gt; is a container orchestration platform that seeks to address these issues. Briefly, it provides a mechanism for defining &lt;strong&gt;entire&lt;/strong&gt; microservice-based application deployment topologies and their service-level requirements for maintaining continuous availability. It is agnostic to the targeted cloud provider, can be run on-premises and even locally on your laptop - all that&amp;#8217;s required is a cluster of virtual machines running Kubernetes - i.e. a Kubernetes&amp;nbsp;cluster.&lt;/p&gt;
 &lt;p&gt;This blog post is designed to be read in conjunction with the code in &lt;a href="https://github.com/AlexIoannides/kubernetes-ml-ops"&gt;this GitHub repository&lt;/a&gt;, that contains the Python modules, Docker configuration files and Kubernetes instructions for demonstrating how a simple Python &lt;span class="caps"&gt;ML&lt;/span&gt; model can be turned into a production-grade RESTful model-scoring (or prediction) &lt;span class="caps"&gt;API&lt;/span&gt; service, using Docker and Kubernetes - both locally and with Google Cloud Platform (&lt;span class="caps"&gt;GCP&lt;/span&gt;). It is not a comprehensive guide to Kubernetes, Docker or &lt;span class="caps"&gt;ML&lt;/span&gt; - think of it more as a &amp;#8216;&lt;span class="caps"&gt;ML&lt;/span&gt; on Kubernetes 101&amp;#8217; for demonstrating capability and allowing newcomers to Kubernetes (e.g. data scientists who are more focused on building models as opposed to deploying them), to get up-and-running quickly and become familiar with the basic concepts and&amp;nbsp;patterns.&lt;/p&gt;
 &lt;p&gt;We will demonstrate &lt;span class="caps"&gt;ML&lt;/span&gt; model deployment using two different approaches: a first principles approach using Docker and Kubernetes; and then a deployment using the &lt;a href="https://www.seldon.io"&gt;Seldon-Core&lt;/a&gt; Kubernetes native framework for streamlining the deployment of &lt;span class="caps"&gt;ML&lt;/span&gt; services. The former will help to appreciate the latter, which constitutes a powerful framework for deploying and performance-monitoring many complex &lt;span class="caps"&gt;ML&lt;/span&gt; model&amp;nbsp;pipelines.&lt;/p&gt;
-&lt;h2&gt;Containerising a Simple &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service using&amp;nbsp;Docker&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Table of&amp;nbsp;Contents&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#containerising-a-simple-ml-model-scoring-service-using-flask-and-docker"&gt;Containerising a Simple &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service using Flask and Docker&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#defining-the-flask-service-in-the-apipy-module"&gt;Defining the Flask Service in the api.py&amp;nbsp;Module&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#defining-the-docker-image-with-the-dockerfile"&gt;Defining the Docker Image with the&amp;nbsp;Dockerfile&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#building-a-docker-image-for-the-ml-scoring-service"&gt;Building a Docker Image for the &lt;span class="caps"&gt;ML&lt;/span&gt; Scoring Service&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#testing"&gt;Testing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#pushing-the-image-to-the-dockerhub-registry"&gt;Pushing the Image to the DockerHub&amp;nbsp;Registry&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#installing-kubernetes-for-local-development-and-testing"&gt;Installing Kubernetes for Local Development and Testing&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#installing-kubernetes-via-docker-desktop"&gt;Installing Kubernetes via Docker&amp;nbsp;Desktop&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#installing-kubernetes-via-minikube"&gt;Installing Kubernetes via&amp;nbsp;Minikube&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#deploying-the-containerised-ml-model-scoring-service-to-kubernetes"&gt;Deploying the Containerised &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service to&amp;nbsp;Kubernetes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#configuring-a-multi-node-cluster-on-google-cloud-platform"&gt;Configuring a Multi-Node Cluster on Google Cloud Platform&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#getting-up-and-running-with-google-cloud-platform"&gt;Getting Up-and-Running with Google Cloud&amp;nbsp;Platform&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#initialising-a-kubernetes-cluster"&gt;Initialising a Kubernetes&amp;nbsp;Cluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#launching-the-containerised-ml-model-scoring-service-on-gcp"&gt;Launching the Containerised &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service on &lt;span class="caps"&gt;GCP&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#switching-between-kubectl-contexts"&gt;Switching Between Kubectl&amp;nbsp;Contexts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#using-yaml-files-to-define-and-deploy-the-ml-model-scoring-service"&gt;Using &lt;span class="caps"&gt;YAML&lt;/span&gt; Files to Define and Deploy the &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring&amp;nbsp;Service&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#using-helm-charts-to-define-and-deploy-the-ml-model-scoring-service"&gt;Using Helm Charts to Define and Deploy the &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#installing-helm"&gt;Installing&amp;nbsp;Helm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#deploying-with-helm"&gt;Deploying with&amp;nbsp;Helm&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#using-seldon-to-deploy-the-ml-model-scoring-service-to-kubernetes"&gt;Using Seldon to Deploy the &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service to Kubernetes&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#building-an-ml-component-for-seldon"&gt;Building an &lt;span class="caps"&gt;ML&lt;/span&gt; Component for Seldon&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#building-the-docker-image-for-use-with-seldon"&gt;Building the Docker Image for use with&amp;nbsp;Seldon&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#deploying-a-ml-component-with-seldon-core"&gt;Deploying a &lt;span class="caps"&gt;ML&lt;/span&gt; Component with Seldon&amp;nbsp;Core&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#testing-the-api-via-the-ambassador-gateway-api"&gt;Testing the &lt;span class="caps"&gt;API&lt;/span&gt; via the Ambassador Gateway &lt;span class="caps"&gt;API&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#tear-down"&gt;Tear&amp;nbsp;Down&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#where-to-go-from-here"&gt;Where to go from&amp;nbsp;Here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#appendix-using-pipenv-for-managing-python-package-dependencies"&gt;Appendix - Using Pipenv for Managing Python Package Dependencies&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#installing-pipenv"&gt;Installing&amp;nbsp;Pipenv&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#installing-projects-dependencies"&gt;Installing Projects&amp;nbsp;Dependencies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#running-python-ipython-and-jupyterlab-from-the-projects-virtual-environment"&gt;Running Python, IPython and JupyterLab from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#pipenv-shells"&gt;Pipenv&amp;nbsp;Shells&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h2 id="containerising-a-simple-ml-model-scoring-service-using-flask-and-docker"&gt;Containerising a Simple &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service using Flask and&amp;nbsp;Docker&lt;/h2&gt;
 &lt;p&gt;We start by demonstrating how to achieve this basic competence using the simple Python &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; contained in the &lt;code&gt;api.py&lt;/code&gt; module, together with the &lt;code&gt;Dockerfile&lt;/code&gt;, both within the &lt;code&gt;py-flask-ml-score-api&lt;/code&gt; directory, whose core contents are as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;py-flask-ml-score-api/
  &lt;span class="p"&gt;|&lt;/span&gt; Dockerfile
  &lt;span class="p"&gt;|&lt;/span&gt; Pipfile
  &lt;span class="p"&gt;|&lt;/span&gt; Pipfile.lock
- &lt;span class="p"&gt;|&lt;/span&gt; api.py 
+ &lt;span class="p"&gt;|&lt;/span&gt; api.py
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;If you&amp;#8217;re already feeling lost then these files are discussed in the points below, otherwise feel free to skip to the next&amp;nbsp;section.&lt;/p&gt;
-&lt;h3&gt;&lt;code&gt;api.py&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id="defining-the-flask-service-in-the-apipy-module"&gt;Defining the Flask Service in the &lt;code&gt;api.py&lt;/code&gt; Module&lt;/h3&gt;
 &lt;p&gt;This is a Python module that uses the &lt;a href="http://flask.pocoo.org"&gt;Flask&lt;/a&gt; framework for defining a web service (&lt;code&gt;app&lt;/code&gt;), with a function (&lt;code&gt;score&lt;/code&gt;), that executes in response to a &lt;span class="caps"&gt;HTTP&lt;/span&gt; request to a specific &lt;span class="caps"&gt;URL&lt;/span&gt; (or &amp;#8216;route&amp;#8217;), thanks to being wrapped by the &lt;code&gt;app.route&lt;/code&gt; function. For reference, the relevant code is reproduced&amp;nbsp;below,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;flask&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jsonify&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;make_response&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;
 
@@ -771,7 +870,7 @@ bayesian = 0.019038871195300778
 
 &lt;p&gt;If running locally - e.g. by starting the web service using &lt;code&gt;python run api.py&lt;/code&gt; - we would be able reach our function (or &amp;#8216;endpoint&amp;#8217;) at &lt;code&gt;http://localhost:5000/score&lt;/code&gt;. This function takes data sent to it as &lt;span class="caps"&gt;JSON&lt;/span&gt; (that has been automatically de-serialised as a Python dict made available as the &lt;code&gt;request&lt;/code&gt; variable in our function definition), and returns a response (automatically serialised as &lt;span class="caps"&gt;JSON&lt;/span&gt;).&lt;/p&gt;
 &lt;p&gt;In our example function, we expect an array of features, &lt;code&gt;X&lt;/code&gt;, that we pass to a &lt;span class="caps"&gt;ML&lt;/span&gt; model, which in our example returns those same features back to the caller - i.e. our chosen &lt;span class="caps"&gt;ML&lt;/span&gt; model is the identity function, which we have chosen for purely demonstrative purposes. We could just as easily have loaded a pickled SciKit-Learn or Keras model and passed the data to the approproate &lt;code&gt;predict&lt;/code&gt; method, returning a score for the feature-data as &lt;span class="caps"&gt;JSON&lt;/span&gt; - see &lt;a href="https://github.com/AlexIoannides/ml-workflow-automation/blob/master/deploy/py-sklearn-flask-ml-service/api.py"&gt;here&lt;/a&gt; for an example of this in&amp;nbsp;action.&lt;/p&gt;
-&lt;h3&gt;&lt;code&gt;Dockerfile&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id="defining-the-docker-image-with-the-dockerfile"&gt;Defining the Docker Image with the &lt;code&gt;Dockerfile&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;A &lt;code&gt;Dockerfile&lt;/code&gt; is essentially the configuration file used by Docker, that allows you to define the contents and configure the operation of a Docker container, when operational. This static data, when not executed as a container, is referred to as the &amp;#8216;image&amp;#8217;. For reference, the &lt;code&gt;Dockerfile&lt;/code&gt; is reproduced&amp;nbsp;below,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; python:3.6-slim&lt;/span&gt;
 &lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; /usr/src/app&lt;/span&gt;
@@ -779,7 +878,7 @@ COPY . .
 &lt;span class="k"&gt;RUN&lt;/span&gt; pip install pipenv
 &lt;span class="k"&gt;RUN&lt;/span&gt; pipenv install
 &lt;span class="k"&gt;EXPOSE&lt;/span&gt;&lt;span class="s"&gt; 5000&lt;/span&gt;
-&lt;span class="k"&gt;ENTRYPOINT&lt;/span&gt;&lt;span class="s"&gt; [&amp;quot;pipenv&amp;quot;, &amp;quot;run&amp;quot;, &amp;quot;python&amp;quot;, &amp;quot;api.py&amp;quot;]&lt;/span&gt;
+&lt;span class="k"&gt;CMD&lt;/span&gt;&lt;span class="s"&gt; [&amp;quot;pipenv&amp;quot;, &amp;quot;run&amp;quot;, &amp;quot;python&amp;quot;, &amp;quot;api.py&amp;quot;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -793,13 +892,15 @@ COPY . .
 &lt;li&gt;to start our Flask RESTful web service - &lt;code&gt;api.py&lt;/code&gt;. Note, that here we are relying on Flask&amp;#8217;s internal &lt;a href="https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface"&gt;&lt;span class="caps"&gt;WSGI&lt;/span&gt;&lt;/a&gt; server, whereas in a production setting we would recommend on configuring a more robust option (e.g. Gunicorn), &lt;a href="https://pythonspeed.com/articles/gunicorn-in-docker/"&gt;as discussed here&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Building this custom image and asking the Docker daemon to run it (remember that a running image is a &amp;#8216;container&amp;#8217;), will expose our RESTful &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service on port 5000 as if it were running on a dedicated virtual machine. Refer to the official &lt;a href="https://docs.docker.com/get-started/"&gt;Docker documentation&lt;/a&gt; for a more comprehensive discussion of these core&amp;nbsp;concepts.&lt;/p&gt;
-&lt;h3&gt;Building the Docker Image for the &lt;span class="caps"&gt;ML&lt;/span&gt; Scoring&amp;nbsp;Service&lt;/h3&gt;
+&lt;h3 id="building-a-docker-image-for-the-ml-scoring-service"&gt;Building a Docker Image for the &lt;span class="caps"&gt;ML&lt;/span&gt; Scoring&amp;nbsp;Service&lt;/h3&gt;
 &lt;p&gt;We assume that &lt;a href="https://www.docker.com"&gt;Docker is running locally&lt;/a&gt; (both Docker client and daemon), that the client is logged into an account on &lt;a href="https://hub.docker.com"&gt;DockerHub&lt;/a&gt; and that there is a terminal open in the this project&amp;#8217;s root directory. To build the image described in the &lt;code&gt;Dockerfile&lt;/code&gt; run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker build --tag alexioannides/test-ml-score-api py-flask-ml-score-api
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Where &amp;#8216;alexioannides&amp;#8217; refers to the name of the DockerHub account that we will push the image to, once we have tested it. To test that the image can be used to create a Docker container that functions as we expect it to&amp;nbsp;use,&lt;/p&gt;
+&lt;p&gt;Where &amp;#8216;alexioannides&amp;#8217; refers to the name of the DockerHub account that we will push the image to, once we have tested&amp;nbsp;it. &lt;/p&gt;
+&lt;h4 id="testing"&gt;Testing&lt;/h4&gt;
+&lt;p&gt;To test that the image can be used to create a Docker container that functions as we expect it to&amp;nbsp;use,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker run --rm --name test-api -p &lt;span class="m"&gt;5000&lt;/span&gt;:5000 -d alexioannides/test-ml-score-api
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -827,16 +928,16 @@ COPY . .
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Pushing a Docker Image to&amp;nbsp;DockerHub&lt;/h3&gt;
+&lt;h4 id="pushing-the-image-to-the-dockerhub-registry"&gt;Pushing the Image to the DockerHub&amp;nbsp;Registry&lt;/h4&gt;
 &lt;p&gt;In order for a remote Docker host or Kubernetes cluster to have access to the image we&amp;#8217;ve created, we need to publish it to an image registry. All cloud computing providers that offer managed Docker-based services will provide private image registries, but we will use the public image registry at DockerHub, for convenience. To push our new image to DockerHub (where my account &lt;span class="caps"&gt;ID&lt;/span&gt; is &amp;#8216;alexioannides&amp;#8217;)&amp;nbsp;use,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker push alexioannides/test-ml-score-api
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Where we can now see that our chosen naming convention for the image is intrinsically linked to our target image registry (you will need to insert your own account &lt;span class="caps"&gt;ID&lt;/span&gt; where required). Once the upload is finished, log onto DockerHub to confirm that the upload has been successful via the &lt;a href="https://hub.docker.com/u/alexioannides"&gt;DockerHub &lt;span class="caps"&gt;UI&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;h2&gt;Installing Kubernetes for Local Development and&amp;nbsp;Testing&lt;/h2&gt;
+&lt;h2 id="installing-kubernetes-for-local-development-and-testing"&gt;Installing Kubernetes for Local Development and&amp;nbsp;Testing&lt;/h2&gt;
 &lt;p&gt;There are two options for installing a single-node Kubernetes cluster that is suitable for local development and testing: via the &lt;a href="https://www.docker.com/products/docker-desktop"&gt;Docker Desktop&lt;/a&gt; client, or via &lt;a href="https://github.com/kubernetes/minikube"&gt;Minikube&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Installing Kubernetes via Docker&amp;nbsp;Desktop&lt;/h3&gt;
+&lt;h3 id="installing-kubernetes-via-docker-desktop"&gt;Installing Kubernetes via Docker&amp;nbsp;Desktop&lt;/h3&gt;
 &lt;p&gt;If you have been using Docker on a Mac, then the chances are that you will have been doing this via the Docker Desktop application. If not (e.g. if you installed Docker Engine via Homebrew), then Docker Desktop can be downloaded &lt;a href="https://www.docker.com/products/docker-desktop"&gt;here&lt;/a&gt;. Docker Desktop now comes bundled with Kubernetes, which can be activated by going to &lt;code&gt;Preferences -&amp;gt; Kubernetes&lt;/code&gt; and selecting &lt;code&gt;Enable Kubernetes&lt;/code&gt;. It will take a while for Docker Desktop to download the Docker images required to run Kubernetes, so be patient. After it has finished, go to &lt;code&gt;Preferences -&amp;gt; Advanced&lt;/code&gt; and ensure that at least 2 CPUs and 4 GiB have been allocated to the Docker Engine, which are the the minimum resources required to deploy a single Seldon &lt;span class="caps"&gt;ML&lt;/span&gt;&amp;nbsp;component.&lt;/p&gt;
 &lt;p&gt;To interact with the Kubernetes cluster you will need the &lt;code&gt;kubectl&lt;/code&gt; Command Line Interface (&lt;span class="caps"&gt;CLI&lt;/span&gt;) tool, which will need to be downloaded separately. The easiest way to do this on a Mac is via Homebrew - i.e with &lt;code&gt;brew install kubernetes-cli&lt;/code&gt;. Once you have &lt;code&gt;kubectl&lt;/code&gt; installed and a Kubernetes cluster up-and-running, test that everything is working as expected by&amp;nbsp;running,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl cluster-info
@@ -851,7 +952,7 @@ To further debug and diagnose cluster problems, use &lt;span class="s1"&gt;&amp;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Installing Kubernetes via&amp;nbsp;Minikube&lt;/h3&gt;
+&lt;h3 id="installing-kubernetes-via-minikube"&gt;Installing Kubernetes via&amp;nbsp;Minikube&lt;/h3&gt;
 &lt;p&gt;On Mac &lt;span class="caps"&gt;OS&lt;/span&gt; X, the steps required to get up-and-running with Minikube are as&amp;nbsp;follows:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;make sure the &lt;a href="https://brew.sh"&gt;Homebrew&lt;/a&gt; package manager for &lt;span class="caps"&gt;OS&lt;/span&gt; X is installed;&amp;nbsp;then,&lt;/li&gt;
@@ -869,7 +970,7 @@ To further debug and diagnose cluster problems, use &lt;span class="s1"&gt;&amp;
 
 
 &lt;p&gt;Where &lt;code&gt;kubectl&lt;/code&gt; is the standard Command Line Interface (&lt;span class="caps"&gt;CLI&lt;/span&gt;) client for interacting with the Kubernetes &lt;span class="caps"&gt;API&lt;/span&gt; (which was installed as part of Minikube, but is also available&amp;nbsp;separately).&lt;/p&gt;
-&lt;h3&gt;Deploying the Containerised &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service on&amp;nbsp;Kubernetes&lt;/h3&gt;
+&lt;h3 id="deploying-the-containerised-ml-model-scoring-service-to-kubernetes"&gt;Deploying the Containerised &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service to&amp;nbsp;Kubernetes&lt;/h3&gt;
 &lt;p&gt;To launch our test model scoring service on Kubernetes, we will start by deploying the containerised service within a Kubernetes &lt;a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/"&gt;Pod&lt;/a&gt;, whose rollout is managed by a &lt;a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/"&gt;Deployment&lt;/a&gt;, which in in-turn creates a &lt;a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/"&gt;ReplicaSet&lt;/a&gt; - a Kubernetes resource that ensures a minimum number of pods (or replicas), running our service are operational at any given time. This is achieved&amp;nbsp;with,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create deployment test-ml-score-api --image&lt;span class="o"&gt;=&lt;/span&gt;alexioannides/test-ml-score-api:latest
 &lt;/pre&gt;&lt;/div&gt;
@@ -922,9 +1023,9 @@ kubectl delete service test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Configuring a Multi-Node Cluster on Google Cloud&amp;nbsp;Platform&lt;/h2&gt;
+&lt;h2 id="configuring-a-multi-node-cluster-on-google-cloud-platform"&gt;Configuring a Multi-Node Cluster on Google Cloud&amp;nbsp;Platform&lt;/h2&gt;
 &lt;p&gt;In order to perform testing on a real-world Kubernetes cluster with far greater resources than those available on a laptop, the easiest way is to use a managed Kubernetes platform from a cloud provider. We will use Kubernetes Engine on &lt;a href="https://cloud.google.com"&gt;Google Cloud Platform (&lt;span class="caps"&gt;GCP&lt;/span&gt;)&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Getting Up-and-Running with Google Cloud&amp;nbsp;Platform&lt;/h3&gt;
+&lt;h3 id="getting-up-and-running-with-google-cloud-platform"&gt;Getting Up-and-Running with Google Cloud&amp;nbsp;Platform&lt;/h3&gt;
 &lt;p&gt;Before we can use Google Cloud Platform, sign-up for an account and create a project specifically for this work. Next, make sure that the &lt;span class="caps"&gt;GCP&lt;/span&gt; &lt;span class="caps"&gt;SDK&lt;/span&gt; is installed on your local machine -&amp;nbsp;e.g.,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;brew cask install google-cloud-sdk
 &lt;/pre&gt;&lt;/div&gt;
@@ -941,14 +1042,14 @@ kubectl delete service test-ml-score-api-lb
 
 
 &lt;p&gt;Which will open a browser and guide you through the necessary authentication steps. Make sure you pick the project you created, together with a default zone and region (if this has not been set via Compute Engine -&amp;gt;&amp;nbsp;Settings).&lt;/p&gt;
-&lt;h3&gt;Initialising a Kubernetes&amp;nbsp;Cluster&lt;/h3&gt;
+&lt;h3 id="initialising-a-kubernetes-cluster"&gt;Initialising a Kubernetes&amp;nbsp;Cluster&lt;/h3&gt;
 &lt;p&gt;Firstly, within the &lt;span class="caps"&gt;GCP&lt;/span&gt; &lt;span class="caps"&gt;UI&lt;/span&gt; visit the Kubernetes Engine page to trigger the Kubernetes &lt;span class="caps"&gt;API&lt;/span&gt; to start-up. From the command line we then start a cluster&amp;nbsp;using,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gcloud container clusters create k8s-test-cluster --num-nodes &lt;span class="m"&gt;3&lt;/span&gt; --machine-type g1-small
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;And then go make a cup of coffee while you wait for the cluster to be created. Note, that this will automatically switch your &lt;code&gt;kubectl&lt;/code&gt; context to point to the cluster on &lt;span class="caps"&gt;GCP&lt;/span&gt;, as you will see if you run, &lt;code&gt;kubectl config get-contexts&lt;/code&gt;. To switch back to the Docker Desktop client use &lt;code&gt;kubectl config use-context docker-desktop&lt;/code&gt;.&lt;/p&gt;
-&lt;h3&gt;Launching the Containerised &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service on the &lt;span class="caps"&gt;GCP&lt;/span&gt;&lt;/h3&gt;
+&lt;h3 id="launching-the-containerised-ml-model-scoring-service-on-gcp"&gt;Launching the Containerised &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service on &lt;span class="caps"&gt;GCP&lt;/span&gt;&lt;/h3&gt;
 &lt;p&gt;This is largely the same as we did for running the test service locally - run the following commands in&amp;nbsp;sequence,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create deployment test-ml-score-api --image&lt;span class="o"&gt;=&lt;/span&gt;alexioannides/test-ml-score-api:latest
 kubectl expose deployment test-ml-score-api --port &lt;span class="m"&gt;5000&lt;/span&gt; --type&lt;span class="o"&gt;=&lt;/span&gt;LoadBalancer --name test-ml-score-api-lb
@@ -987,7 +1088,7 @@ kubectl delete service test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Switching Between Kubectl&amp;nbsp;Contexts&lt;/h2&gt;
+&lt;h2 id="switching-between-kubectl-contexts"&gt;Switching Between Kubectl&amp;nbsp;Contexts&lt;/h2&gt;
 &lt;p&gt;If you are running both with Kubernetes locally and with a cluster on &lt;span class="caps"&gt;GCP&lt;/span&gt;, then you can switch Kubectl &lt;a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/"&gt;context&lt;/a&gt; from one cluster to the other, as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl config use-context docker-desktop
 &lt;/pre&gt;&lt;/div&gt;
@@ -998,7 +1099,7 @@ kubectl delete service test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Using &lt;span class="caps"&gt;YAML&lt;/span&gt; Files to Define and Deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring&amp;nbsp;Service&lt;/h2&gt;
+&lt;h2 id="using-yaml-files-to-define-and-deploy-the-ml-model-scoring-service"&gt;Using &lt;span class="caps"&gt;YAML&lt;/span&gt; Files to Define and Deploy the &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring&amp;nbsp;Service&lt;/h2&gt;
 &lt;p&gt;Up to this point we have been using Kubectl commands to define and deploy a basic version of our &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service. This is fine for demonstrative purposes, but quickly becomes limiting, as well as unmanageable. In practice, the standard way of defining entire Kubernetes deployments is with &lt;span class="caps"&gt;YAML&lt;/span&gt; files,  posted to the Kubernetes &lt;span class="caps"&gt;API&lt;/span&gt;. The &lt;code&gt;py-flask-ml-score.yaml&lt;/code&gt; file in the &lt;code&gt;py-flask-ml-score-api&lt;/code&gt; directory is an example of how our &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service can be defined in a single &lt;span class="caps"&gt;YAML&lt;/span&gt; file. This can now be deployed using a single&amp;nbsp;command,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl apply -f py-flask-ml-score-api/py-flask-ml-score.yaml
 &lt;/pre&gt;&lt;/div&gt;
@@ -1030,9 +1131,9 @@ kubectl delete service test-ml-score-api-lb
 
 
 &lt;p&gt;Which saves us from having to use multiple commands to delete each component individually. Refer to the &lt;a href="https://kubernetes.io/docs/home/"&gt;official documentation for the Kubernetes &lt;span class="caps"&gt;API&lt;/span&gt;&lt;/a&gt; to understand the contents of this &lt;span class="caps"&gt;YAML&lt;/span&gt; file in greater&amp;nbsp;depth.&lt;/p&gt;
-&lt;h2&gt;Using Helm Charts to Define and Deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring&amp;nbsp;Service&lt;/h2&gt;
+&lt;h2 id="using-helm-charts-to-define-and-deploy-the-ml-model-scoring-service"&gt;Using Helm Charts to Define and Deploy the &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring&amp;nbsp;Service&lt;/h2&gt;
 &lt;p&gt;Writing &lt;span class="caps"&gt;YAML&lt;/span&gt; files for Kubernetes can get repetitive and hard to manage, especially if there is a lot of &amp;#8216;copy-paste&amp;#8217; involved, when only a handful of parameters need to be changed from one deployment to the next,  but there is a &amp;#8216;wall of &lt;span class="caps"&gt;YAML&lt;/span&gt;&amp;#8217; that needs to be modified. Enter &lt;a href="https://helm.sh//"&gt;Helm&lt;/a&gt; - a framework for creating, executing and managing Kubernetes deployment templates. What follows is a very high-level demonstration of how Helm can be used to deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service - for a comprehensive discussion of Helm&amp;#8217;s full capabilities (and here are a lot of them), please refer to the &lt;a href="https://docs.helm.sh"&gt;official documentation&lt;/a&gt;. Seldon-Core can also be deployed using Helm and we will cover this in more detail later&amp;nbsp;on.&lt;/p&gt;
-&lt;h3&gt;Installing&amp;nbsp;Helm&lt;/h3&gt;
+&lt;h3 id="installing-helm"&gt;Installing&amp;nbsp;Helm&lt;/h3&gt;
 &lt;p&gt;As before, the easiest way to install Helm onto Mac &lt;span class="caps"&gt;OS&lt;/span&gt; X is to use the Homebrew package&amp;nbsp;manager,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;brew install kubernetes-helm
 &lt;/pre&gt;&lt;/div&gt;
@@ -1055,7 +1156,7 @@ kubectl delete service test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Deploy our &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring&amp;nbsp;Service&lt;/h3&gt;
+&lt;h3 id="deploying-with-helm"&gt;Deploying with&amp;nbsp;Helm&lt;/h3&gt;
 &lt;p&gt;To create a fresh Helm deployment definition - referred to as a &amp;#8216;chart&amp;#8217; in Helm terminology -&amp;nbsp;run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm create NAME-OF-YOUR-HELM-CHART
 &lt;/pre&gt;&lt;/div&gt;
@@ -1151,11 +1252,11 @@ kubectl delete service test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Using Seldon to Deploy a &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service on&amp;nbsp;Kubernetes&lt;/h2&gt;
+&lt;h2 id="using-seldon-to-deploy-the-ml-model-scoring-service-to-kubernetes"&gt;Using Seldon to Deploy the &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service to&amp;nbsp;Kubernetes&lt;/h2&gt;
 &lt;p&gt;Seldon&amp;#8217;s core mission is to simplify the repeated deployment and management of complex &lt;span class="caps"&gt;ML&lt;/span&gt; prediction pipelines on top of Kubernetes. In this demonstration we are going to focus on the simplest possible example - i.e. the simple &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring &lt;span class="caps"&gt;API&lt;/span&gt; we have already been&amp;nbsp;using.&lt;/p&gt;
-&lt;h3&gt;Building an &lt;span class="caps"&gt;ML&lt;/span&gt; Component for&amp;nbsp;Seldon&lt;/h3&gt;
+&lt;h3 id="building-an-ml-component-for-seldon"&gt;Building an &lt;span class="caps"&gt;ML&lt;/span&gt; Component for&amp;nbsp;Seldon&lt;/h3&gt;
 &lt;p&gt;To deploy a &lt;span class="caps"&gt;ML&lt;/span&gt; component using Seldon, we need to create Seldon-compatible Docker images. We start by following &lt;a href="https://docs.seldon.io/projects/seldon-core/en/latest/python/python_wrapping_docker.html"&gt;these guidelines&lt;/a&gt; for defining a Python class that wraps an &lt;span class="caps"&gt;ML&lt;/span&gt; model targeted for deployment with Seldon. This is contained within the &lt;code&gt;seldon-ml-score-component&lt;/code&gt; directory.&lt;/p&gt;
-&lt;h4&gt;Building the Docker Image for use with&amp;nbsp;Seldon&lt;/h4&gt;
+&lt;h4 id="building-the-docker-image-for-use-with-seldon"&gt;Building the Docker Image for use with&amp;nbsp;Seldon&lt;/h4&gt;
 &lt;p&gt;Seldon requires that the Docker image for the &lt;span class="caps"&gt;ML&lt;/span&gt; scoring service be structured in a particular&amp;nbsp;way:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;the &lt;span class="caps"&gt;ML&lt;/span&gt; model has to be wrapped in a Python class with a &lt;code&gt;predict&lt;/code&gt; method with a particular signature (or&amp;nbsp;interface);&lt;/li&gt;
@@ -1183,7 +1284,7 @@ kubectl delete service test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Deploying a &lt;span class="caps"&gt;ML&lt;/span&gt; Component with&amp;nbsp;Seldon-Core&lt;/h3&gt;
+&lt;h3 id="deploying-a-ml-component-with-seldon-core"&gt;Deploying a &lt;span class="caps"&gt;ML&lt;/span&gt; Component with Seldon&amp;nbsp;Core&lt;/h3&gt;
 &lt;p&gt;We now move on to deploying our Seldon compatible &lt;span class="caps"&gt;ML&lt;/span&gt; component to a Kubernetes cluster and creating a fault-tolerant and scalable service from it. To achieve this, we will &lt;a href="https://docs.seldon.io/projects/seldon-core/en/latest/workflow/install.html"&gt;deploy Seldon-Core using Helm charts&lt;/a&gt;. We start by creating a namespace that will contain the &lt;code&gt;seldon-core-operator&lt;/code&gt;, a custom Kubernetes resource required to deploy any &lt;span class="caps"&gt;ML&lt;/span&gt; model using&amp;nbsp;Seldon,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl create namespace seldon-core
 &lt;/pre&gt;&lt;/div&gt;
@@ -1226,7 +1327,7 @@ kubectl delete service test-ml-score-api-lb
 
 
 &lt;p&gt;Note, that multiple &lt;span class="caps"&gt;ML&lt;/span&gt; models can now be deployed using Seldon by repeating the last two steps and they will all be automatically reachable via the same Ambassador &lt;span class="caps"&gt;API&lt;/span&gt; gateway, which we will now use to test our Seldon &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring&amp;nbsp;service.&lt;/p&gt;
-&lt;h3&gt;Testing the &lt;span class="caps"&gt;API&lt;/span&gt; via the Ambassador Gateway &lt;span class="caps"&gt;API&lt;/span&gt;&lt;/h3&gt;
+&lt;h3 id="testing-the-api-via-the-ambassador-gateway-api"&gt;Testing the &lt;span class="caps"&gt;API&lt;/span&gt; via the Ambassador Gateway &lt;span class="caps"&gt;API&lt;/span&gt;&lt;/h3&gt;
 &lt;p&gt;To test the Seldon-based &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring service, we follow the same general approach as we did for our first-principles Kubernetes deployments above, but we will route our requests via the Ambassador &lt;span class="caps"&gt;API&lt;/span&gt; gateway. To find the &lt;span class="caps"&gt;IP&lt;/span&gt; address for Ambassador service&amp;nbsp;run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;kubectl -n ambassador get service ambassador
 &lt;/pre&gt;&lt;/div&gt;
@@ -1269,7 +1370,7 @@ kubectl delete service test-ml-score-api-lb
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Tear&amp;nbsp;Down&lt;/h3&gt;
+&lt;h2 id="tear-down"&gt;Tear&amp;nbsp;Down&lt;/h2&gt;
 &lt;p&gt;To delete a single Seldon &lt;span class="caps"&gt;ML&lt;/span&gt; model and its namespace, deployed using the steps above,&amp;nbsp;run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;helm delete test-ml-seldon-app --purge &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;
   kubectl delete namespace test-ml-seldon-app
@@ -1294,17 +1395,18 @@ minikube delete
 
 
 &lt;p&gt;If running on Docker Desktop, navigate to &lt;code&gt;Preferences -&amp;gt; Reset&lt;/code&gt; to reset the&amp;nbsp;cluster.&lt;/p&gt;
-&lt;h2&gt;Where to go from&amp;nbsp;Here&lt;/h2&gt;
+&lt;h2 id="where-to-go-from-here"&gt;Where to go from&amp;nbsp;Here&lt;/h2&gt;
 &lt;p&gt;The following list of resources will help you dive deeply into the subjects we skimmed-over&amp;nbsp;above:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;the full set of functionality provided by &lt;a href="https://www.seldon.io/open-source/"&gt;Seldon&lt;/a&gt;;&lt;/li&gt;
+&lt;li&gt;running multi-stage containerised workflows (e.g. for data engineering and model training) using &lt;a href="https://argoproj.github.io/argo"&gt;Argo Workflows&lt;/a&gt;;&lt;/li&gt;
 &lt;li&gt;the excellent &amp;#8216;&lt;em&gt;Kubernetes in Action&lt;/em&gt;&amp;#8216; by Marko Lukša &lt;a href="https://www.manning.com/books/kubernetes-in-action"&gt;available from Manning Publications&lt;/a&gt;;&lt;/li&gt;
 &lt;li&gt;&lt;span class="quo"&gt;&amp;#8216;&lt;/span&gt;&lt;em&gt;Docker in Action&lt;/em&gt;&amp;#8216; by Jeff Nickoloff and Stephen Kuenzli &lt;a href="https://www.manning.com/books/docker-in-action-second-edition"&gt;also available from Manning Publications&lt;/a&gt;;&amp;nbsp;and,&lt;/li&gt;
 &lt;li&gt;&lt;em&gt;&lt;span class="quo"&gt;&amp;#8216;&lt;/span&gt;Flask Web Development&amp;#8217;&lt;/em&gt; by Miguel Grinberg &lt;a href="http://shop.oreilly.com/product/0636920089056.do"&gt;O&amp;#8217;Reilly&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Appendix - Using Pipenv for Managing Python Package&amp;nbsp;Dependencies&lt;/h2&gt;
+&lt;h2 id="appendix-using-pipenv-for-managing-python-package-dependencies"&gt;Appendix - Using Pipenv for Managing Python Package&amp;nbsp;Dependencies&lt;/h2&gt;
 &lt;p&gt;We use &lt;a href="https://docs.pipenv.org"&gt;pipenv&lt;/a&gt; for managing project dependencies and Python environments (i.e. virtual environments). All of the direct packages dependencies required to run the code (e.g. Flask or Seldon-Core), as well as any packages that could have been used during development (e.g. flake8 for code linting and IPython for interactive console sessions), are described in the &lt;code&gt;Pipfile&lt;/code&gt;. Their &lt;strong&gt;precise&lt;/strong&gt; downstream dependencies are described in &lt;code&gt;Pipfile.lock&lt;/code&gt;.&lt;/p&gt;
-&lt;h3&gt;Installing&amp;nbsp;Pipenv&lt;/h3&gt;
+&lt;h3 id="installing-pipenv"&gt;Installing&amp;nbsp;Pipenv&lt;/h3&gt;
 &lt;p&gt;To get started with Pipenv, first of all download it - assuming that there is a global version of Python available on your system and on the &lt;span class="caps"&gt;PATH&lt;/span&gt;, then this can be achieved by running the following&amp;nbsp;command,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip3 install pipenv
 &lt;/pre&gt;&lt;/div&gt;
@@ -1316,14 +1418,14 @@ minikube delete
 
 
 &lt;p&gt;For more information, including advanced configuration options, see the &lt;a href="https://docs.pipenv.org"&gt;official pipenv documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Installing Projects&amp;nbsp;Dependencies&lt;/h3&gt;
+&lt;h3 id="installing-projects-dependencies"&gt;Installing Projects&amp;nbsp;Dependencies&lt;/h3&gt;
 &lt;p&gt;If you want to experiment with the Python code in the &lt;code&gt;py-flask-ml-score-api&lt;/code&gt; or &lt;code&gt;seldon-ml-score-component&lt;/code&gt; directories, then make sure that you&amp;#8217;re in the appropriate directory and then&amp;nbsp;run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv install
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This will install all of the direct project&amp;nbsp;dependencies.&lt;/p&gt;
-&lt;h3&gt;Running Python, IPython and JupyterLab from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/h3&gt;
+&lt;h3 id="running-python-ipython-and-jupyterlab-from-the-projects-virtual-environment"&gt;Running Python, IPython and JupyterLab from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/h3&gt;
 &lt;p&gt;In order to continue development in a Python environment that precisely mimics the one the project was initially developed with, use Pipenv from the command line as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv run python3
 &lt;/pre&gt;&lt;/div&gt;
@@ -1334,7 +1436,7 @@ minikube delete
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Pipenv&amp;nbsp;Shells&lt;/h3&gt;
+&lt;h3 id="pipenv-shells"&gt;Pipenv&amp;nbsp;Shells&lt;/h3&gt;
 &lt;p&gt;Prepending &lt;code&gt;pipenv&lt;/code&gt; to every command you want to run within the context of your Pipenv-managed virtual environment, can get very tedious. This can be avoided by entering into a Pipenv-managed&amp;nbsp;shell,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv shell
 &lt;/pre&gt;&lt;/div&gt;
@@ -1345,7 +1447,21 @@ minikube delete
 &lt;p&gt;&lt;span class="caps"&gt;MCMC&lt;/span&gt; algorithms are, generally speaking, computationally expensive and do not scale very easily. For example, it is not as easy to distribute the execution of these algorithms over a cluster of machines, when compared to the optimisation algorithms used for training deep neural networks (e.g. stochastic gradient&amp;nbsp;descent).&lt;/p&gt;
 &lt;p&gt;Over the past few years, however, a new class of algorithms for inferring Bayesian models has been developed, that do &lt;strong&gt;not&lt;/strong&gt; rely heavily on computationally expensive random sampling. These algorithms are referred to as Variational Inference (&lt;span class="caps"&gt;VI&lt;/span&gt;) algorithms and have been shown to be successful with the potential to scale to &amp;#8216;large&amp;#8217;&amp;nbsp;datasets.&lt;/p&gt;
 &lt;p&gt;My preferred &lt;span class="caps"&gt;PPL&lt;/span&gt; is &lt;a href="https://docs.pymc.io"&gt;&lt;span class="caps"&gt;PYMC3&lt;/span&gt;&lt;/a&gt; and offers a choice of both &lt;span class="caps"&gt;MCMC&lt;/span&gt; and &lt;span class="caps"&gt;VI&lt;/span&gt; algorithms for inferring models in Bayesian data analysis. This blog post is based on a Jupyter notebook located in &lt;a href="https://github.com/AlexIoannides/pymc-advi-hmc-demo"&gt;this GitHub repository&lt;/a&gt;, whose purpose is to demonstrate using &lt;span class="caps"&gt;PYMC3&lt;/span&gt;, how &lt;span class="caps"&gt;MCMC&lt;/span&gt; and &lt;span class="caps"&gt;VI&lt;/span&gt; can both be used to perform a simple linear regression, and to make a basic comparison of their&amp;nbsp;results.&lt;/p&gt;
-&lt;h2&gt;A (very) Quick Introduction to Bayesian Data&amp;nbsp;Analysis&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Table of&amp;nbsp;Contents&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#a-very-quick-introduction-to-bayesian-data-analysis"&gt;A (very) Quick Introduction to Bayesian Data&amp;nbsp;Analysis&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#imports-and-global-settings"&gt;Imports and Global&amp;nbsp;Settings&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#create-synthetic-data"&gt;Create Synthetic&amp;nbsp;Data&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#split-data-into-training-and-test-sets"&gt;Split Data into Training and Test&amp;nbsp;Sets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#define-bayesian-regression-model"&gt;Define Bayesian Regression&amp;nbsp;Model&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#model-inference-using-mcmc-hmc"&gt;Model Inference Using &lt;span class="caps"&gt;MCMC&lt;/span&gt; (&lt;span class="caps"&gt;HMC&lt;/span&gt;)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#model-inference-using-variational-inference-mini-batch-advi"&gt;Model Inference using Variational Inference (mini-batch &lt;span class="caps"&gt;ADVI&lt;/span&gt;)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#comparing-predictions"&gt;Comparing&amp;nbsp;Predictions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#conclusions"&gt;Conclusions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h2 id="a-very-quick-introduction-to-bayesian-data-analysis"&gt;A (very) Quick Introduction to Bayesian Data&amp;nbsp;Analysis&lt;/h2&gt;
 &lt;p&gt;Like statistical data analysis more broadly, the main aim of Bayesian Data Analysis (&lt;span class="caps"&gt;BDA&lt;/span&gt;) is to infer unknown parameters for models of observed data, in order to test hypotheses about the physical processes that lead to the observations. Bayesian data analysis deviates from traditional statistics - on a practical level - when it comes to the explicit assimilation of prior knowledge regarding the uncertainty of the model parameters, into the statistical inference process and overall analysis workflow. To this end, &lt;span class="caps"&gt;BDA&lt;/span&gt; focuses on the posterior&amp;nbsp;distribution,&lt;/p&gt;
 &lt;div class="math"&gt;$$
 p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}
@@ -1359,7 +1475,7 @@ $$&lt;/div&gt;
 &lt;/ul&gt;
 &lt;p&gt;For an &lt;strong&gt;excellent&lt;/strong&gt; (inspirational) introduction to practical &lt;span class="caps"&gt;BDA&lt;/span&gt;, take a look at &lt;a href="https://xcelab.net/rm/statistical-rethinking/"&gt;Statistical Rethinking by Richard McElreath&lt;/a&gt;, or for a more theoretical treatment try &lt;a href="http://www.stat.columbia.edu/~gelman/book/"&gt;Bayesian Data Analysis by Gelman &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; co.&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;This notebook is concerned with demonstrating and comparing two separate approaches for inferring the posterior distribution, &lt;span class="math"&gt;\(p(\Theta | X)\)&lt;/span&gt;, for a linear regression&amp;nbsp;model.&lt;/p&gt;
-&lt;h2&gt;Imports and Global&amp;nbsp;Settings&lt;/h2&gt;
+&lt;h2 id="imports-and-global-settings"&gt;Imports and Global&amp;nbsp;Settings&lt;/h2&gt;
 &lt;p&gt;Before we get going in earnest, we follow the convention of declaring all imports at the top of the&amp;nbsp;notebook.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
@@ -1380,7 +1496,7 @@ $$&lt;/div&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Create Synthetic&amp;nbsp;Data&lt;/h2&gt;
+&lt;h2 id="create-synthetic-data"&gt;Create Synthetic&amp;nbsp;Data&lt;/h2&gt;
 &lt;p&gt;We will assume that there is a dependent variable (or labelled data) &lt;span class="math"&gt;\(\tilde{y}\)&lt;/span&gt;, that is a linear function of independent variables (or feature data), &lt;span class="math"&gt;\(x\)&lt;/span&gt; and &lt;span class="math"&gt;\(c\)&lt;/span&gt;. In this instance, &lt;span class="math"&gt;\(x\)&lt;/span&gt; is a positive real number and &lt;span class="math"&gt;\(c\)&lt;/span&gt; denotes membership to one of two categories that occur with equal likelihood. We express this model mathematically, as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="math"&gt;$$
 \tilde{y} = \alpha_{c} + \beta_{c} \cdot x + \sigma \cdot \tilde{\epsilon}
@@ -1472,7 +1588,7 @@ $$&lt;/div&gt;
 &lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_9_1.png"&gt;&lt;/p&gt;
-&lt;h2&gt;Split Data into Training and Test&amp;nbsp;Sets&lt;/h2&gt;
+&lt;h2 id="split-data-into-training-and-test-sets"&gt;Split Data into Training and Test&amp;nbsp;Sets&lt;/h2&gt;
 &lt;p&gt;One of the advantages of generating synthetic data is that we can ensure we have enough data to be able to partition it into two sets - one for training models and one for testing models. We use a helper function from the Scikit-Learn package for this task and make use of stratified sampling to ensure that we have a balanced representation of each category in both training and test&amp;nbsp;datasets.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;train&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;train_test_split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
     &lt;span class="n"&gt;model_data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;test_size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stratify&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;model_data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;category&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -1486,7 +1602,7 @@ $$&lt;/div&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Define Bayesian Regression&amp;nbsp;Model&lt;/h2&gt;
+&lt;h2 id="define-bayesian-regression-model"&gt;Define Bayesian Regression&amp;nbsp;Model&lt;/h2&gt;
 &lt;p&gt;Now we move on to define the model that we want to estimate (i.e. our hypothesis regarding the data), irrespective of how we will perform the inference. We will assume full knowledge of the data-generating model we defined above and define conservative regularising priors for each of the model&amp;nbsp;parameters.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;alpha_prior&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HalfNormal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;alpha&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sd&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;shape&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -1497,7 +1613,7 @@ $$&lt;/div&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Model Inference Using &lt;span class="caps"&gt;MCMC&lt;/span&gt; (&lt;span class="caps"&gt;HMC&lt;/span&gt;)&lt;/h2&gt;
+&lt;h2 id="model-inference-using-mcmc-hmc"&gt;Model Inference Using &lt;span class="caps"&gt;MCMC&lt;/span&gt; (&lt;span class="caps"&gt;HMC&lt;/span&gt;)&lt;/h2&gt;
 &lt;p&gt;We will make use of the default &lt;span class="caps"&gt;MCMC&lt;/span&gt; method in &lt;span class="caps"&gt;PYMC3&lt;/span&gt;&amp;#8217;s &lt;code&gt;sample&lt;/code&gt; function, which is Hamiltonian Monte Carlo (&lt;span class="caps"&gt;HMC&lt;/span&gt;). Those interested in the precise details of the &lt;span class="caps"&gt;HMC&lt;/span&gt; algorithm are directed to the &lt;a href="https://arxiv.org/abs/1701.02434"&gt;excellent paper Michael Betancourt&lt;/a&gt;. Briefly, &lt;span class="caps"&gt;MCMC&lt;/span&gt; algorithms work by defining multi-dimensional Markovian stochastic processes, that when simulated (using Monte Carlo methods), will eventually converge to a state where successive simulations will be equivalent to drawing random samples from the posterior distribution of the model we wish to&amp;nbsp;estimate.&lt;/p&gt;
 &lt;p&gt;The posterior distribution has one dimension for each model parameter, so we can then use the distribution of samples for each parameter to infer the range of possible values and/or compute point estimates (e.g. by taking the mean of all&amp;nbsp;samples).&lt;/p&gt;
 &lt;p&gt;For the purposes of this demonstration, we sample two chains in parallel (as we have two &lt;span class="caps"&gt;CPU&lt;/span&gt; cores available for doing so and this effectively doubles the number of samples), allow 1,000 steps for each chain to converge to its steady-state and then sample for a further 5,000 steps - i.e. generate 5,000 samples from the posterior distribution, assuming that the chain has converged after 1,000&amp;nbsp;samples.&lt;/p&gt;
@@ -1596,7 +1712,7 @@ $$&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_19_1.png"&gt;&lt;/p&gt;
 &lt;p&gt;Firstly, note that &lt;code&gt;Rhat&lt;/code&gt; values (the Gelman Rubin statistic) converging to 1 implies chain convergence for the marginal parameter distributions, while &lt;code&gt;n_eff&lt;/code&gt; describes the effective number of samples after autocorrelations in the chains have been accounted for. We can see from the &lt;code&gt;mean&lt;/code&gt; (point) estimate of each parameter that &lt;span class="caps"&gt;HMC&lt;/span&gt; has done a reasonable job of estimating our original&amp;nbsp;parameters.&lt;/p&gt;
-&lt;h2&gt;Model Inference using Variational Inference (mini-batch &lt;span class="caps"&gt;ADVI&lt;/span&gt;)&lt;/h2&gt;
+&lt;h2 id="model-inference-using-variational-inference-mini-batch-advi"&gt;Model Inference using Variational Inference (mini-batch &lt;span class="caps"&gt;ADVI&lt;/span&gt;)&lt;/h2&gt;
 &lt;p&gt;Variational Inference (&lt;span class="caps"&gt;VI&lt;/span&gt;) takes a completely different approach to inference. Briefly, &lt;span class="caps"&gt;VI&lt;/span&gt; is a name for a class of algorithms that seek to fit a chosen class of functions to approximate the posterior distribution, effectively turning inference into an optimisation problem. In this instance &lt;span class="caps"&gt;VI&lt;/span&gt; minimises the &lt;a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence"&gt;Kullback–Leibler (&lt;span class="caps"&gt;KL&lt;/span&gt;) divergence&lt;/a&gt; (a measure of the &amp;#8216;similarity&amp;#8217; between two densities), between the approximated posterior density and the actual posterior density. An excellent review of &lt;span class="caps"&gt;VI&lt;/span&gt; can be found in the &lt;a href="https://arxiv.org/abs/1601.00670"&gt;paper by Blei &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; co.&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Just to make things more complicated (and for this description to be complete), the &lt;span class="caps"&gt;KL&lt;/span&gt; divergence is actually minimised, by maximising the Evidence Lower BOund (&lt;span class="caps"&gt;ELBO&lt;/span&gt;), which is equal to the negative of the &lt;span class="caps"&gt;KL&lt;/span&gt; divergence up to a constant term - a constant that is computationally infeasible to compute, which is why, technically, we are optimising &lt;span class="caps"&gt;ELBO&lt;/span&gt; and not the &lt;span class="caps"&gt;KL&lt;/span&gt; divergence, albeit to achieve the same&amp;nbsp;end-goal.&lt;/p&gt;
 &lt;p&gt;We are going to make use of &lt;span class="caps"&gt;PYMC3&lt;/span&gt;&amp;#8217;s Auto-Differentiation Variational Inference (&lt;span class="caps"&gt;ADVI&lt;/span&gt;) algorithm (full details in the paper by &lt;a href="https://arxiv.org/abs/1603.00788"&gt;Kucukelbir &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; co.&lt;/a&gt;), which is capable of computing a &lt;span class="caps"&gt;VI&lt;/span&gt; for any differentiable posterior distribution (i.e. any model with continuous prior distributions). In order to achieve this very clever feat (the paper is well-worth a read), the algorithm first maps the posterior into a space where all prior distributions have the same support, such that they can be well approximated by fitting a spherical n-dimensional Gaussian distribution within this space - this is referred to as the &amp;#8216;Gaussian mean-field approximation&amp;#8217;. Note, that due to the initial transformation, this is &lt;strong&gt;not&lt;/strong&gt; the same as approximating the posterior distribution using an n-dimensional Normal distribution. The parameters of these Gaussian parameters are then chosen to maximise the &lt;span class="caps"&gt;ELBO&lt;/span&gt; using gradient ascent - i.e. using high-performance auto-differentiation techniques in numerical computing back-ends such as Theano, TensorFlow,&amp;nbsp;etc..&lt;/p&gt;
@@ -1705,7 +1821,7 @@ $$&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_29_1.png"&gt;&lt;/p&gt;
 &lt;p&gt;Not bad! The mean estimates are comparable, but we note that the standard deviations appear to be larger than those estimated with &lt;span class="caps"&gt;HMC&lt;/span&gt;.&lt;/p&gt;
-&lt;h2&gt;Comparing&amp;nbsp;Predictions&lt;/h2&gt;
+&lt;h2 id="comparing-predictions"&gt;Comparing&amp;nbsp;Predictions&lt;/h2&gt;
 &lt;p&gt;Let&amp;#8217;s move on to comparing the inference algorithms on the practical task of making predictions on our test dataset. We start by swapping the test data into our Theano&amp;nbsp;variables.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;y_tensor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;x_tensor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -1771,7 +1887,7 @@ $$&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_40_1.png"&gt;&lt;/p&gt;
 &lt;p&gt;Which is what one might expect, given the data generating&amp;nbsp;model.&lt;/p&gt;
-&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;h2 id="conclusions"&gt;Conclusions&lt;/h2&gt;
 &lt;p&gt;&lt;span class="caps"&gt;MCMC&lt;/span&gt; and &lt;span class="caps"&gt;VI&lt;/span&gt; present two very different approaches for drawing inferences from Bayesian models. Despite these differences, their high-level output for a simplistic (but not entirely trivial) regression problem, based on synthetic data, is comparable regardless of the approximations used within &lt;span class="caps"&gt;ADVI&lt;/span&gt;. This is important to note, because general purpose &lt;span class="caps"&gt;VI&lt;/span&gt; algorithms such as &lt;span class="caps"&gt;ADVI&lt;/span&gt; have the potential to work at scale - on large volumes of data in a distributed computing environment (see the references embedded above, for case&amp;nbsp;studies).&lt;/p&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",

@@ -124,7 +124,7 @@
 </pre></div>
 
 
-<h2>Pipes in the&nbsp;Pipeline</h2>
+<h2 id="pipes-in-the-pipeline">Pipes in the&nbsp;Pipeline</h2>
 <p>There are currently four types of pipeline section - a section being a function that wraps a user-defined function - that can be assembled into a&nbsp;pipeline:</p>
 <ul>
 <li><code>transform_features</code>: wraps a function that maps input variables (or features) to another space -&nbsp;e.g.,</li>
@@ -164,9 +164,9 @@
 
 <p>As demonstrated above, each one of these functions expects as its argument another unary function of a data.frame (i.e. it has to be a function of a single data.frame). With the <strong>exception</strong> of <code>estimate_model</code>, which expects the input function to return an object that has a <code>predict.object-class-name</code> method existing in the current environment (e.g. <code>predict.lm</code> for linear models built using <code>lm()</code>), all the other transform functions also expect their input functions to return data.frames (consisting entirely of columns <strong>not</strong> present in the input data.frame). If any of these rules are violated then appropriately named errors will be thrown to help you locate the&nbsp;issue.</p>
 <p>If this sounds complex and convoluted then I encourage you to to skip to the examples below - this framework is <strong>very</strong> simple to use in practice. Simplicity is the key aim&nbsp;here.</p>
-<h2>Two Interfaces to Rule Them&nbsp;All</h2>
+<h2 id="two-interfaces-to-rule-them-all">Two Interfaces to Rule Them&nbsp;All</h2>
 <p>I am a great believer and protagonist for functional programming - especially for data-related tasks like building machine learning models. At the same time the notion of a &#8216;machine learning pipeline&#8217; is well represented with a simple object-oriented class hierarchy (which is how it is implemented in <a href="http://spark.apache.org/docs/latest/ml-pipeline.html" title="Pipelines in Apache Spark MLib">Apache Spark&#8217;s</a>). I couldn&#8217;t decide which style of interface was best, so I implemented both within <code>pipeliner</code> (using the same underlying code) and ensured their output can be used interchangeably. To keep this introduction simple, however, I&#8217;m only going to talk about the functional interface - those interested in the (more) object-oriented approach are encouraged to read the manual pages for the <code>ml_pipeline_builder</code> <span class="quo">&#8216;</span>class&#8217;.</p>
-<h3>Example Usage with a Functional&nbsp;Flavor</h3>
+<h3 id="example-usage-with-a-functional-flavor">Example Usage with a Functional&nbsp;Flavor</h3>
 <p>We use the <code>faithful</code> dataset shipped with R, together with the <code>pipeliner</code> package to estimate a linear regression model for the eruption duration of &#8216;Old Faithful&#8217; as a function of the inter-eruption waiting time. The transformations we apply to the input and response variables - before we estimate the model - are simple scaling by the mean and standard deviation (i.e. mapping the variables to&nbsp;z-scores).</p>
 <p>The end-to-end process for building the pipeline, estimating the model and generating in-sample predictions (that include all interim variable transformations), is as&nbsp;follows,</p>
 <div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>pipeliner<span class="p">)</span>
@@ -205,7 +205,7 @@ in_sample_predictions <span class="o">&lt;-</span> predict<span class="p">(</spa
 </pre></div>
 
 
-<h3>Accessing Inner Models <span class="amp">&amp;</span> Prediction&nbsp;Functions</h3>
+<h3 id="accessing-inner-models-prediction-functions">Accessing Inner Models <span class="amp">&amp;</span> Prediction&nbsp;Functions</h3>
 <p>We can access the estimated inner models directly and compute summaries, etc - for&nbsp;example,</p>
 <div class="highlight"><pre><span></span><span class="kp">summary</span><span class="p">(</span>lm_pipeline<span class="o">$</span>inner_model<span class="p">)</span>
 <span class="c1">##</span>
@@ -244,7 +244,7 @@ predictions <span class="o">&lt;-</span> pred_function<span class="p">(</span>da
 </pre></div>
 
 
-<h1>Turbo-Charged Pipelines in the&nbsp;Tidyverse</h1>
+<h1 id="turbo-charged-pipelines-in-the-tidyverse">Turbo-Charged Pipelines in the&nbsp;Tidyverse</h1>
 <p>The <code>pipeliner</code> approach to building models becomes even more concise when combined with the set of packages in the <a href="http://tidyverse.org" title="Welcome to The Tidyverse!">tidyverse</a>. For example, the &#8216;Old Faithful&#8217; pipeline could be rewritten&nbsp;as,</p>
 <div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
 
@@ -273,7 +273,7 @@ lm_pipeline <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
 
 
 <p>Nice, compact and expressive (if I don&#8217;t say so&nbsp;myself)!</p>
-<h3>Compact&nbsp;Cross-validation</h3>
+<h3 id="compact-cross-validation">Compact&nbsp;Cross-validation</h3>
 <p>If we now introduce the <code>modelr</code> package into this workflow and adopt the the list-columns pattern described in Hadley Wickham&#8217;s <a href="http://r4ds.had.co.nz/many-models.html#list-columns-1" title="R 4 Data Science - Many Models &amp; List Columns">R for Data Science</a>, we can also achieve wonderfully compact end-to-end model estimation and&nbsp;cross-validation,</p>
 <div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>modelr<span class="p">)</span>
 
@@ -315,7 +315,7 @@ cv_rmse
 </pre></div>
 
 
-<h1>Forthcoming&nbsp;Attractions</h1>
+<h1 id="forthcoming-attractions">Forthcoming&nbsp;Attractions</h1>
 <p>I built <code>pipeliner</code> largely to fill a hole in my own workflows. Up until now I&#8217;ve used Max Kuhn&#8217;s excellent <a href="http://topepo.github.io/caret/index.html" title="Caret">caret package</a> quite a bit, but for in-the-moment model building (e.g. within a R Notebook) it wasn&#8217;t simplifying the code <em>that</em> much, and the style doesn&#8217;t quite fit with the tidy and functional world that I now inhabit most of the time. So, I plugged the hole by myself. I intend to live with <code>pipeliner</code> for a while to get an idea of where it might go next, but I am always open to suggestions (and bug notifications) - please <a href="https://github.com/AlexIoannides/pipeliner/issues" title="Pipeliner Issues on GitHub">leave any ideas here</a>.</p>
   </div>
   <div class="tag-cloud">

@@ -118,7 +118,21 @@
 <p><span class="caps">MCMC</span> algorithms are, generally speaking, computationally expensive and do not scale very easily. For example, it is not as easy to distribute the execution of these algorithms over a cluster of machines, when compared to the optimisation algorithms used for training deep neural networks (e.g. stochastic gradient&nbsp;descent).</p>
 <p>Over the past few years, however, a new class of algorithms for inferring Bayesian models has been developed, that do <strong>not</strong> rely heavily on computationally expensive random sampling. These algorithms are referred to as Variational Inference (<span class="caps">VI</span>) algorithms and have been shown to be successful with the potential to scale to &#8216;large&#8217;&nbsp;datasets.</p>
 <p>My preferred <span class="caps">PPL</span> is <a href="https://docs.pymc.io"><span class="caps">PYMC3</span></a> and offers a choice of both <span class="caps">MCMC</span> and <span class="caps">VI</span> algorithms for inferring models in Bayesian data analysis. This blog post is based on a Jupyter notebook located in <a href="https://github.com/AlexIoannides/pymc-advi-hmc-demo">this GitHub repository</a>, whose purpose is to demonstrate using <span class="caps">PYMC3</span>, how <span class="caps">MCMC</span> and <span class="caps">VI</span> can both be used to perform a simple linear regression, and to make a basic comparison of their&nbsp;results.</p>
-<h2>A (very) Quick Introduction to Bayesian Data&nbsp;Analysis</h2>
+<p><strong>Table of&nbsp;Contents</strong></p>
+<div class="toc">
+<ul>
+<li><a href="#a-very-quick-introduction-to-bayesian-data-analysis">A (very) Quick Introduction to Bayesian Data&nbsp;Analysis</a></li>
+<li><a href="#imports-and-global-settings">Imports and Global&nbsp;Settings</a></li>
+<li><a href="#create-synthetic-data">Create Synthetic&nbsp;Data</a></li>
+<li><a href="#split-data-into-training-and-test-sets">Split Data into Training and Test&nbsp;Sets</a></li>
+<li><a href="#define-bayesian-regression-model">Define Bayesian Regression&nbsp;Model</a></li>
+<li><a href="#model-inference-using-mcmc-hmc">Model Inference Using <span class="caps">MCMC</span> (<span class="caps">HMC</span>)</a></li>
+<li><a href="#model-inference-using-variational-inference-mini-batch-advi">Model Inference using Variational Inference (mini-batch <span class="caps">ADVI</span>)</a></li>
+<li><a href="#comparing-predictions">Comparing&nbsp;Predictions</a></li>
+<li><a href="#conclusions">Conclusions</a></li>
+</ul>
+</div>
+<h2 id="a-very-quick-introduction-to-bayesian-data-analysis">A (very) Quick Introduction to Bayesian Data&nbsp;Analysis</h2>
 <p>Like statistical data analysis more broadly, the main aim of Bayesian Data Analysis (<span class="caps">BDA</span>) is to infer unknown parameters for models of observed data, in order to test hypotheses about the physical processes that lead to the observations. Bayesian data analysis deviates from traditional statistics - on a practical level - when it comes to the explicit assimilation of prior knowledge regarding the uncertainty of the model parameters, into the statistical inference process and overall analysis workflow. To this end, <span class="caps">BDA</span> focuses on the posterior&nbsp;distribution,</p>
 <div class="math">$$
 p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}
@@ -132,7 +146,7 @@ $$</div>
 </ul>
 <p>For an <strong>excellent</strong> (inspirational) introduction to practical <span class="caps">BDA</span>, take a look at <a href="https://xcelab.net/rm/statistical-rethinking/">Statistical Rethinking by Richard McElreath</a>, or for a more theoretical treatment try <a href="http://www.stat.columbia.edu/~gelman/book/">Bayesian Data Analysis by Gelman <span class="amp">&amp;</span> co.</a>.</p>
 <p>This notebook is concerned with demonstrating and comparing two separate approaches for inferring the posterior distribution, <span class="math">\(p(\Theta | X)\)</span>, for a linear regression&nbsp;model.</p>
-<h2>Imports and Global&nbsp;Settings</h2>
+<h2 id="imports-and-global-settings">Imports and Global&nbsp;Settings</h2>
 <p>Before we get going in earnest, we follow the convention of declaring all imports at the top of the&nbsp;notebook.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
@@ -153,7 +167,7 @@ $$</div>
 </pre></div>
 
 
-<h2>Create Synthetic&nbsp;Data</h2>
+<h2 id="create-synthetic-data">Create Synthetic&nbsp;Data</h2>
 <p>We will assume that there is a dependent variable (or labelled data) <span class="math">\(\tilde{y}\)</span>, that is a linear function of independent variables (or feature data), <span class="math">\(x\)</span> and <span class="math">\(c\)</span>. In this instance, <span class="math">\(x\)</span> is a positive real number and <span class="math">\(c\)</span> denotes membership to one of two categories that occur with equal likelihood. We express this model mathematically, as&nbsp;follows,</p>
 <div class="math">$$
 \tilde{y} = \alpha_{c} + \beta_{c} \cdot x + \sigma \cdot \tilde{\epsilon}
@@ -245,7 +259,7 @@ $$</div>
 </div>
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_9_1.png"></p>
-<h2>Split Data into Training and Test&nbsp;Sets</h2>
+<h2 id="split-data-into-training-and-test-sets">Split Data into Training and Test&nbsp;Sets</h2>
 <p>One of the advantages of generating synthetic data is that we can ensure we have enough data to be able to partition it into two sets - one for training models and one for testing models. We use a helper function from the Scikit-Learn package for this task and make use of stratified sampling to ensure that we have a balanced representation of each category in both training and test&nbsp;datasets.</p>
 <div class="highlight"><pre><span></span><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
     <span class="n">model_data</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">model_data</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
@@ -259,7 +273,7 @@ $$</div>
 </pre></div>
 
 
-<h2>Define Bayesian Regression&nbsp;Model</h2>
+<h2 id="define-bayesian-regression-model">Define Bayesian Regression&nbsp;Model</h2>
 <p>Now we move on to define the model that we want to estimate (i.e. our hypothesis regarding the data), irrespective of how we will perform the inference. We will assume full knowledge of the data-generating model we defined above and define conservative regularising priors for each of the model&nbsp;parameters.</p>
 <div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
     <span class="n">alpha_prior</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -270,7 +284,7 @@ $$</div>
 </pre></div>
 
 
-<h2>Model Inference Using <span class="caps">MCMC</span> (<span class="caps">HMC</span>)</h2>
+<h2 id="model-inference-using-mcmc-hmc">Model Inference Using <span class="caps">MCMC</span> (<span class="caps">HMC</span>)</h2>
 <p>We will make use of the default <span class="caps">MCMC</span> method in <span class="caps">PYMC3</span>&#8217;s <code>sample</code> function, which is Hamiltonian Monte Carlo (<span class="caps">HMC</span>). Those interested in the precise details of the <span class="caps">HMC</span> algorithm are directed to the <a href="https://arxiv.org/abs/1701.02434">excellent paper Michael Betancourt</a>. Briefly, <span class="caps">MCMC</span> algorithms work by defining multi-dimensional Markovian stochastic processes, that when simulated (using Monte Carlo methods), will eventually converge to a state where successive simulations will be equivalent to drawing random samples from the posterior distribution of the model we wish to&nbsp;estimate.</p>
 <p>The posterior distribution has one dimension for each model parameter, so we can then use the distribution of samples for each parameter to infer the range of possible values and/or compute point estimates (e.g. by taking the mean of all&nbsp;samples).</p>
 <p>For the purposes of this demonstration, we sample two chains in parallel (as we have two <span class="caps">CPU</span> cores available for doing so and this effectively doubles the number of samples), allow 1,000 steps for each chain to converge to its steady-state and then sample for a further 5,000 steps - i.e. generate 5,000 samples from the posterior distribution, assuming that the chain has converged after 1,000&nbsp;samples.</p>
@@ -369,7 +383,7 @@ $$</div>
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_19_1.png"></p>
 <p>Firstly, note that <code>Rhat</code> values (the Gelman Rubin statistic) converging to 1 implies chain convergence for the marginal parameter distributions, while <code>n_eff</code> describes the effective number of samples after autocorrelations in the chains have been accounted for. We can see from the <code>mean</code> (point) estimate of each parameter that <span class="caps">HMC</span> has done a reasonable job of estimating our original&nbsp;parameters.</p>
-<h2>Model Inference using Variational Inference (mini-batch <span class="caps">ADVI</span>)</h2>
+<h2 id="model-inference-using-variational-inference-mini-batch-advi">Model Inference using Variational Inference (mini-batch <span class="caps">ADVI</span>)</h2>
 <p>Variational Inference (<span class="caps">VI</span>) takes a completely different approach to inference. Briefly, <span class="caps">VI</span> is a name for a class of algorithms that seek to fit a chosen class of functions to approximate the posterior distribution, effectively turning inference into an optimisation problem. In this instance <span class="caps">VI</span> minimises the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback–Leibler (<span class="caps">KL</span>) divergence</a> (a measure of the &#8216;similarity&#8217; between two densities), between the approximated posterior density and the actual posterior density. An excellent review of <span class="caps">VI</span> can be found in the <a href="https://arxiv.org/abs/1601.00670">paper by Blei <span class="amp">&amp;</span> co.</a>.</p>
 <p>Just to make things more complicated (and for this description to be complete), the <span class="caps">KL</span> divergence is actually minimised, by maximising the Evidence Lower BOund (<span class="caps">ELBO</span>), which is equal to the negative of the <span class="caps">KL</span> divergence up to a constant term - a constant that is computationally infeasible to compute, which is why, technically, we are optimising <span class="caps">ELBO</span> and not the <span class="caps">KL</span> divergence, albeit to achieve the same&nbsp;end-goal.</p>
 <p>We are going to make use of <span class="caps">PYMC3</span>&#8217;s Auto-Differentiation Variational Inference (<span class="caps">ADVI</span>) algorithm (full details in the paper by <a href="https://arxiv.org/abs/1603.00788">Kucukelbir <span class="amp">&amp;</span> co.</a>), which is capable of computing a <span class="caps">VI</span> for any differentiable posterior distribution (i.e. any model with continuous prior distributions). In order to achieve this very clever feat (the paper is well-worth a read), the algorithm first maps the posterior into a space where all prior distributions have the same support, such that they can be well approximated by fitting a spherical n-dimensional Gaussian distribution within this space - this is referred to as the &#8216;Gaussian mean-field approximation&#8217;. Note, that due to the initial transformation, this is <strong>not</strong> the same as approximating the posterior distribution using an n-dimensional Normal distribution. The parameters of these Gaussian parameters are then chosen to maximise the <span class="caps">ELBO</span> using gradient ascent - i.e. using high-performance auto-differentiation techniques in numerical computing back-ends such as Theano, TensorFlow,&nbsp;etc..</p>
@@ -478,7 +492,7 @@ $$</div>
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_29_1.png"></p>
 <p>Not bad! The mean estimates are comparable, but we note that the standard deviations appear to be larger than those estimated with <span class="caps">HMC</span>.</p>
-<h2>Comparing&nbsp;Predictions</h2>
+<h2 id="comparing-predictions">Comparing&nbsp;Predictions</h2>
 <p>Let&#8217;s move on to comparing the inference algorithms on the practical task of making predictions on our test dataset. We start by swapping the test data into our Theano&nbsp;variables.</p>
 <div class="highlight"><pre><span></span><span class="n">y_tensor</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 <span class="n">x_tensor</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
@@ -544,7 +558,7 @@ $$</div>
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_40_1.png"></p>
 <p>Which is what one might expect, given the data generating&nbsp;model.</p>
-<h2>Conclusions</h2>
+<h2 id="conclusions">Conclusions</h2>
 <p><span class="caps">MCMC</span> and <span class="caps">VI</span> present two very different approaches for drawing inferences from Bayesian models. Despite these differences, their high-level output for a simplistic (but not entirely trivial) regression problem, based on synthetic data, is comparable regardless of the approximations used within <span class="caps">ADVI</span>. This is important to note, because general purpose <span class="caps">VI</span> algorithms such as <span class="caps">ADVI</span> have the potential to work at scale - on large volumes of data in a distributed computing environment (see the references embedded above, for case&nbsp;studies).</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",

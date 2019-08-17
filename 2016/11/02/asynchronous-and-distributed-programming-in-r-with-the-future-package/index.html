@@ -119,7 +119,7 @@
 </blockquote>
 <p>A classic example would be a request made to a web server via <span class="caps">HTTP</span>, that has yet to return and whose value remains unknown until it does (and which has promised to return at some point in the future). This &#8216;promise&#8217; is an object assigned to a variable in R like any other, and allows code execution to progress until the moment the code explicitly requires the future to be resolved (i.e. to &#8216;make good&#8217; on it&#8217;s promise). So the code does not need to wait for the web server until the very moment that the information anticipated in its response it actually needed. In the intervening execution time we can send requests to other web servers, run some other computations, etc. Ultimately, this leads to <strong>faster</strong> and <strong>more efficient code</strong>. This way of working also opens the door to distributed (i.e. parallel) computation, as the computation assigned to each new future can be executed on a new thread (and executed on a different core on the same machine, or on another&nbsp;machine/node).</p>
 <p>The future <span class="caps">API</span> is extremely expressive and the associated documentation is excellent. My motivation here is not to repeat any of this, but rather to give a few examples to serve as inspiration for how futures could be used for day-to-day Data Science tasks in&nbsp;R.</p>
-<h1>Creating a Future to be Executed on a Different Core to that Running the Main&nbsp;Script</h1>
+<h1 id="creating-a-future-to-be-executed-on-a-different-core-to-that-running-the-main-script">Creating a Future to be Executed on a Different Core to that Running the Main&nbsp;Script</h1>
 <p>To demonstrate the syntax and structure required to achieve this aim, I am going to delegate to a future the task of estimating the mean of 10 million random samples from the normal distribution, and ask it to spawn a new R process on a different core in order to do so. The code to achieve this is as&nbsp;follows,</p>
 <div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>future<span class="p">)</span>
 
@@ -159,9 +159,9 @@ f_dots<span class="p">()</span>
 
 
 <p>Here, <code>resolved(f)</code> will return <code>FALSE</code> until the future <code>f</code> has finished&nbsp;executing.</p>
-<h1>Useful Use&nbsp;Cases</h1>
+<h1 id="useful-use-cases">Useful Use&nbsp;Cases</h1>
 <p>I can recall many situations where futures would have been handy when writing R scripts. The examples below are the most obvious that come to mind. No doubt there will be many&nbsp;more.</p>
-<h2>Distributed (Parallel)&nbsp;Computation</h2>
+<h2 id="distributed-parallel-computation">Distributed (Parallel)&nbsp;Computation</h2>
 <p>In the past, when I&#8217;ve felt the need to distribute a calculation I have usually used the <code>mclapply</code> function (i.e. multi-core <code>lapply</code>), from the <code>parallel</code> library that comes bundled together with base R. Computing the mean of 100 million random samples from the normal distribution would look something&nbsp;like,</p>
 <div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>parallel<span class="p">)</span>
 
@@ -210,7 +210,7 @@ microbenchmark<span class="p">({</span> samples <span class="o">&lt;-</span> rno
 
 
 <p>We can see that the multi-threaded version is nearly 3 times faster, which is not surprising given that we&#8217;re using 3 extra threads. Note that time is lost spawning the extra threads and combining their results (usually referred to as &#8216;overhead&#8217;), such that distributing a calculation can actually increase computation time if the benefit of parallelisation is less than the cost of the&nbsp;overhead.</p>
-<h2>Non-Blocking Asynchronous&nbsp;Input/Output</h2>
+<h2 id="non-blocking-asynchronous-inputoutput">Non-Blocking Asynchronous&nbsp;Input/Output</h2>
 <p>I have often found myself in the situation where I need to read several large <span class="caps">CSV</span> files, each of which can take a long time to load. Because the files can only be loaded sequentially, I have had to wait for one file to be read before the next one can start loading, which compounds the time devoted to input. Thanks to futures, we can can now achieve <a href="https://en.wikipedia.org/wiki/Asynchronous_I/O" title="Wikipedia on asynchronous io">asynchronous input and output</a> as&nbsp;follows,</p>
 <div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>readr<span class="p">)</span>
 
@@ -270,7 +270,7 @@ values<span class="p">(</span>time_futures<span class="p">)</span>
 
 
 <p>The same logic applies to accessing databases and executing <span class="caps">SQL</span> queries via <a href="https://en.wikipedia.org/wiki/Open_Database_Connectivity" title="Wikipedia on ODBC"><span class="caps">ODBC</span></a> or <a href="https://en.wikipedia.org/wiki/Java_Database_Connectivity" title="Wikipedia on JDBC"><span class="caps">JDBC</span></a>. For example, large complex queries can be split into &#8216;chunks&#8217; and sent asynchronously to the database server in order to have them executed on multiple server threads. The output can then be unified once the server has sent back the chunks, using R (e.g. with <a href="https://github.com/hadley/dplyr" title="dplyr on GitHub">dplyr</a>). This is a strategy that I have been using with Apache Spark, but I could now implement it within R. Similarly, multiple database tables can be accessed concurrently, and so&nbsp;on.  </p>
-<h1>Final&nbsp;Thoughts</h1>
+<h1 id="final-thoughts">Final&nbsp;Thoughts</h1>
 <p>I have only really scratched the surface of what is possible with futures. For example, <a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub">future</a> supports multiple execution plans including <code>lazy</code> and <code>cluster</code> (for multiple machines/nodes) - I have only focused on increasing performance on a single machine with multiple cores. If this post has provided some inspiration or left you curious, then head over to the official <a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub">future docs</a> for the full details (which are a joy to read and&nbsp;work-through).</p>
   </div>
   <div class="tag-cloud">

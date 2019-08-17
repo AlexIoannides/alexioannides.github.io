@@ -130,7 +130,33 @@
 <li>naturally incorporating parameter uncertainty into risk&nbsp;metrics. </li>
 </ul>
 <p>By simulating a Geometric Brownian Motion (<span class="caps">GBM</span>) and then estimating the parameters based on the randomly generated observations, we will quantify the impact of using Bayesian Inference against traditional <span class="caps">ML</span> estimation, when the available data is both plentiful and scarce - the latter being a scenario in which Bayesian Inference is shown to be especially&nbsp;powerful.</p>
-<h2>Imports and Global&nbsp;Settings</h2>
+<p><strong>Table of&nbsp;Contents</strong></p>
+<div class="toc">
+<ul>
+<li><a href="#imports-and-global-settings">Imports and Global&nbsp;Settings</a></li>
+<li><a href="#synthetic-data-generation-using-geometric-brownian-motion">Synthetic Data Generation using Geometric Brownian&nbsp;Motion</a></li>
+<li><a href="#the-traditional-approach-to-parameter-estimation">The Traditional Approach to Parameter Estimation</a><ul>
+<li><a href="#parameter-estimation-when-data-is-plentiful">Parameter Estimation when Data is&nbsp;Plentiful</a></li>
+<li><a href="#parameter-estimation-when-data-is-scarce">Parameter Estimation when Data is&nbsp;Scarce</a></li>
+</ul>
+</li>
+<li><a href="#parameter-estimation-using-bayesian-inference-and-probabilistic-programming">Parameter Estimation using Bayesian Inference and Probabilistic Programming</a><ul>
+<li><a href="#selecting-suitable-prior-distributions">Selecting Suitable Prior Distributions</a><ul>
+<li><a href="#choosing-a-prior-distribution-for-the-expected-return-of-daily-returns">Choosing a Prior Distribution for the Expected Return of Daily&nbsp;Returns</a></li>
+<li><a href="#choosing-a-prior-distribution-for-the-volatility-of-daily-returns">Choosing a Prior Distribution for the Volatility of Daily&nbsp;Returns</a></li>
+</ul>
+</li>
+<li><a href="#inference-using-a-probabilistic-program-markov-chain-monte-carlo-mcmc">Inference using a Probabilistic Program <span class="amp">&amp;</span> Markov Chain Monte Carlo (<span class="caps">MCMC</span>)</a></li>
+</ul>
+</li>
+<li><a href="#making-predictions">Making Predictions</a><ul>
+<li><a href="#impact-on-risk-metrics-value-at-risk-var">Impact on Risk Metrics - Value-at-Risk&nbsp;(VaR)</a></li>
+</ul>
+</li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+</div>
+<h2 id="imports-and-global-settings">Imports and Global&nbsp;Settings</h2>
 <p>Before we get going in earnest, we follow the convention of declaring all imports at the top of the&nbsp;notebook.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -151,7 +177,7 @@
 </pre></div>
 
 
-<h2>Synthetic Data Generation using Geometric Brownian&nbsp;Motion</h2>
+<h2 id="synthetic-data-generation-using-geometric-brownian-motion">Synthetic Data Generation using Geometric Brownian&nbsp;Motion</h2>
 <p>We start by defining a function for simulating a single path from a <span class="caps">GBM</span> - perhaps the most commonly used stochastic process for modelling the time-series of asset prices. We make use of the <a href="https://en.wikipedia.org/wiki/Geometric_Brownian_motion">following equation</a>:</p>
 <div class="math">$$
 \tilde{S_t} = S_0 \exp \left\{ \left(\mu - \frac{\sigma^2}{2} \right) t + \sigma \tilde{W_t}\right\}
@@ -216,7 +242,7 @@ $$</div>
 
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_10_0.png"></p>
-<h2>The Traditional Approach to Parameter&nbsp;Estimation</h2>
+<h2 id="the-traditional-approach-to-parameter-estimation">The Traditional Approach to Parameter&nbsp;Estimation</h2>
 <p>Traditionally, the parameters are estimated using the empirical mean and standard deviation of the daily logarithmic (or geometric) returns. The reasoning behind this can be seen by re-arranging the above equation for <span class="math">\(\tilde{S_t}\)</span> as&nbsp;follows,</p>
 <div class="math">$$
 \log \left( \frac{S_t}{S_{t-1}} \right) = \left(\mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma \tilde{\Delta W_t}
@@ -230,7 +256,7 @@ $$</div>
 \Delta t = \frac{1}{365}
 $$</div>
 <p>From which it is possible to solve the implied simultaneous equations for <span class="math">\(\mu\)</span> and <span class="math">\(\sigma\)</span>, as functions of the mean and standard deviation of the geometric (i.e. logarithmic) returns. Once again, for a more in-depth discussion we refer the reader to <a href="https://arxiv.org/abs/0812.4210">&#8216;A Stochastic Processes Toolkit for Risk Management&#8217;, by Damiano Brigo <em>et al.</em></a>.</p>
-<h3>Parameter Estimation when Data is&nbsp;Plentiful</h3>
+<h3 id="parameter-estimation-when-data-is-plentiful">Parameter Estimation when Data is&nbsp;Plentiful</h3>
 <p>An example computation, using the whole time-series generated above (364 observations of daily returns), is shown below. We start by taking a look at the distribution of daily&nbsp;returns.</p>
 <div class="highlight"><pre><span></span><span class="n">returns_geo_full</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">example_data</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
@@ -260,7 +286,7 @@ empirical estimate of sigma = 0.1423
 
 
 <p>We can see that the empirical estimate of <span class="math">\(\sigma\)</span> is close to the <em>ex ante</em> paramter value we chose, but that the estimate of <span class="math">\(\mu\)</span> is poor - estimating the drift of a stochastic process is notoriously&nbsp;hard.</p>
-<h3>Parameter Estimation when Data is&nbsp;Scarce</h3>
+<h3 id="parameter-estimation-when-data-is-scarce">Parameter Estimation when Data is&nbsp;Scarce</h3>
 <p>Very often data is scare - we may not have 364 observations of geometric returns. To demonstrate the impact this can have on parameter estimation, we sub-sample the distribution of geometric returns by picking 12 returns by random - e.g. to simulate the impact of having only 12 monthly returns to base the estimation&nbsp;on.</p>
 <div class="highlight"><pre><span></span><span class="n">n_observations</span> <span class="o">=</span> <span class="mi">12</span>
 </pre></div>
@@ -292,7 +318,7 @@ empirical estimate of sigma = 0.1080
 
 
 <p>We can clearly see that now estimates of <strong>both</strong> <span class="math">\(\mu\)</span> and <span class="math">\(\sigma\)</span> are&nbsp;poor.</p>
-<h2>Parameter Estimation using Bayesian Inference and Probabilistic&nbsp;Programming</h2>
+<h2 id="parameter-estimation-using-bayesian-inference-and-probabilistic-programming">Parameter Estimation using Bayesian Inference and Probabilistic&nbsp;Programming</h2>
 <p>Like statistical data analysis more broadly, the main aim of Bayesian Data Analysis (<span class="caps">BDA</span>) is to infer unknown parameters for models of observed data, in order to test hypotheses about the physical processes that lead to the observations. Bayesian data analysis deviates from traditional statistics - on a practical level - when it comes to the explicit assimilation of prior knowledge regarding the uncertainty of the model parameters, into the statistical inference process and overall analysis workflow. To this end, <span class="caps">BDA</span> focuses on the posterior&nbsp;distribution,</p>
 <div class="math">$$
 p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}
@@ -306,10 +332,10 @@ $$</div>
 </ul>
 <p>For an <strong>excellent</strong> (inspirational) introduction to practical <span class="caps">BDA</span>, take a look at <a href="https://xcelab.net/rm/statistical-rethinking/">Statistical Rethinking by Richard McElreath</a>, or for a more theoretical treatment try <a href="http://www.stat.columbia.edu/~gelman/book/">Bayesian Data Analysis by Gelman <span class="amp">&amp;</span> co.</a>.</p>
 <p>We will use <span class="caps">BDA</span> to estimate the <span class="caps">GBM</span> parameters from our time series with <strong>scare data</strong>, to demonstrate the benefits of incorporating prior knowledge into the inference process and then compare these results with those derived using <span class="caps">ML</span> estimation (discussed&nbsp;above).</p>
-<h3>Selecting Suitable Prior&nbsp;Distributions</h3>
+<h3 id="selecting-suitable-prior-distributions">Selecting Suitable Prior&nbsp;Distributions</h3>
 <p>We will choose regularising priors that are also in-line with our prior knowledge of the time-series - that is, priors that place the bulk of their probability mass near zero, but allow for enough variation to make &#8216;reasonable&#8217; parameter values viable for our liquid stock in a &#8216;flat&#8217; (or drift-less)&nbsp;market.</p>
 <p>Note, that in the discussion that follows, we will reason about the priors in terms of our real-world experience of daily price returns, their expected returns and volatility - i.e. the mean and standard deviation of our likelihood&nbsp;function.</p>
-<h4>Choosing a Prior Distribution for the Expected Return of Daily&nbsp;Returns</h4>
+<h4 id="choosing-a-prior-distribution-for-the-expected-return-of-daily-returns">Choosing a Prior Distribution for the Expected Return of Daily&nbsp;Returns</h4>
 <p>We choose a Normal distribution for this prior distribution, centered at 0 (i.e. regularising), but with a standard deviation of 0.0001 (i.e. 1 basis-point or 0.01%), to render a 3-4% annualised return a less than 1% probability - consistent with a market for a liquid stock trading&nbsp;&#8216;flat&#8217;.</p>
 <div class="highlight"><pre><span></span><span class="n">prior_mean_mu</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">prior_mean_sigma</span> <span class="o">=</span> <span class="mf">0.0001</span>
@@ -328,7 +354,7 @@ $$</div>
 
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_29_0.png"></p>
-<h4>Choosing a Prior Distribution for the Volatility of Daily&nbsp;Returns</h4>
+<h4 id="choosing-a-prior-distribution-for-the-volatility-of-daily-returns">Choosing a Prior Distribution for the Volatility of Daily&nbsp;Returns</h4>
 <p>We choose a positive <a href="https://en.wikipedia.org/wiki/Half-normal_distribution">Half-Normal distribution</a> for this prior distribution. Most of the mass is near 0 (i.e. regularising), but with a standard deviation of 0.0188 that corresponds to an expected daily volatility of ~0.015 (or&nbsp;1.5%).</p>
 <div class="highlight"><pre><span></span><span class="n">prior_vol_sigma</span> <span class="o">=</span> <span class="mf">0.0188</span>
 
@@ -346,7 +372,7 @@ $$</div>
 
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_33_0.png"></p>
-<h3>Inference using a Probabilistic Program <span class="amp">&amp;</span> Markov Chain Monte Carlo (<span class="caps">MCMC</span>)</h3>
+<h3 id="inference-using-a-probabilistic-program-markov-chain-monte-carlo-mcmc">Inference using a Probabilistic Program <span class="amp">&amp;</span> Markov Chain Monte Carlo (<span class="caps">MCMC</span>)</h3>
 <p>Performing Bayesian inference usually requires some form of Probabilistic Programming Language (<span class="caps">PPL</span>), unless analytical approaches (e.g. based on conjugate prior models), are appropriate for the task at hand. More often than not, PPLs such as <a href="https://docs.pymc.io"><span class="caps">PYMC3</span></a> implement Markov Chain Monte Carlo (<span class="caps">MCMC</span>) algorithms that allow one to draw samples and make inferences from the posterior distribution implied by the choice of model - the likelihood and prior distributions for its parameters - conditional on the observed&nbsp;data.</p>
 <p>We will make use of the default <span class="caps">MCMC</span> method in <span class="caps">PYMC3</span>&#8217;s <code>sample</code> function, which is Hamiltonian Monte Carlo (<span class="caps">HMC</span>). Those interested in the precise details of the <span class="caps">HMC</span> algorithm are directed to the <a href="https://arxiv.org/abs/1701.02434">excellent paper Michael Betancourt</a>. Briefly, <span class="caps">MCMC</span> algorithms work by defining multi-dimensional Markovian stochastic processes, that when simulated (using Monte Carlo methods), will eventually converge to a state where successive simulations will be equivalent to drawing random samples from the posterior distribution of the model we wish to&nbsp;estimate.</p>
 <p>The posterior distribution has one dimension for each model parameter, so we can then use the distribution of samples for each parameter to infer the range of possible values and/or compute point estimates (e.g. by taking the mean of all&nbsp;samples).</p>
@@ -479,7 +505,7 @@ bayesian estimate of sigma = 0.1407
 
 
 <p>The estimate for <span class="math">\(\mu\)</span> is far better than both <span class="caps">ML</span> estimates (full and partial data) and the estimate for <span class="math">\(\sigma\)</span> is considerably better than the <span class="caps">ML</span> estimate with partial data and approaching that with full&nbsp;data.</p>
-<h2>Making&nbsp;Predictions</h2>
+<h2 id="making-predictions">Making&nbsp;Predictions</h2>
 <p>Perhaps most importantly, how do the differences in parameter inference methodology translate into predictions for future distributions of geometric returns? We compare a (Normal) distribution of daily geometric returns simulated using the constant empirical parameter estimates with partial data (black line in the plot below), to that simulated by using random draws of Bayesian parameter estimates from the marginal posterior distributions (red line in the plot&nbsp;below).</p>
 <div class="highlight"><pre><span></span><span class="n">n_samples</span><span class="o">=</span><span class="mi">10000</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -501,7 +527,7 @@ bayesian estimate of sigma = 0.1407
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_52_1.png"></p>
 <p>We can clearly see that taking a Bayesian Inference approach to calibrating stochastic processes leads to more probability mass in the &#8216;tails&#8217; of the distribution of geomtric&nbsp;returns.</p>
-<h3>Impact on Risk Metrics - Value-at-Risk&nbsp;(VaR)</h3>
+<h3 id="impact-on-risk-metrics-value-at-risk-var">Impact on Risk Metrics - Value-at-Risk&nbsp;(VaR)</h3>
 <p>We now quantify the impact that the difference in these distributions has on the VaR for a single unit of the stock, at the 1% and 99% percentile levels - i.e. on 1/100 chance&nbsp;events.</p>
 <div class="highlight"><pre><span></span><span class="n">var_ml</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">returns_geo_ml</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
 <span class="n">var_bayes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">returns_geo_bayes</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
@@ -531,7 +557,7 @@ bayesian = 0.019038871195300778
 
 
 <p>We can see that maximum likelihood estimation in our setup would underestimate risk for both long (VaR-1%) and short (VaR-99%) positions, but particularly for short position where the difference is by over&nbsp;100%.</p>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 <ul>
 <li>Bayesian inference can exploit relevant prior knowledge to yield more precise parameter estimate for stochastic processes, especially when data is&nbsp;scarce;</li>
 <li>because it doesn&#8217;t rely on point-estimates of parameters and is intrinsically stochastic in nature, it is a natural unified framework for parameter inference and simulation, under uncertainty;&nbsp;and,</li>

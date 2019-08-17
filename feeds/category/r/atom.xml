@@ -13,7 +13,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Pipes in the&amp;nbsp;Pipeline&lt;/h2&gt;
+&lt;h2 id="pipes-in-the-pipeline"&gt;Pipes in the&amp;nbsp;Pipeline&lt;/h2&gt;
 &lt;p&gt;There are currently four types of pipeline section - a section being a function that wraps a user-defined function - that can be assembled into a&amp;nbsp;pipeline:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;transform_features&lt;/code&gt;: wraps a function that maps input variables (or features) to another space -&amp;nbsp;e.g.,&lt;/li&gt;
@@ -53,9 +53,9 @@
 
 &lt;p&gt;As demonstrated above, each one of these functions expects as its argument another unary function of a data.frame (i.e. it has to be a function of a single data.frame). With the &lt;strong&gt;exception&lt;/strong&gt; of &lt;code&gt;estimate_model&lt;/code&gt;, which expects the input function to return an object that has a &lt;code&gt;predict.object-class-name&lt;/code&gt; method existing in the current environment (e.g. &lt;code&gt;predict.lm&lt;/code&gt; for linear models built using &lt;code&gt;lm()&lt;/code&gt;), all the other transform functions also expect their input functions to return data.frames (consisting entirely of columns &lt;strong&gt;not&lt;/strong&gt; present in the input data.frame). If any of these rules are violated then appropriately named errors will be thrown to help you locate the&amp;nbsp;issue.&lt;/p&gt;
 &lt;p&gt;If this sounds complex and convoluted then I encourage you to to skip to the examples below - this framework is &lt;strong&gt;very&lt;/strong&gt; simple to use in practice. Simplicity is the key aim&amp;nbsp;here.&lt;/p&gt;
-&lt;h2&gt;Two Interfaces to Rule Them&amp;nbsp;All&lt;/h2&gt;
+&lt;h2 id="two-interfaces-to-rule-them-all"&gt;Two Interfaces to Rule Them&amp;nbsp;All&lt;/h2&gt;
 &lt;p&gt;I am a great believer and protagonist for functional programming - especially for data-related tasks like building machine learning models. At the same time the notion of a &amp;#8216;machine learning pipeline&amp;#8217; is well represented with a simple object-oriented class hierarchy (which is how it is implemented in &lt;a href="http://spark.apache.org/docs/latest/ml-pipeline.html" title="Pipelines in Apache Spark MLib"&gt;Apache Spark&amp;#8217;s&lt;/a&gt;). I couldn&amp;#8217;t decide which style of interface was best, so I implemented both within &lt;code&gt;pipeliner&lt;/code&gt; (using the same underlying code) and ensured their output can be used interchangeably. To keep this introduction simple, however, I&amp;#8217;m only going to talk about the functional interface - those interested in the (more) object-oriented approach are encouraged to read the manual pages for the &lt;code&gt;ml_pipeline_builder&lt;/code&gt; &lt;span class="quo"&gt;&amp;#8216;&lt;/span&gt;class&amp;#8217;.&lt;/p&gt;
-&lt;h3&gt;Example Usage with a Functional&amp;nbsp;Flavor&lt;/h3&gt;
+&lt;h3 id="example-usage-with-a-functional-flavor"&gt;Example Usage with a Functional&amp;nbsp;Flavor&lt;/h3&gt;
 &lt;p&gt;We use the &lt;code&gt;faithful&lt;/code&gt; dataset shipped with R, together with the &lt;code&gt;pipeliner&lt;/code&gt; package to estimate a linear regression model for the eruption duration of &amp;#8216;Old Faithful&amp;#8217; as a function of the inter-eruption waiting time. The transformations we apply to the input and response variables - before we estimate the model - are simple scaling by the mean and standard deviation (i.e. mapping the variables to&amp;nbsp;z-scores).&lt;/p&gt;
 &lt;p&gt;The end-to-end process for building the pipeline, estimating the model and generating in-sample predictions (that include all interim variable transformations), is as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;pipeliner&lt;span class="p"&gt;)&lt;/span&gt;
@@ -94,7 +94,7 @@ in_sample_predictions &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; predict&lt;sp
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Accessing Inner Models &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Prediction&amp;nbsp;Functions&lt;/h3&gt;
+&lt;h3 id="accessing-inner-models-prediction-functions"&gt;Accessing Inner Models &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Prediction&amp;nbsp;Functions&lt;/h3&gt;
 &lt;p&gt;We can access the estimated inner models directly and compute summaries, etc - for&amp;nbsp;example,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kp"&gt;summary&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;lm_pipeline&lt;span class="o"&gt;$&lt;/span&gt;inner_model&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="c1"&gt;##&lt;/span&gt;
@@ -133,7 +133,7 @@ predictions &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; pred_function&lt;span c
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h1&gt;Turbo-Charged Pipelines in the&amp;nbsp;Tidyverse&lt;/h1&gt;
+&lt;h1 id="turbo-charged-pipelines-in-the-tidyverse"&gt;Turbo-Charged Pipelines in the&amp;nbsp;Tidyverse&lt;/h1&gt;
 &lt;p&gt;The &lt;code&gt;pipeliner&lt;/code&gt; approach to building models becomes even more concise when combined with the set of packages in the &lt;a href="http://tidyverse.org" title="Welcome to The Tidyverse!"&gt;tidyverse&lt;/a&gt;. For example, the &amp;#8216;Old Faithful&amp;#8217; pipeline could be rewritten&amp;nbsp;as,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;tidyverse&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -162,7 +162,7 @@ lm_pipeline &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; data &lt;span class="o"
 
 
 &lt;p&gt;Nice, compact and expressive (if I don&amp;#8217;t say so&amp;nbsp;myself)!&lt;/p&gt;
-&lt;h3&gt;Compact&amp;nbsp;Cross-validation&lt;/h3&gt;
+&lt;h3 id="compact-cross-validation"&gt;Compact&amp;nbsp;Cross-validation&lt;/h3&gt;
 &lt;p&gt;If we now introduce the &lt;code&gt;modelr&lt;/code&gt; package into this workflow and adopt the the list-columns pattern described in Hadley Wickham&amp;#8217;s &lt;a href="http://r4ds.had.co.nz/many-models.html#list-columns-1" title="R 4 Data Science - Many Models &amp;amp; List Columns"&gt;R for Data Science&lt;/a&gt;, we can also achieve wonderfully compact end-to-end model estimation and&amp;nbsp;cross-validation,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;modelr&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -204,7 +204,7 @@ cv_rmse
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h1&gt;Forthcoming&amp;nbsp;Attractions&lt;/h1&gt;
+&lt;h1 id="forthcoming-attractions"&gt;Forthcoming&amp;nbsp;Attractions&lt;/h1&gt;
 &lt;p&gt;I built &lt;code&gt;pipeliner&lt;/code&gt; largely to fill a hole in my own workflows. Up until now I&amp;#8217;ve used Max Kuhn&amp;#8217;s excellent &lt;a href="http://topepo.github.io/caret/index.html" title="Caret"&gt;caret package&lt;/a&gt; quite a bit, but for in-the-moment model building (e.g. within a R Notebook) it wasn&amp;#8217;t simplifying the code &lt;em&gt;that&lt;/em&gt; much, and the style doesn&amp;#8217;t quite fit with the tidy and functional world that I now inhabit most of the time. So, I plugged the hole by myself. I intend to live with &lt;code&gt;pipeliner&lt;/code&gt; for a while to get an idea of where it might go next, but I am always open to suggestions (and bug notifications) - please &lt;a href="https://github.com/AlexIoannides/pipeliner/issues" title="Pipeliner Issues on GitHub"&gt;leave any ideas here&lt;/a&gt;.&lt;/p&gt;</content><category term="machine-learning"></category><category term="data-processing"></category></entry><entry><title>elasticsearchr - a Lightweight Elasticsearch Client for R</title><link href="https://alexioannides.github.io/2016/11/28/elasticsearchr-a-lightweight-elasticsearch-client-for-r/" rel="alternate"></link><published>2016-11-28T00:00:00+00:00</published><updated>2016-11-28T00:00:00+00:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-11-28:/2016/11/28/elasticsearchr-a-lightweight-elasticsearch-client-for-r/</id><summary type="html">&lt;p&gt;&lt;img alt="elasticsearchr" src="https://alexioannides.github.io/images/r/elasticsearchr/elasticsearchr2.png" title="Elasticsearchr"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.elastic.co/products/elasticsearch" title="Elasticsearch"&gt;Elasticsearch&lt;/a&gt; is a distributed &lt;a href="https://en.wikipedia.org/wiki/NoSQL" title="What is NoSQL?"&gt;NoSQL&lt;/a&gt; document store search-engine and &lt;a href="https://www.elastic.co/blog/elasticsearch-as-a-column-store" title="Elasticsearch as a Column Store"&gt;column-oriented database&lt;/a&gt;, whose &lt;strong&gt;fast&lt;/strong&gt; (near real-time) reads and powerful aggregation engine make it an excellent choice as an &amp;#8216;analytics database&amp;#8217; for R&amp;amp;D, production-use or both. Installation is simple, it ships with default settings that allow it to work effectively out-of-the-box …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="elasticsearchr" src="https://alexioannides.github.io/images/r/elasticsearchr/elasticsearchr2.png" title="Elasticsearchr"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.elastic.co/products/elasticsearch" title="Elasticsearch"&gt;Elasticsearch&lt;/a&gt; is a distributed &lt;a href="https://en.wikipedia.org/wiki/NoSQL" title="What is NoSQL?"&gt;NoSQL&lt;/a&gt; document store search-engine and &lt;a href="https://www.elastic.co/blog/elasticsearch-as-a-column-store" title="Elasticsearch as a Column Store"&gt;column-oriented database&lt;/a&gt;, whose &lt;strong&gt;fast&lt;/strong&gt; (near real-time) reads and powerful aggregation engine make it an excellent choice as an &amp;#8216;analytics database&amp;#8217; for R&amp;amp;D, production-use or both. Installation is simple, it ships with default settings that allow it to work effectively out-of-the-box, and all interaction is made via a set of intuitive and extremely &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;well documented&lt;/a&gt; &lt;a href="https://en.wikipedia.org/wiki/Representational_state_transfer" title="RESTful?"&gt;RESTful&lt;/a&gt; APIs. I&amp;#8217;ve been using it for two years now and I am&amp;nbsp;evangelical.&lt;/p&gt;
@@ -215,7 +215,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Installing&amp;nbsp;Elasticsearch&lt;/h2&gt;
+&lt;h2 id="installing-elasticsearch"&gt;Installing&amp;nbsp;Elasticsearch&lt;/h2&gt;
 &lt;p&gt;Elasticsearch can be downloaded &lt;a href="https://www.elastic.co/downloads/elasticsearch" title="Download"&gt;here&lt;/a&gt;, where the instructions for installing and starting it can also be found. &lt;span class="caps"&gt;OS&lt;/span&gt; X users (such as myself) can also make use of &lt;a href="http://brew.sh/" title="Homebrew for OS X"&gt;Homebrew&lt;/a&gt; to install it with the&amp;nbsp;command,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ brew install elasticsearch
 &lt;/pre&gt;&lt;/div&gt;
@@ -237,7 +237,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Elasticsearch&amp;nbsp;101&lt;/h2&gt;
+&lt;h2 id="elasticsearch-101"&gt;Elasticsearch&amp;nbsp;101&lt;/h2&gt;
 &lt;p&gt;If you followed the installation steps above, you have just installed a single Elasticsearch &amp;#8216;node&amp;#8217;. When &lt;strong&gt;not&lt;/strong&gt; testing on your laptop, Elasticsearch usually comes in clusters of nodes (usually there are at least 3). The easiest easy way to get access to a managed Elasticsearch cluster is by using the &lt;a href="https://www.elastic.co/cloud/as-a-service" title="Elastic Cloud"&gt;Elastic Cloud&lt;/a&gt; managed service provided by &lt;a href="https://www.elastic.co" title="Elastic corp."&gt;Elastic&lt;/a&gt; (Amazon Web Services offer something similar too). For the rest of this brief tutorial I will assuming you&amp;#8217;re running a single node on your&amp;nbsp;laptop.&lt;/p&gt;
 &lt;p&gt;In Elasticsearch a &amp;#8216;row&amp;#8217; of data is stored as a &amp;#8216;document&amp;#8217;. A document is a &lt;a href="https://en.wikipedia.org/wiki/JSON" title="JSON"&gt;&lt;span class="caps"&gt;JSON&lt;/span&gt;&lt;/a&gt; object - for example, the first row of R&amp;#8217;s &lt;code&gt;iris&lt;/code&gt; dataset,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#   sepal_length sepal_width petal_length petal_width species&lt;/span&gt;
@@ -262,9 +262,9 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;p&gt;For example, the above &lt;code&gt;iris&lt;/code&gt; document could be living&amp;nbsp;at&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;http://localhost:9200/iris/data/1&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Although Elasticsearch - like most NoSQL databases - is often referred to as being &amp;#8216;schema free&amp;#8217;, as we have already see this is not entirely correct. What is true, however, is that the schema - or &amp;#8216;mapping&amp;#8217; as it&amp;#8217;s called in Elasticsearch - does not &lt;em&gt;need&lt;/em&gt; to be declared up-front (although you certainly can do this). Elasticsearch is more than capable of guessing the types of fields based on new data indexed for the first time. For more information on any of these basic concepts take a look &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/_basic_concepts.html" title="Basic Concepts"&gt;here&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;elasticsearchr: a Quick&amp;nbsp;Start&lt;/h2&gt;
+&lt;h2 id="elasticsearchr-a-quick-start"&gt;elasticsearchr: a Quick&amp;nbsp;Start&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;elasticsearchr&lt;/code&gt; is a &lt;strong&gt;lightweight&lt;/strong&gt; client - by this I mean that it only aims to do &amp;#8216;just enough&amp;#8217; work to make using Elasticsearch with R easy and intuitive. You will still need to read the &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;Elasticsearch documentation&lt;/a&gt; to understand how to compose queries and aggregations. What follows is a quick summary of what is&amp;nbsp;possible.&lt;/p&gt;
-&lt;h3&gt;Resources&lt;/h3&gt;
+&lt;h3 id="resources"&gt;Resources&lt;/h3&gt;
 &lt;p&gt;Elasticsearch resources, as defined by the URLs described above, are defined as &lt;code&gt;elastic&lt;/code&gt; objects in &lt;code&gt;elasticsearchr&lt;/code&gt;. For&amp;nbsp;example,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;es &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -273,14 +273,14 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;p&gt;Refers to documents of types &amp;#8216;data&amp;#8217; in the &amp;#8216;iris&amp;#8217; index located on an Elasticsearch node on my laptop. Note that:
 - it is possible to leave the document type empty if you need to refer to all documents in an index; and,
 - &lt;code&gt;elastic&lt;/code&gt; objects can be defined even if the underling resources have yet to be brought into&amp;nbsp;existence.&lt;/p&gt;
-&lt;h3&gt;Indexing New&amp;nbsp;Data&lt;/h3&gt;
+&lt;h3 id="indexing-new-data"&gt;Indexing New&amp;nbsp;Data&lt;/h3&gt;
 &lt;p&gt;To index (insert) data from a data frame, use the &lt;code&gt;%index%&lt;/code&gt; operator as&amp;nbsp;follows:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%index%&lt;/span&gt; iris
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;In this example, the &lt;code&gt;iris&lt;/code&gt; dataset is indexed into the &amp;#8216;iris&amp;#8217; index and given a document type called &amp;#8216;data&amp;#8217;. Note that I have not provided any document ids here. &lt;strong&gt;To explicitly specify document ids there must be a column in the data frame that is labelled &lt;code&gt;id&lt;/code&gt;&lt;/strong&gt;, from which the document ids will be&amp;nbsp;taken.&lt;/p&gt;
-&lt;h3&gt;Deleting&amp;nbsp;Data&lt;/h3&gt;
+&lt;h3 id="deleting-data"&gt;Deleting&amp;nbsp;Data&lt;/h3&gt;
 &lt;p&gt;Documents can be deleted in three different ways using the &lt;code&gt;%delete%&lt;/code&gt; operator. Firstly, an entire index (including the mapping information) can be erased by referencing just the index in the resource -&amp;nbsp;e.g.,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -296,7 +296,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Queries&lt;/h3&gt;
+&lt;h3 id="queries"&gt;Queries&lt;/h3&gt;
 &lt;p&gt;Any type of query that Elasticsearch makes available can be defined in a &lt;code&gt;query&lt;/code&gt; object using the native Elasticsearch &lt;span class="caps"&gt;JSON&lt;/span&gt; syntax - e.g. to match every document we could use the &lt;code&gt;match_all&lt;/code&gt; query,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;for_everything &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; query&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
 &lt;span class="s"&gt;  &amp;quot;match_all&amp;quot;: {}&lt;/span&gt;
@@ -318,7 +318,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Sorting Query&amp;nbsp;Results&lt;/h3&gt;
+&lt;h3 id="sorting-query-results"&gt;Sorting Query&amp;nbsp;Results&lt;/h3&gt;
 &lt;p&gt;Query results can be sorted on multiple fields by defining a &lt;code&gt;sort&lt;/code&gt; object using the same Elasticsearch &lt;span class="caps"&gt;JSON&lt;/span&gt; syntax - e.g. to sort by &lt;code&gt;sepal_width&lt;/code&gt; in ascending order the required &lt;code&gt;sort&lt;/code&gt; object would be defined&amp;nbsp;as,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;by_sepal_width &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&amp;quot;sepal_width&amp;quot;: {&amp;quot;order&amp;quot;: &amp;quot;asc&amp;quot;}}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -338,7 +338,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Aggregations&lt;/h3&gt;
+&lt;h3 id="aggregations"&gt;Aggregations&lt;/h3&gt;
 &lt;p&gt;Similarly, any type of aggregation that Elasticsearch makes available can be defined in an &lt;code&gt;aggs&lt;/code&gt; object - e.g. to compute the average &lt;code&gt;sepal_width&lt;/code&gt; per-species of flower we would specify the following&amp;nbsp;aggregation,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;avg_sepal_width &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; aggs&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
 &lt;span class="s"&gt;  &amp;quot;avg_sepal_width_per_species&amp;quot;: {&lt;/span&gt;
@@ -409,16 +409,16 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 
 
 &lt;p&gt;For comprehensive coverage of all query and aggregations types please refer to the rather excellent &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;official documentation&lt;/a&gt; (newcomers to Elasticsearch are advised to start with the &amp;#8216;Query String&amp;#8217;&amp;nbsp;query).&lt;/p&gt;
-&lt;h3&gt;Mappings&lt;/h3&gt;
+&lt;h3 id="mappings"&gt;Mappings&lt;/h3&gt;
 &lt;p&gt;Finally, I have included the ability to create an empty index with a custom mapping, using the &lt;code&gt;%create%&lt;/code&gt; operator -&amp;nbsp;e.g.,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%create%&lt;/span&gt; mapping_default_simple&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Where in this instance &lt;code&gt;mapping_default_simple()&lt;/code&gt; is a default mapping that I have shipped with &lt;code&gt;elasticsearchr&lt;/code&gt;. It switches-off the text analyser for all fields of type &amp;#8216;string&amp;#8217; (i.e. switches off free text search), allows all text search to work with case-insensitive lower-case terms, and maps any field with the name &amp;#8216;timestamp&amp;#8217; to type &amp;#8216;date&amp;#8217;, so long as it has the appropriate string or long&amp;nbsp;format.&lt;/p&gt;
-&lt;h2&gt;Forthcoming&amp;nbsp;Attractions&lt;/h2&gt;
+&lt;h2 id="forthcoming-attractions"&gt;Forthcoming&amp;nbsp;Attractions&lt;/h2&gt;
 &lt;p&gt;I do not have a grand vision for &lt;code&gt;elasticsearchr&lt;/code&gt; - I want to keep it a lightweight client that requires knowledge of Elasticsearch - but I would like to add the ability to compose major query and aggregation types, without having to type-out lots of &lt;span class="caps"&gt;JSON&lt;/span&gt;, and to be able to retrieve simple information like the names of all indices in a cluster, and all the document types within an index, etc. Future development will likely be focused in these&amp;nbsp;areas.&lt;/p&gt;
-&lt;h2&gt;Acknowledgements&lt;/h2&gt;
+&lt;h2 id="acknowledgements"&gt;Acknowledgements&lt;/h2&gt;
 &lt;p&gt;A big thank you to Hadley Wickham and Jeroen Ooms, the authors of the &lt;code&gt;httr&lt;/code&gt; and &lt;code&gt;jsonlite&lt;/code&gt; packages that &lt;code&gt;elasticsearchr&lt;/code&gt; leans upon &lt;em&gt;heavily&lt;/em&gt;.&lt;/p&gt;</content><category term="data-processing"></category><category term="data-stores"></category></entry><entry><title>Asynchronous and Distributed Programming in R with the Future Package</title><link href="https://alexioannides.github.io/2016/11/02/asynchronous-and-distributed-programming-in-r-with-the-future-package/" rel="alternate"></link><published>2016-11-02T00:00:00+00:00</published><updated>2016-11-02T00:00:00+00:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-11-02:/2016/11/02/asynchronous-and-distributed-programming-in-r-with-the-future-package/</id><summary type="html">&lt;p&gt;&lt;img alt="Future!" src="https://alexioannides.github.io/images/r/future/the_future.jpg" title="the_future"&gt;&lt;/p&gt;
 &lt;p&gt;Every now and again someone comes along and writes an R package that I consider to be a &amp;#8216;game changer&amp;#8217; for the language and it&amp;#8217;s application to Data Science. For example, I consider &lt;a href="https://github.com/hadley/dplyr" title="dplyr on GitHub"&gt;dplyr&lt;/a&gt; one such package as it has made data munging/manipulation &lt;em&gt;that&lt;/em&gt; more intuitive and more …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Future!" src="https://alexioannides.github.io/images/r/future/the_future.jpg" title="the_future"&gt;&lt;/p&gt;
 &lt;p&gt;Every now and again someone comes along and writes an R package that I consider to be a &amp;#8216;game changer&amp;#8217; for the language and it&amp;#8217;s application to Data Science. For example, I consider &lt;a href="https://github.com/hadley/dplyr" title="dplyr on GitHub"&gt;dplyr&lt;/a&gt; one such package as it has made data munging/manipulation &lt;em&gt;that&lt;/em&gt; more intuitive and more productive than it had been before. Although I only first read about it at the beginning of this week, my instinct tells me that in &lt;a href="https://www.linkedin.com/in/henrikbengtsson" title="Henrik Bengtsson on LinkedIn"&gt;Henrik Bengtsson&amp;#8217;s&lt;/a&gt; &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future&lt;/a&gt; package we might have another such game-changing R&amp;nbsp;package.&lt;/p&gt;
@@ -428,7 +428,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;/blockquote&gt;
 &lt;p&gt;A classic example would be a request made to a web server via &lt;span class="caps"&gt;HTTP&lt;/span&gt;, that has yet to return and whose value remains unknown until it does (and which has promised to return at some point in the future). This &amp;#8216;promise&amp;#8217; is an object assigned to a variable in R like any other, and allows code execution to progress until the moment the code explicitly requires the future to be resolved (i.e. to &amp;#8216;make good&amp;#8217; on it&amp;#8217;s promise). So the code does not need to wait for the web server until the very moment that the information anticipated in its response it actually needed. In the intervening execution time we can send requests to other web servers, run some other computations, etc. Ultimately, this leads to &lt;strong&gt;faster&lt;/strong&gt; and &lt;strong&gt;more efficient code&lt;/strong&gt;. This way of working also opens the door to distributed (i.e. parallel) computation, as the computation assigned to each new future can be executed on a new thread (and executed on a different core on the same machine, or on another&amp;nbsp;machine/node).&lt;/p&gt;
 &lt;p&gt;The future &lt;span class="caps"&gt;API&lt;/span&gt; is extremely expressive and the associated documentation is excellent. My motivation here is not to repeat any of this, but rather to give a few examples to serve as inspiration for how futures could be used for day-to-day Data Science tasks in&amp;nbsp;R.&lt;/p&gt;
-&lt;h1&gt;Creating a Future to be Executed on a Different Core to that Running the Main&amp;nbsp;Script&lt;/h1&gt;
+&lt;h1 id="creating-a-future-to-be-executed-on-a-different-core-to-that-running-the-main-script"&gt;Creating a Future to be Executed on a Different Core to that Running the Main&amp;nbsp;Script&lt;/h1&gt;
 &lt;p&gt;To demonstrate the syntax and structure required to achieve this aim, I am going to delegate to a future the task of estimating the mean of 10 million random samples from the normal distribution, and ask it to spawn a new R process on a different core in order to do so. The code to achieve this is as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;future&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -468,9 +468,9 @@ f_dots&lt;span class="p"&gt;()&lt;/span&gt;
 
 
 &lt;p&gt;Here, &lt;code&gt;resolved(f)&lt;/code&gt; will return &lt;code&gt;FALSE&lt;/code&gt; until the future &lt;code&gt;f&lt;/code&gt; has finished&amp;nbsp;executing.&lt;/p&gt;
-&lt;h1&gt;Useful Use&amp;nbsp;Cases&lt;/h1&gt;
+&lt;h1 id="useful-use-cases"&gt;Useful Use&amp;nbsp;Cases&lt;/h1&gt;
 &lt;p&gt;I can recall many situations where futures would have been handy when writing R scripts. The examples below are the most obvious that come to mind. No doubt there will be many&amp;nbsp;more.&lt;/p&gt;
-&lt;h2&gt;Distributed (Parallel)&amp;nbsp;Computation&lt;/h2&gt;
+&lt;h2 id="distributed-parallel-computation"&gt;Distributed (Parallel)&amp;nbsp;Computation&lt;/h2&gt;
 &lt;p&gt;In the past, when I&amp;#8217;ve felt the need to distribute a calculation I have usually used the &lt;code&gt;mclapply&lt;/code&gt; function (i.e. multi-core &lt;code&gt;lapply&lt;/code&gt;), from the &lt;code&gt;parallel&lt;/code&gt; library that comes bundled together with base R. Computing the mean of 100 million random samples from the normal distribution would look something&amp;nbsp;like,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;parallel&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -519,7 +519,7 @@ microbenchmark&lt;span class="p"&gt;({&lt;/span&gt; samples &lt;span class="o"&g
 
 
 &lt;p&gt;We can see that the multi-threaded version is nearly 3 times faster, which is not surprising given that we&amp;#8217;re using 3 extra threads. Note that time is lost spawning the extra threads and combining their results (usually referred to as &amp;#8216;overhead&amp;#8217;), such that distributing a calculation can actually increase computation time if the benefit of parallelisation is less than the cost of the&amp;nbsp;overhead.&lt;/p&gt;
-&lt;h2&gt;Non-Blocking Asynchronous&amp;nbsp;Input/Output&lt;/h2&gt;
+&lt;h2 id="non-blocking-asynchronous-inputoutput"&gt;Non-Blocking Asynchronous&amp;nbsp;Input/Output&lt;/h2&gt;
 &lt;p&gt;I have often found myself in the situation where I need to read several large &lt;span class="caps"&gt;CSV&lt;/span&gt; files, each of which can take a long time to load. Because the files can only be loaded sequentially, I have had to wait for one file to be read before the next one can start loading, which compounds the time devoted to input. Thanks to futures, we can can now achieve &lt;a href="https://en.wikipedia.org/wiki/Asynchronous_I/O" title="Wikipedia on asynchronous io"&gt;asynchronous input and output&lt;/a&gt; as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;readr&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -579,15 +579,15 @@ values&lt;span class="p"&gt;(&lt;/span&gt;time_futures&lt;span class="p"&gt;)&lt
 
 
 &lt;p&gt;The same logic applies to accessing databases and executing &lt;span class="caps"&gt;SQL&lt;/span&gt; queries via &lt;a href="https://en.wikipedia.org/wiki/Open_Database_Connectivity" title="Wikipedia on ODBC"&gt;&lt;span class="caps"&gt;ODBC&lt;/span&gt;&lt;/a&gt; or &lt;a href="https://en.wikipedia.org/wiki/Java_Database_Connectivity" title="Wikipedia on JDBC"&gt;&lt;span class="caps"&gt;JDBC&lt;/span&gt;&lt;/a&gt;. For example, large complex queries can be split into &amp;#8216;chunks&amp;#8217; and sent asynchronously to the database server in order to have them executed on multiple server threads. The output can then be unified once the server has sent back the chunks, using R (e.g. with &lt;a href="https://github.com/hadley/dplyr" title="dplyr on GitHub"&gt;dplyr&lt;/a&gt;). This is a strategy that I have been using with Apache Spark, but I could now implement it within R. Similarly, multiple database tables can be accessed concurrently, and so&amp;nbsp;on.  &lt;/p&gt;
-&lt;h1&gt;Final&amp;nbsp;Thoughts&lt;/h1&gt;
+&lt;h1 id="final-thoughts"&gt;Final&amp;nbsp;Thoughts&lt;/h1&gt;
 &lt;p&gt;I have only really scratched the surface of what is possible with futures. For example, &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future&lt;/a&gt; supports multiple execution plans including &lt;code&gt;lazy&lt;/code&gt; and &lt;code&gt;cluster&lt;/code&gt; (for multiple machines/nodes) - I have only focused on increasing performance on a single machine with multiple cores. If this post has provided some inspiration or left you curious, then head over to the official &lt;a href="https://github.com/HenrikBengtsson/future" title="future package in GitHub"&gt;future docs&lt;/a&gt; for the full details (which are a joy to read and&amp;nbsp;work-through).&lt;/p&gt;</content><category term="data-processing"></category><category term="high-performance-computing"></category></entry><entry><title>An R Function for Generating Authenticated URLs to Private Web Sites Hosted on AWS S3</title><link href="https://alexioannides.github.io/2016/09/19/an-r-function-for-generating-authenticated-urls-to-private-web-sites-hosted-on-aws-s3/" rel="alternate"></link><published>2016-09-19T00:00:00+01:00</published><updated>2016-09-19T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-09-19:/2016/09/19/an-r-function-for-generating-authenticated-urls-to-private-web-sites-hosted-on-aws-s3/</id><summary type="html">&lt;p&gt;&lt;img alt="crypto" src="https://alexioannides.files.wordpress.com/2016/08/hmac.png" title="HMAC"&gt;&lt;/p&gt;
 &lt;p&gt;Quite often I want to share simple (static) web pages with other colleagues or clients. For example, I may have written a report using &lt;a href="http://rmarkdown.rstudio.com" title="R Markdown @ R Studio"&gt;R Markdown&lt;/a&gt; and rendered it to &lt;span class="caps"&gt;HTML&lt;/span&gt;. &lt;span class="caps"&gt;AWS&lt;/span&gt; S3 can easily host such a simple web page (e.g. see &lt;a href="http://docs.aws.amazon.com/gettingstarted/latest/swh/website-hosting-intro.html" title="AWS S3 Static Web Page"&gt;here&lt;/a&gt;), but it cannot, however, offer …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="crypto" src="https://alexioannides.files.wordpress.com/2016/08/hmac.png" title="HMAC"&gt;&lt;/p&gt;
 &lt;p&gt;Quite often I want to share simple (static) web pages with other colleagues or clients. For example, I may have written a report using &lt;a href="http://rmarkdown.rstudio.com" title="R Markdown @ R Studio"&gt;R Markdown&lt;/a&gt; and rendered it to &lt;span class="caps"&gt;HTML&lt;/span&gt;. &lt;span class="caps"&gt;AWS&lt;/span&gt; S3 can easily host such a simple web page (e.g. see &lt;a href="http://docs.aws.amazon.com/gettingstarted/latest/swh/website-hosting-intro.html" title="AWS S3 Static Web Page"&gt;here&lt;/a&gt;), but it cannot, however, offer any authentication to prevent anyone from accessing potentially sensitive&amp;nbsp;information.&lt;/p&gt;
 &lt;p&gt;Yegor Bugayenko has created an external service &lt;a href="http://www.s3auth.com" title="S3 Authentication Service"&gt;S3Auth.com&lt;/a&gt; that stands in the way of any S3 hosted web site, but this is a little too much for my needs. All I want to achieve is to limit access to specific S3 resources that will be largely transient in nature. A viable and simple solution is to use &amp;#8216;query string request authentication&amp;#8217; that is described in detail &lt;a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html#RESTAuthenticationQueryStringAuth" title="AWS documentation"&gt;here&lt;/a&gt;. I must confess to not really understanding what was going on here, until I had dug around on the web to see what others have been up&amp;nbsp;to.&lt;/p&gt;
 &lt;p&gt;This blog post describes a simple R function for generating authenticated and ephemeral URLs to private S3 resources (including web pages) that only the holders of the &lt;span class="caps"&gt;URL&lt;/span&gt; can&amp;nbsp;access.&lt;/p&gt;
-&lt;h1&gt;Creating User Credentials for Read-Only Access to&amp;nbsp;S3&lt;/h1&gt;
+&lt;h1 id="creating-user-credentials-for-read-only-access-to-s3"&gt;Creating User Credentials for Read-Only Access to&amp;nbsp;S3&lt;/h1&gt;
 &lt;p&gt;Before we can authenticate anyone, we need someone to authenticate. From the &lt;span class="caps"&gt;AWS&lt;/span&gt; Management Console create a new user, download their security credentials and then attach the &lt;code&gt;AmazonS3ReadOnlyAccess&lt;/code&gt; policy to them. For more details on how to do this, refer to a &lt;a href="https://alexioannides.com/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;previous post&lt;/a&gt;. Note, that you should &lt;strong&gt;not&lt;/strong&gt; create passwords for them to access the &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;console.&lt;/p&gt;
-&lt;h1&gt;Loading a Static Web Page to &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;S3&lt;/h1&gt;
+&lt;h1 id="loading-a-static-web-page-to-aws-s3"&gt;Loading a Static Web Page to &lt;span class="caps"&gt;AWS&lt;/span&gt;&amp;nbsp;S3&lt;/h1&gt;
 &lt;p&gt;Do &lt;strong&gt;not&lt;/strong&gt; be tempted to follow the S3 &amp;#8216;Getting Started&amp;#8217; page on how to host a static web page and in doing so enable &amp;#8216;Static Website Hosting&amp;#8217;. We need our resources to remain private and we would also like to use &lt;span class="caps"&gt;HTTPS&lt;/span&gt;, which this option does not support. Instead, create a new bucket and upload a simple &lt;span class="caps"&gt;HTML&lt;/span&gt; file &lt;a href="https://alexioannides.com/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;as usual&lt;/a&gt;. An example html file - e.g. &lt;code&gt;index.html&lt;/code&gt; - could&amp;nbsp;be,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
@@ -598,7 +598,7 @@ values&lt;span class="p"&gt;(&lt;/span&gt;time_futures&lt;span class="p"&gt;)&lt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h1&gt;An R Function for Generating Authenticated&amp;nbsp;URLs&lt;/h1&gt;
+&lt;h1 id="an-r-function-for-generating-authenticated-urls"&gt;An R Function for Generating Authenticated&amp;nbsp;URLs&lt;/h1&gt;
 &lt;p&gt;We can now use our new user&amp;#8217;s Access Key &lt;span class="caps"&gt;ID&lt;/span&gt; and Secret Access Key to create a &lt;span class="caps"&gt;URL&lt;/span&gt; with a limited lifetime that enables access to &lt;code&gt;index.html&lt;/code&gt;. Technically, we are making a &lt;span class="caps"&gt;HTTP&lt;/span&gt; &lt;span class="caps"&gt;GET&lt;/span&gt; request to the S3 &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt;, with the authentication details sent as part of a query string. Creating this &lt;span class="caps"&gt;URL&lt;/span&gt; is a bit tricky - I have adapted the Python example (number 3) that is provided &lt;a href="https://s3.amazonaws.com/doc/s3-developer-guide/RESTAuthentication.html" title="Python Auth Example"&gt;here&lt;/a&gt;, as an R function (that can be found in the Gist below) - &lt;code&gt;aws_query_string_auth_url(...)&lt;/code&gt;. Here&amp;#8217;s an example showing this R function in&amp;nbsp;action:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;path_to_file &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;
 bucket &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;my.s3.bucket&amp;quot;&lt;/span&gt;

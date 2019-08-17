@@ -114,20 +114,20 @@
     <p><img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"></p>
 <p>Parts <a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1">one</a>, <a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2">two</a> and <a href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3">three</a> of this series of posts have taken us from creating an account on <span class="caps">AWS</span> to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;D is nearly complete - the only outstanding component is the ability to interact (<span class="caps">REPL</span>-style) with Spark using code written in Scala and to run this on some sort of scheduled basis. So, for this last part I am going to focus on getting <a href="http://zeppelin.apache.org" title="Apache Zeppelin">Apache Zeppelin</a>&nbsp;up-and-running.</p>
 <p><a href="http://zeppelin.apache.org" title="Apache Zeppelin">Zeppelin</a> is a notebook server in a similar vein as the Jupyter or Beaker notebooks (and very similar to those available on Databricks). Code is submitted and executed in &#8216;chunks&#8217; with interim output (e.g. charts and tables) displayed after it has been computed. Where Zeppelin differs from the other, is its first-class support for Spark and it&#8217;s ability to run notebooks (and thereby <span class="caps">ETL</span> process) on a schedule (in essence it uses <code>chron</code> for scheduling and&nbsp;execution).</p>
-<h1>Installing Apache&nbsp;Zeppelin</h1>
+<h1 id="installing-apache-zeppelin">Installing Apache&nbsp;Zeppelin</h1>
 <p>Following the steps laid-out in previous posts, <span class="caps">SSH</span> into our Spark cluster&#8217;s master node (or use <code>$ ./flintrock login my-cluster</code> for extra convenience). Just like we did for R Studio Server we&#8217;re going to install Zeppelin here as well. Find the <span class="caps">URL</span> for the latest version of Zeppelin <a href="http://www.apache.org/dyn/closer.cgi/zeppelin/zeppelin-0.6.1/zeppelin-0.6.1-bin-all.tgz" title="Download Zeppelin">here</a> and then from the master node&#8217;s shell&nbsp;execute,</p>
 <p><code>$ cd /home/ec2-user</code></p>
 <p><code>$ wget http://apache.mirror.anlx.net/zeppelin/zeppelin-0.6.1/zeppelin-0.6.1-bin-all.tgz</code></p>
 <p><code>$ tar -xzf zeppelin-0.6.1-bin-all.tgz</code></p>
 <p><code>$ rm zeppelin-0.6.1-bin-all.tgz</code></p>
 <p>Note that I have chosen to install the binaries that contain all of the available language interpreters - there is no restriction on choice of language and you could just as easily use R or Python for interacting with&nbsp;Spark.</p>
-<h1>Configuring&nbsp;Zeppelin</h1>
+<h1 id="configuring-zeppelin">Configuring&nbsp;Zeppelin</h1>
 <p>Before we can start-up and test Zeppelin, we will need to configure it. Templates for configuration files can be found in the <code>conf</code> directory of the Zeppelin folder. Makes copies of these by executing the following&nbsp;commands,</p>
 <p><code>$ cd /home/ec2-user/zeppelin-0.6.1-bin-all/conf</code></p>
 <p><code>$ cp zeppelin-env.sh.template zeppelin-env.sh</code></p>
 <p><code>$ cp zeppelin-site.xml.template zeppelin-site.xml</code></p>
 <p>Then using a text editor such as <a href="https://en.wikipedia.org/wiki/Vi" title="vi Wiki">vi</a> - e.g. <code>$ vi zeppelin-env.sh</code> - to edit each file making the changes described&nbsp;below.</p>
-<h2>zeppelin-env.sh</h2>
+<h2 id="zeppelin-envsh">zeppelin-env.sh</h2>
 <p>Find the following variable exports, uncomment them, and then make the following&nbsp;assignments:</p>
 <div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">MASTER</span><span class="o">=</span>spark://ip-172-31-6-33:7077 <span class="c1"># use the appropriate local IP address here</span>
 <span class="nb">export</span> <span class="nv">SPARK_HOME</span><span class="o">=</span>/usr/local/lib/spark
@@ -136,7 +136,7 @@
 
 
 <p>Most of these options should be familiar to you by now so I won&#8217;t go-over again&nbsp;here.</p>
-<h2>zeppelin-site.xml</h2>
+<h2 id="zeppelin-sitexml">zeppelin-site.xml</h2>
 <p>Find the following property name and change it to the value&nbsp;below:</p>
 <div class="highlight"><pre><span></span><span class="nt">&lt;property&gt;</span>
   <span class="nt">&lt;name&gt;</span>zeppelin.server.port<span class="nt">&lt;/name&gt;</span>
@@ -153,7 +153,7 @@
 <p><img alt="zeppelin-home" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-home.png" title="Zeppelin Home"></p>
 <p>To shut Zeppelin down return to the master node&#8217;s shell and&nbsp;execute,</p>
 <p><code>$ ./zeppelin-daemon stop</code>.</p>
-<h1>Running Zeppelin with a Service&nbsp;Manager</h1>
+<h1 id="running-zeppelin-with-a-service-manager">Running Zeppelin with a Service&nbsp;Manager</h1>
 <p>Unlike R Studio server that automatically configures and starts-up a <a href="https://en.wikipedia.org/wiki/Daemon_(computing)" title="daemon Wiki">daemon</a> that will shut-down and re-start with our master node when required, we will have to configure and perform these steps manually for Zeppelin - otherwise it will need to be manually started-up every time the cluster is started after being stopped (and I&#8217;m far too lazy for this&nbsp;inconvenience).</p>
 <p>To make this happen on Amazon Linux we will make use of <a href="https://en.wikipedia.org/wiki/Upstart" title="Upstart">Upstart</a> and the <code>initctl</code> command. But first of all we will need to create a configuration file in the <code>/etc/init</code> directory,</p>
 <p><code>$ cd /etc/init</code></p>
@@ -183,13 +183,13 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 <p>To test our script return to the shell and&nbsp;execute,</p>
 <p><code>$ sudo initctl start zeppelin</code></p>
 <p>And return to the browser to check that Zeppelin is up-and-running. You can check that this works by stopping the cluster and then starting it&nbsp;again.</p>
-<h1>Scala&nbsp;Notebooks</h1>
+<h1 id="scala-notebooks">Scala&nbsp;Notebooks</h1>
 <p>From the Zeppelin home page select the &#8216;Zeppelin Tutorial&#8217;, accept the interpreter options and you should be presented with the following&nbsp;notebook:</p>
 <p><img alt="zeppeling-nb" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-nb.png" title="Zeppelin Scala Notebook"></p>
 <p>Click into the first code chunk and hit <code>shift + enter</code> to run it. If everything has been configured correctly then the code will run and the Zeppelin application will be listed in the Spark master node&#8217;s web <span class="caps">UI</span>. We then test our connectivity to S3 by attempting to access our data there in the usual&nbsp;way:</p>
 <p><img alt="zeppelin-s3" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-s3-nb.png" title="Connecting to S3"></p>
 <p>Note that this notebook, as well as any other, can be set to execute on a schedule defined using the &#8216;Run Scheduler&#8217; from the notebook&#8217;s menu bar. This will happen irrespective of whether or not you have it loaded in the browser - so long as the Zeppelin daemon is running the notebooks will run on their defined&nbsp;schedule.</p>
-<h1>Storing Zeppelin Notebooks on&nbsp;S3</h1>
+<h1 id="storing-zeppelin-notebooks-on-s3">Storing Zeppelin Notebooks on&nbsp;S3</h1>
 <p>By default Zeppelin will store all notebooks locally. This is likely to be fine under most circumstances (as it is also very easy to export them), but it makes sense to exploit the ability to have them stored in an S3 bucket instead. For example, if you have amassed a lot of notebooks working on one cluster and you&#8217;d like to run them on another (maybe much larger) cluster, then it makes sense not to have to manually export them all from one cluster to&nbsp;another.</p>
 <p>Enabling access to S3 is relatively easy as we already have S3-enabled <span class="caps">IAM</span> roles assigned to our nodes (via Flintrock configuration). Start by creating a new bucket to store them in - e.g. <code>my.zeppelin.notebooks</code>. Then create a folder within this bucket - e.g. <code>userone</code> - and another one within that called <code>notebook</code>.</p>
 <p>Next, <span class="caps">SSH</span> into the master node and open the <code>zeppelin-site.xml</code> file for editing as we did above. This time, un-comment and set the following&nbsp;properties,</p>
@@ -225,7 +225,7 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 <p>Save the changes and return to the terminal. Finally,&nbsp;execute,</p>
 <p><code>$ sudo initctl restart zeppelin</code></p>
 <p>And wait a few seconds before re-loading Zeppelin in your browser. If you create a new notebook you should be able to see if you go looking for it in the <span class="caps">AWS</span>&nbsp;console.</p>
-<h1>Basic Notebook&nbsp;Security</h1>
+<h1 id="basic-notebook-security">Basic Notebook&nbsp;Security</h1>
 <p>Being able to limit access to Zeppelin as well control the read/write permissions on individual notebooks will be useful if multiple people are likely to be working on the platform and using it to trial and schedule jobs on the cluster. It&#8217;s also handy if you just want to grant someone access to read results and don&#8217;t want to risk them changing the code by&nbsp;accident.</p>
 <p>Enabling basic authentication is relatively straight-forwards. First, open the <code>zeppelin-site.xml</code> file for editing and ensure that the <code>zeppelin.anonymous.allowed</code> property is set to <code>false</code>,</p>
 <div class="highlight"><pre><span></span><span class="nt">&lt;property&gt;</span>
@@ -249,10 +249,10 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 
 
 <p>This file also allows you to set usernames, password and groups. For a slightly more detailed explanation head-over to the <a href="http://zeppelin.apache.org/docs/0.6.1/security/shiroauthentication.html" title="Shiro on Zeppelin">Zeppelin documentation</a>.</p>
-<h1>Zeppelin as a Spark Job <span class="caps">REST</span>&nbsp;Server</h1>
+<h1 id="zeppelin-as-a-spark-job-rest-server">Zeppelin as a Spark Job <span class="caps">REST</span>&nbsp;Server</h1>
 <p>Each notebook on a Zeppelin server can be considered as an &#8216;analytics job&#8217;. We have already briefly mentioned the ability to execute such &#8216;jobs&#8217; on a schedule - e.g. execute an <span class="caps">ETL</span> process every hour, etc. We can actually take this further by exploiting Zeppelin&#8217;s <span class="caps">REST</span> <span class="caps">API</span> that controls pretty much any server action. So, for example, we could execute a job (as defined in a notebook), remotely and possibly on an event-driven basis. A comprehensive description of the Zeppelin <span class="caps">REST</span> <span class="caps">API</span> can be found on the <a href="http://zeppelin.apache.org/docs/0.6.1/rest-api/rest-notebook.html" title="Zeppelin RESTful API">official <span class="caps">API</span> documentation</a>.</p>
 <p>This is the point at which I start to get excited as our R&amp;D platform starts to resemble a production platform. To illustrate how one could remotely execute Zeppelin jobs I have written a few basic R function (with examples) to facilitate this using R - these can be found on <a href="https://github.com/AlexIoannides/alexutilr/blob/master/R/zeppelin_utils.R" title="alexutilr">GitHub</a>, a discussion of which may make a post of its own in the near&nbsp;future.</p>
-<h1>Conclusion</h1>
+<h1 id="conclusion">Conclusion</h1>
 <p>That&#8217;s it - mission&nbsp;accomplished!</p>
 <p>I have met all of my initial aims - possibly more. I have myself a Spark-based R&amp;D platform that I can interact with using my favorite R tools and Scala, all from the comfort of my laptop. And we&#8217;re not far removed from being able to deploy code and &#8216;analytics jobs&#8217; in a production environment. All we&#8217;re really missing is a database for serving analytics (e.g. Elasticsearch) and maybe another for storing data if we won&#8217;t be relying on S3. More on this in another&nbsp;post.</p>
   </div>

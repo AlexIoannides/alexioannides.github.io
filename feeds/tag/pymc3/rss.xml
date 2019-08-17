@@ -15,7 +15,33 @@
 &lt;li&gt;naturally incorporating parameter uncertainty into risk&amp;nbsp;metrics. &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;By simulating a Geometric Brownian Motion (&lt;span class="caps"&gt;GBM&lt;/span&gt;) and then estimating the parameters based on the randomly generated observations, we will quantify the impact of using Bayesian Inference against traditional &lt;span class="caps"&gt;ML&lt;/span&gt; estimation, when the available data is both plentiful and scarce - the latter being a scenario in which Bayesian Inference is shown to be especially&amp;nbsp;powerful.&lt;/p&gt;
-&lt;h2&gt;Imports and Global&amp;nbsp;Settings&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Table of&amp;nbsp;Contents&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#imports-and-global-settings"&gt;Imports and Global&amp;nbsp;Settings&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#synthetic-data-generation-using-geometric-brownian-motion"&gt;Synthetic Data Generation using Geometric Brownian&amp;nbsp;Motion&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#the-traditional-approach-to-parameter-estimation"&gt;The Traditional Approach to Parameter Estimation&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#parameter-estimation-when-data-is-plentiful"&gt;Parameter Estimation when Data is&amp;nbsp;Plentiful&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#parameter-estimation-when-data-is-scarce"&gt;Parameter Estimation when Data is&amp;nbsp;Scarce&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#parameter-estimation-using-bayesian-inference-and-probabilistic-programming"&gt;Parameter Estimation using Bayesian Inference and Probabilistic Programming&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#selecting-suitable-prior-distributions"&gt;Selecting Suitable Prior Distributions&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#choosing-a-prior-distribution-for-the-expected-return-of-daily-returns"&gt;Choosing a Prior Distribution for the Expected Return of Daily&amp;nbsp;Returns&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#choosing-a-prior-distribution-for-the-volatility-of-daily-returns"&gt;Choosing a Prior Distribution for the Volatility of Daily&amp;nbsp;Returns&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#inference-using-a-probabilistic-program-markov-chain-monte-carlo-mcmc"&gt;Inference using a Probabilistic Program &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Markov Chain Monte Carlo (&lt;span class="caps"&gt;MCMC&lt;/span&gt;)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#making-predictions"&gt;Making Predictions&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#impact-on-risk-metrics-value-at-risk-var"&gt;Impact on Risk Metrics - Value-at-Risk&amp;nbsp;(VaR)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#summary"&gt;Summary&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h2 id="imports-and-global-settings"&gt;Imports and Global&amp;nbsp;Settings&lt;/h2&gt;
 &lt;p&gt;Before we get going in earnest, we follow the convention of declaring all imports at the top of the&amp;nbsp;notebook.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;warnings&lt;/span&gt;
 
@@ -36,7 +62,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Synthetic Data Generation using Geometric Brownian&amp;nbsp;Motion&lt;/h2&gt;
+&lt;h2 id="synthetic-data-generation-using-geometric-brownian-motion"&gt;Synthetic Data Generation using Geometric Brownian&amp;nbsp;Motion&lt;/h2&gt;
 &lt;p&gt;We start by defining a function for simulating a single path from a &lt;span class="caps"&gt;GBM&lt;/span&gt; - perhaps the most commonly used stochastic process for modelling the time-series of asset prices. We make use of the &lt;a href="https://en.wikipedia.org/wiki/Geometric_Brownian_motion"&gt;following equation&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="math"&gt;$$
 \tilde{S_t} = S_0 \exp \left\{ \left(\mu - \frac{\sigma^2}{2} \right) t + \sigma \tilde{W_t}\right\}
@@ -101,7 +127,7 @@ $$&lt;/div&gt;
 
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_10_0.png"&gt;&lt;/p&gt;
-&lt;h2&gt;The Traditional Approach to Parameter&amp;nbsp;Estimation&lt;/h2&gt;
+&lt;h2 id="the-traditional-approach-to-parameter-estimation"&gt;The Traditional Approach to Parameter&amp;nbsp;Estimation&lt;/h2&gt;
 &lt;p&gt;Traditionally, the parameters are estimated using the empirical mean and standard deviation of the daily logarithmic (or geometric) returns. The reasoning behind this can be seen by re-arranging the above equation for &lt;span class="math"&gt;\(\tilde{S_t}\)&lt;/span&gt; as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="math"&gt;$$
 \log \left( \frac{S_t}{S_{t-1}} \right) = \left(\mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma \tilde{\Delta W_t}
@@ -115,7 +141,7 @@ $$&lt;/div&gt;
 \Delta t = \frac{1}{365}
 $$&lt;/div&gt;
 &lt;p&gt;From which it is possible to solve the implied simultaneous equations for &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt;, as functions of the mean and standard deviation of the geometric (i.e. logarithmic) returns. Once again, for a more in-depth discussion we refer the reader to &lt;a href="https://arxiv.org/abs/0812.4210"&gt;&amp;#8216;A Stochastic Processes Toolkit for Risk Management&amp;#8217;, by Damiano Brigo &lt;em&gt;et al.&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Parameter Estimation when Data is&amp;nbsp;Plentiful&lt;/h3&gt;
+&lt;h3 id="parameter-estimation-when-data-is-plentiful"&gt;Parameter Estimation when Data is&amp;nbsp;Plentiful&lt;/h3&gt;
 &lt;p&gt;An example computation, using the whole time-series generated above (364 observations of daily returns), is shown below. We start by taking a look at the distribution of daily&amp;nbsp;returns.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;returns_geo_full&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
     &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;example_data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -145,7 +171,7 @@ empirical estimate of sigma = 0.1423
 
 
 &lt;p&gt;We can see that the empirical estimate of &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is close to the &lt;em&gt;ex ante&lt;/em&gt; paramter value we chose, but that the estimate of &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is poor - estimating the drift of a stochastic process is notoriously&amp;nbsp;hard.&lt;/p&gt;
-&lt;h3&gt;Parameter Estimation when Data is&amp;nbsp;Scarce&lt;/h3&gt;
+&lt;h3 id="parameter-estimation-when-data-is-scarce"&gt;Parameter Estimation when Data is&amp;nbsp;Scarce&lt;/h3&gt;
 &lt;p&gt;Very often data is scare - we may not have 364 observations of geometric returns. To demonstrate the impact this can have on parameter estimation, we sub-sample the distribution of geometric returns by picking 12 returns by random - e.g. to simulate the impact of having only 12 monthly returns to base the estimation&amp;nbsp;on.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;n_observations&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -177,7 +203,7 @@ empirical estimate of sigma = 0.1080
 
 
 &lt;p&gt;We can clearly see that now estimates of &lt;strong&gt;both&lt;/strong&gt; &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; are&amp;nbsp;poor.&lt;/p&gt;
-&lt;h2&gt;Parameter Estimation using Bayesian Inference and Probabilistic&amp;nbsp;Programming&lt;/h2&gt;
+&lt;h2 id="parameter-estimation-using-bayesian-inference-and-probabilistic-programming"&gt;Parameter Estimation using Bayesian Inference and Probabilistic&amp;nbsp;Programming&lt;/h2&gt;
 &lt;p&gt;Like statistical data analysis more broadly, the main aim of Bayesian Data Analysis (&lt;span class="caps"&gt;BDA&lt;/span&gt;) is to infer unknown parameters for models of observed data, in order to test hypotheses about the physical processes that lead to the observations. Bayesian data analysis deviates from traditional statistics - on a practical level - when it comes to the explicit assimilation of prior knowledge regarding the uncertainty of the model parameters, into the statistical inference process and overall analysis workflow. To this end, &lt;span class="caps"&gt;BDA&lt;/span&gt; focuses on the posterior&amp;nbsp;distribution,&lt;/p&gt;
 &lt;div class="math"&gt;$$
 p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}
@@ -191,10 +217,10 @@ $$&lt;/div&gt;
 &lt;/ul&gt;
 &lt;p&gt;For an &lt;strong&gt;excellent&lt;/strong&gt; (inspirational) introduction to practical &lt;span class="caps"&gt;BDA&lt;/span&gt;, take a look at &lt;a href="https://xcelab.net/rm/statistical-rethinking/"&gt;Statistical Rethinking by Richard McElreath&lt;/a&gt;, or for a more theoretical treatment try &lt;a href="http://www.stat.columbia.edu/~gelman/book/"&gt;Bayesian Data Analysis by Gelman &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; co.&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;We will use &lt;span class="caps"&gt;BDA&lt;/span&gt; to estimate the &lt;span class="caps"&gt;GBM&lt;/span&gt; parameters from our time series with &lt;strong&gt;scare data&lt;/strong&gt;, to demonstrate the benefits of incorporating prior knowledge into the inference process and then compare these results with those derived using &lt;span class="caps"&gt;ML&lt;/span&gt; estimation (discussed&amp;nbsp;above).&lt;/p&gt;
-&lt;h3&gt;Selecting Suitable Prior&amp;nbsp;Distributions&lt;/h3&gt;
+&lt;h3 id="selecting-suitable-prior-distributions"&gt;Selecting Suitable Prior&amp;nbsp;Distributions&lt;/h3&gt;
 &lt;p&gt;We will choose regularising priors that are also in-line with our prior knowledge of the time-series - that is, priors that place the bulk of their probability mass near zero, but allow for enough variation to make &amp;#8216;reasonable&amp;#8217; parameter values viable for our liquid stock in a &amp;#8216;flat&amp;#8217; (or drift-less)&amp;nbsp;market.&lt;/p&gt;
 &lt;p&gt;Note, that in the discussion that follows, we will reason about the priors in terms of our real-world experience of daily price returns, their expected returns and volatility - i.e. the mean and standard deviation of our likelihood&amp;nbsp;function.&lt;/p&gt;
-&lt;h4&gt;Choosing a Prior Distribution for the Expected Return of Daily&amp;nbsp;Returns&lt;/h4&gt;
+&lt;h4 id="choosing-a-prior-distribution-for-the-expected-return-of-daily-returns"&gt;Choosing a Prior Distribution for the Expected Return of Daily&amp;nbsp;Returns&lt;/h4&gt;
 &lt;p&gt;We choose a Normal distribution for this prior distribution, centered at 0 (i.e. regularising), but with a standard deviation of 0.0001 (i.e. 1 basis-point or 0.01%), to render a 3-4% annualised return a less than 1% probability - consistent with a market for a liquid stock trading&amp;nbsp;&amp;#8216;flat&amp;#8217;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;prior_mean_mu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
 &lt;span class="n"&gt;prior_mean_sigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.0001&lt;/span&gt;
@@ -213,7 +239,7 @@ $$&lt;/div&gt;
 
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_29_0.png"&gt;&lt;/p&gt;
-&lt;h4&gt;Choosing a Prior Distribution for the Volatility of Daily&amp;nbsp;Returns&lt;/h4&gt;
+&lt;h4 id="choosing-a-prior-distribution-for-the-volatility-of-daily-returns"&gt;Choosing a Prior Distribution for the Volatility of Daily&amp;nbsp;Returns&lt;/h4&gt;
 &lt;p&gt;We choose a positive &lt;a href="https://en.wikipedia.org/wiki/Half-normal_distribution"&gt;Half-Normal distribution&lt;/a&gt; for this prior distribution. Most of the mass is near 0 (i.e. regularising), but with a standard deviation of 0.0188 that corresponds to an expected daily volatility of ~0.015 (or&amp;nbsp;1.5%).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;prior_vol_sigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.0188&lt;/span&gt;
 
@@ -231,7 +257,7 @@ $$&lt;/div&gt;
 
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_33_0.png"&gt;&lt;/p&gt;
-&lt;h3&gt;Inference using a Probabilistic Program &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Markov Chain Monte Carlo (&lt;span class="caps"&gt;MCMC&lt;/span&gt;)&lt;/h3&gt;
+&lt;h3 id="inference-using-a-probabilistic-program-markov-chain-monte-carlo-mcmc"&gt;Inference using a Probabilistic Program &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; Markov Chain Monte Carlo (&lt;span class="caps"&gt;MCMC&lt;/span&gt;)&lt;/h3&gt;
 &lt;p&gt;Performing Bayesian inference usually requires some form of Probabilistic Programming Language (&lt;span class="caps"&gt;PPL&lt;/span&gt;), unless analytical approaches (e.g. based on conjugate prior models), are appropriate for the task at hand. More often than not, PPLs such as &lt;a href="https://docs.pymc.io"&gt;&lt;span class="caps"&gt;PYMC3&lt;/span&gt;&lt;/a&gt; implement Markov Chain Monte Carlo (&lt;span class="caps"&gt;MCMC&lt;/span&gt;) algorithms that allow one to draw samples and make inferences from the posterior distribution implied by the choice of model - the likelihood and prior distributions for its parameters - conditional on the observed&amp;nbsp;data.&lt;/p&gt;
 &lt;p&gt;We will make use of the default &lt;span class="caps"&gt;MCMC&lt;/span&gt; method in &lt;span class="caps"&gt;PYMC3&lt;/span&gt;&amp;#8217;s &lt;code&gt;sample&lt;/code&gt; function, which is Hamiltonian Monte Carlo (&lt;span class="caps"&gt;HMC&lt;/span&gt;). Those interested in the precise details of the &lt;span class="caps"&gt;HMC&lt;/span&gt; algorithm are directed to the &lt;a href="https://arxiv.org/abs/1701.02434"&gt;excellent paper Michael Betancourt&lt;/a&gt;. Briefly, &lt;span class="caps"&gt;MCMC&lt;/span&gt; algorithms work by defining multi-dimensional Markovian stochastic processes, that when simulated (using Monte Carlo methods), will eventually converge to a state where successive simulations will be equivalent to drawing random samples from the posterior distribution of the model we wish to&amp;nbsp;estimate.&lt;/p&gt;
 &lt;p&gt;The posterior distribution has one dimension for each model parameter, so we can then use the distribution of samples for each parameter to infer the range of possible values and/or compute point estimates (e.g. by taking the mean of all&amp;nbsp;samples).&lt;/p&gt;
@@ -364,7 +390,7 @@ bayesian estimate of sigma = 0.1407
 
 
 &lt;p&gt;The estimate for &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is far better than both &lt;span class="caps"&gt;ML&lt;/span&gt; estimates (full and partial data) and the estimate for &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is considerably better than the &lt;span class="caps"&gt;ML&lt;/span&gt; estimate with partial data and approaching that with full&amp;nbsp;data.&lt;/p&gt;
-&lt;h2&gt;Making&amp;nbsp;Predictions&lt;/h2&gt;
+&lt;h2 id="making-predictions"&gt;Making&amp;nbsp;Predictions&lt;/h2&gt;
 &lt;p&gt;Perhaps most importantly, how do the differences in parameter inference methodology translate into predictions for future distributions of geometric returns? We compare a (Normal) distribution of daily geometric returns simulated using the constant empirical parameter estimates with partial data (black line in the plot below), to that simulated by using random draws of Bayesian parameter estimates from the marginal posterior distributions (red line in the plot&amp;nbsp;below).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;n_samples&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;
 &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;42&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -386,7 +412,7 @@ bayesian estimate of sigma = 0.1407
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_52_1.png"&gt;&lt;/p&gt;
 &lt;p&gt;We can clearly see that taking a Bayesian Inference approach to calibrating stochastic processes leads to more probability mass in the &amp;#8216;tails&amp;#8217; of the distribution of geomtric&amp;nbsp;returns.&lt;/p&gt;
-&lt;h3&gt;Impact on Risk Metrics - Value-at-Risk&amp;nbsp;(VaR)&lt;/h3&gt;
+&lt;h3 id="impact-on-risk-metrics-value-at-risk-var"&gt;Impact on Risk Metrics - Value-at-Risk&amp;nbsp;(VaR)&lt;/h3&gt;
 &lt;p&gt;We now quantify the impact that the difference in these distributions has on the VaR for a single unit of the stock, at the 1% and 99% percentile levels - i.e. on 1/100 chance&amp;nbsp;events.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;var_ml&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;percentile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;returns_geo_ml&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;99&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;span class="n"&gt;var_bayes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;percentile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;returns_geo_bayes&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;99&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
@@ -416,7 +442,7 @@ bayesian = 0.019038871195300778
 
 
 &lt;p&gt;We can see that maximum likelihood estimation in our setup would underestimate risk for both long (VaR-1%) and short (VaR-99%) positions, but particularly for short position where the difference is by over&amp;nbsp;100%.&lt;/p&gt;
-&lt;h2&gt;Summary&lt;/h2&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Bayesian inference can exploit relevant prior knowledge to yield more precise parameter estimate for stochastic processes, especially when data is&amp;nbsp;scarce;&lt;/li&gt;
 &lt;li&gt;because it doesn&amp;#8217;t rely on point-estimates of parameters and is intrinsically stochastic in nature, it is a natural unified framework for parameter inference and simulation, under uncertainty;&amp;nbsp;and,&lt;/li&gt;
@@ -481,7 +507,21 @@ bayesian = 0.019038871195300778
 &lt;p&gt;&lt;span class="caps"&gt;MCMC&lt;/span&gt; algorithms are, generally speaking, computationally expensive and do not scale very easily. For example, it is not as easy to distribute the execution of these algorithms over a cluster of machines, when compared to the optimisation algorithms used for training deep neural networks (e.g. stochastic gradient&amp;nbsp;descent).&lt;/p&gt;
 &lt;p&gt;Over the past few years, however, a new class of algorithms for inferring Bayesian models has been developed, that do &lt;strong&gt;not&lt;/strong&gt; rely heavily on computationally expensive random sampling. These algorithms are referred to as Variational Inference (&lt;span class="caps"&gt;VI&lt;/span&gt;) algorithms and have been shown to be successful with the potential to scale to &amp;#8216;large&amp;#8217;&amp;nbsp;datasets.&lt;/p&gt;
 &lt;p&gt;My preferred &lt;span class="caps"&gt;PPL&lt;/span&gt; is &lt;a href="https://docs.pymc.io"&gt;&lt;span class="caps"&gt;PYMC3&lt;/span&gt;&lt;/a&gt; and offers a choice of both &lt;span class="caps"&gt;MCMC&lt;/span&gt; and &lt;span class="caps"&gt;VI&lt;/span&gt; algorithms for inferring models in Bayesian data analysis. This blog post is based on a Jupyter notebook located in &lt;a href="https://github.com/AlexIoannides/pymc-advi-hmc-demo"&gt;this GitHub repository&lt;/a&gt;, whose purpose is to demonstrate using &lt;span class="caps"&gt;PYMC3&lt;/span&gt;, how &lt;span class="caps"&gt;MCMC&lt;/span&gt; and &lt;span class="caps"&gt;VI&lt;/span&gt; can both be used to perform a simple linear regression, and to make a basic comparison of their&amp;nbsp;results.&lt;/p&gt;
-&lt;h2&gt;A (very) Quick Introduction to Bayesian Data&amp;nbsp;Analysis&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Table of&amp;nbsp;Contents&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#a-very-quick-introduction-to-bayesian-data-analysis"&gt;A (very) Quick Introduction to Bayesian Data&amp;nbsp;Analysis&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#imports-and-global-settings"&gt;Imports and Global&amp;nbsp;Settings&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#create-synthetic-data"&gt;Create Synthetic&amp;nbsp;Data&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#split-data-into-training-and-test-sets"&gt;Split Data into Training and Test&amp;nbsp;Sets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#define-bayesian-regression-model"&gt;Define Bayesian Regression&amp;nbsp;Model&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#model-inference-using-mcmc-hmc"&gt;Model Inference Using &lt;span class="caps"&gt;MCMC&lt;/span&gt; (&lt;span class="caps"&gt;HMC&lt;/span&gt;)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#model-inference-using-variational-inference-mini-batch-advi"&gt;Model Inference using Variational Inference (mini-batch &lt;span class="caps"&gt;ADVI&lt;/span&gt;)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#comparing-predictions"&gt;Comparing&amp;nbsp;Predictions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#conclusions"&gt;Conclusions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h2 id="a-very-quick-introduction-to-bayesian-data-analysis"&gt;A (very) Quick Introduction to Bayesian Data&amp;nbsp;Analysis&lt;/h2&gt;
 &lt;p&gt;Like statistical data analysis more broadly, the main aim of Bayesian Data Analysis (&lt;span class="caps"&gt;BDA&lt;/span&gt;) is to infer unknown parameters for models of observed data, in order to test hypotheses about the physical processes that lead to the observations. Bayesian data analysis deviates from traditional statistics - on a practical level - when it comes to the explicit assimilation of prior knowledge regarding the uncertainty of the model parameters, into the statistical inference process and overall analysis workflow. To this end, &lt;span class="caps"&gt;BDA&lt;/span&gt; focuses on the posterior&amp;nbsp;distribution,&lt;/p&gt;
 &lt;div class="math"&gt;$$
 p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}
@@ -495,7 +535,7 @@ $$&lt;/div&gt;
 &lt;/ul&gt;
 &lt;p&gt;For an &lt;strong&gt;excellent&lt;/strong&gt; (inspirational) introduction to practical &lt;span class="caps"&gt;BDA&lt;/span&gt;, take a look at &lt;a href="https://xcelab.net/rm/statistical-rethinking/"&gt;Statistical Rethinking by Richard McElreath&lt;/a&gt;, or for a more theoretical treatment try &lt;a href="http://www.stat.columbia.edu/~gelman/book/"&gt;Bayesian Data Analysis by Gelman &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; co.&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;This notebook is concerned with demonstrating and comparing two separate approaches for inferring the posterior distribution, &lt;span class="math"&gt;\(p(\Theta | X)\)&lt;/span&gt;, for a linear regression&amp;nbsp;model.&lt;/p&gt;
-&lt;h2&gt;Imports and Global&amp;nbsp;Settings&lt;/h2&gt;
+&lt;h2 id="imports-and-global-settings"&gt;Imports and Global&amp;nbsp;Settings&lt;/h2&gt;
 &lt;p&gt;Before we get going in earnest, we follow the convention of declaring all imports at the top of the&amp;nbsp;notebook.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
@@ -516,7 +556,7 @@ $$&lt;/div&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Create Synthetic&amp;nbsp;Data&lt;/h2&gt;
+&lt;h2 id="create-synthetic-data"&gt;Create Synthetic&amp;nbsp;Data&lt;/h2&gt;
 &lt;p&gt;We will assume that there is a dependent variable (or labelled data) &lt;span class="math"&gt;\(\tilde{y}\)&lt;/span&gt;, that is a linear function of independent variables (or feature data), &lt;span class="math"&gt;\(x\)&lt;/span&gt; and &lt;span class="math"&gt;\(c\)&lt;/span&gt;. In this instance, &lt;span class="math"&gt;\(x\)&lt;/span&gt; is a positive real number and &lt;span class="math"&gt;\(c\)&lt;/span&gt; denotes membership to one of two categories that occur with equal likelihood. We express this model mathematically, as&amp;nbsp;follows,&lt;/p&gt;
 &lt;div class="math"&gt;$$
 \tilde{y} = \alpha_{c} + \beta_{c} \cdot x + \sigma \cdot \tilde{\epsilon}
@@ -608,7 +648,7 @@ $$&lt;/div&gt;
 &lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_9_1.png"&gt;&lt;/p&gt;
-&lt;h2&gt;Split Data into Training and Test&amp;nbsp;Sets&lt;/h2&gt;
+&lt;h2 id="split-data-into-training-and-test-sets"&gt;Split Data into Training and Test&amp;nbsp;Sets&lt;/h2&gt;
 &lt;p&gt;One of the advantages of generating synthetic data is that we can ensure we have enough data to be able to partition it into two sets - one for training models and one for testing models. We use a helper function from the Scikit-Learn package for this task and make use of stratified sampling to ensure that we have a balanced representation of each category in both training and test&amp;nbsp;datasets.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;train&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;train_test_split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
     &lt;span class="n"&gt;model_data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;test_size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stratify&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;model_data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;category&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -622,7 +662,7 @@ $$&lt;/div&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Define Bayesian Regression&amp;nbsp;Model&lt;/h2&gt;
+&lt;h2 id="define-bayesian-regression-model"&gt;Define Bayesian Regression&amp;nbsp;Model&lt;/h2&gt;
 &lt;p&gt;Now we move on to define the model that we want to estimate (i.e. our hypothesis regarding the data), irrespective of how we will perform the inference. We will assume full knowledge of the data-generating model we defined above and define conservative regularising priors for each of the model&amp;nbsp;parameters.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;alpha_prior&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HalfNormal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;alpha&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sd&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;shape&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -633,7 +673,7 @@ $$&lt;/div&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Model Inference Using &lt;span class="caps"&gt;MCMC&lt;/span&gt; (&lt;span class="caps"&gt;HMC&lt;/span&gt;)&lt;/h2&gt;
+&lt;h2 id="model-inference-using-mcmc-hmc"&gt;Model Inference Using &lt;span class="caps"&gt;MCMC&lt;/span&gt; (&lt;span class="caps"&gt;HMC&lt;/span&gt;)&lt;/h2&gt;
 &lt;p&gt;We will make use of the default &lt;span class="caps"&gt;MCMC&lt;/span&gt; method in &lt;span class="caps"&gt;PYMC3&lt;/span&gt;&amp;#8217;s &lt;code&gt;sample&lt;/code&gt; function, which is Hamiltonian Monte Carlo (&lt;span class="caps"&gt;HMC&lt;/span&gt;). Those interested in the precise details of the &lt;span class="caps"&gt;HMC&lt;/span&gt; algorithm are directed to the &lt;a href="https://arxiv.org/abs/1701.02434"&gt;excellent paper Michael Betancourt&lt;/a&gt;. Briefly, &lt;span class="caps"&gt;MCMC&lt;/span&gt; algorithms work by defining multi-dimensional Markovian stochastic processes, that when simulated (using Monte Carlo methods), will eventually converge to a state where successive simulations will be equivalent to drawing random samples from the posterior distribution of the model we wish to&amp;nbsp;estimate.&lt;/p&gt;
 &lt;p&gt;The posterior distribution has one dimension for each model parameter, so we can then use the distribution of samples for each parameter to infer the range of possible values and/or compute point estimates (e.g. by taking the mean of all&amp;nbsp;samples).&lt;/p&gt;
 &lt;p&gt;For the purposes of this demonstration, we sample two chains in parallel (as we have two &lt;span class="caps"&gt;CPU&lt;/span&gt; cores available for doing so and this effectively doubles the number of samples), allow 1,000 steps for each chain to converge to its steady-state and then sample for a further 5,000 steps - i.e. generate 5,000 samples from the posterior distribution, assuming that the chain has converged after 1,000&amp;nbsp;samples.&lt;/p&gt;
@@ -732,7 +772,7 @@ $$&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_19_1.png"&gt;&lt;/p&gt;
 &lt;p&gt;Firstly, note that &lt;code&gt;Rhat&lt;/code&gt; values (the Gelman Rubin statistic) converging to 1 implies chain convergence for the marginal parameter distributions, while &lt;code&gt;n_eff&lt;/code&gt; describes the effective number of samples after autocorrelations in the chains have been accounted for. We can see from the &lt;code&gt;mean&lt;/code&gt; (point) estimate of each parameter that &lt;span class="caps"&gt;HMC&lt;/span&gt; has done a reasonable job of estimating our original&amp;nbsp;parameters.&lt;/p&gt;
-&lt;h2&gt;Model Inference using Variational Inference (mini-batch &lt;span class="caps"&gt;ADVI&lt;/span&gt;)&lt;/h2&gt;
+&lt;h2 id="model-inference-using-variational-inference-mini-batch-advi"&gt;Model Inference using Variational Inference (mini-batch &lt;span class="caps"&gt;ADVI&lt;/span&gt;)&lt;/h2&gt;
 &lt;p&gt;Variational Inference (&lt;span class="caps"&gt;VI&lt;/span&gt;) takes a completely different approach to inference. Briefly, &lt;span class="caps"&gt;VI&lt;/span&gt; is a name for a class of algorithms that seek to fit a chosen class of functions to approximate the posterior distribution, effectively turning inference into an optimisation problem. In this instance &lt;span class="caps"&gt;VI&lt;/span&gt; minimises the &lt;a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence"&gt;Kullback–Leibler (&lt;span class="caps"&gt;KL&lt;/span&gt;) divergence&lt;/a&gt; (a measure of the &amp;#8216;similarity&amp;#8217; between two densities), between the approximated posterior density and the actual posterior density. An excellent review of &lt;span class="caps"&gt;VI&lt;/span&gt; can be found in the &lt;a href="https://arxiv.org/abs/1601.00670"&gt;paper by Blei &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; co.&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Just to make things more complicated (and for this description to be complete), the &lt;span class="caps"&gt;KL&lt;/span&gt; divergence is actually minimised, by maximising the Evidence Lower BOund (&lt;span class="caps"&gt;ELBO&lt;/span&gt;), which is equal to the negative of the &lt;span class="caps"&gt;KL&lt;/span&gt; divergence up to a constant term - a constant that is computationally infeasible to compute, which is why, technically, we are optimising &lt;span class="caps"&gt;ELBO&lt;/span&gt; and not the &lt;span class="caps"&gt;KL&lt;/span&gt; divergence, albeit to achieve the same&amp;nbsp;end-goal.&lt;/p&gt;
 &lt;p&gt;We are going to make use of &lt;span class="caps"&gt;PYMC3&lt;/span&gt;&amp;#8217;s Auto-Differentiation Variational Inference (&lt;span class="caps"&gt;ADVI&lt;/span&gt;) algorithm (full details in the paper by &lt;a href="https://arxiv.org/abs/1603.00788"&gt;Kucukelbir &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; co.&lt;/a&gt;), which is capable of computing a &lt;span class="caps"&gt;VI&lt;/span&gt; for any differentiable posterior distribution (i.e. any model with continuous prior distributions). In order to achieve this very clever feat (the paper is well-worth a read), the algorithm first maps the posterior into a space where all prior distributions have the same support, such that they can be well approximated by fitting a spherical n-dimensional Gaussian distribution within this space - this is referred to as the &amp;#8216;Gaussian mean-field approximation&amp;#8217;. Note, that due to the initial transformation, this is &lt;strong&gt;not&lt;/strong&gt; the same as approximating the posterior distribution using an n-dimensional Normal distribution. The parameters of these Gaussian parameters are then chosen to maximise the &lt;span class="caps"&gt;ELBO&lt;/span&gt; using gradient ascent - i.e. using high-performance auto-differentiation techniques in numerical computing back-ends such as Theano, TensorFlow,&amp;nbsp;etc..&lt;/p&gt;
@@ -841,7 +881,7 @@ $$&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_29_1.png"&gt;&lt;/p&gt;
 &lt;p&gt;Not bad! The mean estimates are comparable, but we note that the standard deviations appear to be larger than those estimated with &lt;span class="caps"&gt;HMC&lt;/span&gt;.&lt;/p&gt;
-&lt;h2&gt;Comparing&amp;nbsp;Predictions&lt;/h2&gt;
+&lt;h2 id="comparing-predictions"&gt;Comparing&amp;nbsp;Predictions&lt;/h2&gt;
 &lt;p&gt;Let&amp;#8217;s move on to comparing the inference algorithms on the practical task of making predictions on our test dataset. We start by swapping the test data into our Theano&amp;nbsp;variables.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;y_tensor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;x_tensor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -907,7 +947,7 @@ $$&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_40_1.png"&gt;&lt;/p&gt;
 &lt;p&gt;Which is what one might expect, given the data generating&amp;nbsp;model.&lt;/p&gt;
-&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;h2 id="conclusions"&gt;Conclusions&lt;/h2&gt;
 &lt;p&gt;&lt;span class="caps"&gt;MCMC&lt;/span&gt; and &lt;span class="caps"&gt;VI&lt;/span&gt; present two very different approaches for drawing inferences from Bayesian models. Despite these differences, their high-level output for a simplistic (but not entirely trivial) regression problem, based on synthetic data, is comparable regardless of the approximations used within &lt;span class="caps"&gt;ADVI&lt;/span&gt;. This is important to note, because general purpose &lt;span class="caps"&gt;VI&lt;/span&gt; algorithms such as &lt;span class="caps"&gt;ADVI&lt;/span&gt; have the potential to work at scale - on large volumes of data in a distributed computing environment (see the references embedded above, for case&amp;nbsp;studies).&lt;/p&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
