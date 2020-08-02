@@ -148,10 +148,10 @@ $$</div>
 <p>This notebook is concerned with demonstrating and comparing two separate approaches for inferring the posterior distribution, <span class="math">\(p(\Theta | X)\)</span>, for a linear regression&nbsp;model.</p>
 <h2 id="imports-and-global-settings">Imports and Global&nbsp;Settings</h2>
 <p>Before we get going in earnest, we follow the convention of declaring all imports at the top of the&nbsp;notebook.</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">pymc3</span> <span class="kn">as</span> <span class="nn">pm</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pymc3</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">theano</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">binomial</span><span class="p">,</span> <span class="n">randn</span><span class="p">,</span> <span class="n">uniform</span>
@@ -545,14 +545,14 @@ $$</div>
 <p>Finally, let&#8217;s compare predictions with the actual&nbsp;data.</p>
 <div class="highlight"><pre><span></span><span class="n">RMSE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">prediction_data</span><span class="o">.</span><span class="n">error_ADVI</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;RMSE for ADVI predictions = {RMSE:.3f}&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;RMSE for ADVI predictions = </span><span class="si">{</span><span class="n">RMSE</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;ADVI&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;actual&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">prediction_data</span><span class="p">,</span> 
                <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>RMSE for ADVI predictions = 0.746
+<div class="highlight"><pre><span></span><span class="err">RMSE for ADVI predictions = 0.746</span>
 </pre></div>
 
 

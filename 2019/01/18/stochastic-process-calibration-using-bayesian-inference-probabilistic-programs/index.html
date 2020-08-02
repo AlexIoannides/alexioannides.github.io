@@ -160,11 +160,11 @@
 <p>Before we get going in earnest, we follow the convention of declaring all imports at the top of the&nbsp;notebook.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">arviz</span> <span class="kn">as</span> <span class="nn">az</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">pymc3</span> <span class="kn">as</span> <span class="nn">pm</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pymc3</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
 </pre></div>
 
@@ -275,13 +275,13 @@ $$</div>
 <span class="n">sigma_ml_full</span> <span class="o">=</span> <span class="n">dist_vol_full</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">365</span><span class="p">)</span>
 <span class="n">mu_ml_full</span> <span class="o">=</span> <span class="n">dist_mean_full</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_ml_full</span> <span class="o">**</span> <span class="mi">2</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;empirical estimate of mu = {mu_ml_full:.4f}&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;empirical estimate of sigma = {sigma_ml_full:.4f}&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;empirical estimate of mu = </span><span class="si">{</span><span class="n">mu_ml_full</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;empirical estimate of sigma = </span><span class="si">{</span><span class="n">sigma_ml_full</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>empirical estimate of mu = 0.0220
-empirical estimate of sigma = 0.1423
+<div class="highlight"><pre><span></span><span class="err">empirical estimate of mu = 0.0220</span>
+<span class="err">empirical estimate of sigma = 0.1423</span>
 </pre></div>
 
 
@@ -307,13 +307,13 @@ empirical estimate of sigma = 0.1423
 <span class="n">sigma_ml</span> <span class="o">=</span> <span class="n">dist_vol_ml</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">365</span><span class="p">)</span>
 <span class="n">mu_ml</span> <span class="o">=</span> <span class="n">dist_mean_ml</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma_ml</span> <span class="o">**</span> <span class="mi">2</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;empirical estimate of mu = {mu_ml:.4f}&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;empirical estimate of sigma = {sigma_ml:.4f}&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;empirical estimate of mu = </span><span class="si">{</span><span class="n">mu_ml</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;empirical estimate of sigma = </span><span class="si">{</span><span class="n">sigma_ml</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>empirical estimate of mu = -1.3935
-empirical estimate of sigma = 0.1080
+<div class="highlight"><pre><span></span><span class="err">empirical estimate of mu = -1.3935</span>
+<span class="err">empirical estimate of sigma = 0.1080</span>
 </pre></div>
 
 
@@ -404,11 +404,11 @@ $$</div>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>Auto-assigning NUTS sampler...
-Initializing NUTS using jitter+adapt_diag...
-Multiprocess sampling (2 chains in 2 jobs)
-NUTS: [volatility, mean]
-Sampling 2 chains: 100%|██████████| 30000/30000 [00:27&lt;00:00, 1097.48draws/s]
+<div class="highlight"><pre><span></span><span class="err">Auto-assigning NUTS sampler...</span>
+<span class="err">Initializing NUTS using jitter+adapt_diag...</span>
+<span class="err">Multiprocess sampling (2 chains in 2 jobs)</span>
+<span class="c">NUTS: [volatility, mean]</span>
+<span class="err">Sampling 2 chains: 100%|██████████| 30000/30000 [00:27&lt;00:00, 1097.48draws/s]</span>
 </pre></div>
 
 
@@ -494,13 +494,13 @@ Sampling 2 chains: 100%|██████████| 30000/30000 [00:27&lt;00
 <span class="n">sigma_bayes</span> <span class="o">=</span> <span class="n">dist_sd_bayes</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">365</span><span class="p">)</span>
 <span class="n">mu_bayes</span> <span class="o">=</span> <span class="n">dist_mean_bayes</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dist_sd_bayes</span> <span class="o">**</span> <span class="mi">2</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;bayesian estimate of mu = {mu_bayes:.5f}&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;bayesian estimate of sigma = {sigma_bayes:.4f}&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;bayesian estimate of mu = </span><span class="si">{</span><span class="n">mu_bayes</span><span class="si">:</span><span class="s1">.5f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;bayesian estimate of sigma = </span><span class="si">{</span><span class="n">sigma_bayes</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>bayesian estimate of mu = -0.00309
-bayesian estimate of sigma = 0.1407
+<div class="highlight"><pre><span></span><span class="err">bayesian estimate of mu = -0.00309</span>
+<span class="err">bayesian estimate of sigma = 0.1407</span>
 </pre></div>
 
 
@@ -516,12 +516,12 @@ bayesian estimate of sigma = 0.1407
 <span class="n">returns_geo_bayes</span> <span class="o">=</span> <span class="n">posterior_predictive_samples</span><span class="p">[</span><span class="s1">&#39;daily_returns&#39;</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">]</span>
 <span class="n">returns_geo_ml</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">dist_mean_ml</span><span class="p">,</span> <span class="n">dist_vol_ml</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
 
-<span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">returns_geo_ml</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">returns_geo_bayes</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">returns_geo_ml</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">returns_geo_bayes</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>100%|██████████| 10000/10000 [00:06&lt;00:00, 1555.86it/s]
+<div class="highlight"><pre><span></span><span class="err">100%|██████████| 10000/10000 [00:06&lt;00:00, 1555.86it/s]</span>
 </pre></div>
 
 
@@ -532,15 +532,15 @@ bayesian estimate of sigma = 0.1407
 <div class="highlight"><pre><span></span><span class="n">var_ml</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">returns_geo_ml</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
 <span class="n">var_bayes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">returns_geo_bayes</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;VaR-1%:&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;-------&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;maximum likelihood = {var_ml[0]}&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;bayesian = {var_bayes[0]}&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;VaR-1%:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-------&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;maximum likelihood = </span><span class="si">{</span><span class="n">var_ml</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;bayesian = </span><span class="si">{</span><span class="n">var_bayes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">VaR-99%:&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;--------&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;maximum likelihood = {var_ml[1]}&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;bayesian = {var_bayes[1]}&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">VaR-99%:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--------&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;maximum likelihood = </span><span class="si">{</span><span class="n">var_ml</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;bayesian = </span><span class="si">{</span><span class="n">var_bayes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
 

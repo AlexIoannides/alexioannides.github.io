@@ -120,7 +120,7 @@
 <li>generate a prediction (or model-scoring) function that automatically applies the entire pipeline of transformations and inverse-transformations to the inputs and outputs of the inner-model and its predicted values (or&nbsp;scores).</li>
 </ul>
 <p>The idea of pipelines is inspired by the machine learning pipelines implemented in <a href="http://spark.apache.org/docs/latest/ml-pipeline.html" title="Pipelines in Apache Spark MLib">Apache Spark&#8217;s MLib library</a> (which are in-turn inspired by Python&#8217;s scikit-Learn package). This package is still in its infancy and the latest development version can be downloaded from <a href="https://github.com/AlexIoannides/pipeliner" title="Pipeliner on GitHub">this GitHub repository</a> using the <code>devtools</code> package (bundled with&nbsp;RStudio),</p>
-<div class="highlight"><pre><span></span>devtools<span class="o">::</span>install_github<span class="p">(</span><span class="s">&quot;alexioannides/pipeliner&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">devtools</span><span class="o">::</span><span class="nf">install_github</span><span class="p">(</span><span class="s">&quot;alexioannides/pipeliner&quot;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -129,8 +129,8 @@
 <ul>
 <li><code>transform_features</code>: wraps a function that maps input variables (or features) to another space -&nbsp;e.g.,</li>
 </ul>
-<div class="highlight"><pre><span></span>transform_features<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-  <span class="kt">data.frame</span><span class="p">(</span>x1 <span class="o">=</span> <span class="kp">log</span><span class="p">(</span>df<span class="o">$</span>var1<span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="nf">transform_features</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nf">data.frame</span><span class="p">(</span><span class="n">x1</span> <span class="o">=</span> <span class="nf">log</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">var1</span><span class="p">))</span>
 <span class="p">})</span>
 </pre></div>
 
@@ -138,8 +138,8 @@
 <ul>
 <li><code>transform_response</code>: wraps a function that maps the response variable to another space -&nbsp;e.g.,</li>
 </ul>
-<div class="highlight"><pre><span></span>transform_response<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-  <span class="kt">data.frame</span><span class="p">(</span>y <span class="o">=</span> <span class="kp">log</span><span class="p">(</span>df<span class="o">$</span>response<span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="nf">transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nf">data.frame</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="nf">log</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">response</span><span class="p">))</span>
 <span class="p">})</span>
 </pre></div>
 
@@ -147,8 +147,8 @@
 <ul>
 <li><code>estimate_model</code>: wraps a function that defines how to estimate a model from training data in a data.frame -&nbsp;e.g.,</li>
 </ul>
-<div class="highlight"><pre><span></span>estimate_model<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-  lm<span class="p">(</span>y <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> x1<span class="p">,</span> df<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nf">estimate_model</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nf">lm</span><span class="p">(</span><span class="n">y</span> <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x1</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 <span class="p">})</span>
 </pre></div>
 
@@ -156,8 +156,8 @@
 <ul>
 <li><code>inv_transform_features(f)</code>: wraps a function that is the inverse to <code>transform_response</code>, such that we can map from the space of inner-model predictions to the one of output domain predictions -&nbsp;e.g.,</li>
 </ul>
-<div class="highlight"><pre><span></span>inv_transform_response<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-  <span class="kt">data.frame</span><span class="p">(</span>pred_response <span class="o">=</span> <span class="kp">exp</span><span class="p">(</span>df<span class="o">$</span>pred_y<span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="nf">inv_transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nf">data.frame</span><span class="p">(</span><span class="n">pred_response</span> <span class="o">=</span> <span class="nf">exp</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">pred_y</span><span class="p">))</span>
 <span class="p">})</span>
 </pre></div>
 
@@ -169,32 +169,32 @@
 <h3 id="example-usage-with-a-functional-flavor">Example Usage with a Functional&nbsp;Flavor</h3>
 <p>We use the <code>faithful</code> dataset shipped with R, together with the <code>pipeliner</code> package to estimate a linear regression model for the eruption duration of &#8216;Old Faithful&#8217; as a function of the inter-eruption waiting time. The transformations we apply to the input and response variables - before we estimate the model - are simple scaling by the mean and standard deviation (i.e. mapping the variables to&nbsp;z-scores).</p>
 <p>The end-to-end process for building the pipeline, estimating the model and generating in-sample predictions (that include all interim variable transformations), is as&nbsp;follows,</p>
-<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>pipeliner<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">pipeliner</span><span class="p">)</span>
 
-data <span class="o">&lt;-</span> faithful
+<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">faithful</span>
 
-lm_pipeline <span class="o">&lt;-</span> pipeline<span class="p">(</span>
-  data<span class="p">,</span>
+<span class="n">lm_pipeline</span> <span class="o">&lt;-</span> <span class="nf">pipeline</span><span class="p">(</span>
+  <span class="n">data</span><span class="p">,</span>
 
-  transform_features<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-    <span class="kt">data.frame</span><span class="p">(</span>x1 <span class="o">=</span> <span class="p">(</span>df<span class="o">$</span>waiting <span class="o">-</span> <span class="kp">mean</span><span class="p">(</span>df<span class="o">$</span>waiting<span class="p">))</span> <span class="o">/</span> sd<span class="p">(</span>df<span class="o">$</span>waiting<span class="p">))</span>
+  <span class="nf">transform_features</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">data.frame</span><span class="p">(</span><span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">waiting</span> <span class="o">-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">waiting</span><span class="p">))</span> <span class="o">/</span> <span class="nf">sd</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">waiting</span><span class="p">))</span>
   <span class="p">}),</span>
 
-  transform_response<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-    <span class="kt">data.frame</span><span class="p">(</span>y <span class="o">=</span> <span class="p">(</span>df<span class="o">$</span>eruptions <span class="o">-</span> <span class="kp">mean</span><span class="p">(</span>df<span class="o">$</span>eruptions<span class="p">))</span> <span class="o">/</span> sd<span class="p">(</span>df<span class="o">$</span>eruptions<span class="p">))</span>
+  <span class="nf">transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">data.frame</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">eruptions</span> <span class="o">-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">eruptions</span><span class="p">))</span> <span class="o">/</span> <span class="nf">sd</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">eruptions</span><span class="p">))</span>
   <span class="p">}),</span>
 
-  estimate_model<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-    lm<span class="p">(</span>y <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> x1<span class="p">,</span> df<span class="p">)</span>
+  <span class="nf">estimate_model</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">lm</span><span class="p">(</span><span class="n">y</span> <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x1</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
   <span class="p">}),</span>
 
-  inv_transform_response<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-    <span class="kt">data.frame</span><span class="p">(</span>pred_eruptions <span class="o">=</span> df<span class="o">$</span>pred_model <span class="o">*</span> sd<span class="p">(</span>df<span class="o">$</span>eruptions<span class="p">)</span> <span class="o">+</span> <span class="kp">mean</span><span class="p">(</span>df<span class="o">$</span>eruptions<span class="p">))</span>
+  <span class="nf">inv_transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">data.frame</span><span class="p">(</span><span class="n">pred_eruptions</span> <span class="o">=</span> <span class="n">df</span><span class="o">$</span><span class="n">pred_model</span> <span class="o">*</span> <span class="nf">sd</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">eruptions</span><span class="p">)</span> <span class="o">+</span> <span class="nf">mean</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">eruptions</span><span class="p">))</span>
   <span class="p">})</span>
 <span class="p">)</span>
 
-in_sample_predictions <span class="o">&lt;-</span> predict<span class="p">(</span>lm_pipeline<span class="p">,</span> data<span class="p">,</span> verbose <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>  
-<span class="kp">head</span><span class="p">(</span>in_sample_predictions<span class="p">)</span>
+<span class="n">in_sample_predictions</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">lm_pipeline</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>  
+<span class="nf">head</span><span class="p">(</span><span class="n">in_sample_predictions</span><span class="p">)</span>
 <span class="c1">##   eruptions waiting         x1 pred_model pred_eruptions</span>
 <span class="c1">## 1     3.600      79  0.5960248  0.5369058       4.100592</span>
 <span class="c1">## 2     1.800      54 -1.2428901 -1.1196093       2.209893</span>
@@ -207,7 +207,7 @@ in_sample_predictions <span class="o">&lt;-</span> predict<span class="p">(</spa
 
 <h3 id="accessing-inner-models-prediction-functions">Accessing Inner Models <span class="amp">&amp;</span> Prediction&nbsp;Functions</h3>
 <p>We can access the estimated inner models directly and compute summaries, etc - for&nbsp;example,</p>
-<div class="highlight"><pre><span></span><span class="kp">summary</span><span class="p">(</span>lm_pipeline<span class="o">$</span>inner_model<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nf">summary</span><span class="p">(</span><span class="n">lm_pipeline</span><span class="o">$</span><span class="n">inner_model</span><span class="p">)</span>
 <span class="c1">##</span>
 <span class="c1">## Call:</span>
 <span class="c1">## lm(formula = y ~ 1 + x1, data = df)</span>
@@ -230,10 +230,10 @@ in_sample_predictions <span class="o">&lt;-</span> predict<span class="p">(</spa
 
 
 <p>Pipeline prediction functions can also be accessed directly in a similar way - for&nbsp;example,</p>
-<div class="highlight"><pre><span></span>pred_function <span class="o">&lt;-</span> lm_pipeline<span class="o">$</span>predict
-predictions <span class="o">&lt;-</span> pred_function<span class="p">(</span>data<span class="p">,</span> verbose <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">pred_function</span> <span class="o">&lt;-</span> <span class="n">lm_pipeline</span><span class="o">$</span><span class="n">predict</span>
+<span class="n">predictions</span> <span class="o">&lt;-</span> <span class="nf">pred_function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
 
-<span class="kp">head</span><span class="p">(</span>predictions<span class="p">)</span>
+<span class="nf">head</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
 <span class="c1">##   pred_eruptions</span>
 <span class="c1">## 1       4.100592</span>
 <span class="c1">## 2       2.209893</span>
@@ -246,28 +246,28 @@ predictions <span class="o">&lt;-</span> pred_function<span class="p">(</span>da
 
 <h1 id="turbo-charged-pipelines-in-the-tidyverse">Turbo-Charged Pipelines in the&nbsp;Tidyverse</h1>
 <p>The <code>pipeliner</code> approach to building models becomes even more concise when combined with the set of packages in the <a href="http://tidyverse.org" title="Welcome to The Tidyverse!">tidyverse</a>. For example, the &#8216;Old Faithful&#8217; pipeline could be rewritten&nbsp;as,</p>
-<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
 
-lm_pipeline <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
-  pipeline<span class="p">(</span>
-    transform_features<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-      transmute<span class="p">(</span>df<span class="p">,</span> x1 <span class="o">=</span> <span class="p">(</span>waiting <span class="o">-</span> <span class="kp">mean</span><span class="p">(</span>waiting<span class="p">))</span> <span class="o">/</span> sd<span class="p">(</span>waiting<span class="p">))</span>
+<span class="n">lm_pipeline</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
+  <span class="nf">pipeline</span><span class="p">(</span>
+    <span class="nf">transform_features</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">transmute</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="n">waiting</span> <span class="o">-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">waiting</span><span class="p">))</span> <span class="o">/</span> <span class="nf">sd</span><span class="p">(</span><span class="n">waiting</span><span class="p">))</span>
     <span class="p">}),</span>
 
-    transform_response<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-      transmute<span class="p">(</span>df<span class="p">,</span> y <span class="o">=</span> <span class="p">(</span>eruptions <span class="o">-</span> <span class="kp">mean</span><span class="p">(</span>eruptions<span class="p">))</span> <span class="o">/</span> sd<span class="p">(</span>eruptions<span class="p">))</span>
+    <span class="nf">transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">transmute</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">eruptions</span> <span class="o">-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">eruptions</span><span class="p">))</span> <span class="o">/</span> <span class="nf">sd</span><span class="p">(</span><span class="n">eruptions</span><span class="p">))</span>
     <span class="p">}),</span>
 
-    estimate_model<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-      lm<span class="p">(</span>y <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> x1<span class="p">,</span> df<span class="p">)</span>
+    <span class="nf">estimate_model</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">lm</span><span class="p">(</span><span class="n">y</span> <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x1</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
     <span class="p">}),</span>
 
-    inv_transform_response<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-      transmute<span class="p">(</span>df<span class="p">,</span> pred_eruptions <span class="o">=</span> pred_model <span class="o">*</span> sd<span class="p">(</span>eruptions<span class="p">)</span> <span class="o">+</span> <span class="kp">mean</span><span class="p">(</span>eruptions<span class="p">))</span>
+    <span class="nf">inv_transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">transmute</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pred_eruptions</span> <span class="o">=</span> <span class="n">pred_model</span> <span class="o">*</span> <span class="nf">sd</span><span class="p">(</span><span class="n">eruptions</span><span class="p">)</span> <span class="o">+</span> <span class="nf">mean</span><span class="p">(</span><span class="n">eruptions</span><span class="p">))</span>
     <span class="p">})</span>
   <span class="p">)</span>
 
-<span class="kp">head</span><span class="p">(</span>predict<span class="p">(</span>lm_pipeline<span class="p">,</span> data<span class="p">))</span>
+<span class="nf">head</span><span class="p">(</span><span class="nf">predict</span><span class="p">(</span><span class="n">lm_pipeline</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
 <span class="c1">## [1] 4.100592 2.209893 3.722452 2.814917 4.554360 2.285521</span>
 </pre></div>
 
@@ -275,39 +275,39 @@ lm_pipeline <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
 <p>Nice, compact and expressive (if I don&#8217;t say so&nbsp;myself)!</p>
 <h3 id="compact-cross-validation">Compact&nbsp;Cross-validation</h3>
 <p>If we now introduce the <code>modelr</code> package into this workflow and adopt the the list-columns pattern described in Hadley Wickham&#8217;s <a href="http://r4ds.had.co.nz/many-models.html#list-columns-1" title="R 4 Data Science - Many Models &amp; List Columns">R for Data Science</a>, we can also achieve wonderfully compact end-to-end model estimation and&nbsp;cross-validation,</p>
-<div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>modelr<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">modelr</span><span class="p">)</span>
 
 <span class="c1"># define a function that estimates a machine learning pipeline on a single fold of the data</span>
-pipeline_func <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-  pipeline<span class="p">(</span>
-    df<span class="p">,</span>
-    transform_features<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-      transmute<span class="p">(</span>df<span class="p">,</span> x1 <span class="o">=</span> <span class="p">(</span>waiting <span class="o">-</span> <span class="kp">mean</span><span class="p">(</span>waiting<span class="p">))</span> <span class="o">/</span> sd<span class="p">(</span>waiting<span class="p">))</span>
+<span class="n">pipeline_func</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nf">pipeline</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span>
+    <span class="nf">transform_features</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">transmute</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="n">waiting</span> <span class="o">-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">waiting</span><span class="p">))</span> <span class="o">/</span> <span class="nf">sd</span><span class="p">(</span><span class="n">waiting</span><span class="p">))</span>
     <span class="p">}),</span>
 
-    transform_response<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-      transmute<span class="p">(</span>df<span class="p">,</span> y <span class="o">=</span> <span class="p">(</span>eruptions <span class="o">-</span> <span class="kp">mean</span><span class="p">(</span>eruptions<span class="p">))</span> <span class="o">/</span> sd<span class="p">(</span>eruptions<span class="p">))</span>
+    <span class="nf">transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">transmute</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">eruptions</span> <span class="o">-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">eruptions</span><span class="p">))</span> <span class="o">/</span> <span class="nf">sd</span><span class="p">(</span><span class="n">eruptions</span><span class="p">))</span>
     <span class="p">}),</span>
 
-    estimate_model<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-      lm<span class="p">(</span>y <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> x1<span class="p">,</span> df<span class="p">)</span>
+    <span class="nf">estimate_model</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">lm</span><span class="p">(</span><span class="n">y</span> <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x1</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
     <span class="p">}),</span>
 
-    inv_transform_response<span class="p">(</span><span class="kr">function</span><span class="p">(</span>df<span class="p">)</span> <span class="p">{</span>
-      transmute<span class="p">(</span>df<span class="p">,</span> pred_eruptions <span class="o">=</span> pred_model <span class="o">*</span> sd<span class="p">(</span>eruptions<span class="p">)</span> <span class="o">+</span> <span class="kp">mean</span><span class="p">(</span>eruptions<span class="p">))</span>
+    <span class="nf">inv_transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">transmute</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pred_eruptions</span> <span class="o">=</span> <span class="n">pred_model</span> <span class="o">*</span> <span class="nf">sd</span><span class="p">(</span><span class="n">eruptions</span><span class="p">)</span> <span class="o">+</span> <span class="nf">mean</span><span class="p">(</span><span class="n">eruptions</span><span class="p">))</span>
     <span class="p">})</span>
   <span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1"># 5-fold cross-validation using machine learning pipelines</span>
-cv_rmse <span class="o">&lt;-</span> crossv_kfold<span class="p">(</span>data<span class="p">,</span> <span class="m">5</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  mutate<span class="p">(</span>model <span class="o">=</span> map<span class="p">(</span>train<span class="p">,</span> <span class="o">~</span> pipeline_func<span class="p">(</span><span class="kp">as.data.frame</span><span class="p">(</span><span class="m">.</span>x<span class="p">))),</span>
-         predictions <span class="o">=</span> map2<span class="p">(</span>model<span class="p">,</span> test<span class="p">,</span> <span class="o">~</span> predict<span class="p">(</span><span class="m">.</span>x<span class="p">,</span> <span class="kp">as.data.frame</span><span class="p">(</span><span class="m">.</span>y<span class="p">))),</span>
-         residuals <span class="o">=</span> map2<span class="p">(</span>predictions<span class="p">,</span> test<span class="p">,</span> <span class="o">~</span> <span class="m">.</span>x <span class="o">-</span> <span class="kp">as.data.frame</span><span class="p">(</span><span class="m">.</span>y<span class="p">)</span><span class="o">$</span>eruptions<span class="p">),</span>
-         rmse <span class="o">=</span> map_dbl<span class="p">(</span>residuals<span class="p">,</span> <span class="o">~</span> <span class="kp">sqrt</span><span class="p">(</span><span class="kp">mean</span><span class="p">(</span><span class="m">.</span>x <span class="o">^</span> <span class="m">2</span><span class="p">))))</span> <span class="o">%&gt;%</span>
-  summarise<span class="p">(</span>mean_rmse <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>rmse<span class="p">),</span> sd_rmse <span class="o">=</span> sd<span class="p">(</span>rmse<span class="p">))</span>
+<span class="n">cv_rmse</span> <span class="o">&lt;-</span> <span class="nf">crossv_kfold</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="m">5</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="nf">map</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="o">~</span> <span class="nf">pipeline_func</span><span class="p">(</span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">.x</span><span class="p">))),</span>
+         <span class="n">predictions</span> <span class="o">=</span> <span class="nf">map2</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="o">~</span> <span class="nf">predict</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span> <span class="nf">as.data.frame</span><span class="p">(</span><span class="n">.y</span><span class="p">))),</span>
+         <span class="n">residuals</span> <span class="o">=</span> <span class="nf">map2</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="o">~</span> <span class="n">.x</span> <span class="o">-</span> <span class="nf">as.data.frame</span><span class="p">(</span><span class="n">.y</span><span class="p">)</span><span class="o">$</span><span class="n">eruptions</span><span class="p">),</span>
+         <span class="n">rmse</span> <span class="o">=</span> <span class="nf">map_dbl</span><span class="p">(</span><span class="n">residuals</span><span class="p">,</span> <span class="o">~</span> <span class="nf">sqrt</span><span class="p">(</span><span class="nf">mean</span><span class="p">(</span><span class="n">.x</span> <span class="o">^</span> <span class="m">2</span><span class="p">))))</span> <span class="o">%&gt;%</span>
+  <span class="nf">summarise</span><span class="p">(</span><span class="n">mean_rmse</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">rmse</span><span class="p">),</span> <span class="n">sd_rmse</span> <span class="o">=</span> <span class="nf">sd</span><span class="p">(</span><span class="n">rmse</span><span class="p">))</span>
 
-cv_rmse
+<span class="n">cv_rmse</span>
 <span class="c1">## # A tibble: 1 × 2</span>
 <span class="c1">##   mean_rmse    sd_rmse</span>
 <span class="c1">##       &lt;dbl&gt;      &lt;dbl&gt;</span>

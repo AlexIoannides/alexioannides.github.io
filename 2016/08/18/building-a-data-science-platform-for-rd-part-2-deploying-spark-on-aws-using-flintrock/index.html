@@ -190,9 +190,9 @@ $ <span class="nb">cd</span> flintrock/
 <p>Return to the terminal and follow this advice. If successful, you should see something along the lines&nbsp;of:</p>
 <p><img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ssh_master.png" title="SSH-connect"></p>
 <p>Next, fire-up the Spark shell for Scala by executing <code>spark-shell</code>. To run a trivial job across all nodes and test the cluster, run the following program on a line-by-line&nbsp;basis:</p>
-<div class="highlight"><pre><span></span>val localArray = Array(1,2,3,4,5)
-val rddArray = sc.parallelize(localArray)
-val rddArraySum = rddArray.reduce((x, y) =&gt; x + y)
+<div class="highlight"><pre><span></span><span class="err">val localArray = Array(1,2,3,4,5)</span>
+<span class="err">val rddArray = sc.parallelize(localArray)</span>
+<span class="err">val rddArraySum = rddArray.reduce((x, y) =&gt; x + y)</span>
 </pre></div>
 
 
@@ -208,8 +208,8 @@ val rddArraySum = rddArray.reduce((x, y) =&gt; x + y)
 <p>In order to access our S3 data from Spark (via Hadoop), we need to make a couple of packages (<span class="caps">JAR</span> files and their dependencies) available to all nodes in our cluster. The easiest way to do this, is to start the spark-shell with the following&nbsp;options:</p>
 <p><code>$ spark-shell --packages com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2</code></p>
 <p>Once the cluster has downloaded everything it needs and the shell has started, run the following program that &#8216;opens&#8217; the <span class="caps">README</span> file we uploaded to S3 in Part 1 of this series of blogs, and &#8216;collects&#8217; it back to the master node from its distributed (<span class="caps">RDD</span>)&nbsp;representation:</p>
-<div class="highlight"><pre><span></span>val data = sc.textFile(&quot;s3a://alex.data/README.md&quot;)
-data.collect
+<div class="highlight"><pre><span></span><span class="err">val data = sc.textFile(&quot;s3a://alex.data/README.md&quot;)</span>
+<span class="err">data.collect</span>
 </pre></div>
 
 

@@ -129,13 +129,13 @@
 
 <h1 id="an-r-function-for-generating-authenticated-urls">An R Function for Generating Authenticated&nbsp;URLs</h1>
 <p>We can now use our new user&#8217;s Access Key <span class="caps">ID</span> and Secret Access Key to create a <span class="caps">URL</span> with a limited lifetime that enables access to <code>index.html</code>. Technically, we are making a <span class="caps">HTTP</span> <span class="caps">GET</span> request to the S3 <span class="caps">REST</span> <span class="caps">API</span>, with the authentication details sent as part of a query string. Creating this <span class="caps">URL</span> is a bit tricky - I have adapted the Python example (number 3) that is provided <a href="https://s3.amazonaws.com/doc/s3-developer-guide/RESTAuthentication.html" title="Python Auth Example">here</a>, as an R function (that can be found in the Gist below) - <code>aws_query_string_auth_url(...)</code>. Here&#8217;s an example showing this R function in&nbsp;action:</p>
-<div class="highlight"><pre><span></span>path_to_file <span class="o">&lt;-</span> <span class="s">&quot;index.html&quot;</span>
-bucket <span class="o">&lt;-</span> <span class="s">&quot;my.s3.bucket&quot;</span>
-region <span class="o">&lt;-</span> <span class="s">&quot;eu-west-1&quot;</span>
-aws_access_key_id <span class="o">&lt;-</span> <span class="s">&quot;DWAAAAJL4KIEWJCV3R36&quot;</span>
-aws_secret_access_key <span class="o">&lt;-</span> <span class="s">&quot;jH1pEfnQtKj6VZJOFDy+t253OZJWZLEo9gaEoFAY&quot;</span>
-lifetime_minutes <span class="o">&lt;-</span> <span class="m">1</span>
-aws_query_string_auth_url<span class="p">(</span>path_to_file<span class="p">,</span> bucket<span class="p">,</span> region<span class="p">,</span> aws_access_key_id<span class="p">,</span> aws_secret_access_key<span class="p">,</span> lifetime_minutes<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">path_to_file</span> <span class="o">&lt;-</span> <span class="s">&quot;index.html&quot;</span>
+<span class="n">bucket</span> <span class="o">&lt;-</span> <span class="s">&quot;my.s3.bucket&quot;</span>
+<span class="n">region</span> <span class="o">&lt;-</span> <span class="s">&quot;eu-west-1&quot;</span>
+<span class="n">aws_access_key_id</span> <span class="o">&lt;-</span> <span class="s">&quot;DWAAAAJL4KIEWJCV3R36&quot;</span>
+<span class="n">aws_secret_access_key</span> <span class="o">&lt;-</span> <span class="s">&quot;jH1pEfnQtKj6VZJOFDy+t253OZJWZLEo9gaEoFAY&quot;</span>
+<span class="n">lifetime_minutes</span> <span class="o">&lt;-</span> <span class="m">1</span>
+<span class="nf">aws_query_string_auth_url</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">aws_access_key_id</span><span class="p">,</span> <span class="n">aws_secret_access_key</span><span class="p">,</span> <span class="n">lifetime_minutes</span><span class="p">)</span>
 <span class="c1"># &quot;https://s3-eu-west-1.amazonaws.com/my.s3.bucket/index.html?AWSAccessKeyId=DWAAAKIAJL4EWJCV3R36&amp;Expires=1471994487&amp;Signature=inZlnNHHswKmcPfTBiKhziRSwT4%3D&quot;</span>
 </pre></div>
 

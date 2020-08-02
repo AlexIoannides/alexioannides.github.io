@@ -78,7 +78,7 @@
 &lt;span class="n"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 
-&lt;span class="nd"&gt;@app.route&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/score&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;methods&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;POST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="nd"&gt;@app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;route&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/score&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;methods&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;POST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;score&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
     &lt;span class="n"&gt;features&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;X&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;make_response&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonify&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;score&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;features&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;
@@ -93,13 +93,13 @@
 &lt;p&gt;In our example function, we expect an array of features, &lt;code&gt;X&lt;/code&gt;, that we pass to a &lt;span class="caps"&gt;ML&lt;/span&gt; model, which in our example returns those same features back to the caller - i.e. our chosen &lt;span class="caps"&gt;ML&lt;/span&gt; model is the identity function, which we have chosen for purely demonstrative purposes. We could just as easily have loaded a pickled SciKit-Learn or Keras model and passed the data to the approproate &lt;code&gt;predict&lt;/code&gt; method, returning a score for the feature-data as &lt;span class="caps"&gt;JSON&lt;/span&gt; - see &lt;a href="https://github.com/AlexIoannides/ml-workflow-automation/blob/master/deploy/py-sklearn-flask-ml-service/api.py"&gt;here&lt;/a&gt; for an example of this in&amp;nbsp;action.&lt;/p&gt;
 &lt;h3 id="defining-the-docker-image-with-the-dockerfile"&gt;Defining the Docker Image with the &lt;code&gt;Dockerfile&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;A &lt;code&gt;Dockerfile&lt;/code&gt; is essentially the configuration file used by Docker, that allows you to define the contents and configure the operation of a Docker container, when operational. This static data, when not executed as a container, is referred to as the &amp;#8216;image&amp;#8217;. For reference, the &lt;code&gt;Dockerfile&lt;/code&gt; is reproduced&amp;nbsp;below,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; python:3.6-slim&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="s"&gt;python:3.6-slim&lt;/span&gt;
 &lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; /usr/src/app&lt;/span&gt;
-COPY . .
+&lt;span class="k"&gt;COPY&lt;/span&gt; . .
 &lt;span class="k"&gt;RUN&lt;/span&gt; pip install pipenv
 &lt;span class="k"&gt;RUN&lt;/span&gt; pipenv install
 &lt;span class="k"&gt;EXPOSE&lt;/span&gt;&lt;span class="s"&gt; 5000&lt;/span&gt;
-&lt;span class="k"&gt;CMD&lt;/span&gt;&lt;span class="s"&gt; [&amp;quot;pipenv&amp;quot;, &amp;quot;run&amp;quot;, &amp;quot;python&amp;quot;, &amp;quot;api.py&amp;quot;]&lt;/span&gt;
+&lt;span class="k"&gt;CMD&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;pipenv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;run&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;python&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;api.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -394,57 +394,57 @@ kubectl delete service test-ml-score-api-lb
 
 &lt;p&gt;Briefly, the &lt;code&gt;charts&lt;/code&gt; directory contains other charts that our new chart will depend on (we will not make use of this), the &lt;code&gt;templates&lt;/code&gt; directory contains our Helm templates, &lt;code&gt;Chart.yaml&lt;/code&gt; contains core information for our chart (e.g. name and version information) and &lt;code&gt;values.yaml&lt;/code&gt; contains default values to render our templates with (in the case that no values are set from the command&amp;nbsp;line).&lt;/p&gt;
 &lt;p&gt;The next step is to delete all of the files in the &lt;code&gt;templates&lt;/code&gt; directory (apart from &lt;code&gt;NOTES.txt&lt;/code&gt;), and to replace them with our own. We start with &lt;code&gt;namespace.yaml&lt;/code&gt; for declaring a namespace for our&amp;nbsp;app,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;apiVersion&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v1&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;kind&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Namespace&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;metadata&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.namespace&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;apiVersion&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v1&lt;/span&gt;
+&lt;span class="nt"&gt;kind&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Namespace&lt;/span&gt;
+&lt;span class="nt"&gt;metadata&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.namespace&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Anyone familiar with &lt;span class="caps"&gt;HTML&lt;/span&gt; template frameworks (e.g. Jinja), will be familiar with the use of &lt;code&gt;{{}}&lt;/code&gt; for defining values that will be injected into the rendered template. In this specific instance &lt;code&gt;.Values.app.namespace&lt;/code&gt; injects the &lt;code&gt;app.namespace&lt;/code&gt; variable, whose default value defined in &lt;code&gt;values.yaml&lt;/code&gt;. Next we define a deployment of pods in &lt;code&gt;deployment.yaml&lt;/code&gt;,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;apiVersion&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;apps/v1&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;kind&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Deployment&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;metadata&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;labels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;env&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.env&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;namespace&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.namespace&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;spec&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;replicas&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;1&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;selector&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;matchLabels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-      &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;template&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;metadata&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-      &lt;span class="l l-Scalar l-Scalar-Plain"&gt;labels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;env&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.env&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;spec&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-      &lt;span class="l l-Scalar l-Scalar-Plain"&gt;containers&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-      &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;image&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.image&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;ports&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-        &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;containerPort&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.containerPort&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-          &lt;span class="l l-Scalar l-Scalar-Plain"&gt;protocol&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;TCP&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;apiVersion&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;apps/v1&lt;/span&gt;
+&lt;span class="nt"&gt;kind&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Deployment&lt;/span&gt;
+&lt;span class="nt"&gt;metadata&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;labels&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;app&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+    &lt;span class="nt"&gt;env&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.env&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+  &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+  &lt;span class="nt"&gt;namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.namespace&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+&lt;span class="nt"&gt;spec&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;replicas&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;1&lt;/span&gt;
+  &lt;span class="nt"&gt;selector&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;matchLabels&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="nt"&gt;app&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+  &lt;span class="nt"&gt;template&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;metadata&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="nt"&gt;labels&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nt"&gt;app&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+        &lt;span class="nt"&gt;env&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.env&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+    &lt;span class="nt"&gt;spec&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="nt"&gt;containers&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.image&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+        &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+        &lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;containerPort&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.containerPort&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+          &lt;span class="nt"&gt;protocol&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;TCP&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;And the details of the load balancer service in &lt;code&gt;service.yaml&lt;/code&gt;,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;apiVersion&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v1&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;kind&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Service&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;metadata&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;name&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;-lb&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;labels&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;namespace&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.namespace&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;spec&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;type&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;LoadBalancer&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;ports&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;port&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.containerPort&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;targetPort&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.targetPort&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;selector&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;app&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;apiVersion&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;v1&lt;/span&gt;
+&lt;span class="nt"&gt;kind&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Service&lt;/span&gt;
+&lt;span class="nt"&gt;metadata&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;-lb&lt;/span&gt;
+  &lt;span class="nt"&gt;labels&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;app&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+  &lt;span class="nt"&gt;namespace&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.namespace&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+&lt;span class="nt"&gt;spec&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;LoadBalancer&lt;/span&gt;
+  &lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.containerPort&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+    &lt;span class="nt"&gt;targetPort&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.targetPort&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
+  &lt;span class="nt"&gt;selector&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;app&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;.Values.app.name&lt;/span&gt; &lt;span class="p p-Indicator"&gt;}}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -476,70 +476,15 @@ kubectl delete service test-ml-score-api-lb
 &lt;h2 id="using-seldon-to-deploy-the-ml-model-scoring-service-to-kubernetes"&gt;Using Seldon to Deploy the &lt;span class="caps"&gt;ML&lt;/span&gt; Model Scoring Service to&amp;nbsp;Kubernetes&lt;/h2&gt;
 &lt;p&gt;Seldon&amp;#8217;s core mission is to simplify the repeated deployment and management of complex &lt;span class="caps"&gt;ML&lt;/span&gt; prediction pipelines on top of Kubernetes. In this demonstration we are going to focus on the simplest possible example - i.e. the simple &lt;span class="caps"&gt;ML&lt;/span&gt; model scoring &lt;span class="caps"&gt;API&lt;/span&gt; we have already been&amp;nbsp;using.&lt;/p&gt;
 &lt;h3 id="building-an-ml-component-for-seldon"&gt;Building an &lt;span class="caps"&gt;ML&lt;/span&gt; Component for&amp;nbsp;Seldon&lt;/h3&gt;
-&lt;p&gt;To deploy a &lt;span class="caps"&gt;ML&lt;/span&gt; component using Seldon, we need to create Seldon-compatible Docker images. We start by following &lt;a href="https://docs.seldon.io/projects/seldon-core/en/latest/python/python_wrapping_docker.html"&gt;these guidelines&lt;/a&gt; for defining a Python class that wraps an &lt;span class="caps"&gt;ML&lt;/span&gt; model targeted for deployment with Seldon. This is contained within the &lt;code&gt;seldon-ml-score-component&lt;/code&gt; directory, whose contents are similar to those in &lt;code&gt;py-flask-ml-score-api&lt;/code&gt;,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;seldon-ml-score-component/
- &lt;span class="p"&gt;|&lt;/span&gt; Dockerfile
- &lt;span class="p"&gt;|&lt;/span&gt; MLScore.py
- &lt;span class="p"&gt;|&lt;/span&gt; Pipfile
- &lt;span class="p"&gt;|&lt;/span&gt; Pipfile.lock
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;p&gt;To deploy a &lt;span class="caps"&gt;ML&lt;/span&gt; component using Seldon, we need to create Seldon-compatible Docker images. We start by following &lt;a href="https://docs.seldon.io/projects/seldon-core/en/latest/python/python_wrapping_docker.html"&gt;these guidelines&lt;/a&gt; for defining a Python class that wraps an &lt;span class="caps"&gt;ML&lt;/span&gt; model targeted for deployment with Seldon. This is contained within the &lt;code&gt;seldon-ml-score-component&lt;/code&gt; directory.&lt;/p&gt;
 &lt;h4 id="building-the-docker-image-for-use-with-seldon"&gt;Building the Docker Image for use with&amp;nbsp;Seldon&lt;/h4&gt;
 &lt;p&gt;Seldon requires that the Docker image for the &lt;span class="caps"&gt;ML&lt;/span&gt; scoring service be structured in a particular&amp;nbsp;way:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;the &lt;span class="caps"&gt;ML&lt;/span&gt; model has to be wrapped in a Python class with a &lt;code&gt;predict&lt;/code&gt; method with a particular signature (or interface) - for example, in &lt;code&gt;MLScore.py&lt;/code&gt; (deliberately named after the Python class contained within it) we&amp;nbsp;have,&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MLScore&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class="sd"&gt;    Model template. You can load your model parameters in __init__ from&lt;/span&gt;
-&lt;span class="sd"&gt;    a location accessible at runtime&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class="sd"&gt;        Load models and add any initialization parameters (these will&lt;/span&gt;
-&lt;span class="sd"&gt;        be passed at runtime from the graph definition parameters&lt;/span&gt;
-&lt;span class="sd"&gt;        defined in your seldondeployment kubernetes resource manifest).&lt;/span&gt;
-&lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Initializing&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;predict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;features_names&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class="sd"&gt;        Return a prediction.&lt;/span&gt;
-
-&lt;span class="sd"&gt;        Parameters&lt;/span&gt;
-&lt;span class="sd"&gt;        ----------&lt;/span&gt;
-&lt;span class="sd"&gt;        X : array-like&lt;/span&gt;
-&lt;span class="sd"&gt;        feature_names : array of feature names (optional)&lt;/span&gt;
-&lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Predict called - will run identity function&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;X&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;ul&gt;
+&lt;li&gt;the &lt;span class="caps"&gt;ML&lt;/span&gt; model has to be wrapped in a Python class with a &lt;code&gt;predict&lt;/code&gt; method with a particular signature (or&amp;nbsp;interface);&lt;/li&gt;
 &lt;li&gt;the &lt;code&gt;seldon-core&lt;/code&gt; Python package must be installed (we use &lt;code&gt;pipenv&lt;/code&gt; to manage dependencies as discussed above and in the Appendix below);&amp;nbsp;and,&lt;/li&gt;
-&lt;li&gt;the container starts by running the Seldon service using the &lt;code&gt;seldon-core-microservice&lt;/code&gt; entry-point provided by the &lt;code&gt;seldon-core&lt;/code&gt; package - both this and the point above can be seen the &lt;code&gt;DockerFile&lt;/code&gt;,&lt;/li&gt;
+&lt;li&gt;the container starts by running the Seldon service using the &lt;code&gt;seldon-core-microservice&lt;/code&gt; entry-point provided by the &lt;code&gt;seldon-core&lt;/code&gt; package.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; python:3.6-slim&lt;/span&gt;
-COPY . /app
-&lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; /app&lt;/span&gt;
-&lt;span class="k"&gt;RUN&lt;/span&gt; pip install pipenv
-&lt;span class="k"&gt;RUN&lt;/span&gt; pipenv install
-&lt;span class="k"&gt;EXPOSE&lt;/span&gt;&lt;span class="s"&gt; 5000&lt;/span&gt;
-
-&lt;span class="c"&gt;# Define environment variable&lt;/span&gt;
-&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; MODEL_NAME MLScore&lt;/span&gt;
-&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; API_TYPE REST&lt;/span&gt;
-&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; SERVICE_TYPE MODEL&lt;/span&gt;
-&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; PERSISTENCE 0&lt;/span&gt;
-
-&lt;span class="k"&gt;CMD&lt;/span&gt;&lt;span class="s"&gt; pipenv run seldon-core-microservice $MODEL_NAME $API_TYPE --service-type $SERVICE_TYPE --persistence $PERSISTENCE&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;For the precise details refer to the &lt;a href="https://docs.seldon.io/projects/seldon-core/en/latest/python/index.html"&gt;official Seldon documentation&lt;/a&gt;. Next, build this&amp;nbsp;image,&lt;/p&gt;
+&lt;p&gt;For the precise details, see &lt;code&gt;MLScore.py&lt;/code&gt; and &lt;code&gt;Dockefile&lt;/code&gt; in the &lt;code&gt;seldon-ml-score-component&lt;/code&gt; directory. Next, build this&amp;nbsp;image,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker build seldon-ml-score-component -t alexioannides/test-ml-score-seldon-api:latest
 &lt;/pre&gt;&lt;/div&gt;
 

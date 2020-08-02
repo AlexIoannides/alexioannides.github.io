@@ -5,7 +5,7 @@
 &lt;p&gt;The &lt;code&gt;elasticsearchr&lt;/code&gt; package implements a simple Domain-Specific Language (&lt;span class="caps"&gt;DSL&lt;/span&gt;) for indexing, deleting, querying, sorting and aggregating data in Elasticsearch, from within R. The main purpose of this package is to remove the labour involved with assembling &lt;span class="caps"&gt;HTTP&lt;/span&gt; requests to Elasticsearch&amp;#8217;s &lt;span class="caps"&gt;REST&lt;/span&gt; APIs and parsing the responses. Instead, users of this package need only send and receive data frames to Elasticsearch resources. Users needing richer functionality are encouraged to investigate the excellent &lt;code&gt;elastic&lt;/code&gt; package from the good people at &lt;a href="https://github.com/ropensci/elastic" title="rOpenSci"&gt;rOpenSci&lt;/a&gt;.
 &lt;!--more--&gt;
 This package is available on &lt;a href="https://cran.r-project.org/web/packages/elasticsearchr/" title="elasticsearchr on CRAN"&gt;&lt;span class="caps"&gt;CRAN&lt;/span&gt;&lt;/a&gt; or from &lt;a href="https://github.com/AlexIoannides/elasticsearchr" title="Alex's GitHub repository"&gt;this GitHub repository&lt;/a&gt;. To install the latest (development) version from GitHub, make sure that you have the &lt;code&gt;devtools&lt;/code&gt; package installed (this comes bundled with RStudio), and then execute the following on the R command&amp;nbsp;line:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;devtools&lt;span class="o"&gt;::&lt;/span&gt;install_github&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;alexioannides/elasticsearchr&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;devtools&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="nf"&gt;install_github&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;alexioannides/elasticsearchr&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -60,7 +60,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;p&gt;&lt;code&gt;elasticsearchr&lt;/code&gt; is a &lt;strong&gt;lightweight&lt;/strong&gt; client - by this I mean that it only aims to do &amp;#8216;just enough&amp;#8217; work to make using Elasticsearch with R easy and intuitive. You will still need to read the &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;Elasticsearch documentation&lt;/a&gt; to understand how to compose queries and aggregations. What follows is a quick summary of what is&amp;nbsp;possible.&lt;/p&gt;
 &lt;h3 id="resources"&gt;Resources&lt;/h3&gt;
 &lt;p&gt;Elasticsearch resources, as defined by the URLs described above, are defined as &lt;code&gt;elastic&lt;/code&gt; objects in &lt;code&gt;elasticsearchr&lt;/code&gt;. For&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;es &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;es&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;elastic&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -69,37 +69,37 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 - &lt;code&gt;elastic&lt;/code&gt; objects can be defined even if the underling resources have yet to be brought into&amp;nbsp;existence.&lt;/p&gt;
 &lt;h3 id="indexing-new-data"&gt;Indexing New&amp;nbsp;Data&lt;/h3&gt;
 &lt;p&gt;To index (insert) data from a data frame, use the &lt;code&gt;%index%&lt;/code&gt; operator as&amp;nbsp;follows:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%index%&lt;/span&gt; iris
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;elastic&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%index%&lt;/span&gt; &lt;span class="n"&gt;iris&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;In this example, the &lt;code&gt;iris&lt;/code&gt; dataset is indexed into the &amp;#8216;iris&amp;#8217; index and given a document type called &amp;#8216;data&amp;#8217;. Note that I have not provided any document ids here. &lt;strong&gt;To explicitly specify document ids there must be a column in the data frame that is labelled &lt;code&gt;id&lt;/code&gt;&lt;/strong&gt;, from which the document ids will be&amp;nbsp;taken.&lt;/p&gt;
 &lt;h3 id="deleting-data"&gt;Deleting&amp;nbsp;Data&lt;/h3&gt;
 &lt;p&gt;Documents can be deleted in three different ways using the &lt;code&gt;%delete%&lt;/code&gt; operator. Firstly, an entire index (including the mapping information) can be erased by referencing just the index in the resource -&amp;nbsp;e.g.,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;elastic&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Alternatively, documents can be deleted on a type-by-type basis leaving the index and it&amp;#8217;s mappings untouched, by referencing both the index and the document type as the resource -&amp;nbsp;e.g.,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;elastic&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Finally, specific documents can be deleted by referencing their ids directly -&amp;nbsp;e.g.,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;3&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;4&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;5&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;elastic&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%delete%&lt;/span&gt; &lt;span class="nf"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;3&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;4&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;5&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3 id="queries"&gt;Queries&lt;/h3&gt;
 &lt;p&gt;Any type of query that Elasticsearch makes available can be defined in a &lt;code&gt;query&lt;/code&gt; object using the native Elasticsearch &lt;span class="caps"&gt;JSON&lt;/span&gt; syntax - e.g. to match every document we could use the &lt;code&gt;match_all&lt;/code&gt; query,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;for_everything &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; query&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;for_everything&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
 &lt;span class="s"&gt;  &amp;quot;match_all&amp;quot;: {}&lt;/span&gt;
 &lt;span class="s"&gt;}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;To execute this query we use the &lt;code&gt;%search%&lt;/code&gt; operator on the appropriate resource -&amp;nbsp;e.g.,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; for_everything
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;elastic&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; &lt;span class="n"&gt;for_everything&lt;/span&gt;
 
 &lt;span class="c1"&gt;#     sepal_length sepal_width petal_length petal_width    species&lt;/span&gt;
 &lt;span class="c1"&gt;# 1            4.9         3.0          1.4         0.2     setosa&lt;/span&gt;
@@ -114,12 +114,12 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 
 &lt;h3 id="sorting-query-results"&gt;Sorting Query&amp;nbsp;Results&lt;/h3&gt;
 &lt;p&gt;Query results can be sorted on multiple fields by defining a &lt;code&gt;sort&lt;/code&gt; object using the same Elasticsearch &lt;span class="caps"&gt;JSON&lt;/span&gt; syntax - e.g. to sort by &lt;code&gt;sepal_width&lt;/code&gt; in ascending order the required &lt;code&gt;sort&lt;/code&gt; object would be defined&amp;nbsp;as,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;by_sepal_width &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&amp;quot;sepal_width&amp;quot;: {&amp;quot;order&amp;quot;: &amp;quot;asc&amp;quot;}}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;by_sepal_width&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&amp;quot;sepal_width&amp;quot;: {&amp;quot;order&amp;quot;: &amp;quot;asc&amp;quot;}}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This is then added to a &lt;code&gt;query&lt;/code&gt; object whose results we want sorted and executed using the &lt;code&gt;%search%&lt;/code&gt; operator as before -&amp;nbsp;e.g.,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;for_everything &lt;span class="o"&gt;+&lt;/span&gt; by_sepal_width&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;elastic&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;for_everything&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;by_sepal_width&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;#   sepal_length sepal_width petal_length petal_width    species&lt;/span&gt;
 &lt;span class="c1"&gt;# 1          5.0         2.0          3.5         1.0 versicolor&lt;/span&gt;
@@ -134,7 +134,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 
 &lt;h3 id="aggregations"&gt;Aggregations&lt;/h3&gt;
 &lt;p&gt;Similarly, any type of aggregation that Elasticsearch makes available can be defined in an &lt;code&gt;aggs&lt;/code&gt; object - e.g. to compute the average &lt;code&gt;sepal_width&lt;/code&gt; per-species of flower we would specify the following&amp;nbsp;aggregation,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;avg_sepal_width &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; aggs&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;avg_sepal_width&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;aggs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;{&lt;/span&gt;
 &lt;span class="s"&gt;  &amp;quot;avg_sepal_width_per_species&amp;quot;: {&lt;/span&gt;
 &lt;span class="s"&gt;    &amp;quot;terms&amp;quot;: {&lt;/span&gt;
 &lt;span class="s"&gt;      &amp;quot;field&amp;quot;: &amp;quot;species&amp;quot;,&lt;/span&gt;
@@ -154,7 +154,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 
 &lt;p&gt;&lt;em&gt;(Elasticsearch 5.x users please note that when using the out-of-the-box mappings the above aggregation requires that &lt;code&gt;"field": "species"&lt;/code&gt; be changed to &lt;code&gt;"field": "species.keyword"&lt;/code&gt; - see &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.0/breaking_50_mapping_changes.html" title="Text fields in Elasticsearch 5.x"&gt;here&lt;/a&gt; for more information as to&amp;nbsp;why)&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;This aggregation is also executed via the &lt;code&gt;%search%&lt;/code&gt; operator on the appropriate resource -&amp;nbsp;e.g.,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; avg_sepal_width
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;elastic&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; &lt;span class="n"&gt;avg_sepal_width&lt;/span&gt;
 
 &lt;span class="c1"&gt;#          key doc_count avg_sepal_width.value&lt;/span&gt;
 &lt;span class="c1"&gt;# 1     setosa        50                 3.428&lt;/span&gt;
@@ -164,7 +164,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 
 
 &lt;p&gt;Queries and aggregations can be combined such that the aggregations are computed on the results of the query. For example, to execute the combination of the above query and aggregation, we would&amp;nbsp;execute,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;for_everything &lt;span class="o"&gt;+&lt;/span&gt; avg_sepal_width&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;elastic&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%search%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;for_everything&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;avg_sepal_width&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;#          key doc_count avg_sepal_width.value&lt;/span&gt;
 &lt;span class="c1"&gt;# 1     setosa        50                 3.428&lt;/span&gt;
@@ -174,7 +174,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 
 
 &lt;p&gt;where the combination&amp;nbsp;yields,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kp"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;for_everything &lt;span class="o"&gt;+&lt;/span&gt; avg_sepal_width&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;for_everything&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;avg_sepal_width&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# {&lt;/span&gt;
 &lt;span class="c1"&gt;#     &amp;quot;size&amp;quot;: 0,&lt;/span&gt;
@@ -205,7 +205,7 @@ This package is available on &lt;a href="https://cran.r-project.org/web/packages
 &lt;p&gt;For comprehensive coverage of all query and aggregations types please refer to the rather excellent &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation"&gt;official documentation&lt;/a&gt; (newcomers to Elasticsearch are advised to start with the &amp;#8216;Query String&amp;#8217;&amp;nbsp;query).&lt;/p&gt;
 &lt;h3 id="mappings"&gt;Mappings&lt;/h3&gt;
 &lt;p&gt;Finally, I have included the ability to create an empty index with a custom mapping, using the &lt;code&gt;%create%&lt;/code&gt; operator -&amp;nbsp;e.g.,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;elastic&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%create%&lt;/span&gt; mapping_default_simple&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;elastic&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://localhost:9200&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;iris&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%create%&lt;/span&gt; &lt;span class="nf"&gt;mapping_default_simple&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 

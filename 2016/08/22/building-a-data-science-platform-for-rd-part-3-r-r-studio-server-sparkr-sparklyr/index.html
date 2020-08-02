@@ -155,23 +155,23 @@ We will then install and configure both the <a href="http://spark.rstudio.com/in
 <span class="c1"># Sys.setenv(AWS_SECRET_ACCESS_KEY=&quot;nVZJQtKj6ODDy+t253OZJWZLEo2gaEoFAYjH1pEf&quot;)</span>
 
 <span class="c1"># load packages ----</span>
-<span class="kn">library</span><span class="p">(</span>sparklyr<span class="p">)</span>
-<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">sparklyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
 
 <span class="c1"># add packages to Spark config ----</span>
-config <span class="o">&lt;-</span> spark_config<span class="p">()</span>
-config<span class="o">$</span>sparklyr.defaultPackages<span class="p">[[</span><span class="m">3</span><span class="p">]]</span> <span class="o">&lt;-</span> <span class="s">&quot;org.apache.hadoop:hadoop-aws:2.7.2&quot;</span>
-config<span class="o">$</span>sparklyr.defaultPackages
+<span class="n">config</span> <span class="o">&lt;-</span> <span class="nf">spark_config</span><span class="p">()</span>
+<span class="n">config</span><span class="o">$</span><span class="n">sparklyr.defaultPackages</span><span class="p">[[</span><span class="m">3</span><span class="p">]]</span> <span class="o">&lt;-</span> <span class="s">&quot;org.apache.hadoop:hadoop-aws:2.7.2&quot;</span>
+<span class="n">config</span><span class="o">$</span><span class="n">sparklyr.defaultPackages</span>
 <span class="c1"># [1] &quot;com.databricks:spark-csv_2.11:1.3.0&quot;    &quot;com.amazonaws:aws-java-sdk-pom:1.10.34&quot; &quot;org.apache.hadoop:hadoop-aws:2.7.2&quot;</span>
 
 <span class="c1"># connect to Spark cluster ----</span>
-sc <span class="o">&lt;-</span> spark_connect<span class="p">(</span>master <span class="o">=</span> <span class="s">&quot;spark://ip-172-31-11-216:7077&quot;</span><span class="p">,</span>
-                   spark_home <span class="o">=</span> <span class="s">&quot;/usr/local/lib/spark&quot;</span><span class="p">,</span>
-                   config <span class="o">=</span> config<span class="p">)</span>
+<span class="n">sc</span> <span class="o">&lt;-</span> <span class="nf">spark_connect</span><span class="p">(</span><span class="n">master</span> <span class="o">=</span> <span class="s">&quot;spark://ip-172-31-11-216:7077&quot;</span><span class="p">,</span>
+                   <span class="n">spark_home</span> <span class="o">=</span> <span class="s">&quot;/usr/local/lib/spark&quot;</span><span class="p">,</span>
+                   <span class="n">config</span> <span class="o">=</span> <span class="n">config</span><span class="p">)</span>
 
 <span class="c1"># copy the local iris dataset to Spark ----</span>
-iris_tbl <span class="o">&lt;-</span> copy_to<span class="p">(</span>sc<span class="p">,</span> iris<span class="p">)</span>
-<span class="kp">head</span><span class="p">(</span>iris_tbl<span class="p">)</span>
+<span class="n">iris_tbl</span> <span class="o">&lt;-</span> <span class="nf">copy_to</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">iris</span><span class="p">)</span>
+<span class="nf">head</span><span class="p">(</span><span class="n">iris_tbl</span><span class="p">)</span>
 <span class="c1"># Sepal_Length Sepal_Width Petal_Length Petal_Width  Species</span>
 <span class="c1">#        &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;    &lt;chr&gt;</span>
 <span class="c1">#          5.1         3.5          1.4         0.2 &quot;setosa&quot;</span>
@@ -182,8 +182,8 @@ iris_tbl <span class="o">&lt;-</span> copy_to<span class="p">(</span>sc<span cla
 <span class="c1">#          5.4         3.9          1.7         0.4 &quot;setosa&quot;</span>
 
 <span class="c1"># load S3 file into Spark&#39;s using the &quot;s3a:&quot; protocol ----</span>
-test <span class="o">&lt;-</span> spark_read_csv<span class="p">(</span>sc<span class="p">,</span> <span class="s">&quot;test&quot;</span><span class="p">,</span> <span class="s">&quot;s3a://adhoc.analytics.data/README.md&quot;</span><span class="p">)</span>
-test
+<span class="n">test</span> <span class="o">&lt;-</span> <span class="nf">spark_read_csv</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="s">&quot;test&quot;</span><span class="p">,</span> <span class="s">&quot;s3a://adhoc.analytics.data/README.md&quot;</span><span class="p">)</span>
+<span class="n">test</span>
 <span class="c1"># Source:   query [?? x 1]</span>
 <span class="c1"># Database: spark connection master=spark://ip-172-31-11-216:7077 app=sparklyr local=FALSE</span>
 <span class="c1">#</span>
@@ -202,7 +202,7 @@ test
 <span class="c1"># # ... with more rows</span>
 
 <span class="c1"># disconnect ----</span>
-spark_disconnect_all<span class="p">()</span>
+<span class="nf">spark_disconnect_all</span><span class="p">()</span>
 </pre></div>
 
 
@@ -214,22 +214,22 @@ spark_disconnect_all<span class="p">()</span>
 <div class="highlight"><pre><span></span><span class="c1"># set system variables ----</span>
 <span class="c1"># - location of Spark on master node;</span>
 <span class="c1"># - add sparkR package directory to the list of path to look for R packages</span>
-<span class="kp">Sys.setenv</span><span class="p">(</span>SPARK_HOME<span class="o">=</span><span class="s">&quot;/home/ec2-user/spark&quot;</span><span class="p">)</span>
-<span class="m">.</span>libPaths<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="kp">file.path</span><span class="p">(</span><span class="kp">Sys.getenv</span><span class="p">(</span><span class="s">&quot;SPARK_HOME&quot;</span><span class="p">),</span> <span class="s">&quot;R&quot;</span><span class="p">,</span> <span class="s">&quot;lib&quot;</span><span class="p">),</span> <span class="m">.</span>libPaths<span class="p">()))</span>
+<span class="nf">Sys.setenv</span><span class="p">(</span><span class="n">SPARK_HOME</span><span class="o">=</span><span class="s">&quot;/home/ec2-user/spark&quot;</span><span class="p">)</span>
+<span class="nf">.libPaths</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="nf">file.path</span><span class="p">(</span><span class="nf">Sys.getenv</span><span class="p">(</span><span class="s">&quot;SPARK_HOME&quot;</span><span class="p">),</span> <span class="s">&quot;R&quot;</span><span class="p">,</span> <span class="s">&quot;lib&quot;</span><span class="p">),</span> <span class="nf">.libPaths</span><span class="p">()))</span>
 
 <span class="c1"># load packages ----</span>
-<span class="kn">library</span><span class="p">(</span>SparkR<span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">SparkR</span><span class="p">)</span>
 
 <span class="c1"># connect to Spark cluster ----</span>
 <span class="c1"># check your_public_ip_address:8080 to get the local network address of your master node</span>
-sc <span class="o">&lt;-</span> sparkR.session<span class="p">(</span>master <span class="o">=</span> <span class="s">&quot;spark://ip-172-31-11-216:7077&quot;</span><span class="p">,</span>
-                     sparkPackages <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;com.databricks:spark-csv_2.11:1.3.0&quot;</span><span class="p">,</span>
+<span class="n">sc</span> <span class="o">&lt;-</span> <span class="nf">sparkR.session</span><span class="p">(</span><span class="n">master</span> <span class="o">=</span> <span class="s">&quot;spark://ip-172-31-11-216:7077&quot;</span><span class="p">,</span>
+                     <span class="n">sparkPackages</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;com.databricks:spark-csv_2.11:1.3.0&quot;</span><span class="p">,</span>
                                        <span class="s">&quot;com.amazonaws:aws-java-sdk-pom:1.10.34&quot;</span><span class="p">,</span>
                                        <span class="s">&quot;org.apache.hadoop:hadoop-aws:2.7.2&quot;</span><span class="p">))</span>
 
 <span class="c1"># copy the local iris dataset to Spark ----</span>
-iris_tbl <span class="o">&lt;-</span> createDataFrame<span class="p">(</span>iris<span class="p">)</span>
-<span class="kp">head</span><span class="p">(</span>iris_tbl<span class="p">)</span>
+<span class="n">iris_tbl</span> <span class="o">&lt;-</span> <span class="nf">createDataFrame</span><span class="p">(</span><span class="n">iris</span><span class="p">)</span>
+<span class="nf">head</span><span class="p">(</span><span class="n">iris_tbl</span><span class="p">)</span>
 <span class="c1"># Sepal_Length Sepal_Width Petal_Length Petal_Width Species</span>
 <span class="c1">#          5.1         3.5          1.4         0.2  setosa</span>
 <span class="c1">#          4.9         3.0          1.4         0.2  setosa</span>
@@ -239,8 +239,8 @@ iris_tbl <span class="o">&lt;-</span> createDataFrame<span class="p">(</span>iri
 <span class="c1">#          5.4         3.9          1.7         0.4  setosa</span>
 
 <span class="c1"># load S3 file into Spark&#39;s using the &quot;s3a:&quot; protocol ----</span>
-test <span class="o">&lt;-</span> read.text<span class="p">(</span><span class="s">&quot;s3a://adhoc.analytics.data/README.md&quot;</span><span class="p">)</span>
-<span class="kp">head</span><span class="p">(</span>collect<span class="p">(</span>test<span class="p">))</span>
+<span class="n">test</span> <span class="o">&lt;-</span> <span class="nf">read.text</span><span class="p">(</span><span class="s">&quot;s3a://adhoc.analytics.data/README.md&quot;</span><span class="p">)</span>
+<span class="nf">head</span><span class="p">(</span><span class="nf">collect</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
 <span class="c1">#                                                                            value</span>
 <span class="c1"># 1                                                                 # Apache Spark</span>
 <span class="c1"># 2</span>
@@ -250,7 +250,7 @@ test <span class="o">&lt;-</span> read.text<span class="p">(</span><span class="
 <span class="c1"># 6     rich set of higher-level tools including Spark SQL for SQL and DataFrames,</span>
 
 <span class="c1"># close connection</span>
-sparkR.session.stop<span class="p">()</span>
+<span class="nf">sparkR.session.stop</span><span class="p">()</span>
 </pre></div>
 
 

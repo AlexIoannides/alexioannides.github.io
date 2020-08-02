@@ -116,7 +116,7 @@
 <p>The <code>elasticsearchr</code> package implements a simple Domain-Specific Language (<span class="caps">DSL</span>) for indexing, deleting, querying, sorting and aggregating data in Elasticsearch, from within R. The main purpose of this package is to remove the labour involved with assembling <span class="caps">HTTP</span> requests to Elasticsearch&#8217;s <span class="caps">REST</span> APIs and parsing the responses. Instead, users of this package need only send and receive data frames to Elasticsearch resources. Users needing richer functionality are encouraged to investigate the excellent <code>elastic</code> package from the good people at <a href="https://github.com/ropensci/elastic" title="rOpenSci">rOpenSci</a>.
 <!--more-->
 This package is available on <a href="https://cran.r-project.org/web/packages/elasticsearchr/" title="elasticsearchr on CRAN"><span class="caps">CRAN</span></a> or from <a href="https://github.com/AlexIoannides/elasticsearchr" title="Alex's GitHub repository">this GitHub repository</a>. To install the latest (development) version from GitHub, make sure that you have the <code>devtools</code> package installed (this comes bundled with RStudio), and then execute the following on the R command&nbsp;line:</p>
-<div class="highlight"><pre><span></span>devtools<span class="o">::</span>install_github<span class="p">(</span><span class="s">&quot;alexioannides/elasticsearchr&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">devtools</span><span class="o">::</span><span class="nf">install_github</span><span class="p">(</span><span class="s">&quot;alexioannides/elasticsearchr&quot;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -171,7 +171,7 @@ This package is available on <a href="https://cran.r-project.org/web/packages/el
 <p><code>elasticsearchr</code> is a <strong>lightweight</strong> client - by this I mean that it only aims to do &#8216;just enough&#8217; work to make using Elasticsearch with R easy and intuitive. You will still need to read the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation">Elasticsearch documentation</a> to understand how to compose queries and aggregations. What follows is a quick summary of what is&nbsp;possible.</p>
 <h3 id="resources">Resources</h3>
 <p>Elasticsearch resources, as defined by the URLs described above, are defined as <code>elastic</code> objects in <code>elasticsearchr</code>. For&nbsp;example,</p>
-<div class="highlight"><pre><span></span>es <span class="o">&lt;-</span> elastic<span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">es</span> <span class="o">&lt;-</span> <span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -180,37 +180,37 @@ This package is available on <a href="https://cran.r-project.org/web/packages/el
 - <code>elastic</code> objects can be defined even if the underling resources have yet to be brought into&nbsp;existence.</p>
 <h3 id="indexing-new-data">Indexing New&nbsp;Data</h3>
 <p>To index (insert) data from a data frame, use the <code>%index%</code> operator as&nbsp;follows:</p>
-<div class="highlight"><pre><span></span>elastic<span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%index%</span> iris
+<div class="highlight"><pre><span></span><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%index%</span> <span class="n">iris</span>
 </pre></div>
 
 
 <p>In this example, the <code>iris</code> dataset is indexed into the &#8216;iris&#8217; index and given a document type called &#8216;data&#8217;. Note that I have not provided any document ids here. <strong>To explicitly specify document ids there must be a column in the data frame that is labelled <code>id</code></strong>, from which the document ids will be&nbsp;taken.</p>
 <h3 id="deleting-data">Deleting&nbsp;Data</h3>
 <p>Documents can be deleted in three different ways using the <code>%delete%</code> operator. Firstly, an entire index (including the mapping information) can be erased by referencing just the index in the resource -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span>elastic<span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">)</span> <span class="o">%delete%</span> <span class="kc">TRUE</span>
+<div class="highlight"><pre><span></span><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">)</span> <span class="o">%delete%</span> <span class="kc">TRUE</span>
 </pre></div>
 
 
 <p>Alternatively, documents can be deleted on a type-by-type basis leaving the index and it&#8217;s mappings untouched, by referencing both the index and the document type as the resource -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span>elastic<span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%delete%</span> <span class="kc">TRUE</span>
+<div class="highlight"><pre><span></span><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%delete%</span> <span class="kc">TRUE</span>
 </pre></div>
 
 
 <p>Finally, specific documents can be deleted by referencing their ids directly -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span>elastic<span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%delete%</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">,</span> <span class="s">&quot;2&quot;</span><span class="p">,</span> <span class="s">&quot;3&quot;</span><span class="p">,</span> <span class="s">&quot;4&quot;</span><span class="p">,</span> <span class="s">&quot;5&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%delete%</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">,</span> <span class="s">&quot;2&quot;</span><span class="p">,</span> <span class="s">&quot;3&quot;</span><span class="p">,</span> <span class="s">&quot;4&quot;</span><span class="p">,</span> <span class="s">&quot;5&quot;</span><span class="p">)</span>
 </pre></div>
 
 
 <h3 id="queries">Queries</h3>
 <p>Any type of query that Elasticsearch makes available can be defined in a <code>query</code> object using the native Elasticsearch <span class="caps">JSON</span> syntax - e.g. to match every document we could use the <code>match_all</code> query,</p>
-<div class="highlight"><pre><span></span>for_everything <span class="o">&lt;-</span> query<span class="p">(</span><span class="s">&#39;{</span>
+<div class="highlight"><pre><span></span><span class="n">for_everything</span> <span class="o">&lt;-</span> <span class="nf">query</span><span class="p">(</span><span class="s">&#39;{</span>
 <span class="s">  &quot;match_all&quot;: {}</span>
 <span class="s">}&#39;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>To execute this query we use the <code>%search%</code> operator on the appropriate resource -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span>elastic<span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> for_everything
+<div class="highlight"><pre><span></span><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> <span class="n">for_everything</span>
 
 <span class="c1">#     sepal_length sepal_width petal_length petal_width    species</span>
 <span class="c1"># 1            4.9         3.0          1.4         0.2     setosa</span>
@@ -225,12 +225,12 @@ This package is available on <a href="https://cran.r-project.org/web/packages/el
 
 <h3 id="sorting-query-results">Sorting Query&nbsp;Results</h3>
 <p>Query results can be sorted on multiple fields by defining a <code>sort</code> object using the same Elasticsearch <span class="caps">JSON</span> syntax - e.g. to sort by <code>sepal_width</code> in ascending order the required <code>sort</code> object would be defined&nbsp;as,</p>
-<div class="highlight"><pre><span></span>by_sepal_width <span class="o">&lt;-</span> <span class="kp">sort</span><span class="p">(</span><span class="s">&#39;{&quot;sepal_width&quot;: {&quot;order&quot;: &quot;asc&quot;}}&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">by_sepal_width</span> <span class="o">&lt;-</span> <span class="nf">sort</span><span class="p">(</span><span class="s">&#39;{&quot;sepal_width&quot;: {&quot;order&quot;: &quot;asc&quot;}}&#39;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>This is then added to a <code>query</code> object whose results we want sorted and executed using the <code>%search%</code> operator as before -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span>elastic<span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> <span class="p">(</span>for_everything <span class="o">+</span> by_sepal_width<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> <span class="p">(</span><span class="n">for_everything</span> <span class="o">+</span> <span class="n">by_sepal_width</span><span class="p">)</span>
 
 <span class="c1">#   sepal_length sepal_width petal_length petal_width    species</span>
 <span class="c1"># 1          5.0         2.0          3.5         1.0 versicolor</span>
@@ -245,7 +245,7 @@ This package is available on <a href="https://cran.r-project.org/web/packages/el
 
 <h3 id="aggregations">Aggregations</h3>
 <p>Similarly, any type of aggregation that Elasticsearch makes available can be defined in an <code>aggs</code> object - e.g. to compute the average <code>sepal_width</code> per-species of flower we would specify the following&nbsp;aggregation,</p>
-<div class="highlight"><pre><span></span>avg_sepal_width <span class="o">&lt;-</span> aggs<span class="p">(</span><span class="s">&#39;{</span>
+<div class="highlight"><pre><span></span><span class="n">avg_sepal_width</span> <span class="o">&lt;-</span> <span class="nf">aggs</span><span class="p">(</span><span class="s">&#39;{</span>
 <span class="s">  &quot;avg_sepal_width_per_species&quot;: {</span>
 <span class="s">    &quot;terms&quot;: {</span>
 <span class="s">      &quot;field&quot;: &quot;species&quot;,</span>
@@ -265,7 +265,7 @@ This package is available on <a href="https://cran.r-project.org/web/packages/el
 
 <p><em>(Elasticsearch 5.x users please note that when using the out-of-the-box mappings the above aggregation requires that <code>"field": "species"</code> be changed to <code>"field": "species.keyword"</code> - see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.0/breaking_50_mapping_changes.html" title="Text fields in Elasticsearch 5.x">here</a> for more information as to&nbsp;why)</em></p>
 <p>This aggregation is also executed via the <code>%search%</code> operator on the appropriate resource -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span>elastic<span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> avg_sepal_width
+<div class="highlight"><pre><span></span><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> <span class="n">avg_sepal_width</span>
 
 <span class="c1">#          key doc_count avg_sepal_width.value</span>
 <span class="c1"># 1     setosa        50                 3.428</span>
@@ -275,7 +275,7 @@ This package is available on <a href="https://cran.r-project.org/web/packages/el
 
 
 <p>Queries and aggregations can be combined such that the aggregations are computed on the results of the query. For example, to execute the combination of the above query and aggregation, we would&nbsp;execute,</p>
-<div class="highlight"><pre><span></span>elastic<span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> <span class="p">(</span>for_everything <span class="o">+</span> avg_sepal_width<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> <span class="p">(</span><span class="n">for_everything</span> <span class="o">+</span> <span class="n">avg_sepal_width</span><span class="p">)</span>
 
 <span class="c1">#          key doc_count avg_sepal_width.value</span>
 <span class="c1"># 1     setosa        50                 3.428</span>
@@ -285,7 +285,7 @@ This package is available on <a href="https://cran.r-project.org/web/packages/el
 
 
 <p>where the combination&nbsp;yields,</p>
-<div class="highlight"><pre><span></span><span class="kp">print</span><span class="p">(</span>for_everything <span class="o">+</span> avg_sepal_width<span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nf">print</span><span class="p">(</span><span class="n">for_everything</span> <span class="o">+</span> <span class="n">avg_sepal_width</span><span class="p">)</span>
 
 <span class="c1"># {</span>
 <span class="c1">#     &quot;size&quot;: 0,</span>
@@ -316,7 +316,7 @@ This package is available on <a href="https://cran.r-project.org/web/packages/el
 <p>For comprehensive coverage of all query and aggregations types please refer to the rather excellent <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation">official documentation</a> (newcomers to Elasticsearch are advised to start with the &#8216;Query String&#8217;&nbsp;query).</p>
 <h3 id="mappings">Mappings</h3>
 <p>Finally, I have included the ability to create an empty index with a custom mapping, using the <code>%create%</code> operator -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span>elastic<span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">)</span> <span class="o">%create%</span> mapping_default_simple<span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">)</span> <span class="o">%create%</span> <span class="nf">mapping_default_simple</span><span class="p">()</span>
 </pre></div>
 
 
