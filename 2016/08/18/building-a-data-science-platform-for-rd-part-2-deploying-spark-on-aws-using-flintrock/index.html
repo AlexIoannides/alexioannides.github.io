@@ -8,12 +8,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="index, follow" />
 
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+
+
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
 
     <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
@@ -39,6 +45,7 @@
 <meta name="description" content="Part 1 in this series of blog posts describes how to setup AWS with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on AWS and accessing our S3 data from within Spark. A key part of my vision …" />
 <meta name="keywords" content="AWS, data-processing, apache-spark">
 
+
 <meta property="og:site_name" content="Dr Alex Ioannides"/>
 <meta property="og:title" content="Building a Data Science Platform for R&amp;D, Part 2 - Deploying Spark on AWS using Flintrock"/>
 <meta property="og:description" content="Part 1 in this series of blog posts describes how to setup AWS with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on AWS and accessing our S3 data from within Spark. A key part of my vision …"/>
@@ -57,45 +64,74 @@
   <title>Dr Alex Ioannides &ndash; Building a Data Science Platform for R&amp;D, Part 2 - Deploying Spark on AWS using Flintrock</title>
 
 </head>
-<body>
+<body class="light-theme">
   <aside>
     <div>
       <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
-      <h1><a href="https://alexioannides.github.io">Dr Alex Ioannides</a></h1>
+
+      <h1>
+        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
+      </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
+
       <nav>
         <ul class="list">
-          <li><a href="https://alexioannides.github.io/about-this-blog/">About this&nbsp;Blog</a></li>
-          <li><a href="https://alexioannides.github.io/about-me/">About&nbsp;Me</a></li>
+
+
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-me/">
+                  About&nbsp;Me
+                </a>
+              </li>
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-this-blog/">
+                  About this&nbsp;Blog
+                </a>
+              </li>
 
         </ul>
       </nav>
 
       <ul class="social">
-        <li><a class="sc-github" href="https://github.com/alexioannides" target="_blank"><i class="fa fa-github"></i></a></li>
-        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-        <li><a class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank"><i class="fa fa-twitter"></i></a></li>
-        <li><a class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank"><i class="fa fa-soundcloud"></i></a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/alexioannides" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank">
+              <i class="fab fa-soundcloud"></i>
+            </a>
+          </li>
       </ul>
     </div>
-
 
   </aside>
   <main>
 
     <nav>
-      <a href="https://alexioannides.github.io">    Home
-</a>
+      <a href="https://alexioannides.github.io">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
       <a href="/archives.html">Archives</a>
 
-      <a href="https://alexioannides.github.io/feeds/all.atom.xml">    Atom
-</a>
+      <a href="https://alexioannides.github.io/feeds/all.atom.xml">Atom</a>
 
     </nav>
 
@@ -104,8 +140,7 @@
       
     <h1 id="building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock">Building a Data Science Platform for R&D, Part 2 - Deploying Spark on <span class="caps">AWS</span> using&nbsp;Flintrock</h1>
     <p>
-          Posted on Thu 18 August 2016 in <a href="https://alexioannides.github.io/category/data-science.html">data-science</a>
-
+      Posted on Thu 18 August 2016 in <a href="https://alexioannides.github.io/category/data-science.html">data-science</a>
 
     </p>
   </header>
@@ -123,13 +158,12 @@
 <p><img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/welcome_to_spark.png" title="spark-shell"></p>
 <h2 id="install-flintrock">Install&nbsp;Flintrock</h2>
 <p>Exit the Spark shell (ctrl-d on a Mac, just in case you didn&#8217;t know&#8230;) and return to Spark&#8217;s home directory. For convenience, I&#8217;m going to download Flintrock to here as well - where the old ec2 scripts used to be. The steps for downloading the Flintrock binaries - taken verbatim from the Flinkrock repo&#8217;s <span class="caps">README</span> - are as&nbsp;follows:</p>
-<div class="highlight"><pre><span></span>$ <span class="nv">flintrock_version</span><span class="o">=</span><span class="s2">&quot;0.5.0&quot;</span>
+<div class="highlight"><pre><span></span><code>$ <span class="nv">flintrock_version</span><span class="o">=</span><span class="s2">&quot;0.5.0&quot;</span>
 
 $ curl --location --remote-name <span class="s2">&quot;https://github.com/nchammas/flintrock/releases/download/v</span><span class="nv">$flintrock_version</span><span class="s2">/Flintrock-</span><span class="nv">$flintrock_version</span><span class="s2">-standalone-OSX-x86_64.zip&quot;</span>
 $ unzip -q -d flintrock <span class="s2">&quot;Flintrock-</span><span class="nv">$flintrock_version</span><span class="s2">-standalone-OSX-x86_64.zip&quot;</span>
 $ <span class="nb">cd</span> flintrock/
-</pre></div>
-
+</code></pre></div>
 
 <p>And test that it works by&nbsp;running,</p>
 <p><code>$ ./flintrock --help</code></p>
@@ -190,11 +224,10 @@ $ <span class="nb">cd</span> flintrock/
 <p>Return to the terminal and follow this advice. If successful, you should see something along the lines&nbsp;of:</p>
 <p><img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ssh_master.png" title="SSH-connect"></p>
 <p>Next, fire-up the Spark shell for Scala by executing <code>spark-shell</code>. To run a trivial job across all nodes and test the cluster, run the following program on a line-by-line&nbsp;basis:</p>
-<div class="highlight"><pre><span></span><span class="err">val localArray = Array(1,2,3,4,5)</span>
+<div class="highlight"><pre><span></span><code><span class="err">val localArray = Array(1,2,3,4,5)</span>
 <span class="err">val rddArray = sc.parallelize(localArray)</span>
 <span class="err">val rddArraySum = rddArray.reduce((x, y) =&gt; x + y)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>If no errors were thrown and the shell&#8217;s final output&nbsp;is,</p>
 <p><code>rddArraySum: Int = 15</code></p>
@@ -208,10 +241,9 @@ $ <span class="nb">cd</span> flintrock/
 <p>In order to access our S3 data from Spark (via Hadoop), we need to make a couple of packages (<span class="caps">JAR</span> files and their dependencies) available to all nodes in our cluster. The easiest way to do this, is to start the spark-shell with the following&nbsp;options:</p>
 <p><code>$ spark-shell --packages com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2</code></p>
 <p>Once the cluster has downloaded everything it needs and the shell has started, run the following program that &#8216;opens&#8217; the <span class="caps">README</span> file we uploaded to S3 in Part 1 of this series of blogs, and &#8216;collects&#8217; it back to the master node from its distributed (<span class="caps">RDD</span>)&nbsp;representation:</p>
-<div class="highlight"><pre><span></span><span class="err">val data = sc.textFile(&quot;s3a://alex.data/README.md&quot;)</span>
+<div class="highlight"><pre><span></span><code><span class="err">val data = sc.textFile(&quot;s3a://alex.data/README.md&quot;)</span>
 <span class="err">data.collect</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>If everything is successful then you should see the contents of the file printed to&nbsp;screen.</p>
 <p>If you have read elsewhere about accessing data on S3, you may have seen references made to connection strings that start with <code>"s3n://...</code> or maybe even <code>"s3://...</code> with accompanying discussions about passing credentials either as part of the connection string or by setting system variables, etc. Because we are using a recent version of Hadoop and the Amazon packages required to map S3 objects onto Hadoop, and because we have assigned our nodes <span class="caps">IAM</span> roles that have permission to access S3, we do not need to negotiate any of these (sometimes painful)&nbsp;issues.</p>
@@ -248,15 +280,15 @@ $ <span class="nb">cd</span> flintrock/
     })();
 </script>
 <noscript>
-        Please enable JavaScript to view comments.
-
+    Please enable JavaScript to view comments.
 </noscript>
 <!-- End Disqus -->
 </article>
 
     <footer>
 <p>&copy;  </p>
-<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
 </p>    </footer>
   </main>
 
@@ -273,6 +305,7 @@ $ <span class="nb">cd</span> flintrock/
   "description": ""
 }
 </script>
+
 
 </body>
 </html>

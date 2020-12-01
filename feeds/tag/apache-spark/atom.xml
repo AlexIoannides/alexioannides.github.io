@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Dr Alex Ioannides - apache-spark</title><link href="https://alexioannides.github.io/" rel="alternate"></link><link href="https://alexioannides.github.io/feeds/tag/apache-spark/atom.xml" rel="self"></link><id>https://alexioannides.github.io/</id><updated>2019-07-28T00:00:00+01:00</updated><entry><title>Best Practices for PySpark ETL Projects</title><link href="https://alexioannides.github.io/2019/07/28/best-practices-for-pyspark-etl-projects/" rel="alternate"></link><published>2019-07-28T00:00:00+01:00</published><updated>2019-07-28T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2019-07-28:/2019/07/28/best-practices-for-pyspark-etl-projects/</id><summary type="html">&lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data-engineering/pyspark-etl/etl.png"&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dr Alex Ioannides - apache-spark</title><link href="https://alexioannides.github.io/" rel="alternate"></link><link href="https://alexioannides.github.io/feeds/tag/apache-spark/atom.xml" rel="self"></link><id>https://alexioannides.github.io/</id><updated>2019-07-28T00:00:00+01:00</updated><subtitle>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</subtitle><entry><title>Best Practices for PySpark ETL Projects</title><link href="https://alexioannides.github.io/2019/07/28/best-practices-for-pyspark-etl-projects/" rel="alternate"></link><published>2019-07-28T00:00:00+01:00</published><updated>2019-07-28T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2019-07-28:/2019/07/28/best-practices-for-pyspark-etl-projects/</id><summary type="html">&lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data-engineering/pyspark-etl/etl.png"&gt;&lt;/p&gt;
 &lt;p&gt;I have often lent heavily on Apache Spark and the SparkSQL APIs for operationalising any type of batch data-processing &amp;#8216;job&amp;#8217;, within a production environment where handling fluctuating volumes of data reliably and consistently are on-going business concerns. These batch data-processing jobs may involve nothing more than joining data sources and …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data-engineering/pyspark-etl/etl.png"&gt;&lt;/p&gt;
 &lt;p&gt;I have often lent heavily on Apache Spark and the SparkSQL APIs for operationalising any type of batch data-processing &amp;#8216;job&amp;#8217;, within a production environment where handling fluctuating volumes of data reliably and consistently are on-going business concerns. These batch data-processing jobs may involve nothing more than joining data sources and performing aggregations, or they may apply machine learning models to generate inventory recommendations - regardless of the complexity, this often reduces to defining &lt;a href="https://en.wikipedia.org/wiki/Extract,_transform,_load"&gt;Extract, Transform and Load (&lt;span class="caps"&gt;ETL&lt;/span&gt;)&lt;/a&gt; jobs. I&amp;#8217;m a self-proclaimed Pythonista, so I use PySpark for interacting with SparkSQL and for writing and testing all of my &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;scripts.&lt;/p&gt;
 &lt;p&gt;This post is designed to be read in parallel with the code in the &lt;a href="https://github.com/AlexIoannides/pyspark-example-project"&gt;&lt;code&gt;pyspark-template-project&lt;/code&gt; GitHub repository&lt;/a&gt;. Together, these constitute what I consider to be a &amp;#8216;best practices&amp;#8217; approach to writing &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs using Apache Spark and its Python (&amp;#8216;PySpark&amp;#8217;) APIs. These &amp;#8216;best practices&amp;#8217; have been learnt over several years in-the-field, often the result of hindsight and the quest for continuous improvement. I am also grateful to the various contributors to this project for adding their own wisdom to this&amp;nbsp;endeavour. &lt;/p&gt;
@@ -33,7 +33,7 @@
 &lt;/div&gt;
 &lt;h2 id="pyspark-etl-project-structure"&gt;PySpark &lt;span class="caps"&gt;ETL&lt;/span&gt; Project&amp;nbsp;Structure&lt;/h2&gt;
 &lt;p&gt;The basic project structure is as&amp;nbsp;follows:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;root/
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;root/
 &lt;span class="p"&gt;|&lt;/span&gt;-- configs/
  &lt;span class="p"&gt;|&lt;/span&gt;   &lt;span class="p"&gt;|&lt;/span&gt;-- etl_config.json
  &lt;span class="p"&gt;|&lt;/span&gt;-- dependencies/
@@ -50,17 +50,15 @@
  &lt;span class="p"&gt;|&lt;/span&gt;   Pipfile.lock 
  &lt;span class="p"&gt;|&lt;/span&gt;   build_dependencies.sh
  &lt;span class="p"&gt;|&lt;/span&gt;   packages.zip
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The main Python module containing the &lt;span class="caps"&gt;ETL&lt;/span&gt; job (which will be sent to the Spark cluster), is &lt;code&gt;jobs/etl_job.py&lt;/code&gt;. Any external configuration parameters required by &lt;code&gt;etl_job.py&lt;/code&gt; are stored in &lt;span class="caps"&gt;JSON&lt;/span&gt; format in &lt;code&gt;configs/etl_config.json&lt;/code&gt;. Additional modules that support this job can be kept in the &lt;code&gt;dependencies&lt;/code&gt; folder (more on this later). In the project&amp;#8217;s root we include &lt;code&gt;build_dependencies.sh&lt;/code&gt; - a bash script for building these dependencies into a zip-file to be sent to the cluster (&lt;code&gt;packages.zip&lt;/code&gt;). Unit test modules are kept in the &lt;code&gt;tests&lt;/code&gt; folder and small chunks of representative input and output data, to be use with the tests, are kept in &lt;code&gt;tests/test_data&lt;/code&gt; folder.&lt;/p&gt;
 &lt;h2 id="the-structure-of-an-etl-job"&gt;The Structure of an &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/h2&gt;
 &lt;p&gt;In order to facilitate easy debugging and testing, we recommend that the &amp;#8216;Transformation&amp;#8217; step be isolated from the &amp;#8216;Extract&amp;#8217; and &amp;#8216;Load&amp;#8217; steps, into it&amp;#8217;s own function - taking input data arguments in the form of DataFrames and returning the transformed data as a single DataFrame. For example, in the &lt;code&gt;main()&lt;/code&gt; job function from &lt;code&gt;jobs/etl_job.py&lt;/code&gt; we&amp;nbsp;have,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;extract_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;extract_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;data_transformed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;transform_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;load_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data_transformed&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The code that surrounds the use of the transformation function in the &lt;code&gt;main()&lt;/code&gt; job function, is concerned with Extracting the data, passing it to the transformation function and then Loading (or writing) the results to their ultimate destination. Testing is simplified, as mock or test data can be passed to the transformation function and the results explicitly verified, which would not be possible if all of the &lt;span class="caps"&gt;ETL&lt;/span&gt; code resided in &lt;code&gt;main()&lt;/code&gt; and referenced production data sources and&amp;nbsp;destinations.&lt;/p&gt;
 &lt;p&gt;More generally, transformation functions should be designed to be &lt;a href="https://en.wikipedia.org/wiki/Idempotence"&gt;idempotent&lt;/a&gt;. This is a technical way of saying&amp;nbsp;that,&lt;/p&gt;
@@ -71,19 +69,17 @@
 &lt;h2 id="passing-configuration-parameters-to-the-etl-job"&gt;Passing Configuration Parameters to the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;Job&lt;/h2&gt;
 &lt;p&gt;Although it is possible to pass arguments to &lt;code&gt;etl_job.py&lt;/code&gt;, as you would for any generic Python module running as a &amp;#8216;main&amp;#8217; program  - by specifying them after the module&amp;#8217;s filename and then parsing these command line arguments - this can get very complicated, &lt;strong&gt;very quickly&lt;/strong&gt;, especially when there are lot of parameters (e.g. credentials for multiple databases, table names, &lt;span class="caps"&gt;SQL&lt;/span&gt; snippets, etc.). This also makes debugging the code from within a Python interpreter extremely awkward, as you don&amp;#8217;t have access to the command line arguments that would ordinarily be passed to the code, when calling it from the command&amp;nbsp;line.&lt;/p&gt;
 &lt;p&gt;A much more effective solution is to send Spark a separate file - e.g. using the &lt;code&gt;--files configs/etl_config.json&lt;/code&gt; flag with &lt;code&gt;spark-submit&lt;/code&gt; - containing the configuration in &lt;span class="caps"&gt;JSON&lt;/span&gt; format, which can be parsed into a Python dictionary in one line of code with &lt;code&gt;json.loads(config_file_contents)&lt;/code&gt;. Testing the code from within a Python interactive console session is also greatly simplified, as all one has to do to access configuration parameters for testing, is to copy and paste the contents of the file -&amp;nbsp;e.g.,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
 
 &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loads&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;{&amp;quot;field&amp;quot;: &amp;quot;value&amp;quot;}&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This also has the added bonus that the &lt;span class="caps"&gt;ETL&lt;/span&gt; job configuration can be explicitly version controlled within the same project structure, avoiding the risk that configuration parameters escape any type of version control - e.g. because they are passed as arguments in bash scripts written by separate teams, whose responsibility is deploying the code, not writing&amp;nbsp;it.  &lt;/p&gt;
 &lt;p&gt;For the exact details of how the configuration file is located, opened and parsed, please see the &lt;code&gt;start_spark()&lt;/code&gt; function in &lt;code&gt;dependencies/spark.py&lt;/code&gt; (also discussed in more detail below), which in addition to parsing the configuration file sent to Spark (and returning it as a Python dictionary), also launches the Spark driver program (the application) on the cluster and retrieves the Spark logger at the same&amp;nbsp;time.&lt;/p&gt;
 &lt;h2 id="packaging-etl-job-dependencies"&gt;Packaging &lt;span class="caps"&gt;ETL&lt;/span&gt; Job&amp;nbsp;Dependencies&lt;/h2&gt;
 &lt;p&gt;In this project, functions that can be used across different &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs are kept in a module called &lt;code&gt;dependencies&lt;/code&gt; and referenced in specific job modules using, for&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;dependencies.spark&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;start_spark&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;dependencies.spark&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;start_spark&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This package, together with any additional dependencies referenced within it, must be to copied to each Spark node for all jobs that use &lt;code&gt;dependencies&lt;/code&gt; to run. This can be achieved in one of several&amp;nbsp;ways:&lt;/p&gt;
 &lt;ol&gt;
@@ -97,14 +93,13 @@
 &lt;/blockquote&gt;
 &lt;h2 id="running-the-etl-job"&gt;Running the &lt;span class="caps"&gt;ETL&lt;/span&gt;&amp;nbsp;job&lt;/h2&gt;
 &lt;p&gt;Assuming that the &lt;code&gt;$SPARK_HOME&lt;/code&gt; environment variable points to your local Spark installation folder, then the &lt;span class="caps"&gt;ETL&lt;/span&gt; job can be run from the project&amp;#8217;s root directory using the following command from the&amp;nbsp;terminal,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$SPARK_HOME&lt;/span&gt;/bin/spark-submit &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;$SPARK_HOME&lt;/span&gt;/bin/spark-submit &lt;span class="se"&gt;\&lt;/span&gt;
 --master local&lt;span class="o"&gt;[&lt;/span&gt;*&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
 --packages &lt;span class="s1"&gt;&amp;#39;com.some-spark-jar.dependency:1.0.0&amp;#39;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
 --py-files dependencies.zip &lt;span class="se"&gt;\&lt;/span&gt;
 --files configs/etl_config.json &lt;span class="se"&gt;\&lt;/span&gt;
 jobs/etl_job.py
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Briefly, the options supplied serve the following&amp;nbsp;purposes:&lt;/p&gt;
 &lt;ul&gt;
@@ -118,7 +113,7 @@ jobs/etl_job.py
 &lt;h2 id="debugging-spark-jobs-using-start_spark"&gt;Debugging Spark Jobs Using &lt;code&gt;start_spark&lt;/code&gt;&lt;/h2&gt;
 &lt;p&gt;It is not practical to test and debug Spark jobs by sending them to a cluster using &lt;code&gt;spark-submit&lt;/code&gt; and examining stack traces for clues on what went wrong. A more productive workflow is to use an interactive console session (e.g. IPython) or a debugger (e.g. the &lt;code&gt;pdb&lt;/code&gt; package in the Python standard library or the Python debugger in Visual Studio Code). In practice, however, it can be hard to test and debug Spark jobs in this way, as they can implicitly rely on arguments that are sent to &lt;code&gt;spark-submit&lt;/code&gt;, which are not available in a console or debug&amp;nbsp;session.&lt;/p&gt;
 &lt;p&gt;We wrote the &lt;code&gt;start_spark&lt;/code&gt; function - found in &lt;code&gt;dependencies/spark.py&lt;/code&gt; - to facilitate the development of Spark jobs that are aware of the context in which they are being executed - i.e. as &lt;code&gt;spark-submit&lt;/code&gt; jobs or within an IPython console, etc. The expected location of the Spark and job configuration parameters required by the job, is contingent on which execution context has been detected. The doscstring for &lt;code&gt;start_spark&lt;/code&gt; gives the precise&amp;nbsp;details,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;start_spark&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;my_spark_app&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;master&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;local[*]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jar_packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[],&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;start_spark&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;my_spark_app&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;master&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;local[*]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jar_packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[],&lt;/span&gt;
                 &lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[],&lt;/span&gt; &lt;span class="n"&gt;spark_config&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{}):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Start Spark session, get Spark logger and load config files.&lt;/span&gt;
 
@@ -166,16 +161,14 @@ jobs/etl_job.py
     &lt;span class="c1"&gt;# ...&lt;/span&gt;
 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;spark_sess&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;spark_logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;config_dict&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;For example, the following code&amp;nbsp;snippet,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;spark&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;start_spark&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;spark&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;start_spark&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
     &lt;span class="n"&gt;app_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;my_etl_job&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
     &lt;span class="n"&gt;jar_packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;com.somesparkjar.dependency:1.0.0&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
     &lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;configs/etl_config.json&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Will use the arguments provided to &lt;code&gt;start_spark&lt;/code&gt; to setup the Spark job if executed from an interactive console session or debugger, but will look for the same arguments sent via &lt;code&gt;spark-submit&lt;/code&gt; if that is how the job has been&amp;nbsp;executed.&lt;/p&gt;
 &lt;blockquote&gt;
@@ -184,7 +177,7 @@ jobs/etl_job.py
 &lt;h2 id="automated-testing"&gt;Automated&amp;nbsp;Testing&lt;/h2&gt;
 &lt;p&gt;In order to test with Spark, we use the &lt;code&gt;pyspark&lt;/code&gt; Python package, which is bundled with the Spark JARs required to programmatically start-up and tear-down a local Spark instance, on a per-test-suite basis (we recommend using the &lt;code&gt;setUp&lt;/code&gt; and &lt;code&gt;tearDown&lt;/code&gt; methods in &lt;code&gt;unittest.TestCase&lt;/code&gt; to do this once per test-suite). Note, that using &lt;code&gt;pyspark&lt;/code&gt; to run Spark is an alternative way of developing with Spark as opposed to using the PySpark shell or &lt;code&gt;spark-submit&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Given that we have chosen to structure our &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs in such a way as to isolate the &amp;#8216;Transformation&amp;#8217; step into its own function (see &amp;#8216;Structure of an &lt;span class="caps"&gt;ETL&lt;/span&gt; job&amp;#8217; above), we are free to feed it a small slice of &amp;#8216;real-world&amp;#8217; production data that has been persisted locally - e.g. in &lt;code&gt;tests/test_data&lt;/code&gt; or some easily accessible network directory - and check it against known results (e.g. computed manually or interactively within a Python interactive console session), as demonstrated in this extract from &lt;code&gt;tests/test_etl_job.py&lt;/code&gt;,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# assemble&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# assemble&lt;/span&gt;
 &lt;span class="n"&gt;input_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
     &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;spark&lt;/span&gt;
     &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read&lt;/span&gt;
@@ -220,65 +213,56 @@ jobs/etl_job.py
 &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertEqual&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;expected_avg_steps&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;avg_steps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertTrue&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;col&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;expected_data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;
                  &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;col&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;data_transformed&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;To execute the example unit test for this project&amp;nbsp;run,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv run python -m unittest tests/test_*.py
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipenv run python -m unittest tests/test_*.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If you&amp;#8217;re wondering what the &lt;code&gt;pipenv&lt;/code&gt; command is, then read the next&amp;nbsp;section.&lt;/p&gt;
 &lt;h2 id="managing-project-dependencies-using-pipenv"&gt;Managing Project Dependencies using&amp;nbsp;Pipenv&lt;/h2&gt;
 &lt;p&gt;We use &lt;a href="https://docs.pipenv.org"&gt;Pipenv&lt;/a&gt; for managing project dependencies and Python environments (i.e. virtual environments). All direct packages dependencies (e.g. NumPy may be used in a User Defined Function), as well as all the packages used during development (e.g. PySpark, flake8 for code linting, IPython for interactive console sessions, etc.), are described in the &lt;code&gt;Pipfile&lt;/code&gt;. Their &lt;strong&gt;precise&lt;/strong&gt; downstream dependencies are described and frozen in &lt;code&gt;Pipfile.lock&lt;/code&gt; (generated automatically by Pipenv, given a&amp;nbsp;Pipfile).&lt;/p&gt;
 &lt;h3 id="installing-pipenv"&gt;Installing&amp;nbsp;Pipenv&lt;/h3&gt;
 &lt;p&gt;To get started with Pipenv, first of all download it - assuming that there is a global version of Python available on your system and on the &lt;span class="caps"&gt;PATH&lt;/span&gt;, then this can be achieved by running the following&amp;nbsp;command,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip3 install pipenv
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pip3 install pipenv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Pipenv is also available to install from many non-Python package managers. For example, on &lt;span class="caps"&gt;OS&lt;/span&gt; X it can be installed using the &lt;a href="https://brew.sh"&gt;Homebrew&lt;/a&gt; package manager, with the following terminal&amp;nbsp;command,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;brew install pipenv
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;brew install pipenv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;For more information, including advanced configuration options, see the &lt;a href="https://docs.pipenv.org"&gt;official Pipenv documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="installing-this-projects-dependencies"&gt;Installing this Projects&amp;#8217;&amp;nbsp;Dependencies&lt;/h3&gt;
 &lt;p&gt;Make sure that you&amp;#8217;re in the project&amp;#8217;s root directory (the same one in which the &lt;code&gt;Pipfile&lt;/code&gt; resides), and then&amp;nbsp;run,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv install --dev
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipenv install --dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This will install all of the direct project dependencies as well as the development dependencies (the latter a consequence of the &lt;code&gt;--dev&lt;/code&gt; flag).&lt;/p&gt;
 &lt;h3 id="running-python-and-ipython-from-the-projects-virtual-environment"&gt;Running Python and IPython from the Project&amp;#8217;s Virtual&amp;nbsp;Environment&lt;/h3&gt;
 &lt;p&gt;In order to continue development in a Python environment that precisely mimics the one the project was initially developed with, use Pipenv from the command line as&amp;nbsp;follows,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv run python3
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipenv run python3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The &lt;code&gt;python3&lt;/code&gt; command could just as well be &lt;code&gt;ipython3&lt;/code&gt;, for&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv run ipython
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipenv run ipython
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This will fire-up an IPython console session &lt;em&gt;where the default Python 3 kernel includes all of the direct and development project dependencies&lt;/em&gt; - this is our&amp;nbsp;preference.&lt;/p&gt;
 &lt;h3 id="pipenv-shells"&gt;Pipenv&amp;nbsp;Shells&lt;/h3&gt;
 &lt;p&gt;Prepending &lt;code&gt;pipenv&lt;/code&gt; to every command you want to run within the context of your Pipenv-managed virtual environment can get very tedious. This can be avoided by entering into a Pipenv-managed&amp;nbsp;shell,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pipenv shell
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pipenv shell
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This is equivalent to &amp;#8216;activating&amp;#8217; the virtual environment; any command will now be executed within the virtual environment. Use &lt;code&gt;exit&lt;/code&gt; to leave the shell&amp;nbsp;session.&lt;/p&gt;
 &lt;h3 id="automatic-loading-of-environment-variables"&gt;Automatic Loading of Environment&amp;nbsp;Variables&lt;/h3&gt;
 &lt;p&gt;Pipenv will automatically pick-up and load any environment variables declared in the &lt;code&gt;.env&lt;/code&gt; file, located in the package&amp;#8217;s root directory. For example,&amp;nbsp;adding,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;applications/spark-2.3.1/bin
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;applications/spark-2.3.1/bin
 &lt;span class="nv"&gt;DEBUG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Will enable access to these variables within any Python program -e.g. via a call to &lt;code&gt;os.environ['SPARK_HOME']&lt;/code&gt;. Note, that if any security credentials are placed here, then this file &lt;strong&gt;must&lt;/strong&gt; be removed from source control - i.e. add &lt;code&gt;.env&lt;/code&gt; to the &lt;code&gt;.gitignore&lt;/code&gt; file to prevent potential security&amp;nbsp;risks.&lt;/p&gt;
 &lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
-&lt;p&gt;The workflow described above, together with the &lt;a href="https://github.com/AlexIoannides/pyspark-example-project"&gt;accompanying Python project&lt;/a&gt;, represents a stable foundation for writing robust &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs, regardless of their complexity and regardless of how the jobs are being executed - e.g. via use of &lt;code&gt;cron&lt;/code&gt; or more sophisticated workflow automation tools, such as &lt;a href="https://airflow.apache.org"&gt;Airflow&lt;/a&gt;. I am always interested in collating and integrating more &amp;#8216;best practices&amp;#8217; - if you have any, please submit them &lt;a href="https://github.com/AlexIoannides/pyspark-example-project/issues"&gt;here&lt;/a&gt;. &lt;/p&gt;</content><category term="data-engineering"></category><category term="data-processing"></category><category term="apache-spark"></category><category term="python"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 3 - R, R Studio Server, SparkR &amp; Sparklyr</title><link href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" rel="alternate"></link><published>2016-08-22T00:00:00+01:00</published><updated>2016-08-22T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-22:/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"&gt;&lt;/p&gt;
+&lt;p&gt;The workflow described above, together with the &lt;a href="https://github.com/AlexIoannides/pyspark-example-project"&gt;accompanying Python project&lt;/a&gt;, represents a stable foundation for writing robust &lt;span class="caps"&gt;ETL&lt;/span&gt; jobs, regardless of their complexity and regardless of how the jobs are being executed - e.g. via use of &lt;code&gt;cron&lt;/code&gt; or more sophisticated workflow automation tools, such as &lt;a href="https://airflow.apache.org"&gt;Airflow&lt;/a&gt;. I am always interested in collating and integrating more &amp;#8216;best practices&amp;#8217; - if you have any, please submit them &lt;a href="https://github.com/AlexIoannides/pyspark-example-project/issues"&gt;here&lt;/a&gt;. &lt;/p&gt;</content><category term="data-engineering"></category><category term="data-engineering"></category><category term="data-processing"></category><category term="apache-spark"></category><category term="python"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 3 - R, R Studio Server, SparkR &amp; Sparklyr</title><link href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" rel="alternate"></link><published>2016-08-22T00:00:00+01:00</published><updated>2016-08-22T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-22:/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;Part 1&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;Part 2&lt;/a&gt; of this series dealt with setting up &lt;span class="caps"&gt;AWS&lt;/span&gt;, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster&amp;#8217;s master node and use it to …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt3/sparklyr.png" title="Command Line R"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;Part 1&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;Part 2&lt;/a&gt; of this series dealt with setting up &lt;span class="caps"&gt;AWS&lt;/span&gt;, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster&amp;#8217;s master node and use it to serve my favorite R &lt;span class="caps"&gt;IDE&lt;/span&gt;: R Studio.
 We will then install and configure both the &lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr&lt;/a&gt; and [SparkR][sparkR] packages for connecting and interacting with Spark and our data. After this, we will be on our way to interacting with and computing on large-scale data as if it were sitting on our&amp;nbsp;laptops.&lt;/p&gt;
@@ -317,7 +301,7 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;p&gt;Sparklyr is still in it&amp;#8217;s infancy and is not yet available on the &lt;span class="caps"&gt;CRAN&lt;/span&gt; archives. As such, it needs to be installed directly from its GitHub repo, which from within R Studio is done by&amp;nbsp;executing,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;&amp;gt; devtools::install_github("rstudio/sparklyr")&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;This will take a few minutes as there are a lot of dependencies that need to be built from source. Once this is finished create a new script and copy the following code for testing Sparklyr, its ability to connect to our Spark cluster and our S3&amp;nbsp;data:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# set system variables for access to S3 using older &amp;quot;s3n:&amp;quot; protocol ----&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# set system variables for access to S3 using older &amp;quot;s3n:&amp;quot; protocol ----&lt;/span&gt;
 &lt;span class="c1"&gt;# Sys.setenv(AWS_ACCESS_KEY_ID=&amp;quot;AKIAJL4EWJCQ3R86DWAA&amp;quot;)&lt;/span&gt;
 &lt;span class="c1"&gt;# Sys.setenv(AWS_SECRET_ACCESS_KEY=&amp;quot;nVZJQtKj6ODDy+t253OZJWZLEo2gaEoFAYjH1pEf&amp;quot;)&lt;/span&gt;
 
@@ -370,15 +354,14 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 
 &lt;span class="c1"&gt;# disconnect ----&lt;/span&gt;
 &lt;span class="nf"&gt;spark_disconnect_all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Execute line-by-line and check the key outputs with those commented-out in the above script. Sparklyr is changing rapidly at the moment - for the latest documentation and information on: how to use it with the &lt;code&gt;dplyr&lt;/code&gt; package, how to leverage Spark machine learning libraries and how to extend Sparklyr itself, head over to the &lt;a href="http://spark.rstudio.com/index.html" title="sparklyr"&gt;Sparklyr web site&lt;/a&gt; hosted by R&amp;nbsp;Studio.&lt;/p&gt;
 &lt;h1 id="connect-to-spark-with-sparkr"&gt;Connect to Spark with&amp;nbsp;SparkR&lt;/h1&gt;
 &lt;p&gt;SparkR is shipped with Spark and as such there is no external installation process that we&amp;#8217;re required to follow. It does, however, require R to be installed on every node in the cluster. This can be achieved by &lt;span class="caps"&gt;SSH&lt;/span&gt;-ing into every node in our cluster and repeating the above R installation steps, or experimenting with Flintrock&amp;#8217;s &lt;code&gt;run-command&lt;/code&gt; command that will automatically execute the same command on every node in the cluster, such&amp;nbsp;as,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ ./flintrock run-command the_name_of_your_cluster 'sudo yum install -y R'&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;To enable SparkR to be used via R Studio and demonstrate the same connectivity as we did above for Sparklyr, create a new script for the following&amp;nbsp;code:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# set system variables ----&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# set system variables ----&lt;/span&gt;
 &lt;span class="c1"&gt;# - location of Spark on master node;&lt;/span&gt;
 &lt;span class="c1"&gt;# - add sparkR package directory to the list of path to look for R packages&lt;/span&gt;
 &lt;span class="nf"&gt;Sys.setenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/home/ec2-user/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -418,11 +401,10 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 
 &lt;span class="c1"&gt;# close connection&lt;/span&gt;
 &lt;span class="nf"&gt;sparkR.session.stop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Again, execute line-by-line and check the key outputs with those commented-out in the above script. Use the &lt;a href="https://spark.apache.org/docs/latest/sparkr.html" title="sparkR guide"&gt;sparkR programming guide&lt;/a&gt; and the &lt;a href="https://spark.apache.org/docs/latest/api/R/index.html" title="sparkR API"&gt;sparkR &lt;span class="caps"&gt;API&lt;/span&gt; documentation&lt;/a&gt; for more information on the available&amp;nbsp;functions.&lt;/p&gt;
-&lt;p&gt;We have nearly met all of the aims set-out at the beginning of this series of posts. All that remains now is to install Apache Zeppelin so we can interact with Spark using Scala in the same way we can now interact with it using&amp;nbsp;R.&lt;/p&gt;</content><category term="AWS"></category><category term="data-processing"></category><category term="apache-spark"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 2 - Deploying Spark on AWS using Flintrock</title><link href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" rel="alternate"></link><published>2016-08-18T00:00:00+01:00</published><updated>2016-08-18T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-18:/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/spark.png" title="spark"&gt;&lt;/p&gt;
+&lt;p&gt;We have nearly met all of the aims set-out at the beginning of this series of posts. All that remains now is to install Apache Zeppelin so we can interact with Spark using Scala in the same way we can now interact with it using&amp;nbsp;R.&lt;/p&gt;</content><category term="data-science"></category><category term="AWS"></category><category term="data-processing"></category><category term="apache-spark"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 2 - Deploying Spark on AWS using Flintrock</title><link href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" rel="alternate"></link><published>2016-08-18T00:00:00+01:00</published><updated>2016-08-18T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-18:/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/</id><summary type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/spark.png" title="spark"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="PartOne"&gt;Part 1&lt;/a&gt; in this series of blog posts describes how to setup &lt;span class="caps"&gt;AWS&lt;/span&gt; with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on &lt;span class="caps"&gt;AWS&lt;/span&gt; and accessing our S3 data from within&amp;nbsp;Spark.&lt;/p&gt;
 &lt;p&gt;A key part of my vision …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/spark.png" title="spark"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="PartOne"&gt;Part 1&lt;/a&gt; in this series of blog posts describes how to setup &lt;span class="caps"&gt;AWS&lt;/span&gt; with some basic security and then load data into S3. This post walks-through the process of setting up a Spark cluster on &lt;span class="caps"&gt;AWS&lt;/span&gt; and accessing our S3 data from within&amp;nbsp;Spark.&lt;/p&gt;
@@ -435,13 +417,12 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/welcome_to_spark.png" title="spark-shell"&gt;&lt;/p&gt;
 &lt;h2 id="install-flintrock"&gt;Install&amp;nbsp;Flintrock&lt;/h2&gt;
 &lt;p&gt;Exit the Spark shell (ctrl-d on a Mac, just in case you didn&amp;#8217;t know&amp;#8230;) and return to Spark&amp;#8217;s home directory. For convenience, I&amp;#8217;m going to download Flintrock to here as well - where the old ec2 scripts used to be. The steps for downloading the Flintrock binaries - taken verbatim from the Flinkrock repo&amp;#8217;s &lt;span class="caps"&gt;README&lt;/span&gt; - are as&amp;nbsp;follows:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nv"&gt;flintrock_version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0.5.0&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ &lt;span class="nv"&gt;flintrock_version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0.5.0&amp;quot;&lt;/span&gt;
 
 $ curl --location --remote-name &lt;span class="s2"&gt;&amp;quot;https://github.com/nchammas/flintrock/releases/download/v&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;/Flintrock-&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
 $ unzip -q -d flintrock &lt;span class="s2"&gt;&amp;quot;Flintrock-&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
 $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;And test that it works by&amp;nbsp;running,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ ./flintrock --help&lt;/code&gt;&lt;/p&gt;
@@ -502,11 +483,10 @@ $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
 &lt;p&gt;Return to the terminal and follow this advice. If successful, you should see something along the lines&amp;nbsp;of:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ssh_master.png" title="SSH-connect"&gt;&lt;/p&gt;
 &lt;p&gt;Next, fire-up the Spark shell for Scala by executing &lt;code&gt;spark-shell&lt;/code&gt;. To run a trivial job across all nodes and test the cluster, run the following program on a line-by-line&amp;nbsp;basis:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;val localArray = Array(1,2,3,4,5)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;val localArray = Array(1,2,3,4,5)&lt;/span&gt;
 &lt;span class="err"&gt;val rddArray = sc.parallelize(localArray)&lt;/span&gt;
 &lt;span class="err"&gt;val rddArraySum = rddArray.reduce((x, y) =&amp;gt; x + y)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If no errors were thrown and the shell&amp;#8217;s final output&amp;nbsp;is,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;rddArraySum: Int = 15&lt;/code&gt;&lt;/p&gt;
@@ -520,10 +500,9 @@ $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
 &lt;p&gt;In order to access our S3 data from Spark (via Hadoop), we need to make a couple of packages (&lt;span class="caps"&gt;JAR&lt;/span&gt; files and their dependencies) available to all nodes in our cluster. The easiest way to do this, is to start the spark-shell with the following&amp;nbsp;options:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ spark-shell --packages com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Once the cluster has downloaded everything it needs and the shell has started, run the following program that &amp;#8216;opens&amp;#8217; the &lt;span class="caps"&gt;README&lt;/span&gt; file we uploaded to S3 in Part 1 of this series of blogs, and &amp;#8216;collects&amp;#8217; it back to the master node from its distributed (&lt;span class="caps"&gt;RDD&lt;/span&gt;)&amp;nbsp;representation:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;val data = sc.textFile(&amp;quot;s3a://alex.data/README.md&amp;quot;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;val data = sc.textFile(&amp;quot;s3a://alex.data/README.md&amp;quot;)&lt;/span&gt;
 &lt;span class="err"&gt;data.collect&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If everything is successful then you should see the contents of the file printed to&amp;nbsp;screen.&lt;/p&gt;
 &lt;p&gt;If you have read elsewhere about accessing data on S3, you may have seen references made to connection strings that start with &lt;code&gt;"s3n://...&lt;/code&gt; or maybe even &lt;code&gt;"s3://...&lt;/code&gt; with accompanying discussions about passing credentials either as part of the connection string or by setting system variables, etc. Because we are using a recent version of Hadoop and the Amazon packages required to map S3 objects onto Hadoop, and because we have assigned our nodes &lt;span class="caps"&gt;IAM&lt;/span&gt; roles that have permission to access S3, we do not need to negotiate any of these (sometimes painful)&amp;nbsp;issues.&lt;/p&gt;
@@ -535,4 +514,4 @@ $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
 &lt;p&gt;&lt;code&gt;$ ./flintrock destroy the_name_of_my_cluster&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Be aware&lt;/strong&gt; that when you restart a cluster the public &lt;span class="caps"&gt;IP&lt;/span&gt; addresses for all the nodes will have changed. This can be a bit of a (minor) hassle, so I have opted to create an &lt;a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" title="ElasticIP"&gt;Elastic &lt;span class="caps"&gt;IP&lt;/span&gt;&lt;/a&gt; address and assign it to my master node to keep it&amp;#8217;s public &lt;span class="caps"&gt;IP&lt;/span&gt; address constant over stops and restarts (for a nominal cost). To see what clusters are running at any one moment in&amp;nbsp;time,&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ ./flintrock describe&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;We are now ready to install R, R Studio and start using Sparklyr and/or SparkR to start interacting with our data (Part 3 in this series of&amp;nbsp;blogs).&lt;/p&gt;</content><category term="AWS"></category><category term="data-processing"></category><category term="apache-spark"></category></entry></feed>
+&lt;p&gt;We are now ready to install R, R Studio and start using Sparklyr and/or SparkR to start interacting with our data (Part 3 in this series of&amp;nbsp;blogs).&lt;/p&gt;</content><category term="data-science"></category><category term="AWS"></category><category term="data-processing"></category><category term="apache-spark"></category></entry></feed>

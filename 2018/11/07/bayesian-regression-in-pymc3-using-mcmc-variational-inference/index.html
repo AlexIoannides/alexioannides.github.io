@@ -8,12 +8,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="index, follow" />
 
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+
+
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
 
     <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
@@ -39,6 +45,7 @@
 <meta name="description" content="Conducting a Bayesian data analysis - e.g. estimating a Bayesian linear regression model - will usually require some form of Probabilistic Programming Language (PPL), unless analytical approaches (e.g. based on conjugate prior models), are appropriate for the task at hand. More often than not, PPLs implement Markov Chain Monte Carlo …" />
 <meta name="keywords" content="machine-learning, probabilistic-programming, python, pymc3">
 
+
 <meta property="og:site_name" content="Dr Alex Ioannides"/>
 <meta property="og:title" content="Bayesian Regression in PYMC3 using MCMC &amp; Variational Inference"/>
 <meta property="og:description" content="Conducting a Bayesian data analysis - e.g. estimating a Bayesian linear regression model - will usually require some form of Probabilistic Programming Language (PPL), unless analytical approaches (e.g. based on conjugate prior models), are appropriate for the task at hand. More often than not, PPLs implement Markov Chain Monte Carlo …"/>
@@ -58,45 +65,74 @@
   <title>Dr Alex Ioannides &ndash; Bayesian Regression in PYMC3 using MCMC &amp; Variational Inference</title>
 
 </head>
-<body>
+<body class="light-theme">
   <aside>
     <div>
       <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
-      <h1><a href="https://alexioannides.github.io">Dr Alex Ioannides</a></h1>
+
+      <h1>
+        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
+      </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
+
       <nav>
         <ul class="list">
-          <li><a href="https://alexioannides.github.io/about-this-blog/">About this&nbsp;Blog</a></li>
-          <li><a href="https://alexioannides.github.io/about-me/">About&nbsp;Me</a></li>
+
+
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-me/">
+                  About&nbsp;Me
+                </a>
+              </li>
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-this-blog/">
+                  About this&nbsp;Blog
+                </a>
+              </li>
 
         </ul>
       </nav>
 
       <ul class="social">
-        <li><a class="sc-github" href="https://github.com/alexioannides" target="_blank"><i class="fa fa-github"></i></a></li>
-        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-        <li><a class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank"><i class="fa fa-twitter"></i></a></li>
-        <li><a class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank"><i class="fa fa-soundcloud"></i></a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/alexioannides" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank">
+              <i class="fab fa-soundcloud"></i>
+            </a>
+          </li>
       </ul>
     </div>
-
 
   </aside>
   <main>
 
     <nav>
-      <a href="https://alexioannides.github.io">    Home
-</a>
+      <a href="https://alexioannides.github.io">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
       <a href="/archives.html">Archives</a>
 
-      <a href="https://alexioannides.github.io/feeds/all.atom.xml">    Atom
-</a>
+      <a href="https://alexioannides.github.io/feeds/all.atom.xml">Atom</a>
 
     </nav>
 
@@ -105,8 +141,7 @@
       
     <h1 id="bayesian-regression-in-pymc3-using-mcmc-variational-inference">Bayesian Regression in <span class="caps">PYMC3</span> using <span class="caps">MCMC</span> <span class="amp">&amp;</span> Variational&nbsp;Inference</h1>
     <p>
-          Posted on Wed 07 November 2018 in <a href="https://alexioannides.github.io/category/data-science.html">data-science</a>
-
+      Posted on Wed 07 November 2018 in <a href="https://alexioannides.github.io/category/data-science.html">data-science</a>
 
     </p>
   </header>
@@ -148,7 +183,7 @@ $$</div>
 <p>This notebook is concerned with demonstrating and comparing two separate approaches for inferring the posterior distribution, <span class="math">\(p(\Theta | X)\)</span>, for a linear regression&nbsp;model.</p>
 <h2 id="imports-and-global-settings">Imports and Global&nbsp;Settings</h2>
 <p>Before we get going in earnest, we follow the convention of declaring all imports at the top of the&nbsp;notebook.</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pymc3</span> <span class="k">as</span> <span class="nn">pm</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
@@ -156,16 +191,14 @@ $$</div>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">binomial</span><span class="p">,</span> <span class="n">randn</span><span class="p">,</span> <span class="n">uniform</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>And then notebook-wide (global) settings that enable in-line plotting, configure Seaborn for visualisation and to explicitly ignore warnings (e.g. NumPy&nbsp;deprecations).</p>
-<div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<div class="highlight"><pre><span></span><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 
 <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <h2 id="create-synthetic-data">Create Synthetic&nbsp;Data</h2>
 <p>We will assume that there is a dependent variable (or labelled data) <span class="math">\(\tilde{y}\)</span>, that is a linear function of independent variables (or feature data), <span class="math">\(x\)</span> and <span class="math">\(c\)</span>. In this instance, <span class="math">\(x\)</span> is a positive real number and <span class="math">\(c\)</span> denotes membership to one of two categories that occur with equal likelihood. We express this model mathematically, as&nbsp;follows,</p>
@@ -173,18 +206,17 @@ $$</div>
 \tilde{y} = \alpha_{c} + \beta_{c} \cdot x + \sigma \cdot \tilde{\epsilon}
 $$</div>
 <p>where <span class="math">\(\tilde{\epsilon} \sim N(0, 1)\)</span>, <span class="math">\(\sigma\)</span> is the standard deviation of the noise in the data and <span class="math">\(c \in \{0, 1\}\)</span> denotes the category. We start by defining our <em>a priori</em> choices for the model&nbsp;parameters.</p>
-<div class="highlight"><pre><span></span><span class="n">alpha_0</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="highlight"><pre><span></span><code><span class="n">alpha_0</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">alpha_1</span> <span class="o">=</span> <span class="mf">1.25</span>
 
 <span class="n">beta_0</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">beta_1</span> <span class="o">=</span> <span class="mf">1.25</span>
 
 <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.75</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>We then use these to generate some random samples that we store in a DataFrame and visualise using the Seaborn&nbsp;package.</p>
-<div class="highlight"><pre><span></span><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1000</span>
+<div class="highlight"><pre><span></span><code><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1000</span>
 
 <span class="n">category</span> <span class="o">=</span> <span class="n">binomial</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
@@ -197,8 +229,7 @@ $$</div>
 
 <span class="n">display</span><span class="p">(</span><span class="n">model_data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">relplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">model_data</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <div>
 <style scoped>
@@ -261,43 +292,38 @@ $$</div>
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_9_1.png"></p>
 <h2 id="split-data-into-training-and-test-sets">Split Data into Training and Test&nbsp;Sets</h2>
 <p>One of the advantages of generating synthetic data is that we can ensure we have enough data to be able to partition it into two sets - one for training models and one for testing models. We use a helper function from the Scikit-Learn package for this task and make use of stratified sampling to ensure that we have a balanced representation of each category in both training and test&nbsp;datasets.</p>
-<div class="highlight"><pre><span></span><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
     <span class="n">model_data</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">model_data</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>We will be using the <a href="https://docs.pymc.io"><span class="caps">PYMC3</span></a> package for building and estimating our Bayesian regression models, which in-turn uses the Theano package as a computational &#8216;back-end&#8217; (in much the same way that the Keras package for deep learning uses TensorFlow as back-end). Consequently, we will have to interact with Theano if we want to have the ability to swap between training and test data (which we do). As such, we will explicitly define &#8216;shared&#8217; tensors for all of our model&nbsp;variables.</p>
-<div class="highlight"><pre><span></span><span class="n">y_tensor</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="n">y_tensor</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">))</span>
 <span class="n">x_tensor</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">))</span>
 <span class="n">cat_tensor</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int64&#39;</span><span class="p">))</span>
-</pre></div>
-
+</code></pre></div>
 
 <h2 id="define-bayesian-regression-model">Define Bayesian Regression&nbsp;Model</h2>
 <p>Now we move on to define the model that we want to estimate (i.e. our hypothesis regarding the data), irrespective of how we will perform the inference. We will assume full knowledge of the data-generating model we defined above and define conservative regularising priors for each of the model&nbsp;parameters.</p>
-<div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
     <span class="n">alpha_prior</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">beta_prior</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">sigma_prior</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s1">&#39;sigma&#39;</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">mu_likelihood</span> <span class="o">=</span> <span class="n">alpha_prior</span><span class="p">[</span><span class="n">cat_tensor</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta_prior</span><span class="p">[</span><span class="n">cat_tensor</span><span class="p">]</span> <span class="o">*</span> <span class="n">x_tensor</span>
     <span class="n">y_likelihood</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu_likelihood</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="n">sigma_prior</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">y_tensor</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <h2 id="model-inference-using-mcmc-hmc">Model Inference Using <span class="caps">MCMC</span> (<span class="caps">HMC</span>)</h2>
 <p>We will make use of the default <span class="caps">MCMC</span> method in <span class="caps">PYMC3</span>&#8217;s <code>sample</code> function, which is Hamiltonian Monte Carlo (<span class="caps">HMC</span>). Those interested in the precise details of the <span class="caps">HMC</span> algorithm are directed to the <a href="https://arxiv.org/abs/1701.02434">excellent paper Michael Betancourt</a>. Briefly, <span class="caps">MCMC</span> algorithms work by defining multi-dimensional Markovian stochastic processes, that when simulated (using Monte Carlo methods), will eventually converge to a state where successive simulations will be equivalent to drawing random samples from the posterior distribution of the model we wish to&nbsp;estimate.</p>
 <p>The posterior distribution has one dimension for each model parameter, so we can then use the distribution of samples for each parameter to infer the range of possible values and/or compute point estimates (e.g. by taking the mean of all&nbsp;samples).</p>
 <p>For the purposes of this demonstration, we sample two chains in parallel (as we have two <span class="caps">CPU</span> cores available for doing so and this effectively doubles the number of samples), allow 1,000 steps for each chain to converge to its steady-state and then sample for a further 5,000 steps - i.e. generate 5,000 samples from the posterior distribution, assuming that the chain has converged after 1,000&nbsp;samples.</p>
-<div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
     <span class="n">hmc_trace</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">tune</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Now let&#8217;s take a look at what we can infer from the <span class="caps">HMC</span> samples of the posterior&nbsp;distribution.</p>
-<div class="highlight"><pre><span></span><span class="n">pm</span><span class="o">.</span><span class="n">traceplot</span><span class="p">(</span><span class="n">hmc_trace</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">pm</span><span class="o">.</span><span class="n">traceplot</span><span class="p">(</span><span class="n">hmc_trace</span><span class="p">)</span>
 <span class="n">pm</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">hmc_trace</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <div>
 <style scoped>
@@ -390,35 +416,31 @@ $$</div>
 <p>The assumption of a spherical Gaussian distribution does, however, imply no dependency (i.e. zero correlations) between parameter distributions. One of the advantages of <span class="caps">HMC</span> over <span class="caps">ADVI</span>, is that these correlations, which can lead to under-estimated variances in the parameter distributions, are included. <span class="caps">ADVI</span> gives these up in the name of computational efficiency (i.e. speed and scale of data). This simplifying assumption can be dropped, however, and <span class="caps">PYMC3</span> does offer the option to use &#8216;full-rank&#8217; Gaussians, but I have not used this in anger&nbsp;(yet).</p>
 <p>We also take the opportunity to make use of <span class="caps">PYMC3</span>&#8217;s ability to compute <span class="caps">ADVI</span> using &#8216;batched&#8217; data, analogous to how Stochastic Gradient Descent (<span class="caps">SGD</span>) is used to optimise loss functions in deep-neural networks, which further facilitates model training at scale thanks to the reliance on auto-differentiation and batched data, which can also be distributed across <span class="caps">CPU</span> (or&nbsp;GPUs).</p>
 <p>In order to enable mini-batch <span class="caps">ADVI</span>, we first have to setup the mini-batches (we use batches of 100&nbsp;samples).</p>
-<div class="highlight"><pre><span></span><span class="n">map_tensor_batch</span> <span class="o">=</span> <span class="p">{</span><span class="n">y_tensor</span><span class="p">:</span> <span class="n">pm</span><span class="o">.</span><span class="n">Minibatch</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+<div class="highlight"><pre><span></span><code><span class="n">map_tensor_batch</span> <span class="o">=</span> <span class="p">{</span><span class="n">y_tensor</span><span class="p">:</span> <span class="n">pm</span><span class="o">.</span><span class="n">Minibatch</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
                     <span class="n">x_tensor</span><span class="p">:</span> <span class="n">pm</span><span class="o">.</span><span class="n">Minibatch</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
                     <span class="n">cat_tensor</span><span class="p">:</span> <span class="n">pm</span><span class="o">.</span><span class="n">Minibatch</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">100</span><span class="p">)}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>We then compute the variational inference using 30,000 iterations (for the gradient ascent of the <span class="caps">ELBO</span>). We use the <code>more_replacements</code> key-word argument to swap-out the original Theano tensors with the batched versions defined&nbsp;above.</p>
-<div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">model</span><span class="p">:</span>
     <span class="n">advi_fit</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">pm</span><span class="o">.</span><span class="n">ADVI</span><span class="p">(),</span> <span class="n">n</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span>
                       <span class="n">more_replacements</span><span class="o">=</span><span class="n">map_tensor_batch</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Before we take a look at the parameters, let&#8217;s make sure the <span class="caps">ADVI</span> fit has converged by plotting <span class="caps">ELBO</span> as a function of the number of&nbsp;iterations.</p>
-<div class="highlight"><pre><span></span><span class="n">advi_elbo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="n">advi_elbo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span><span class="s1">&#39;log-ELBO&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">advi_fit</span><span class="o">.</span><span class="n">hist</span><span class="p">),</span>
      <span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">advi_fit</span><span class="o">.</span><span class="n">hist</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])})</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;log-ELBO&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">advi_elbo</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_27_0.png"></p>
 <p>In order to be able to look at what we can infer from posterior distribution we have fit with <span class="caps">ADVI</span>, we first have to draw some samples from it, before summarising like we did with <span class="caps">HMC</span>&nbsp;inference.</p>
-<div class="highlight"><pre><span></span><span class="n">advi_trace</span> <span class="o">=</span> <span class="n">advi_fit</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">advi_trace</span> <span class="o">=</span> <span class="n">advi_fit</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">pm</span><span class="o">.</span><span class="n">traceplot</span><span class="p">(</span><span class="n">advi_trace</span><span class="p">)</span>
 <span class="n">pm</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">advi_trace</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <div>
 <style scoped>
@@ -494,14 +516,13 @@ $$</div>
 <p>Not bad! The mean estimates are comparable, but we note that the standard deviations appear to be larger than those estimated with <span class="caps">HMC</span>.</p>
 <h2 id="comparing-predictions">Comparing&nbsp;Predictions</h2>
 <p>Let&#8217;s move on to comparing the inference algorithms on the practical task of making predictions on our test dataset. We start by swapping the test data into our Theano&nbsp;variables.</p>
-<div class="highlight"><pre><span></span><span class="n">y_tensor</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">y_tensor</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 <span class="n">x_tensor</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 <span class="n">cat_tensor</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int64&#39;</span><span class="p">))</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>And then drawing posterior-predictive samples for each new data-point, for which we use the mean as the point estimate to use for&nbsp;comparison.</p>
-<div class="highlight"><pre><span></span><span class="n">hmc_posterior_pred</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample_ppc</span><span class="p">(</span><span class="n">hmc_trace</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">hmc_posterior_pred</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample_ppc</span><span class="p">(</span><span class="n">hmc_trace</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 <span class="n">hmc_predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">hmc_posterior_pred</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">advi_posterior_pred</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample_ppc</span><span class="p">(</span><span class="n">advi_trace</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
@@ -516,45 +537,40 @@ $$</div>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;ADVI&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;HMC&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">prediction_data</span><span class="p">,</span>
                <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
-</pre></div>
-
+</code></pre></div>
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_34_1.png"></p>
 <p>As we might expect, given the parameter estimates, the two models generate similar&nbsp;predictions. </p>
 <p>To begin to get an insight into the differences between <span class="caps">HMC</span> and <span class="caps">ADVI</span>, we look at the inferred dependency structure between the samples of <code>alpha_0</code> and <code>beta_0</code>, for both <span class="caps">HMC</span> and <span class="caps">VI</span>, starting with <span class="caps">HMC</span>.</p>
-<div class="highlight"><pre><span></span><span class="n">param_samples_HMC</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="n">param_samples_HMC</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span><span class="s1">&#39;alpha_0&#39;</span><span class="p">:</span> <span class="n">hmc_trace</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">],</span> 
      <span class="s1">&#39;beta_0&#39;</span><span class="p">:</span> <span class="n">hmc_trace</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s1">&#39;beta&#39;</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]})</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;alpha_0&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;beta_0&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">param_samples_HMC</span><span class="p">)</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;HMC&#39;</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_36_0.png"></p>
 <p>And again for <span class="caps">ADVI</span>.</p>
-<div class="highlight"><pre><span></span><span class="n">param_samples_ADVI</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="n">param_samples_ADVI</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span><span class="s1">&#39;alpha_0&#39;</span><span class="p">:</span> <span class="n">advi_trace</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">],</span> 
      <span class="s1">&#39;beta_0&#39;</span><span class="p">:</span> <span class="n">advi_trace</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s1">&#39;beta&#39;</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]})</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;alpha_0&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;beta_0&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">param_samples_ADVI</span><span class="p">)</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ADVI&#39;</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_38_0.png"></p>
 <p>We can see clearly the impact of <span class="caps">ADVI</span>&#8217;s assumption of n-dimensional spherical Gaussians, manifest in the&nbsp;inference!</p>
 <p>Finally, let&#8217;s compare predictions with the actual&nbsp;data.</p>
-<div class="highlight"><pre><span></span><span class="n">RMSE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">prediction_data</span><span class="o">.</span><span class="n">error_ADVI</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="n">RMSE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">prediction_data</span><span class="o">.</span><span class="n">error_ADVI</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;RMSE for ADVI predictions = </span><span class="si">{</span><span class="n">RMSE</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;ADVI&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;actual&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">prediction_data</span><span class="p">,</span> 
                <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
-</pre></div>
+</code></pre></div>
 
-
-<div class="highlight"><pre><span></span><span class="err">RMSE for ADVI predictions = 0.746</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">RMSE for ADVI predictions = 0.746</span>
+</code></pre></div>
 
 <p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_40_1.png"></p>
 <p>Which is what one might expect, given the data generating&nbsp;model.</p>
@@ -640,15 +656,15 @@ $$</div>
     })();
 </script>
 <noscript>
-        Please enable JavaScript to view comments.
-
+    Please enable JavaScript to view comments.
 </noscript>
 <!-- End Disqus -->
 </article>
 
     <footer>
 <p>&copy;  </p>
-<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
 </p>    </footer>
   </main>
 
@@ -665,6 +681,7 @@ $$</div>
   "description": ""
 }
 </script>
+
 
 </body>
 </html>

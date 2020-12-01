@@ -8,12 +8,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="index, follow" />
 
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+
+
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
 
     <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
@@ -39,6 +45,7 @@
 <meta name="description" content="Quite often I want to share simple (static) web pages with other colleagues or clients. For example, I may have written a report using R Markdown and rendered it to HTML. AWS S3 can easily host such a simple web page (e.g. see here), but it cannot, however, offer …" />
 <meta name="keywords" content="AWS">
 
+
 <meta property="og:site_name" content="Dr Alex Ioannides"/>
 <meta property="og:title" content="An R Function for Generating Authenticated URLs to Private Web Sites Hosted on AWS S3"/>
 <meta property="og:description" content="Quite often I want to share simple (static) web pages with other colleagues or clients. For example, I may have written a report using R Markdown and rendered it to HTML. AWS S3 can easily host such a simple web page (e.g. see here), but it cannot, however, offer …"/>
@@ -55,45 +62,74 @@
   <title>Dr Alex Ioannides &ndash; An R Function for Generating Authenticated URLs to Private Web Sites Hosted on AWS S3</title>
 
 </head>
-<body>
+<body class="light-theme">
   <aside>
     <div>
       <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
-      <h1><a href="https://alexioannides.github.io">Dr Alex Ioannides</a></h1>
+
+      <h1>
+        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
+      </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
+
       <nav>
         <ul class="list">
-          <li><a href="https://alexioannides.github.io/about-this-blog/">About this&nbsp;Blog</a></li>
-          <li><a href="https://alexioannides.github.io/about-me/">About&nbsp;Me</a></li>
+
+
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-me/">
+                  About&nbsp;Me
+                </a>
+              </li>
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-this-blog/">
+                  About this&nbsp;Blog
+                </a>
+              </li>
 
         </ul>
       </nav>
 
       <ul class="social">
-        <li><a class="sc-github" href="https://github.com/alexioannides" target="_blank"><i class="fa fa-github"></i></a></li>
-        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-        <li><a class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank"><i class="fa fa-twitter"></i></a></li>
-        <li><a class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank"><i class="fa fa-soundcloud"></i></a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/alexioannides" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank">
+              <i class="fab fa-soundcloud"></i>
+            </a>
+          </li>
       </ul>
     </div>
-
 
   </aside>
   <main>
 
     <nav>
-      <a href="https://alexioannides.github.io">    Home
-</a>
+      <a href="https://alexioannides.github.io">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
       <a href="/archives.html">Archives</a>
 
-      <a href="https://alexioannides.github.io/feeds/all.atom.xml">    Atom
-</a>
+      <a href="https://alexioannides.github.io/feeds/all.atom.xml">Atom</a>
 
     </nav>
 
@@ -102,8 +138,7 @@
       
     <h1 id="an-r-function-for-generating-authenticated-urls-to-private-web-sites-hosted-on-aws-s3">An R Function for Generating Authenticated URLs to Private Web Sites Hosted on <span class="caps">AWS</span>&nbsp;S3</h1>
     <p>
-          Posted on Mon 19 September 2016 in <a href="https://alexioannides.github.io/category/r.html">r</a>
-
+      Posted on Mon 19 September 2016 in <a href="https://alexioannides.github.io/category/r.html">r</a>
 
     </p>
   </header>
@@ -118,18 +153,17 @@
 <p>Before we can authenticate anyone, we need someone to authenticate. From the <span class="caps">AWS</span> Management Console create a new user, download their security credentials and then attach the <code>AmazonS3ReadOnlyAccess</code> policy to them. For more details on how to do this, refer to a <a href="https://alexioannides.com/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1">previous post</a>. Note, that you should <strong>not</strong> create passwords for them to access the <span class="caps">AWS</span>&nbsp;console.</p>
 <h1 id="loading-a-static-web-page-to-aws-s3">Loading a Static Web Page to <span class="caps">AWS</span>&nbsp;S3</h1>
 <p>Do <strong>not</strong> be tempted to follow the S3 &#8216;Getting Started&#8217; page on how to host a static web page and in doing so enable &#8216;Static Website Hosting&#8217;. We need our resources to remain private and we would also like to use <span class="caps">HTTPS</span>, which this option does not support. Instead, create a new bucket and upload a simple <span class="caps">HTML</span> file <a href="https://alexioannides.com/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1">as usual</a>. An example html file - e.g. <code>index.html</code> - could&nbsp;be,</p>
-<div class="highlight"><pre><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
     <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Hello, World!<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
   <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
-</pre></div>
-
+</code></pre></div>
 
 <h1 id="an-r-function-for-generating-authenticated-urls">An R Function for Generating Authenticated&nbsp;URLs</h1>
 <p>We can now use our new user&#8217;s Access Key <span class="caps">ID</span> and Secret Access Key to create a <span class="caps">URL</span> with a limited lifetime that enables access to <code>index.html</code>. Technically, we are making a <span class="caps">HTTP</span> <span class="caps">GET</span> request to the S3 <span class="caps">REST</span> <span class="caps">API</span>, with the authentication details sent as part of a query string. Creating this <span class="caps">URL</span> is a bit tricky - I have adapted the Python example (number 3) that is provided <a href="https://s3.amazonaws.com/doc/s3-developer-guide/RESTAuthentication.html" title="Python Auth Example">here</a>, as an R function (that can be found in the Gist below) - <code>aws_query_string_auth_url(...)</code>. Here&#8217;s an example showing this R function in&nbsp;action:</p>
-<div class="highlight"><pre><span></span><span class="n">path_to_file</span> <span class="o">&lt;-</span> <span class="s">&quot;index.html&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">path_to_file</span> <span class="o">&lt;-</span> <span class="s">&quot;index.html&quot;</span>
 <span class="n">bucket</span> <span class="o">&lt;-</span> <span class="s">&quot;my.s3.bucket&quot;</span>
 <span class="n">region</span> <span class="o">&lt;-</span> <span class="s">&quot;eu-west-1&quot;</span>
 <span class="n">aws_access_key_id</span> <span class="o">&lt;-</span> <span class="s">&quot;DWAAAAJL4KIEWJCV3R36&quot;</span>
@@ -137,8 +171,7 @@
 <span class="n">lifetime_minutes</span> <span class="o">&lt;-</span> <span class="m">1</span>
 <span class="nf">aws_query_string_auth_url</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">aws_access_key_id</span><span class="p">,</span> <span class="n">aws_secret_access_key</span><span class="p">,</span> <span class="n">lifetime_minutes</span><span class="p">)</span>
 <span class="c1"># &quot;https://s3-eu-west-1.amazonaws.com/my.s3.bucket/index.html?AWSAccessKeyId=DWAAAKIAJL4EWJCV3R36&amp;Expires=1471994487&amp;Signature=inZlnNHHswKmcPfTBiKhziRSwT4%3D&quot;</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>And here&#8217;s the code for it as inspired by the short code snippet <a href="https://s3.amazonaws.com/doc/s3-developer-guide/RESTAuthentication.html" title="Python Auth Example">here</a>:</p>
 <script src="https://gist.github.com/AlexIoannides/927dc77c8258ab436f602096c8491460.js"></script>
@@ -166,15 +199,15 @@
     })();
 </script>
 <noscript>
-        Please enable JavaScript to view comments.
-
+    Please enable JavaScript to view comments.
 </noscript>
 <!-- End Disqus -->
 </article>
 
     <footer>
 <p>&copy;  </p>
-<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
 </p>    </footer>
   </main>
 
@@ -191,6 +224,7 @@
   "description": ""
 }
 </script>
+
 
 </body>
 </html>

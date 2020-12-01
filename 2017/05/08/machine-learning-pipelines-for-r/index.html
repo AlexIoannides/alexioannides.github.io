@@ -8,12 +8,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="index, follow" />
 
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+
+
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
 
     <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
@@ -39,6 +45,7 @@
 <meta name="description" content="Building machine learning and statistical models often requires pre- and post-transformation of the input and/or response variables, prior to training (or fitting) the models. For example, a model may require training on the logarithm of the response and input variables. As a consequence, fitting and then generating predictions from …" />
 <meta name="keywords" content="machine-learning, data-processing">
 
+
 <meta property="og:site_name" content="Dr Alex Ioannides"/>
 <meta property="og:title" content="Machine Learning Pipelines for R"/>
 <meta property="og:description" content="Building machine learning and statistical models often requires pre- and post-transformation of the input and/or response variables, prior to training (or fitting) the models. For example, a model may require training on the logarithm of the response and input variables. As a consequence, fitting and then generating predictions from …"/>
@@ -56,45 +63,74 @@
   <title>Dr Alex Ioannides &ndash; Machine Learning Pipelines for R</title>
 
 </head>
-<body>
+<body class="light-theme">
   <aside>
     <div>
       <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
-      <h1><a href="https://alexioannides.github.io">Dr Alex Ioannides</a></h1>
+
+      <h1>
+        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
+      </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
+
       <nav>
         <ul class="list">
-          <li><a href="https://alexioannides.github.io/about-this-blog/">About this&nbsp;Blog</a></li>
-          <li><a href="https://alexioannides.github.io/about-me/">About&nbsp;Me</a></li>
+
+
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-me/">
+                  About&nbsp;Me
+                </a>
+              </li>
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-this-blog/">
+                  About this&nbsp;Blog
+                </a>
+              </li>
 
         </ul>
       </nav>
 
       <ul class="social">
-        <li><a class="sc-github" href="https://github.com/alexioannides" target="_blank"><i class="fa fa-github"></i></a></li>
-        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-        <li><a class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank"><i class="fa fa-twitter"></i></a></li>
-        <li><a class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank"><i class="fa fa-soundcloud"></i></a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/alexioannides" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank">
+              <i class="fab fa-soundcloud"></i>
+            </a>
+          </li>
       </ul>
     </div>
-
 
   </aside>
   <main>
 
     <nav>
-      <a href="https://alexioannides.github.io">    Home
-</a>
+      <a href="https://alexioannides.github.io">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
       <a href="/archives.html">Archives</a>
 
-      <a href="https://alexioannides.github.io/feeds/all.atom.xml">    Atom
-</a>
+      <a href="https://alexioannides.github.io/feeds/all.atom.xml">Atom</a>
 
     </nav>
 
@@ -103,8 +139,7 @@
       
     <h1 id="machine-learning-pipelines-for-r">Machine Learning Pipelines for&nbsp;R</h1>
     <p>
-          Posted on Mon 08 May 2017 in <a href="https://alexioannides.github.io/category/r.html">r</a>
-
+      Posted on Mon 08 May 2017 in <a href="https://alexioannides.github.io/category/r.html">r</a>
 
     </p>
   </header>
@@ -120,47 +155,42 @@
 <li>generate a prediction (or model-scoring) function that automatically applies the entire pipeline of transformations and inverse-transformations to the inputs and outputs of the inner-model and its predicted values (or&nbsp;scores).</li>
 </ul>
 <p>The idea of pipelines is inspired by the machine learning pipelines implemented in <a href="http://spark.apache.org/docs/latest/ml-pipeline.html" title="Pipelines in Apache Spark MLib">Apache Spark&#8217;s MLib library</a> (which are in-turn inspired by Python&#8217;s scikit-Learn package). This package is still in its infancy and the latest development version can be downloaded from <a href="https://github.com/AlexIoannides/pipeliner" title="Pipeliner on GitHub">this GitHub repository</a> using the <code>devtools</code> package (bundled with&nbsp;RStudio),</p>
-<div class="highlight"><pre><span></span><span class="n">devtools</span><span class="o">::</span><span class="nf">install_github</span><span class="p">(</span><span class="s">&quot;alexioannides/pipeliner&quot;</span><span class="p">)</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="n">devtools</span><span class="o">::</span><span class="nf">install_github</span><span class="p">(</span><span class="s">&quot;alexioannides/pipeliner&quot;</span><span class="p">)</span>
+</code></pre></div>
 
 <h2 id="pipes-in-the-pipeline">Pipes in the&nbsp;Pipeline</h2>
 <p>There are currently four types of pipeline section - a section being a function that wraps a user-defined function - that can be assembled into a&nbsp;pipeline:</p>
 <ul>
 <li><code>transform_features</code>: wraps a function that maps input variables (or features) to another space -&nbsp;e.g.,</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="nf">transform_features</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nf">transform_features</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
   <span class="nf">data.frame</span><span class="p">(</span><span class="n">x1</span> <span class="o">=</span> <span class="nf">log</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">var1</span><span class="p">))</span>
 <span class="p">})</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li><code>transform_response</code>: wraps a function that maps the response variable to another space -&nbsp;e.g.,</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="nf">transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nf">transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
   <span class="nf">data.frame</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="nf">log</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">response</span><span class="p">))</span>
 <span class="p">})</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li><code>estimate_model</code>: wraps a function that defines how to estimate a model from training data in a data.frame -&nbsp;e.g.,</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="nf">estimate_model</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nf">estimate_model</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
   <span class="nf">lm</span><span class="p">(</span><span class="n">y</span> <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x1</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 <span class="p">})</span>
-</pre></div>
-
+</code></pre></div>
 
 <ul>
 <li><code>inv_transform_features(f)</code>: wraps a function that is the inverse to <code>transform_response</code>, such that we can map from the space of inner-model predictions to the one of output domain predictions -&nbsp;e.g.,</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="nf">inv_transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nf">inv_transform_response</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
   <span class="nf">data.frame</span><span class="p">(</span><span class="n">pred_response</span> <span class="o">=</span> <span class="nf">exp</span><span class="p">(</span><span class="n">df</span><span class="o">$</span><span class="n">pred_y</span><span class="p">))</span>
 <span class="p">})</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>As demonstrated above, each one of these functions expects as its argument another unary function of a data.frame (i.e. it has to be a function of a single data.frame). With the <strong>exception</strong> of <code>estimate_model</code>, which expects the input function to return an object that has a <code>predict.object-class-name</code> method existing in the current environment (e.g. <code>predict.lm</code> for linear models built using <code>lm()</code>), all the other transform functions also expect their input functions to return data.frames (consisting entirely of columns <strong>not</strong> present in the input data.frame). If any of these rules are violated then appropriately named errors will be thrown to help you locate the&nbsp;issue.</p>
 <p>If this sounds complex and convoluted then I encourage you to to skip to the examples below - this framework is <strong>very</strong> simple to use in practice. Simplicity is the key aim&nbsp;here.</p>
@@ -169,7 +199,7 @@
 <h3 id="example-usage-with-a-functional-flavor">Example Usage with a Functional&nbsp;Flavor</h3>
 <p>We use the <code>faithful</code> dataset shipped with R, together with the <code>pipeliner</code> package to estimate a linear regression model for the eruption duration of &#8216;Old Faithful&#8217; as a function of the inter-eruption waiting time. The transformations we apply to the input and response variables - before we estimate the model - are simple scaling by the mean and standard deviation (i.e. mapping the variables to&nbsp;z-scores).</p>
 <p>The end-to-end process for building the pipeline, estimating the model and generating in-sample predictions (that include all interim variable transformations), is as&nbsp;follows,</p>
-<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">pipeliner</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">pipeliner</span><span class="p">)</span>
 
 <span class="n">data</span> <span class="o">&lt;-</span> <span class="n">faithful</span>
 
@@ -202,12 +232,11 @@
 <span class="c1">## 4     2.283      62 -0.6544374 -0.5895245       2.814917</span>
 <span class="c1">## 5     4.533      85  1.0373644  0.9344694       4.554360</span>
 <span class="c1">## 6     2.883      55 -1.1693335 -1.0533487       2.285521</span>
-</pre></div>
-
+</code></pre></div>
 
 <h3 id="accessing-inner-models-prediction-functions">Accessing Inner Models <span class="amp">&amp;</span> Prediction&nbsp;Functions</h3>
 <p>We can access the estimated inner models directly and compute summaries, etc - for&nbsp;example,</p>
-<div class="highlight"><pre><span></span><span class="nf">summary</span><span class="p">(</span><span class="n">lm_pipeline</span><span class="o">$</span><span class="n">inner_model</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">summary</span><span class="p">(</span><span class="n">lm_pipeline</span><span class="o">$</span><span class="n">inner_model</span><span class="p">)</span>
 <span class="c1">##</span>
 <span class="c1">## Call:</span>
 <span class="c1">## lm(formula = y ~ 1 + x1, data = df)</span>
@@ -226,11 +255,10 @@
 <span class="c1">## Residual standard error: 0.435 on 270 degrees of freedom</span>
 <span class="c1">## Multiple R-squared:  0.8115, Adjusted R-squared:  0.8108</span>
 <span class="c1">## F-statistic:  1162 on 1 and 270 DF,  p-value: &lt; 2.2e-16</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Pipeline prediction functions can also be accessed directly in a similar way - for&nbsp;example,</p>
-<div class="highlight"><pre><span></span><span class="n">pred_function</span> <span class="o">&lt;-</span> <span class="n">lm_pipeline</span><span class="o">$</span><span class="n">predict</span>
+<div class="highlight"><pre><span></span><code><span class="n">pred_function</span> <span class="o">&lt;-</span> <span class="n">lm_pipeline</span><span class="o">$</span><span class="n">predict</span>
 <span class="n">predictions</span> <span class="o">&lt;-</span> <span class="nf">pred_function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
 
 <span class="nf">head</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
@@ -241,12 +269,11 @@
 <span class="c1">## 4       2.814917</span>
 <span class="c1">## 5       4.554360</span>
 <span class="c1">## 6       2.285521</span>
-</pre></div>
-
+</code></pre></div>
 
 <h1 id="turbo-charged-pipelines-in-the-tidyverse">Turbo-Charged Pipelines in the&nbsp;Tidyverse</h1>
 <p>The <code>pipeliner</code> approach to building models becomes even more concise when combined with the set of packages in the <a href="http://tidyverse.org" title="Welcome to The Tidyverse!">tidyverse</a>. For example, the &#8216;Old Faithful&#8217; pipeline could be rewritten&nbsp;as,</p>
-<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
 
 <span class="n">lm_pipeline</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
   <span class="nf">pipeline</span><span class="p">(</span>
@@ -269,13 +296,12 @@
 
 <span class="nf">head</span><span class="p">(</span><span class="nf">predict</span><span class="p">(</span><span class="n">lm_pipeline</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
 <span class="c1">## [1] 4.100592 2.209893 3.722452 2.814917 4.554360 2.285521</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Nice, compact and expressive (if I don&#8217;t say so&nbsp;myself)!</p>
 <h3 id="compact-cross-validation">Compact&nbsp;Cross-validation</h3>
 <p>If we now introduce the <code>modelr</code> package into this workflow and adopt the the list-columns pattern described in Hadley Wickham&#8217;s <a href="http://r4ds.had.co.nz/many-models.html#list-columns-1" title="R 4 Data Science - Many Models &amp; List Columns">R for Data Science</a>, we can also achieve wonderfully compact end-to-end model estimation and&nbsp;cross-validation,</p>
-<div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">modelr</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">modelr</span><span class="p">)</span>
 
 <span class="c1"># define a function that estimates a machine learning pipeline on a single fold of the data</span>
 <span class="n">pipeline_func</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="p">{</span>
@@ -312,8 +338,7 @@
 <span class="c1">##   mean_rmse    sd_rmse</span>
 <span class="c1">##       &lt;dbl&gt;      &lt;dbl&gt;</span>
 <span class="c1">## 1 0.4877222 0.05314748</span>
-</pre></div>
-
+</code></pre></div>
 
 <h1 id="forthcoming-attractions">Forthcoming&nbsp;Attractions</h1>
 <p>I built <code>pipeliner</code> largely to fill a hole in my own workflows. Up until now I&#8217;ve used Max Kuhn&#8217;s excellent <a href="http://topepo.github.io/caret/index.html" title="Caret">caret package</a> quite a bit, but for in-the-moment model building (e.g. within a R Notebook) it wasn&#8217;t simplifying the code <em>that</em> much, and the style doesn&#8217;t quite fit with the tidy and functional world that I now inhabit most of the time. So, I plugged the hole by myself. I intend to live with <code>pipeliner</code> for a while to get an idea of where it might go next, but I am always open to suggestions (and bug notifications) - please <a href="https://github.com/AlexIoannides/pipeliner/issues" title="Pipeliner Issues on GitHub">leave any ideas here</a>.</p>
@@ -340,15 +365,15 @@
     })();
 </script>
 <noscript>
-        Please enable JavaScript to view comments.
-
+    Please enable JavaScript to view comments.
 </noscript>
 <!-- End Disqus -->
 </article>
 
     <footer>
 <p>&copy;  </p>
-<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
 </p>    </footer>
   </main>
 
@@ -365,6 +390,7 @@
   "description": ""
 }
 </script>
+
 
 </body>
 </html>

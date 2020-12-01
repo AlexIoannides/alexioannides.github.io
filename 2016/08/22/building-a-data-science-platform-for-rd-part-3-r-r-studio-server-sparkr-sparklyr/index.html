@@ -8,12 +8,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="index, follow" />
 
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+
+
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
 
     <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
@@ -39,6 +45,7 @@
 <meta name="description" content="Part 1 and Part 2 of this series dealt with setting up AWS, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster’s master node and use it to …" />
 <meta name="keywords" content="AWS, data-processing, apache-spark">
 
+
 <meta property="og:site_name" content="Dr Alex Ioannides"/>
 <meta property="og:title" content="Building a Data Science Platform for R&amp;D, Part 3 - R, R Studio Server, SparkR &amp; Sparklyr"/>
 <meta property="og:description" content="Part 1 and Part 2 of this series dealt with setting up AWS, loading data into S3, deploying a Spark cluster and using it to access our data. In this part we will deploy R and R Studio Server to our Spark cluster’s master node and use it to …"/>
@@ -57,45 +64,74 @@
   <title>Dr Alex Ioannides &ndash; Building a Data Science Platform for R&amp;D, Part 3 - R, R Studio Server, SparkR &amp; Sparklyr</title>
 
 </head>
-<body>
+<body class="light-theme">
   <aside>
     <div>
       <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
-      <h1><a href="https://alexioannides.github.io">Dr Alex Ioannides</a></h1>
+
+      <h1>
+        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
+      </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
+
       <nav>
         <ul class="list">
-          <li><a href="https://alexioannides.github.io/about-this-blog/">About this&nbsp;Blog</a></li>
-          <li><a href="https://alexioannides.github.io/about-me/">About&nbsp;Me</a></li>
+
+
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-me/">
+                  About&nbsp;Me
+                </a>
+              </li>
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-this-blog/">
+                  About this&nbsp;Blog
+                </a>
+              </li>
 
         </ul>
       </nav>
 
       <ul class="social">
-        <li><a class="sc-github" href="https://github.com/alexioannides" target="_blank"><i class="fa fa-github"></i></a></li>
-        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-        <li><a class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank"><i class="fa fa-twitter"></i></a></li>
-        <li><a class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank"><i class="fa fa-soundcloud"></i></a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/alexioannides" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank">
+              <i class="fab fa-soundcloud"></i>
+            </a>
+          </li>
       </ul>
     </div>
-
 
   </aside>
   <main>
 
     <nav>
-      <a href="https://alexioannides.github.io">    Home
-</a>
+      <a href="https://alexioannides.github.io">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
       <a href="/archives.html">Archives</a>
 
-      <a href="https://alexioannides.github.io/feeds/all.atom.xml">    Atom
-</a>
+      <a href="https://alexioannides.github.io/feeds/all.atom.xml">Atom</a>
 
     </nav>
 
@@ -104,8 +140,7 @@
       
     <h1 id="building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr">Building a Data Science Platform for R&D, Part 3 - R, R Studio Server, SparkR <span class="amp">&amp;</span>&nbsp;Sparklyr</h1>
     <p>
-          Posted on Mon 22 August 2016 in <a href="https://alexioannides.github.io/category/data-science.html">data-science</a>
-
+      Posted on Mon 22 August 2016 in <a href="https://alexioannides.github.io/category/data-science.html">data-science</a>
 
     </p>
   </header>
@@ -150,7 +185,7 @@ We will then install and configure both the <a href="http://spark.rstudio.com/in
 <p>Sparklyr is still in it&#8217;s infancy and is not yet available on the <span class="caps">CRAN</span> archives. As such, it needs to be installed directly from its GitHub repo, which from within R Studio is done by&nbsp;executing,</p>
 <p><code>&gt; devtools::install_github("rstudio/sparklyr")</code></p>
 <p>This will take a few minutes as there are a lot of dependencies that need to be built from source. Once this is finished create a new script and copy the following code for testing Sparklyr, its ability to connect to our Spark cluster and our S3&nbsp;data:</p>
-<div class="highlight"><pre><span></span><span class="c1"># set system variables for access to S3 using older &quot;s3n:&quot; protocol ----</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># set system variables for access to S3 using older &quot;s3n:&quot; protocol ----</span>
 <span class="c1"># Sys.setenv(AWS_ACCESS_KEY_ID=&quot;AKIAJL4EWJCQ3R86DWAA&quot;)</span>
 <span class="c1"># Sys.setenv(AWS_SECRET_ACCESS_KEY=&quot;nVZJQtKj6ODDy+t253OZJWZLEo2gaEoFAYjH1pEf&quot;)</span>
 
@@ -203,15 +238,14 @@ We will then install and configure both the <a href="http://spark.rstudio.com/in
 
 <span class="c1"># disconnect ----</span>
 <span class="nf">spark_disconnect_all</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Execute line-by-line and check the key outputs with those commented-out in the above script. Sparklyr is changing rapidly at the moment - for the latest documentation and information on: how to use it with the <code>dplyr</code> package, how to leverage Spark machine learning libraries and how to extend Sparklyr itself, head over to the <a href="http://spark.rstudio.com/index.html" title="sparklyr">Sparklyr web site</a> hosted by R&nbsp;Studio.</p>
 <h1 id="connect-to-spark-with-sparkr">Connect to Spark with&nbsp;SparkR</h1>
 <p>SparkR is shipped with Spark and as such there is no external installation process that we&#8217;re required to follow. It does, however, require R to be installed on every node in the cluster. This can be achieved by <span class="caps">SSH</span>-ing into every node in our cluster and repeating the above R installation steps, or experimenting with Flintrock&#8217;s <code>run-command</code> command that will automatically execute the same command on every node in the cluster, such&nbsp;as,</p>
 <p><code>$ ./flintrock run-command the_name_of_your_cluster 'sudo yum install -y R'</code></p>
 <p>To enable SparkR to be used via R Studio and demonstrate the same connectivity as we did above for Sparklyr, create a new script for the following&nbsp;code:</p>
-<div class="highlight"><pre><span></span><span class="c1"># set system variables ----</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># set system variables ----</span>
 <span class="c1"># - location of Spark on master node;</span>
 <span class="c1"># - add sparkR package directory to the list of path to look for R packages</span>
 <span class="nf">Sys.setenv</span><span class="p">(</span><span class="n">SPARK_HOME</span><span class="o">=</span><span class="s">&quot;/home/ec2-user/spark&quot;</span><span class="p">)</span>
@@ -251,8 +285,7 @@ We will then install and configure both the <a href="http://spark.rstudio.com/in
 
 <span class="c1"># close connection</span>
 <span class="nf">sparkR.session.stop</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Again, execute line-by-line and check the key outputs with those commented-out in the above script. Use the <a href="https://spark.apache.org/docs/latest/sparkr.html" title="sparkR guide">sparkR programming guide</a> and the <a href="https://spark.apache.org/docs/latest/api/R/index.html" title="sparkR API">sparkR <span class="caps">API</span> documentation</a> for more information on the available&nbsp;functions.</p>
 <p>We have nearly met all of the aims set-out at the beginning of this series of posts. All that remains now is to install Apache Zeppelin so we can interact with Spark using Scala in the same way we can now interact with it using&nbsp;R.</p>
@@ -280,15 +313,15 @@ We will then install and configure both the <a href="http://spark.rstudio.com/in
     })();
 </script>
 <noscript>
-        Please enable JavaScript to view comments.
-
+    Please enable JavaScript to view comments.
 </noscript>
 <!-- End Disqus -->
 </article>
 
     <footer>
 <p>&copy;  </p>
-<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
 </p>    </footer>
   </main>
 
@@ -305,6 +338,7 @@ We will then install and configure both the <a href="http://spark.rstudio.com/in
   "description": ""
 }
 </script>
+
 
 </body>
 </html>

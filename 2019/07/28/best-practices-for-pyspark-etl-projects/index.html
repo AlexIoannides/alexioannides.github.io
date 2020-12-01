@@ -8,12 +8,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="index, follow" />
 
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+
+
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
 
     <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
@@ -39,6 +45,7 @@
 <meta name="description" content="I have often lent heavily on Apache Spark and the SparkSQL APIs for operationalising any type of batch data-processing ‘job’, within a production environment where handling fluctuating volumes of data reliably and consistently are on-going business concerns. These batch data-processing jobs may involve nothing more than joining data sources and …" />
 <meta name="keywords" content="data-engineering, data-processing, apache-spark, python">
 
+
 <meta property="og:site_name" content="Dr Alex Ioannides"/>
 <meta property="og:title" content="Best Practices for PySpark ETL Projects"/>
 <meta property="og:description" content="I have often lent heavily on Apache Spark and the SparkSQL APIs for operationalising any type of batch data-processing ‘job’, within a production environment where handling fluctuating volumes of data reliably and consistently are on-going business concerns. These batch data-processing jobs may involve nothing more than joining data sources and …"/>
@@ -58,45 +65,74 @@
   <title>Dr Alex Ioannides &ndash; Best Practices for PySpark ETL Projects</title>
 
 </head>
-<body>
+<body class="light-theme">
   <aside>
     <div>
       <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
-      <h1><a href="https://alexioannides.github.io">Dr Alex Ioannides</a></h1>
+
+      <h1>
+        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
+      </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
+
       <nav>
         <ul class="list">
-          <li><a href="https://alexioannides.github.io/about-this-blog/">About this&nbsp;Blog</a></li>
-          <li><a href="https://alexioannides.github.io/about-me/">About&nbsp;Me</a></li>
+
+
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-me/">
+                  About&nbsp;Me
+                </a>
+              </li>
+              <li>
+                <a target="_self"
+                   href="https://alexioannides.github.io/about-this-blog/">
+                  About this&nbsp;Blog
+                </a>
+              </li>
 
         </ul>
       </nav>
 
       <ul class="social">
-        <li><a class="sc-github" href="https://github.com/alexioannides" target="_blank"><i class="fa fa-github"></i></a></li>
-        <li><a class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-        <li><a class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank"><i class="fa fa-twitter"></i></a></li>
-        <li><a class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank"><i class="fa fa-soundcloud"></i></a></li>
+          <li>
+            <a  class="sc-github" href="https://github.com/alexioannides" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank">
+              <i class="fab fa-soundcloud"></i>
+            </a>
+          </li>
       </ul>
     </div>
-
 
   </aside>
   <main>
 
     <nav>
-      <a href="https://alexioannides.github.io">    Home
-</a>
+      <a href="https://alexioannides.github.io">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
       <a href="/archives.html">Archives</a>
 
-      <a href="https://alexioannides.github.io/feeds/all.atom.xml">    Atom
-</a>
+      <a href="https://alexioannides.github.io/feeds/all.atom.xml">Atom</a>
 
     </nav>
 
@@ -105,8 +141,7 @@
       
     <h1 id="best-practices-for-pyspark-etl-projects">Best Practices for PySpark <span class="caps">ETL</span>&nbsp;Projects</h1>
     <p>
-          Posted on Sun 28 July 2019 in <a href="https://alexioannides.github.io/category/data-engineering.html">data-engineering</a>
-
+      Posted on Sun 28 July 2019 in <a href="https://alexioannides.github.io/category/data-engineering.html">data-engineering</a>
 
     </p>
   </header>
@@ -146,7 +181,7 @@
 </div>
 <h2 id="pyspark-etl-project-structure">PySpark <span class="caps">ETL</span> Project&nbsp;Structure</h2>
 <p>The basic project structure is as&nbsp;follows:</p>
-<div class="highlight"><pre><span></span>root/
+<div class="highlight"><pre><span></span><code>root/
 <span class="p">|</span>-- configs/
  <span class="p">|</span>   <span class="p">|</span>-- etl_config.json
  <span class="p">|</span>-- dependencies/
@@ -163,17 +198,15 @@
  <span class="p">|</span>   Pipfile.lock 
  <span class="p">|</span>   build_dependencies.sh
  <span class="p">|</span>   packages.zip
-</pre></div>
-
+</code></pre></div>
 
 <p>The main Python module containing the <span class="caps">ETL</span> job (which will be sent to the Spark cluster), is <code>jobs/etl_job.py</code>. Any external configuration parameters required by <code>etl_job.py</code> are stored in <span class="caps">JSON</span> format in <code>configs/etl_config.json</code>. Additional modules that support this job can be kept in the <code>dependencies</code> folder (more on this later). In the project&#8217;s root we include <code>build_dependencies.sh</code> - a bash script for building these dependencies into a zip-file to be sent to the cluster (<code>packages.zip</code>). Unit test modules are kept in the <code>tests</code> folder and small chunks of representative input and output data, to be use with the tests, are kept in <code>tests/test_data</code> folder.</p>
 <h2 id="the-structure-of-an-etl-job">The Structure of an <span class="caps">ETL</span>&nbsp;Job</h2>
 <p>In order to facilitate easy debugging and testing, we recommend that the &#8216;Transformation&#8217; step be isolated from the &#8216;Extract&#8217; and &#8216;Load&#8217; steps, into it&#8217;s own function - taking input data arguments in the form of DataFrames and returning the transformed data as a single DataFrame. For example, in the <code>main()</code> job function from <code>jobs/etl_job.py</code> we&nbsp;have,</p>
-<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">extract_data</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="n">extract_data</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="n">data_transformed</span> <span class="o">=</span> <span class="n">transform_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 <span class="n">load_data</span><span class="p">(</span><span class="n">data_transformed</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The code that surrounds the use of the transformation function in the <code>main()</code> job function, is concerned with Extracting the data, passing it to the transformation function and then Loading (or writing) the results to their ultimate destination. Testing is simplified, as mock or test data can be passed to the transformation function and the results explicitly verified, which would not be possible if all of the <span class="caps">ETL</span> code resided in <code>main()</code> and referenced production data sources and&nbsp;destinations.</p>
 <p>More generally, transformation functions should be designed to be <a href="https://en.wikipedia.org/wiki/Idempotence">idempotent</a>. This is a technical way of saying&nbsp;that,</p>
@@ -184,19 +217,17 @@
 <h2 id="passing-configuration-parameters-to-the-etl-job">Passing Configuration Parameters to the <span class="caps">ETL</span>&nbsp;Job</h2>
 <p>Although it is possible to pass arguments to <code>etl_job.py</code>, as you would for any generic Python module running as a &#8216;main&#8217; program  - by specifying them after the module&#8217;s filename and then parsing these command line arguments - this can get very complicated, <strong>very quickly</strong>, especially when there are lot of parameters (e.g. credentials for multiple databases, table names, <span class="caps">SQL</span> snippets, etc.). This also makes debugging the code from within a Python interpreter extremely awkward, as you don&#8217;t have access to the command line arguments that would ordinarily be passed to the code, when calling it from the command&nbsp;line.</p>
 <p>A much more effective solution is to send Spark a separate file - e.g. using the <code>--files configs/etl_config.json</code> flag with <code>spark-submit</code> - containing the configuration in <span class="caps">JSON</span> format, which can be parsed into a Python dictionary in one line of code with <code>json.loads(config_file_contents)</code>. Testing the code from within a Python interactive console session is also greatly simplified, as all one has to do to access configuration parameters for testing, is to copy and paste the contents of the file -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;{&quot;field&quot;: &quot;value&quot;}&quot;&quot;&quot;</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>This also has the added bonus that the <span class="caps">ETL</span> job configuration can be explicitly version controlled within the same project structure, avoiding the risk that configuration parameters escape any type of version control - e.g. because they are passed as arguments in bash scripts written by separate teams, whose responsibility is deploying the code, not writing&nbsp;it.  </p>
 <p>For the exact details of how the configuration file is located, opened and parsed, please see the <code>start_spark()</code> function in <code>dependencies/spark.py</code> (also discussed in more detail below), which in addition to parsing the configuration file sent to Spark (and returning it as a Python dictionary), also launches the Spark driver program (the application) on the cluster and retrieves the Spark logger at the same&nbsp;time.</p>
 <h2 id="packaging-etl-job-dependencies">Packaging <span class="caps">ETL</span> Job&nbsp;Dependencies</h2>
 <p>In this project, functions that can be used across different <span class="caps">ETL</span> jobs are kept in a module called <code>dependencies</code> and referenced in specific job modules using, for&nbsp;example,</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dependencies.spark</span> <span class="kn">import</span> <span class="n">start_spark</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dependencies.spark</span> <span class="kn">import</span> <span class="n">start_spark</span>
+</code></pre></div>
 
 <p>This package, together with any additional dependencies referenced within it, must be to copied to each Spark node for all jobs that use <code>dependencies</code> to run. This can be achieved in one of several&nbsp;ways:</p>
 <ol>
@@ -210,14 +241,13 @@
 </blockquote>
 <h2 id="running-the-etl-job">Running the <span class="caps">ETL</span>&nbsp;job</h2>
 <p>Assuming that the <code>$SPARK_HOME</code> environment variable points to your local Spark installation folder, then the <span class="caps">ETL</span> job can be run from the project&#8217;s root directory using the following command from the&nbsp;terminal,</p>
-<div class="highlight"><pre><span></span><span class="nv">$SPARK_HOME</span>/bin/spark-submit <span class="se">\</span>
+<div class="highlight"><pre><span></span><code><span class="nv">$SPARK_HOME</span>/bin/spark-submit <span class="se">\</span>
 --master local<span class="o">[</span>*<span class="o">]</span> <span class="se">\</span>
 --packages <span class="s1">&#39;com.some-spark-jar.dependency:1.0.0&#39;</span> <span class="se">\</span>
 --py-files dependencies.zip <span class="se">\</span>
 --files configs/etl_config.json <span class="se">\</span>
 jobs/etl_job.py
-</pre></div>
-
+</code></pre></div>
 
 <p>Briefly, the options supplied serve the following&nbsp;purposes:</p>
 <ul>
@@ -231,7 +261,7 @@ jobs/etl_job.py
 <h2 id="debugging-spark-jobs-using-start_spark">Debugging Spark Jobs Using <code>start_spark</code></h2>
 <p>It is not practical to test and debug Spark jobs by sending them to a cluster using <code>spark-submit</code> and examining stack traces for clues on what went wrong. A more productive workflow is to use an interactive console session (e.g. IPython) or a debugger (e.g. the <code>pdb</code> package in the Python standard library or the Python debugger in Visual Studio Code). In practice, however, it can be hard to test and debug Spark jobs in this way, as they can implicitly rely on arguments that are sent to <code>spark-submit</code>, which are not available in a console or debug&nbsp;session.</p>
 <p>We wrote the <code>start_spark</code> function - found in <code>dependencies/spark.py</code> - to facilitate the development of Spark jobs that are aware of the context in which they are being executed - i.e. as <code>spark-submit</code> jobs or within an IPython console, etc. The expected location of the Spark and job configuration parameters required by the job, is contingent on which execution context has been detected. The doscstring for <code>start_spark</code> gives the precise&nbsp;details,</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">start_spark</span><span class="p">(</span><span class="n">app_name</span><span class="o">=</span><span class="s1">&#39;my_spark_app&#39;</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="s1">&#39;local[*]&#39;</span><span class="p">,</span> <span class="n">jar_packages</span><span class="o">=</span><span class="p">[],</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">start_spark</span><span class="p">(</span><span class="n">app_name</span><span class="o">=</span><span class="s1">&#39;my_spark_app&#39;</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="s1">&#39;local[*]&#39;</span><span class="p">,</span> <span class="n">jar_packages</span><span class="o">=</span><span class="p">[],</span>
                 <span class="n">files</span><span class="o">=</span><span class="p">[],</span> <span class="n">spark_config</span><span class="o">=</span><span class="p">{}):</span>
     <span class="sd">&quot;&quot;&quot;Start Spark session, get Spark logger and load config files.</span>
 
@@ -279,16 +309,14 @@ jobs/etl_job.py
     <span class="c1"># ...</span>
 
     <span class="k">return</span> <span class="n">spark_sess</span><span class="p">,</span> <span class="n">spark_logger</span><span class="p">,</span> <span class="n">config_dict</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>For example, the following code&nbsp;snippet,</p>
-<div class="highlight"><pre><span></span><span class="n">spark</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="n">config</span> <span class="o">=</span> <span class="n">start_spark</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="n">spark</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="n">config</span> <span class="o">=</span> <span class="n">start_spark</span><span class="p">(</span>
     <span class="n">app_name</span><span class="o">=</span><span class="s1">&#39;my_etl_job&#39;</span><span class="p">,</span>
     <span class="n">jar_packages</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;com.somesparkjar.dependency:1.0.0&#39;</span><span class="p">],</span>
     <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;configs/etl_config.json&#39;</span><span class="p">])</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Will use the arguments provided to <code>start_spark</code> to setup the Spark job if executed from an interactive console session or debugger, but will look for the same arguments sent via <code>spark-submit</code> if that is how the job has been&nbsp;executed.</p>
 <blockquote>
@@ -297,7 +325,7 @@ jobs/etl_job.py
 <h2 id="automated-testing">Automated&nbsp;Testing</h2>
 <p>In order to test with Spark, we use the <code>pyspark</code> Python package, which is bundled with the Spark JARs required to programmatically start-up and tear-down a local Spark instance, on a per-test-suite basis (we recommend using the <code>setUp</code> and <code>tearDown</code> methods in <code>unittest.TestCase</code> to do this once per test-suite). Note, that using <code>pyspark</code> to run Spark is an alternative way of developing with Spark as opposed to using the PySpark shell or <code>spark-submit</code>.</p>
 <p>Given that we have chosen to structure our <span class="caps">ETL</span> jobs in such a way as to isolate the &#8216;Transformation&#8217; step into its own function (see &#8216;Structure of an <span class="caps">ETL</span> job&#8217; above), we are free to feed it a small slice of &#8216;real-world&#8217; production data that has been persisted locally - e.g. in <code>tests/test_data</code> or some easily accessible network directory - and check it against known results (e.g. computed manually or interactively within a Python interactive console session), as demonstrated in this extract from <code>tests/test_etl_job.py</code>,</p>
-<div class="highlight"><pre><span></span><span class="c1"># assemble</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># assemble</span>
 <span class="n">input_data</span> <span class="o">=</span> <span class="p">(</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">spark</span>
     <span class="o">.</span><span class="n">read</span>
@@ -333,61 +361,52 @@ jobs/etl_job.py
 <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">expected_avg_steps</span><span class="p">,</span> <span class="n">avg_steps</span><span class="p">)</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">([</span><span class="n">col</span> <span class="ow">in</span> <span class="n">expected_data</span><span class="o">.</span><span class="n">columns</span>
                  <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data_transformed</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>To execute the example unit test for this project&nbsp;run,</p>
-<div class="highlight"><pre><span></span>pipenv run python -m unittest tests/test_*.py
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>pipenv run python -m unittest tests/test_*.py
+</code></pre></div>
 
 <p>If you&#8217;re wondering what the <code>pipenv</code> command is, then read the next&nbsp;section.</p>
 <h2 id="managing-project-dependencies-using-pipenv">Managing Project Dependencies using&nbsp;Pipenv</h2>
 <p>We use <a href="https://docs.pipenv.org">Pipenv</a> for managing project dependencies and Python environments (i.e. virtual environments). All direct packages dependencies (e.g. NumPy may be used in a User Defined Function), as well as all the packages used during development (e.g. PySpark, flake8 for code linting, IPython for interactive console sessions, etc.), are described in the <code>Pipfile</code>. Their <strong>precise</strong> downstream dependencies are described and frozen in <code>Pipfile.lock</code> (generated automatically by Pipenv, given a&nbsp;Pipfile).</p>
 <h3 id="installing-pipenv">Installing&nbsp;Pipenv</h3>
 <p>To get started with Pipenv, first of all download it - assuming that there is a global version of Python available on your system and on the <span class="caps">PATH</span>, then this can be achieved by running the following&nbsp;command,</p>
-<div class="highlight"><pre><span></span>pip3 install pipenv
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>pip3 install pipenv
+</code></pre></div>
 
 <p>Pipenv is also available to install from many non-Python package managers. For example, on <span class="caps">OS</span> X it can be installed using the <a href="https://brew.sh">Homebrew</a> package manager, with the following terminal&nbsp;command,</p>
-<div class="highlight"><pre><span></span>brew install pipenv
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>brew install pipenv
+</code></pre></div>
 
 <p>For more information, including advanced configuration options, see the <a href="https://docs.pipenv.org">official Pipenv documentation</a>.</p>
 <h3 id="installing-this-projects-dependencies">Installing this Projects&#8217;&nbsp;Dependencies</h3>
 <p>Make sure that you&#8217;re in the project&#8217;s root directory (the same one in which the <code>Pipfile</code> resides), and then&nbsp;run,</p>
-<div class="highlight"><pre><span></span>pipenv install --dev
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>pipenv install --dev
+</code></pre></div>
 
 <p>This will install all of the direct project dependencies as well as the development dependencies (the latter a consequence of the <code>--dev</code> flag).</p>
 <h3 id="running-python-and-ipython-from-the-projects-virtual-environment">Running Python and IPython from the Project&#8217;s Virtual&nbsp;Environment</h3>
 <p>In order to continue development in a Python environment that precisely mimics the one the project was initially developed with, use Pipenv from the command line as&nbsp;follows,</p>
-<div class="highlight"><pre><span></span>pipenv run python3
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>pipenv run python3
+</code></pre></div>
 
 <p>The <code>python3</code> command could just as well be <code>ipython3</code>, for&nbsp;example,</p>
-<div class="highlight"><pre><span></span>pipenv run ipython
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>pipenv run ipython
+</code></pre></div>
 
 <p>This will fire-up an IPython console session <em>where the default Python 3 kernel includes all of the direct and development project dependencies</em> - this is our&nbsp;preference.</p>
 <h3 id="pipenv-shells">Pipenv&nbsp;Shells</h3>
 <p>Prepending <code>pipenv</code> to every command you want to run within the context of your Pipenv-managed virtual environment can get very tedious. This can be avoided by entering into a Pipenv-managed&nbsp;shell,</p>
-<div class="highlight"><pre><span></span>pipenv shell
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>pipenv shell
+</code></pre></div>
 
 <p>This is equivalent to &#8216;activating&#8217; the virtual environment; any command will now be executed within the virtual environment. Use <code>exit</code> to leave the shell&nbsp;session.</p>
 <h3 id="automatic-loading-of-environment-variables">Automatic Loading of Environment&nbsp;Variables</h3>
 <p>Pipenv will automatically pick-up and load any environment variables declared in the <code>.env</code> file, located in the package&#8217;s root directory. For example,&nbsp;adding,</p>
-<div class="highlight"><pre><span></span><span class="nv">SPARK_HOME</span><span class="o">=</span>applications/spark-2.3.1/bin
+<div class="highlight"><pre><span></span><code><span class="nv">SPARK_HOME</span><span class="o">=</span>applications/spark-2.3.1/bin
 <span class="nv">DEBUG</span><span class="o">=</span><span class="m">1</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Will enable access to these variables within any Python program -e.g. via a call to <code>os.environ['SPARK_HOME']</code>. Note, that if any security credentials are placed here, then this file <strong>must</strong> be removed from source control - i.e. add <code>.env</code> to the <code>.gitignore</code> file to prevent potential security&nbsp;risks.</p>
 <h2 id="summary">Summary</h2>
@@ -417,15 +436,15 @@ jobs/etl_job.py
     })();
 </script>
 <noscript>
-        Please enable JavaScript to view comments.
-
+    Please enable JavaScript to view comments.
 </noscript>
 <!-- End Disqus -->
 </article>
 
     <footer>
 <p>&copy;  </p>
-<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
 </p>    </footer>
   </main>
 
@@ -442,6 +461,7 @@ jobs/etl_job.py
   "description": ""
 }
 </script>
+
 
 </body>
 </html>
