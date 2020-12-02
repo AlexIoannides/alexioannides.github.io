@@ -60,13 +60,13 @@
 &lt;p&gt;Within this stage’s directory, &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/stage-2-deploy-scoring-service/requirements.txt"&gt;requirements.txt&lt;/a&gt; lists the 3rd party Python packages that will be Pip-installed on the Bodywork host container in order to run &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/stage-2-deploy-scoring-service/serve_model.py"&gt;serve_model.py&lt;/a&gt;, which defines the &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; server containing our &lt;span class="caps"&gt;ML&lt;/span&gt; scoring endpoint. The &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/stage-2-deploy-scoring-service/config.ini"&gt;config.ini&lt;/a&gt; file allows us to specify that this stage is a service-deployment stage (as opposed to a batch stage), that &lt;code&gt;serve_model.py&lt;/code&gt; should be the script that is run, as well as an estimate of the &lt;span class="caps"&gt;CPU&lt;/span&gt; and memory resources to request from the k8s cluster, how long to wait for the service to start-up and be ‘ready’, which port to expose and how many instances (or replicas) of the server should be created to stand-behind the&amp;nbsp;cluster-service.&lt;/p&gt;
 &lt;h3 id="configuring-the-complete-bodywork-workflow"&gt;Configuring the Complete Bodywork&amp;nbsp;Workflow&lt;/h3&gt;
 &lt;p&gt;The &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/bodywork.ini"&gt;bodywork.ini&lt;/a&gt; file in the root of the project repository contains the configuration for the whole workflow - a workflow being a collection of stages, run in a specific order, that can be represented by a Directed Acyclic Graph (or &lt;span class="caps"&gt;DAG&lt;/span&gt;). The most important element is the specification of the workflow &lt;span class="caps"&gt;DAG&lt;/span&gt;, which in this instance is&amp;nbsp;simple,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;DAG = stage-1-train-model &amp;gt;&amp;gt; stage-2-deploy-scoring-service
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="na"&gt;DAG&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;stage-1-train-model &amp;gt;&amp;gt; stage-2-deploy-scoring-service&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;i.e. train the model and then (if successful) deploy the scoring&amp;nbsp;service.&lt;/p&gt;
 &lt;h3 id="testing-the-workflow"&gt;Testing the&amp;nbsp;Workflow&lt;/h3&gt;
 &lt;p&gt;Firstly, make sure that the &lt;a href="https://pypi.org/project/bodywork/"&gt;bodywork&lt;/a&gt; package has been Pip-installed into a local Python environment that is active. Then, make sure that there is a namespace setup for use by bodywork projects - e.g. &lt;code&gt;iris-classification&lt;/code&gt; - by running the following at the command&amp;nbsp;line,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;bodywork setup-namespace iris-classification
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork setup-namespace iris-classification
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Which should result in the following&amp;nbsp;output,&lt;/p&gt;
@@ -77,21 +77,21 @@ creating service-account=bodywork-jobs-and-deployments in namespace=iris-classif
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Then, the workflow can be tested by running the workflow-controller locally&amp;nbsp;using,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;bodywork workflow \
-    --namespace=iris-classification \
-    https://github.com/bodywork-ml/bodywork-ml-ops-project \
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork workflow &lt;span class="se"&gt;\&lt;/span&gt;
+    --namespace&lt;span class="o"&gt;=&lt;/span&gt;iris-classification &lt;span class="se"&gt;\&lt;/span&gt;
+    https://github.com/bodywork-ml/bodywork-ml-ops-project &lt;span class="se"&gt;\&lt;/span&gt;
     master
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Which will run the workflow defined in the &lt;code&gt;master&lt;/code&gt; branch of this GitHub repository, all within the &lt;code&gt;iris-classification&lt;/code&gt; namespace. The logs from the workflow-controller and the containers nested within each constituent stage, will be streamed to the command-line to inform you on the precise state of the workflow, but you can also keep track of the current state of all k8s resources created by the workflow-controller in the &lt;code&gt;iris-classification&lt;/code&gt; namespace, by using the kubectl &lt;span class="caps"&gt;CLI&lt;/span&gt; tool -&amp;nbsp;e.g.,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;kubectl -n iris-classification get all
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ kubectl -n iris-classification get all
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Once the workflow has completed, the &lt;span class="caps"&gt;ML&lt;/span&gt; scoring service deployed within your cluster can be tested from your local machine, by first of all running &lt;code&gt;kubectl proxy&lt;/code&gt; in one shell, and then in a new shell use the &lt;code&gt;curl&lt;/code&gt; tool as&amp;nbsp;follows,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;curl http://localhost:8001/api/v1/namespaces/iris-classification/services/bodywork-ml-ops-project--stage-2-deploy-scoring-service/proxy/iris/v1/score \
-    --request POST \
-    --header &amp;quot;Content-Type: application/json&amp;quot; \
-    --data &amp;#39;{&amp;quot;sepal_length&amp;quot;: 5.1, &amp;quot;sepal_width&amp;quot;: 3.5, &amp;quot;petal_length&amp;quot;: 1.4, &amp;quot;petal_width&amp;quot;: 0.2}&amp;#39;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ curl http://localhost:8001/api/v1/namespaces/iris-classification/services/bodywork-ml-ops-project--stage-2-deploy-scoring-service/proxy/iris/v1/score &lt;span class="se"&gt;\&lt;/span&gt;
+    --request POST &lt;span class="se"&gt;\&lt;/span&gt;
+    --header &lt;span class="s2"&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    --data &lt;span class="s1"&gt;&amp;#39;{&amp;quot;sepal_length&amp;quot;: 5.1, &amp;quot;sepal_width&amp;quot;: 3.5, &amp;quot;petal_length&amp;quot;: 1.4, &amp;quot;petal_width&amp;quot;: 0.2}&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If successful, you should get the following&amp;nbsp;response,&lt;/p&gt;
@@ -104,19 +104,19 @@ creating service-account=bodywork-jobs-and-deployments in namespace=iris-classif
 
 &lt;h2 id="executing-the-workflow-on-a-schedule"&gt;Executing the Workflow on a&amp;nbsp;Schedule&lt;/h2&gt;
 &lt;p&gt;If you’re happy with the test results, then you can schedule the workflow-controller to operate remotely on the cluster as a k8s cronjob. As an example, to setup the the workflow to run every hour, use the following&amp;nbsp;command,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;bodywork cronjob create \
-    --namespace=iris-classification \
-    --name=iris-classification \
-    --schedule=&amp;quot;0 * * * *&amp;quot; \
-    --git-repo-url=https://github.com/bodywork-ml/bodywork-ml-ops-project
-    --git-repo-branch=master
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork cronjob create &lt;span class="se"&gt;\&lt;/span&gt;
+    --namespace&lt;span class="o"&gt;=&lt;/span&gt;iris-classification &lt;span class="se"&gt;\&lt;/span&gt;
+    --name&lt;span class="o"&gt;=&lt;/span&gt;iris-classification &lt;span class="se"&gt;\&lt;/span&gt;
+    --schedule&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0 * * * *&amp;quot;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    --git-repo-url&lt;span class="o"&gt;=&lt;/span&gt;https://github.com/bodywork-ml/bodywork-ml-ops-project
+    --git-repo-branch&lt;span class="o"&gt;=&lt;/span&gt;master
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Each scheduled workflow will attempt to re-run the workflow, end-to-end, as defined by the state of this repository’s &lt;code&gt;master&lt;/code&gt; branch at the time of execution - performing rolling-updates to service-deployments and automatic roll-backs in the event of&amp;nbsp;failure.&lt;/p&gt;
 &lt;p&gt;To get the execution history for all &lt;code&gt;iris-classification&lt;/code&gt; jobs&amp;nbsp;use,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;bodywork cronjob history \
-    --namespace=iris-classification \
-    --name=iris-classification
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork cronjob &lt;span class="nb"&gt;history&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    --namespace&lt;span class="o"&gt;=&lt;/span&gt;iris-classification &lt;span class="se"&gt;\&lt;/span&gt;
+    --name&lt;span class="o"&gt;=&lt;/span&gt;iris-classification
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Which should return output along the lines&amp;nbsp;of,&lt;/p&gt;
@@ -125,17 +125,17 @@ iris-classification-1605214260          2020-11-12 20:51:04+00:00     2020-11-12
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Then to stream the logs from any given cronjob run - e.g. to debug and/or monitor for errors -&amp;nbsp;use,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;bodywork cronjob logs \
-    --namespace=iris-classification \
-    --name=iris-classification-1605214260
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork cronjob logs &lt;span class="se"&gt;\&lt;/span&gt;
+    --namespace&lt;span class="o"&gt;=&lt;/span&gt;iris-classification &lt;span class="se"&gt;\&lt;/span&gt;
+    --name&lt;span class="o"&gt;=&lt;/span&gt;iris-classification-1605214260
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2 id="cleaning-up"&gt;Cleaning&amp;nbsp;Up&lt;/h2&gt;
 &lt;p&gt;To clean-up the deployment in its entirety, delete the namespace using kubectl - e.g. by&amp;nbsp;running,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;kubectl delete ns iris-classification
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ kubectl delete ns iris-classification
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2 id="where-to-go-from-here"&gt;Where to go from&amp;nbsp;Here&lt;/h2&gt;
 &lt;p&gt;Read the &lt;a href="https://bodywork.readthedocs.io/en/latest/"&gt;official Bodywork documentation&lt;/a&gt; or ask a question on the &lt;a href="https://bodywork.flarum.cloud/"&gt;bodywork discussion forum&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="discosure"&gt;Discosure&lt;/h2&gt;
+&lt;h2 id="disclosure"&gt;Disclosure&lt;/h2&gt;
 &lt;p&gt;I am one of the co-founders of &lt;a href="https://www.bodyworkml.com"&gt;Bodywork Machine Learning&lt;/a&gt;!&lt;/p&gt;</content><category term="machine-learning-engineering"></category><category term="python"></category><category term="machine-learning"></category><category term="mlops"></category><category term="kubernetes"></category><category term="bodywork"></category></entry></feed>
