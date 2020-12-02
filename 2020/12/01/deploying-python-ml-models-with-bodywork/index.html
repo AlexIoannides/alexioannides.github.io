@@ -10,18 +10,18 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
 
     <link id="pygments-light-theme" rel="stylesheet" type="text/css"
-          href="../../../../theme/pygments/monokai.min.css">
+          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
 
 
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/fontawesome.css">
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/brands.css">
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/solid.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
 
-    <link href="../../../../static/custom.css" rel="stylesheet">
+    <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
     <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
 
@@ -50,11 +50,11 @@
 <meta property="og:title" content="Deploying Python ML Models with Bodywork"/>
 <meta property="og:description" content="Once you have a viable solution to a Machine Learning (ML) task, that is often developed within a Jupyter notebook, you are then faced with an altogether different problem - how to engineer the solution into your product and how to maintain the performance of the solution as new instances of …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="../../../../2020/12/01/deploying-python-ml-models-with-bodywork/"/>
+<meta property="og:url" content="https://alexioannides.github.io/2020/12/01/deploying-python-ml-models-with-bodywork/"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2020-12-01 00:00:00+00:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
+<meta property="article:author" content="https://alexioannides.github.io/author/dr-alex-ioannides.html">
 <meta property="article:section" content="machine-learning-engineering"/>
 <meta property="article:tag" content="python"/>
 <meta property="article:tag" content="machine-learning"/>
@@ -69,12 +69,12 @@
 <body class="light-theme">
   <aside>
     <div>
-      <a href="../../../..">
+      <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
 
       <h1>
-        <a href="../../../..">Dr Alex Ioannides</a>
+        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
       </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
@@ -85,13 +85,13 @@
 
               <li>
                 <a target="_self"
-                   href="../../../../about-me/">
+                   href="https://alexioannides.github.io/about-me/">
                   About&nbsp;Me
                 </a>
               </li>
               <li>
                 <a target="_self"
-                   href="../../../../about-this-blog/">
+                   href="https://alexioannides.github.io/about-this-blog/">
                   About this&nbsp;Blog
                 </a>
               </li>
@@ -127,7 +127,7 @@
   <main>
 
     <nav>
-      <a href="../../../..">Home</a>
+      <a href="https://alexioannides.github.io">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
@@ -142,14 +142,14 @@
       
     <h1 id="deploying-python-ml-models-with-bodywork">Deploying Python <span class="caps">ML</span> Models with&nbsp;Bodywork</h1>
     <p>
-      Posted on Tue 01 December 2020 in <a href="../../../../category/machine-learning-engineering.html">machine-learning-engineering</a>
+      Posted on Tue 01 December 2020 in <a href="https://alexioannides.github.io/category/machine-learning-engineering.html">machine-learning-engineering</a>
 
     </p>
   </header>
 
 
   <div>
-    <p><img alt="bodywork_logo" src="../../../../images/machine-learning-engineering/bodywork/bodywork-logo.png"></p>
+    <p><img alt="bodywork_logo" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/bodywork-logo.png"></p>
 <p>Once you have a viable solution to a Machine Learning (<span class="caps">ML</span>) task, that is often developed within a Jupyter notebook, you are then faced with an altogether different problem - how to engineer the solution into your product and how to maintain the performance of the solution as new instances of data are&nbsp;experienced.</p>
 <h2 id="what-is-this-tutorial-going-to-teach-me">What is this Tutorial Going to Teach&nbsp;Me?</h2>
 <ul>
@@ -159,13 +159,13 @@
 <li>How to run the train-and-deploy workflow on a schedule, so the model is periodically re-trained when new data is available, but without the manual intervention of an <span class="caps">ML</span>&nbsp;engineer.</li>
 </ul>
 <h2 id="introduction">Introduction</h2>
-<p>I’ve written at length on the subject of getting machine learning into production - an area that is now referred to as Machine Learning Operations (MLOps), and which is a hot topic within the field of <span class="caps">ML</span> engineering. For example, my <a href="../../../../2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/">blog post</a> on <em>Deploying Python <span class="caps">ML</span> Models with Flask, Docker and Kubernetes</em> is viewed by hundreds of <span class="caps">ML</span> practitioners every month; at the recent <a href="https://databricks.com/dataaisummit/europe-2020/agenda?_sessions_focus_tax=productionizing-machine-learning">Data and <span class="caps">AI</span> Summit</a> there was an entire track devoted to ‘Productionizing Machine Learning’; Thoughtwork’s <a href="https://www.thoughtworks.com/insights/articles/intelligent-enterprise-series-cd4ml">essay</a> on <em>Continuous Delivery for <span class="caps">ML</span></em> is now an essential reference for all <span class="caps">ML</span> engineers, together with Google’s <a href="https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html">paper</a> on the <em>Hidden Technical Debt in Machine Learning Systems</em>; and MLOps even has its own entry on <a href="https://en.wikipedia.org/wiki/MLOps">Wikipedia</a>.</p>
+<p>I’ve written at length on the subject of getting machine learning into production - an area that is now referred to as Machine Learning Operations (MLOps), and which is a hot topic within the field of <span class="caps">ML</span> engineering. For example, my <a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/">blog post</a> on <em>Deploying Python <span class="caps">ML</span> Models with Flask, Docker and Kubernetes</em> is viewed by hundreds of <span class="caps">ML</span> practitioners every month; at the recent <a href="https://databricks.com/dataaisummit/europe-2020/agenda?_sessions_focus_tax=productionizing-machine-learning">Data and <span class="caps">AI</span> Summit</a> there was an entire track devoted to ‘Productionizing Machine Learning’; Thoughtwork’s <a href="https://www.thoughtworks.com/insights/articles/intelligent-enterprise-series-cd4ml">essay</a> on <em>Continuous Delivery for <span class="caps">ML</span></em> is now an essential reference for all <span class="caps">ML</span> engineers, together with Google’s <a href="https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html">paper</a> on the <em>Hidden Technical Debt in Machine Learning Systems</em>; and MLOps even has its own entry on <a href="https://en.wikipedia.org/wiki/MLOps">Wikipedia</a>.</p>
 <h3 id="why-is-mlops-getting-so-much-attention">Why is MLOps Getting so Much&nbsp;Attention?</h3>
 <p>In my opinion, this is because we are at a point where a significant number of organisations have now overcome their data ingestion and engineering problems. They are able to provide their data scientists with the data required to solve business problems using machine learning, only to find that, as Thoughtworks put&nbsp;it,</p>
 <blockquote>
 <p>“<em>Getting machine learning applications into production is hard</em>”</p>
 </blockquote>
-<p>To tackle some of the core complexities of MLOps, <span class="caps">ML</span> engineering teams appear to have settled on approaches that are based-upon deploying containerised <span class="caps">ML</span> models, usually as RESTful model-scoring services, to some type of cloud platform. Kubernetes is especially useful for this as I have <a href="../../../../2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/">written about before</a>.</p>
+<p>To tackle some of the core complexities of MLOps, <span class="caps">ML</span> engineering teams appear to have settled on approaches that are based-upon deploying containerised <span class="caps">ML</span> models, usually as RESTful model-scoring services, to some type of cloud platform. Kubernetes is especially useful for this as I have <a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/">written about before</a>.</p>
 <h3 id="bodywork-for-mlops">Bodywork for&nbsp;MLOps</h3>
 <p>Containerising <span class="caps">ML</span> code using <a href="https://docs.docker.com">Docker</a>, pushing the build artefacts to an image repository and then configuring Kubernetes to orchestrate <span class="caps">ML</span> pipelines into batch jobs and services, requires skills and expertise that most <span class="caps">ML</span> engineers do not have the time (and often the desire) to learn. Scale this scenario into one where there are multiple models to worry about, all needing to be re-trained and re-deployed, and it is easy to imagine how large and undesirable a burden this can&nbsp;become.</p>
 <p>This is where the <a href="https://bodywork.readthedocs.io/en/latest/">Bodywork MLOps framework</a> steps-in - to deliver your code to the right place and then execute it at the right time, so that your models are trained, deployed and available to the rest of your team. Bodywork is a tool aimed at <span class="caps">ML</span> engineers to help&nbsp;them:</p>
@@ -175,7 +175,7 @@
 </ul>
 <p>In other words, Bodywork automates the repetitive tasks that most <span class="caps">ML</span> engineers think of as <a href="https://en.wikipedia.org/wiki/DevOps">DevOps</a>, allowing them to focus their time on what they do best - machine&nbsp;learning.</p>
 <p>This post serves as a short tutorial on how to use Bodywork to productionise the most common MLOps use-case -&nbsp;train-and-deploy.</p>
-<p><img alt="train_and_deploy" src="../../../../images/machine-learning-engineering/bodywork/concepts_train_and_deploy.png"></p>
+<p><img alt="train_and_deploy" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/concepts_train_and_deploy.png"></p>
 <p>We will refer to the <a href="https://github.com/bodywork-ml/bodywork-ml-ops-project">example bodywork <span class="caps">ML</span> project (GitHub) repository</a> and the files within&nbsp;it.</p>
 <h3 id="prerequisites">Prerequisites</h3>
 <p>If you want to execute the example code, then you will&nbsp;need:</p>
@@ -184,16 +184,16 @@
 <li>access to a Kubernetes cluster - either locally using <a href="https://minikube.sigs.k8s.io/docs/">minikube</a> or <a href="https://www.docker.com/products/docker-desktop">Docker-for-desktop</a>, or as a managed service from a cloud provider, such as <a href="https://aws.amazon.com/eks"><span class="caps">EKS</span></a> from <span class="caps">AWS</span> or <a href="https://azure.microsoft.com/en-us/services/kubernetes-service/"><span class="caps">AKS</span></a> from&nbsp;Azure.</li>
 <li><a href="https://git-scm.com">Git</a> and a basic understanding of how to use&nbsp;it.</li>
 </ul>
-<p>Familiarity with basic <a href="https://kubernetes.io/docs/concepts/">Kubernetes concepts</a> and some exposure to the <a href="https://kubernetes.io/docs/reference/kubectl/overview/">kubectl</a> command-line tool will make life easier. The introductory article I wrote on <a href="../../../../2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"><em>Deploying Python <span class="caps">ML</span> Models with Flask, Docker and Kubernetes</em></a>, is a good place to&nbsp;start.</p>
+<p>Familiarity with basic <a href="https://kubernetes.io/docs/concepts/">Kubernetes concepts</a> and some exposure to the <a href="https://kubernetes.io/docs/reference/kubectl/overview/">kubectl</a> command-line tool will make life easier. The introductory article I wrote on <a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"><em>Deploying Python <span class="caps">ML</span> Models with Flask, Docker and Kubernetes</em></a>, is a good place to&nbsp;start.</p>
 <h2 id="starting-with-a-solution-to-a-ml-task">Starting with a Solution to a <span class="caps">ML</span>&nbsp;Task</h2>
 <p>The <span class="caps">ML</span> problem we have chosen to use for this tutorial, is the classification of iris plants into one of their three sub-species using the famous <a href="https://scikit-learn.org/stable/datasets/index.html#iris-dataset">iris plants dataset</a>. The <a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/ml_prototype_work.ipynb">ml_prototype_work notebook</a> found in the root of this tutorial&#8217;s GitHub repository, documents the trivial <span class="caps">ML</span> workflow used to train a Decision Tree classifier as a solution to this multi-class classification task, as well as to prototype some of the work that will be required to engineer and deploy the final prediction (or scoring)&nbsp;service.</p>
 <h2 id="the-bodywork-project">The Bodywork&nbsp;Project</h2>
 <p>Bodywork <span class="caps">ML</span> projects must be stored as Git repositories, from where pre-built Bodywork containers running on Kubernetes (k8s), can pull them. There are no build artefacts - such as Docker images - that need to be built as part of the deployment process. Take a look at the Git repository for the example project and you will find the following directory&nbsp;structure,</p>
-<p><img alt="example_project_root" src="../../../../images/machine-learning-engineering/bodywork/example-project-root.png"></p>
+<p><img alt="example_project_root" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/example-project-root.png"></p>
 <p>The sub-directories contain all the code required to run a single stage - for example, in the <code>stage-1-train-model</code> directory you will find the following&nbsp;files,</p>
-<p><img alt="train_model_stage" src="../../../../images/machine-learning-engineering/bodywork/train-model-stage.png"></p>
+<p><img alt="train_model_stage" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/train-model-stage.png"></p>
 <p>And similarly, in the <code>stage-2-deploy-scoring-service</code> directory you will find the following&nbsp;files,</p>
-<p><img alt="deploy_model_stage" src="../../../../images/machine-learning-engineering/bodywork/deploy-model-stage.png"></p>
+<p><img alt="deploy_model_stage" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/deploy-model-stage.png"></p>
 <p>The remainder of this tutorial will be spent explaining the purpose of these files and demonstrating how they are used to map the <span class="caps">ML</span> task developed within the Jupyter notebook, into a <span class="caps">ML</span> workflow that can be executed on a remote Kubernetes cluster, to provide a model-scoring service ready for&nbsp;production.</p>
 <h3 id="configuring-a-bodywork-batch-stage-for-training-the-model">Configuring a Bodywork Batch Stage for Training the&nbsp;Model</h3>
 <p>The <code>stage-1-train-model</code> directory contains the code and configuration required to train the model within a pre-built container on a k8s cluster, as a batch workload. Using the <a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/ml_prototype_work.ipynb">ml_prototype_work notebook</a> as a reference, the <a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/stage-1-train-model/train_model.py">train_model.py</a> module contains the code required&nbsp;to:</p>
@@ -291,11 +291,11 @@ iris-classification-1605214260          2020-11-12 20:51:04+00:00     2020-11-12
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="../../../../tag/python.html">python</a>
-      <a href="../../../../tag/machine-learning.html">machine-learning</a>
-      <a href="../../../../tag/mlops.html">mlops</a>
-      <a href="../../../../tag/kubernetes.html">kubernetes</a>
-      <a href="../../../../tag/bodywork.html">bodywork</a>
+      <a href="https://alexioannides.github.io/tag/python.html">python</a>
+      <a href="https://alexioannides.github.io/tag/machine-learning.html">machine-learning</a>
+      <a href="https://alexioannides.github.io/tag/mlops.html">mlops</a>
+      <a href="https://alexioannides.github.io/tag/kubernetes.html">kubernetes</a>
+      <a href="https://alexioannides.github.io/tag/bodywork.html">bodywork</a>
     </p>
   </div>
 
@@ -334,7 +334,7 @@ Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a 
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Dr Alex Ioannides ",
-  "url" : "../../../..",
+  "url" : "https://alexioannides.github.io",
   "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
   "description": ""
 }
