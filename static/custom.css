@@ -1,13 +1,11 @@
-html {
-    font-size:105%
-}
-
 body {
-    line-height: 1.5
+    font-size:105%;
+    line-height: 155%
 }
 
 a {
-    color: #0099ff
+    color: #0167ac;
+    background-color: transparent;
 }
 
 a:hover {
@@ -15,7 +13,7 @@ a:hover {
 }
 
 a.btn {
-    background-color: #0099ff
+    background-color: #0186df
 }
 
 a.btn:hover{
