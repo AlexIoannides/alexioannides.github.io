@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Dr Alex Ioannides - bodywork</title><link href="https://alexioannides.github.io/" rel="alternate"></link><link href="https://alexioannides.github.io/feeds/tag/bodywork/atom.xml" rel="self"></link><id>https://alexioannides.github.io/</id><updated>2020-12-01T00:00:00+00:00</updated><subtitle>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</subtitle><entry><title>Deploying Python ML Models with Bodywork</title><link href="https://alexioannides.github.io/2020/12/01/deploying-python-ml-models-with-bodywork/" rel="alternate"></link><published>2020-12-01T00:00:00+00:00</published><updated>2020-12-01T00:00:00+00:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2020-12-01:/2020/12/01/deploying-python-ml-models-with-bodywork/</id><summary type="html">&lt;p&gt;&lt;img alt="bodywork_logo" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/bodywork-logo.png"&gt;&lt;/p&gt;
-&lt;p&gt;Once you have a viable solution to a Machine Learning (&lt;span class="caps"&gt;ML&lt;/span&gt;) task, that is often developed within a Jupyter notebook, you are then faced with an altogether different problem - how to engineer the solution into your product and how to maintain the performance of the solution as new instances of …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="bodywork_logo" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/bodywork-logo.png"&gt;&lt;/p&gt;
-&lt;p&gt;Once you have a viable solution to a Machine Learning (&lt;span class="caps"&gt;ML&lt;/span&gt;) task, that is often developed within a Jupyter notebook, you are then faced with an altogether different problem - how to engineer the solution into your product and how to maintain the performance of the solution as new instances of data are&amp;nbsp;experienced.&lt;/p&gt;
+&lt;p&gt;Solutions to Machine Learning (&lt;span class="caps"&gt;ML&lt;/span&gt;) tasks are often developed within Jupyter notebooks. Once a candidate solution is found, you are then faced with an altogether different problem - how to engineer the solution into your product and how to maintain the performance of the solution as new instances of data are …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="bodywork_logo" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/bodywork-logo.png"&gt;&lt;/p&gt;
+&lt;p&gt;Solutions to Machine Learning (&lt;span class="caps"&gt;ML&lt;/span&gt;) tasks are often developed within Jupyter notebooks. Once a candidate solution is found, you are then faced with an altogether different problem - how to engineer the solution into your product and how to maintain the performance of the solution as new instances of data are&amp;nbsp;experienced.&lt;/p&gt;
 &lt;h2 id="what-is-this-tutorial-going-to-teach-me"&gt;What is this Tutorial Going to Teach&amp;nbsp;Me?&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;How to take a solution to a &lt;span class="caps"&gt;ML&lt;/span&gt; task, as developed within a Jupyter notebook, and map it into two separate Python modules for training a model and then deploying the trained model as a RESTful model-scoring &lt;span class="caps"&gt;API&lt;/span&gt;.&lt;/li&gt;
-&lt;li&gt;How to execute these &amp;#8216;train&amp;#8217; and &amp;#8216;deploy&amp;#8217; modules - that together form a simple &lt;span class="caps"&gt;ML&lt;/span&gt; pipeline (or workflow) - remotely on a &lt;a href="https://kubernetes.io/"&gt;Kubernetes&lt;/a&gt; cluster, using &lt;a href="https://github.com/"&gt;GitHub&lt;/a&gt; and &lt;a href="https://bodywork.readthedocs.io/en/latest/"&gt;Bodywork&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;How to start with a solution to a &lt;span class="caps"&gt;ML&lt;/span&gt; task developed within a Jupyter notebook, and map it into two separate Python modules: one for training a model and one for deploying the trained model as a model-scoring&amp;nbsp;service.&lt;/li&gt;
+&lt;li&gt;How to execute these &lt;code&gt;train&lt;/code&gt; and &lt;code&gt;deploy&lt;/code&gt; modules (that form a simple &lt;span class="caps"&gt;ML&lt;/span&gt; pipeline), remotely on a &lt;a href="https://kubernetes.io/"&gt;Kubernetes&lt;/a&gt; cluster, using &lt;a href="https://github.com/"&gt;GitHub&lt;/a&gt; and &lt;a href="https://bodywork.readthedocs.io/en/latest/"&gt;Bodywork&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;How to interact-with and test the model-scoring service that has been deployed to&amp;nbsp;Kubernetes.&lt;/li&gt;
-&lt;li&gt;How to run the train-and-deploy workflow on a schedule, so the model is periodically re-trained when new data is available, but without the manual intervention of an &lt;span class="caps"&gt;ML&lt;/span&gt;&amp;nbsp;engineer.&lt;/li&gt;
+&lt;li&gt;How to run the pipeline on a schedule, so that the model is periodically re-trained and then re-deployed (when new data is available), without the manual intervention of a machine learning&amp;nbsp;engineer.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;Table of&amp;nbsp;Contents&lt;/strong&gt;&lt;/p&gt;
 &lt;div class="toc"&gt;
@@ -22,9 +22,9 @@
 &lt;li&gt;&lt;a href="#a-machine-learning-task"&gt;A Machine Learning&amp;nbsp;Task&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#a-machine-learning-operations-task"&gt;A Machine Learning Operations Task&lt;/a&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a href="#configuring-a-bodywork-batch-stage-for-training-a-model"&gt;Configuring a Bodywork Batch Stage for Training a&amp;nbsp;Model&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#configuring-a-bodywork-service-deployment-stage-for-creating-a-ml-scoring-service"&gt;Configuring a Bodywork Service-Deployment Stage for Creating a &lt;span class="caps"&gt;ML&lt;/span&gt; Scoring&amp;nbsp;Service&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#configuring-a-bodywork-service-stage-for-deploying-a-model-scoring-service"&gt;Configuring a Bodywork Service Stage for Deploying a Model-Scoring&amp;nbsp;Service&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#configuring-the-complete-bodywork-workflow"&gt;Configuring the Complete Bodywork&amp;nbsp;Workflow&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="#testing-the-workflow-locally"&gt;Testing the Workflow Locally&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#testing-the-workflow"&gt;Testing the Workflow&lt;/a&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a href="#testing-the-model-scoring-service"&gt;Testing the Model-Scoring&amp;nbsp;Service&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
@@ -37,49 +37,50 @@
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;I’ve written at length on the subject of getting machine learning into production - an area that is now referred to as Machine Learning Operations (MLOps), a hot topic within the field of &lt;span class="caps"&gt;ML&lt;/span&gt; engineering. For example, my &lt;a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"&gt;blog post&lt;/a&gt; on &lt;em&gt;Deploying Python &lt;span class="caps"&gt;ML&lt;/span&gt; Models with Flask, Docker and Kubernetes&lt;/em&gt; is viewed by hundreds of &lt;span class="caps"&gt;ML&lt;/span&gt; practitioners every month; at the recent &lt;a href="https://databricks.com/dataaisummit/europe-2020/agenda?_sessions_focus_tax=productionizing-machine-learning"&gt;Data and &lt;span class="caps"&gt;AI&lt;/span&gt; Summit&lt;/a&gt; there was an entire track devoted to ‘Productionizing Machine Learning’; Thoughtwork’s &lt;a href="https://www.thoughtworks.com/insights/articles/intelligent-enterprise-series-cd4ml"&gt;essay&lt;/a&gt; on &lt;em&gt;Continuous Delivery for &lt;span class="caps"&gt;ML&lt;/span&gt;&lt;/em&gt; is now an essential reference for all &lt;span class="caps"&gt;ML&lt;/span&gt; engineers, together with Google’s &lt;a href="https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html"&gt;paper&lt;/a&gt; on the &lt;em&gt;Hidden Technical Debt in Machine Learning Systems&lt;/em&gt;; and MLOps even has its own entry on &lt;a href="https://en.wikipedia.org/wiki/MLOps"&gt;Wikipedia&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I’ve written at length on the subject of getting machine learning into production - an area now referred to as Machine Learning Operations (MLOps). MLOps is a hot topic within the field of machine learning engineering. For example, my &lt;a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"&gt;blog post&lt;/a&gt; on &lt;em&gt;Deploying Python &lt;span class="caps"&gt;ML&lt;/span&gt; Models with Flask, Docker and Kubernetes&lt;/em&gt; is viewed by hundreds of machine learning practitioners every month; at the recent &lt;a href="https://databricks.com/dataaisummit/europe-2020/agenda?_sessions_focus_tax=productionizing-machine-learning"&gt;Data and &lt;span class="caps"&gt;AI&lt;/span&gt; Summit&lt;/a&gt; there was an entire track devoted to ‘Productionizing Machine Learning’; Thoughtwork’s &lt;a href="https://www.thoughtworks.com/insights/articles/intelligent-enterprise-series-cd4ml"&gt;essay&lt;/a&gt; on &lt;em&gt;Continuous Delivery for &lt;span class="caps"&gt;ML&lt;/span&gt;&lt;/em&gt; is now an essential reference for all machine learning engineers, together with Google’s &lt;a href="https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html"&gt;paper&lt;/a&gt; on the &lt;em&gt;Hidden Technical Debt in Machine Learning Systems&lt;/em&gt;; and MLOps even has its own entry on &lt;a href="https://en.wikipedia.org/wiki/MLOps"&gt;Wikipedia&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="why-is-mlops-getting-so-much-attention"&gt;Why is MLOps Getting so Much&amp;nbsp;Attention?&lt;/h3&gt;
 &lt;p&gt;In my opinion, this is because we are at a point where a significant number of organisations have now overcome their data ingestion and engineering problems. They are able to provide their data scientists with the data required to solve business problems using machine learning, only to find that, as Thoughtworks put&amp;nbsp;it,&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;“&lt;em&gt;Getting machine learning applications into production is hard&lt;/em&gt;”&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;To tackle some of the core complexities of MLOps, many &lt;span class="caps"&gt;ML&lt;/span&gt; engineering teams have settled on approaches that are based-upon deploying containerised &lt;span class="caps"&gt;ML&lt;/span&gt; models, usually as RESTful model-scoring services, to some type of cloud platform. Kubernetes is especially useful for this as I have &lt;a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"&gt;written about before&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To tackle some of the core complexities of MLOps, many machine learning engineering teams have settled on approaches that are based-upon deploying containerised models, usually as RESTful model-scoring services, to some type of cloud platform. Kubernetes is especially useful for this as I have &lt;a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"&gt;written about before&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="mlops-with-bodywork"&gt;MLOps with&amp;nbsp;Bodywork&lt;/h3&gt;
-&lt;p&gt;The process of containerising machine learning code using Docker to build images, pushing the build artefacts to an image repository and then configuring a container orchestration platform to run batch workloads and deploy services, requires skills and expertise that most machine learning engineers do not have the time (and often the desire) to&amp;nbsp;learn.&lt;/p&gt;
-&lt;p&gt;Scale this scenario to one where there are multiple models to worry about, all needing to be re-trained and re-deployed, and it is easy to see how quickly the management of these pipelines will become a large and undesirable&amp;nbsp;burden.&lt;/p&gt;
-&lt;p&gt;This is where the Bodywork MLOps framework steps-in - to take care of delivering your code to the right place and executing it at the right time, so that your models are always trained, deployed and&amp;nbsp;available.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="bodywork_logo" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/bodywork-diagram.png"&gt;&lt;/p&gt;
+&lt;p&gt;Running machine learning code in containers has become a common pattern to guarantee reproducibility between what has been developed and what is deployed in production&amp;nbsp;environments.&lt;/p&gt;
+&lt;p&gt;Most machine learning engineers do not, however, have the time to develop the skills and expertise required to deliver and deploy containerised machine learning systems into production environments. This requires an understanding of how to build container images, how to push build artefacts to image repositories and how to configure a container orchestration platform to use these to execute batch jobs and deploy&amp;nbsp;services.&lt;/p&gt;
+&lt;p&gt;Developing and maintaining these deployment pipelines is time-consuming. If there are multiple projects, each requiring re-training and re-deployment, then the management of these pipelines will quickly become a large&amp;nbsp;burden.&lt;/p&gt;
+&lt;p&gt;This is where the Bodywork framework steps-in - to take responsibility for pulling you machine learning projects into containers and deploying them to the Kubernetes container orchestration platform. Bodywork can ensure that your projects are always trained with the latest data, the most recent models are always deployed and your machine learning systems remain generally&amp;nbsp;available.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="bodywork_logo" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/ml-pipeline.png"&gt;&lt;/p&gt;
 &lt;p&gt;Bodywork is a tool built upon the Kubernetes container orchestration platform and is aimed at machine learning engineers to help&amp;nbsp;them:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Continuously deliver code&lt;/strong&gt; - for training models and defining model-scoring services. Bodywork containers running on Kubernetes will pull code directly from your project&amp;#8217;s Git repository, removing the need to build-and-push your own container&amp;nbsp;images.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Automate deployments&lt;/strong&gt; - of batch workloads and model-scoring services, using the Bodywork workflow-controller to orchestrate end-to-end machine learning workflows on&amp;nbsp;Kubernetes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;continuously deliver&lt;/strong&gt; - code for preparing features, training models, scoring data and defining model-scoring services. Bodywork containers running on Kubernetes will pull code directly from your project&amp;#8217;s Git repository, removing the need to build-and-push your own container&amp;nbsp;images.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;continuously deploy&lt;/strong&gt; - batch jobs, model-scoring services and complex machine learning pipelines, using the Bodywork workflow-controller to orchestrate end-to-end machine learning workflows on&amp;nbsp;Kubernetes.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;In other words, Bodywork automates the repetitive tasks that most &lt;span class="caps"&gt;ML&lt;/span&gt; engineers think of as &lt;a href="https://en.wikipedia.org/wiki/DevOps"&gt;DevOps&lt;/a&gt;, allowing them to focus their time on what they do best - machine&amp;nbsp;learning.&lt;/p&gt;
-&lt;p&gt;This post serves as a short tutorial on how to use Bodywork to productionise the most common MLOps use-case - train-and-deploy. We will refer to the &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project"&gt;example bodywork &lt;span class="caps"&gt;ML&lt;/span&gt; project (GitHub) repository&lt;/a&gt; and the files within&amp;nbsp;it.&lt;/p&gt;
+&lt;p&gt;In other words, Bodywork automates the repetitive tasks that most machine learning engineers think of as &lt;a href="https://en.wikipedia.org/wiki/DevOps"&gt;DevOps&lt;/a&gt;, allowing them to focus their time on what they do best - machine&amp;nbsp;learning.&lt;/p&gt;
+&lt;p&gt;This post serves as a short tutorial on how to use Bodywork to productionise a common &lt;span class="caps"&gt;ML&lt;/span&gt; pipeline - train-and-deploy. This tutorial refers to files within a Bodywork project hosted on GitHub - see &lt;a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project"&gt;bodywork-ml-pipeline-project&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="prerequisites"&gt;Prerequisites&lt;/h3&gt;
 &lt;p&gt;If you want to execute the example code, then you will&amp;nbsp;need:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;to &lt;a href="https://bodywork.readthedocs.io/en/latest/installation/"&gt;install&lt;/a&gt; the bodywork Python package on your local&amp;nbsp;machine.&lt;/li&gt;
-&lt;li&gt;access to a Kubernetes cluster - either locally using &lt;a href="https://minikube.sigs.k8s.io/docs/"&gt;minikube&lt;/a&gt; or &lt;a href="https://www.docker.com/products/docker-desktop"&gt;Docker-for-desktop&lt;/a&gt;, or as a managed service from a cloud provider, such as &lt;a href="https://aws.amazon.com/eks"&gt;&lt;span class="caps"&gt;EKS&lt;/span&gt;&lt;/a&gt; from &lt;span class="caps"&gt;AWS&lt;/span&gt; or &lt;a href="https://azure.microsoft.com/en-us/services/kubernetes-service/"&gt;&lt;span class="caps"&gt;AKS&lt;/span&gt;&lt;/a&gt; from&amp;nbsp;Azure.&lt;/li&gt;
+&lt;li&gt;access to a Kubernetes cluster - either a single-node on your local machine using &lt;a href="https://minikube.sigs.k8s.io/docs/"&gt;minikube&lt;/a&gt; or &lt;a href="https://www.docker.com/products/docker-desktop"&gt;Docker-for-desktop&lt;/a&gt;, or as a managed service from a cloud provider, such as &lt;a href="https://aws.amazon.com/eks"&gt;&lt;span class="caps"&gt;EKS&lt;/span&gt;&lt;/a&gt; from &lt;span class="caps"&gt;AWS&lt;/span&gt; or &lt;a href="https://azure.microsoft.com/en-us/services/kubernetes-service/"&gt;&lt;span class="caps"&gt;AKS&lt;/span&gt;&lt;/a&gt; from&amp;nbsp;Azure.&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://git-scm.com"&gt;Git&lt;/a&gt; and a basic understanding of how to use&amp;nbsp;it.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Familiarity with basic &lt;a href="https://kubernetes.io/docs/concepts/"&gt;Kubernetes concepts&lt;/a&gt; and some exposure to the &lt;a href="https://kubernetes.io/docs/reference/kubectl/overview/"&gt;kubectl&lt;/a&gt; command-line tool will make life easier. The introductory article I wrote on &lt;a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"&gt;&lt;em&gt;Deploying Python &lt;span class="caps"&gt;ML&lt;/span&gt; Models with Flask, Docker and Kubernetes&lt;/em&gt;&lt;/a&gt;, is a good place to&amp;nbsp;start.&lt;/p&gt;
 &lt;h2 id="a-machine-learning-task"&gt;A Machine Learning&amp;nbsp;Task&lt;/h2&gt;
-&lt;p&gt;The &lt;span class="caps"&gt;ML&lt;/span&gt; problem we have chosen to use for this tutorial, is the classification of iris plants into one of their three sub-species using the &lt;a href="https://scikit-learn.org/stable/datasets/index.html#iris-dataset"&gt;iris plants dataset&lt;/a&gt; - a multi-class classification&amp;nbsp;task.&lt;/p&gt;
-&lt;p&gt;The Jupyter notebook titled &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/ml_prototype_work.ipynb"&gt;ml_prototype_work.ipynb&lt;/a&gt; and found in the root of the &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project"&gt;bodywork-ml-ops-project&lt;/a&gt; repository, documents the trivial &lt;span class="caps"&gt;ML&lt;/span&gt; workflow used to arrive at a proposed solution to this task, by training a Decision Tree classifier and persisting the trained model to cloud storage. Take five minutes to read through&amp;nbsp;it.&lt;/p&gt;
+&lt;p&gt;The &lt;span class="caps"&gt;ML&lt;/span&gt; problem we have chosen to use for this tutorial, is the classification of iris plants into one of their three sub-species, given their physical dimensions. It uses the &lt;a href="https://scikit-learn.org/stable/datasets/index.html#iris-dataset"&gt;iris plants dataset&lt;/a&gt; and is an example of a multi-class classification&amp;nbsp;task.&lt;/p&gt;
+&lt;p&gt;The Jupyter notebook titled &lt;a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project/blob/master/ml_prototype_work.ipynb"&gt;ml_prototype_work.ipynb&lt;/a&gt; and found in the root of the &lt;a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project"&gt;bodywork-ml-pipeline-project&lt;/a&gt; repository, documents the trivial &lt;span class="caps"&gt;ML&lt;/span&gt; workflow used to arrive at a proposed solution to this task, by training a Decision Tree classifier and persisting the trained model to cloud storage. Take five minutes to read through&amp;nbsp;it.&lt;/p&gt;
 &lt;h2 id="a-machine-learning-operations-task"&gt;A Machine Learning Operations&amp;nbsp;Task&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="train_and_deploy" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/concepts_train_and_deploy.png"&gt;&lt;/p&gt;
 &lt;p&gt;Now that we have developed a solution to our chosen &lt;span class="caps"&gt;ML&lt;/span&gt; task, how do we get it into production - i.e. how can we split the Jupyter notebook into a &amp;#8216;train-model&amp;#8217; stage that persists a trained model to cloud storage, and a separate &amp;#8216;deploy-scoring-service&amp;#8217; stage that will load the persisted model and start a web service to expose a model-scoring &lt;span class="caps"&gt;API&lt;/span&gt;?&lt;/p&gt;
-&lt;p&gt;The solution with Bodywork is contained within the &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project"&gt;bodywork-ml-ops-project&lt;/a&gt; GitHub repository, whose root directory is as&amp;nbsp;follows,&lt;/p&gt;
+&lt;p&gt;The solution using Bodywork is packaged as a &lt;a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project"&gt;GitHub repository&lt;/a&gt;, whose root directory is as&amp;nbsp;follows,&lt;/p&gt;
 &lt;p&gt;&lt;img alt="example_project_root" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/example-project-root.png"&gt;&lt;/p&gt;
-&lt;p&gt;Bodywork &lt;span class="caps"&gt;ML&lt;/span&gt; projects must be stored as Git repositories, using the structure described in this tutorial, from where pre-built Bodywork containers running on Kubernetes (k8s), can pull them for deployment. There are no build artefacts - such as Docker images - that need to be built as part of the deployment&amp;nbsp;process.&lt;/p&gt;
+&lt;p&gt;Bodywork &lt;span class="caps"&gt;ML&lt;/span&gt; projects must be packaged as Git repositories, using the structure described in this tutorial, from where pre-built Bodywork containers running on Kubernetes (k8s), can pull them for deployment. There are no build artefacts - such as Docker images - that need to be built as part of the deployment&amp;nbsp;process.&lt;/p&gt;
 &lt;p&gt;The sub-directories contain all the code required to run a single stage - for example, in the &lt;code&gt;stage-1-train-model&lt;/code&gt; directory you will find the following&amp;nbsp;files,&lt;/p&gt;
 &lt;p&gt;&lt;img alt="train_model_stage" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/train-model-stage.png"&gt;&lt;/p&gt;
 &lt;p&gt;And similarly, in the &lt;code&gt;stage-2-deploy-scoring-service&lt;/code&gt; directory you will find the following&amp;nbsp;files,&lt;/p&gt;
 &lt;p&gt;&lt;img alt="deploy_model_stage" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/deploy-model-stage.png"&gt;&lt;/p&gt;
-&lt;p&gt;The remainder of this tutorial will be spent explaining the purpose of these files and demonstrating how they are used to map the &lt;span class="caps"&gt;ML&lt;/span&gt; task developed within the Jupyter notebook, into a &lt;span class="caps"&gt;ML&lt;/span&gt; workflow that can be executed on a remote Kubernetes cluster, to provide a model-scoring service ready for&amp;nbsp;production.&lt;/p&gt;
+&lt;p&gt;The remainder of this tutorial is concerned with explaining what is contained within these directories and their files, and how to command Bodywork to work with them to operationalise the solution on&amp;nbsp;Kubernetes.&lt;/p&gt;
 &lt;h3 id="configuring-a-bodywork-batch-stage-for-training-a-model"&gt;Configuring a Bodywork Batch Stage for Training a&amp;nbsp;Model&lt;/h3&gt;
-&lt;p&gt;The &lt;code&gt;stage-1-train-model&lt;/code&gt; directory contains the code and configuration required to train the model within a pre-built container on a k8s cluster, as a batch workload. Using the &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/ml_prototype_work.ipynb"&gt;ml_prototype_work.ipynb&lt;/a&gt; notebook as a reference, the &lt;code&gt;train_model.py&lt;/code&gt; module contains the code required&amp;nbsp;to:&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;stage-1-train-model&lt;/code&gt; directory contains the code and configuration required to train the model within a pre-built container on a k8s cluster, as a batch workload. Using the &lt;a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project/blob/master/ml_prototype_work.ipynb"&gt;ml_prototype_work.ipynb&lt;/a&gt; notebook as a reference, the &lt;code&gt;train_model.py&lt;/code&gt; module contains the code required&amp;nbsp;to:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;download data from an &lt;span class="caps"&gt;AWS&lt;/span&gt; S3&amp;nbsp;bucket;&lt;/li&gt;
 &lt;li&gt;pre-process the data (e.g. extract labels for supervised&amp;nbsp;learning);&lt;/li&gt;
@@ -93,7 +94,7 @@
 &lt;span class="c1"&gt;# other imports&lt;/span&gt;
 &lt;span class="c1"&gt;# ...&lt;/span&gt;
 
-&lt;span class="n"&gt;DATA_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://bodywork-ml-ops-project.s3.eu-west-2.amazonaws.com&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;DATA_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://bodywork-ml-pipeline-project.s3.eu-west-2.amazonaws.com&amp;#39;&lt;/span&gt;
             &lt;span class="s1"&gt;&amp;#39;/data/iris_classification_data.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# other constants&lt;/span&gt;
@@ -116,7 +117,7 @@
     &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;We recommend that you spend five minutes familiarising yourself with the full contents of &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/stage-1-train-model/train_model.py"&gt;train_model.py&lt;/a&gt;. When Bodywork runs the stage, it will do so in exactly the same way as if you were to&amp;nbsp;run,&lt;/p&gt;
+&lt;p&gt;We recommend that you spend five minutes familiarising yourself with the full contents of &lt;a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project/blob/master/stage-1-train-model/train_model.py"&gt;train_model.py&lt;/a&gt;. When Bodywork runs the stage, it will do so in exactly the same way as if you were to&amp;nbsp;run,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ python train_model.py
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -147,17 +148,17 @@ scikit-learn==0.23.2
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;From which it is clear to see that we have specified that this stage is a batch stage (as opposed to a service-deployment), that &lt;code&gt;train_model.py&lt;/code&gt; should be the script that is run, together with an estimate of the &lt;span class="caps"&gt;CPU&lt;/span&gt; and memory resources to request from the k8s cluster, how long to wait and how many times to retry,&amp;nbsp;etc.&lt;/p&gt;
-&lt;h3 id="configuring-a-bodywork-service-deployment-stage-for-creating-a-ml-scoring-service"&gt;Configuring a Bodywork Service-Deployment Stage for Creating a &lt;span class="caps"&gt;ML&lt;/span&gt; Scoring&amp;nbsp;Service&lt;/h3&gt;
-&lt;p&gt;The &lt;code&gt;stage-2-deploy-scoring-service&lt;/code&gt; directory contains the code and configuration required to load the model trained in &lt;code&gt;stage-1-train-model&lt;/code&gt; and use it as part of the code for a &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; endpoint definition, that will accept a single instance (or row) of data encoded as &lt;span class="caps"&gt;JSON&lt;/span&gt; in a &lt;span class="caps"&gt;HTTP&lt;/span&gt; request, and return the model&amp;#8217;s prediction as &lt;span class="caps"&gt;JSON&lt;/span&gt; data in the corresponding &lt;span class="caps"&gt;HTTP&lt;/span&gt;&amp;nbsp;response.&lt;/p&gt;
-&lt;p&gt;We have decided to choose the Python &lt;a href="https://flask.palletsprojects.com/en/1.1.x/"&gt;Flask&lt;/a&gt; framework with which to create our &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; server, that will be deployed to k8s and exposed as a service on the cluster, after this stage completes. The use of Flask is &lt;strong&gt;not&lt;/strong&gt; a requirement in any way and you are free to use different frameworks - e.g. &lt;a href="https://fastapi.tiangolo.com"&gt;FastAPI&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Within this stage&amp;#8217;s directory, &lt;code&gt;serve_model.py&lt;/code&gt; defines the &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; server containing our &lt;span class="caps"&gt;ML&lt;/span&gt; scoring endpoint. In essence, it can be summarised&amp;nbsp;as,&lt;/p&gt;
+&lt;h3 id="configuring-a-bodywork-service-stage-for-deploying-a-model-scoring-service"&gt;Configuring a Bodywork Service Stage for Deploying a Model-Scoring&amp;nbsp;Service&lt;/h3&gt;
+&lt;p&gt;The &lt;code&gt;stage-2-deploy-scoring-service&lt;/code&gt; directory contains the code and configuration required to load the model trained in &lt;code&gt;stage-1-train-model&lt;/code&gt; and use it within the definition of a &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; endpoint, that will accept a single instance (or row) of data encoded as &lt;span class="caps"&gt;JSON&lt;/span&gt; in the request, and return the model&amp;#8217;s prediction as &lt;span class="caps"&gt;JSON&lt;/span&gt; data in the corresponding&amp;nbsp;response.&lt;/p&gt;
+&lt;p&gt;We have decided to choose the Python &lt;a href="https://flask.palletsprojects.com/en/1.1.x/"&gt;Flask&lt;/a&gt; framework with which to create our &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; server. The use of Flask is &lt;strong&gt;not&lt;/strong&gt; a requirement in any way and you are free to use different frameworks - e.g. &lt;a href="https://fastapi.tiangolo.com"&gt;FastAPI&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Within this stage&amp;#8217;s directory, &lt;code&gt;serve_model.py&lt;/code&gt; defines the &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt; server containing our &lt;span class="caps"&gt;ML&lt;/span&gt; scoring endpoint. It can be summarised&amp;nbsp;as,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;urllib.request&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;urlopen&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;typing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Dict&lt;/span&gt;
 
 &lt;span class="c1"&gt;# other imports&lt;/span&gt;
 &lt;span class="c1"&gt;# ...&lt;/span&gt;
 
-&lt;span class="n"&gt;MODEL_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://bodywork-ml-ops-project.s3.eu-west-2.amazonaws.com/models&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;MODEL_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://bodywork-ml-pipeline-project.s3.eu-west-2.amazonaws.com/models&amp;#39;&lt;/span&gt;
              &lt;span class="s1"&gt;&amp;#39;/iris_tree_classifier.joblib&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# other constants&lt;/span&gt;
@@ -185,7 +186,7 @@ scikit-learn==0.23.2
     &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;host&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;0.0.0.0&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;5000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;We recommend that you spend five minutes familiarising yourself with the full contents of &lt;a href="https://github.com/bodywork-ml/bodywork-ml-ops-project/blob/master/stage-2-deploy-scoring-service/serve_model.py"&gt;serve_model.py&lt;/a&gt;. When Bodywork runs the stage, it will start the server defined by &lt;code&gt;app&lt;/code&gt; (note that this process has no scheduled end), that will expose the &lt;code&gt;/iris/v1/score&lt;/code&gt; route that is being handled by &lt;code&gt;score()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We recommend that you spend five minutes familiarising yourself with the full contents of &lt;a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project/blob/master/stage-2-deploy-scoring-service/serve_model.py"&gt;serve_model.py&lt;/a&gt;. When Bodywork runs the stage, it will start the server defined by &lt;code&gt;app&lt;/code&gt; and expose the &lt;code&gt;/iris/v1/score&lt;/code&gt; route that is being handled by &lt;code&gt;score()&lt;/code&gt; (note that this process has no scheduled&amp;nbsp;end).&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;requirements.txt&lt;/code&gt; file lists the 3rd party Python packages that will be Pip-installed on the Bodywork host container, as required to run &lt;code&gt;serve_model.py&lt;/code&gt;. In this example we&amp;nbsp;have,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Flask==1.1.2
 joblib==0.17.0
@@ -213,9 +214,9 @@ scikit-learn==0.23.2
 
 &lt;p&gt;From which it is clear to see that we have specified that this stage is a service-deployment stage (as opposed to a batch stage), that &lt;code&gt;serve_model.py&lt;/code&gt; should be the script that is run, together with an estimate of the &lt;span class="caps"&gt;CPU&lt;/span&gt; and memory resources to request from the k8s cluster, how long to wait for the service to start-up and be &amp;#8216;ready&amp;#8217;, which port to expose and how many instances (or replicas) of the server should be created to stand-behind the&amp;nbsp;cluster-service.&lt;/p&gt;
 &lt;h3 id="configuring-the-complete-bodywork-workflow"&gt;Configuring the Complete Bodywork&amp;nbsp;Workflow&lt;/h3&gt;
-&lt;p&gt;The &lt;code&gt;bodywork.ini&lt;/code&gt; file in the root of this repository contains the configuration for the whole workflow - a workflow being a collection of stages, run in a specific order, that can be represented by a Directed Acyclic Graph (or &lt;span class="caps"&gt;DAG&lt;/span&gt;). &lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;bodywork.ini&lt;/code&gt; file in the root of this repository contains the configuration for the whole workflow - a workflow being a collection of stages, run in a specific order, that can be represented by a Directed Acyclic Graph (or &lt;span class="caps"&gt;DAG&lt;/span&gt;).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;[default]&lt;/span&gt;
-&lt;span class="na"&gt;PROJECT_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;bodywork-ml-ops-project&amp;quot;&lt;/span&gt;
+&lt;span class="na"&gt;PROJECT_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;bodywork-ml-pipeline-project&amp;quot;&lt;/span&gt;
 &lt;span class="na"&gt;DOCKER_IMAGE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;bodyworkml/bodywork-core:latest&amp;quot;&lt;/span&gt;
 
 &lt;span class="k"&gt;[workflow]&lt;/span&gt;
@@ -226,27 +227,27 @@ scikit-learn==0.23.2
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The most important element is the specification of the workflow &lt;span class="caps"&gt;DAG&lt;/span&gt;, which in this instance is simple and will instruct the Bodywork workflow-controller to train the model and then (if successful) deploy the scoring&amp;nbsp;service.&lt;/p&gt;
-&lt;h3 id="testing-the-workflow-locally"&gt;Testing the Workflow&amp;nbsp;Locally&lt;/h3&gt;
-&lt;p&gt;Firstly, make sure that the &lt;a href="https://pypi.org/project/bodywork/"&gt;bodywork&lt;/a&gt; package has been Pip-installed into a local Python environment that is active. Then, make sure that there is a namespace setup for use by bodywork projects - e.g. &lt;code&gt;iris-classification&lt;/code&gt; - by running the following at the command&amp;nbsp;line,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork setup-namespace iris-classification
+&lt;h3 id="testing-the-workflow"&gt;Testing the&amp;nbsp;Workflow&lt;/h3&gt;
+&lt;p&gt;Firstly, make sure that the &lt;a href="https://pypi.org/project/bodywork/"&gt;bodywork&lt;/a&gt; package has been Pip-installed into a local Python environment that is active. Then, make sure that there is a namespace setup for use by bodywork projects - e.g. &lt;code&gt;ml-pipeline&lt;/code&gt; - by running the following at the command&amp;nbsp;line,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork setup-namespace ml-pipeline
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Which should result in the following&amp;nbsp;output,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;creating namespace=iris-classification
-creating service-account=bodywork-workflow-controller in namespace=iris-classification
-creating cluster-role-binding=bodywork-workflow-controller--iris-classification
-creating service-account=bodywork-jobs-and-deployments in namespace=iris-classification
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;creating namespace=ml-pipeline
+creating service-account=bodywork-workflow-controller in namespace=ml-pipeline
+creating cluster-role-binding=bodywork-workflow-controller--ml-pipeline
+creating service-account=bodywork-jobs-and-deployments in namespace=ml-pipeline
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Then, the workflow can be tested by running the workflow-controller locally&amp;nbsp;using,&lt;/p&gt;
+&lt;p&gt;Then, the workflow can be tested by running the workflow-controller locally (to orchestrate remote containers on k8s),&amp;nbsp;using,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork workflow &lt;span class="se"&gt;\&lt;/span&gt;
-    --namespace&lt;span class="o"&gt;=&lt;/span&gt;iris-classification &lt;span class="se"&gt;\&lt;/span&gt;
-    https://github.com/bodywork-ml/bodywork-ml-ops-project &lt;span class="se"&gt;\&lt;/span&gt;
+    --namespace&lt;span class="o"&gt;=&lt;/span&gt;ml-pipeline &lt;span class="se"&gt;\&lt;/span&gt;
+    https://github.com/bodywork-ml/bodywork-ml-pipeline-project &lt;span class="se"&gt;\&lt;/span&gt;
     master
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Which will run the workflow defined in the &lt;code&gt;master&lt;/code&gt; branch of the project&amp;#8217;s remote GitHub repository, all within the &lt;code&gt;iris-classification&lt;/code&gt; namespace. The logs from the workflow-controller and the containers nested within each constituent stage, will be streamed to the command-line to inform you on the precise state of the workflow. For&amp;nbsp;example,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;2020-11-24 20:04:12,648 - INFO - workflow.run_workflow - attempting to run workflow for project=https://github.com/bodywork-ml/bodywork-ml-ops-project on branch=master in kubernetes namespace=iris-classification
+&lt;p&gt;Which will run the workflow defined in the &lt;code&gt;master&lt;/code&gt; branch of the project&amp;#8217;s remote GitHub repository, all within the &lt;code&gt;ml-pipeline&lt;/code&gt; namespace. The logs from the workflow-controller and the containers nested within each constituent stage, will be streamed to the command-line to inform you on the precise state of the workflow. For&amp;nbsp;example,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;2020-11-24 20:04:12,648 - INFO - workflow.run_workflow - attempting to run workflow for project=https://github.com/bodywork-ml/bodywork-ml-pipeline-project on branch=master in kubernetes namespace=ml-pipeline
 git version 2.24.3 (Apple Git-128)
 Cloning into &amp;#39;bodywork_project&amp;#39;...
 remote: Enumerating objects: 92, done.
@@ -256,15 +257,15 @@ remote: Total 92 (delta 49), reused 70 (delta 27), pack-reused 0
 Receiving objects: 100% (92/92), 20.51 KiB | 1.58 MiB/s, done.
 Resolving deltas: 100% (49/49), done.
 2020-11-24 20:04:15,579 - INFO - workflow.run_workflow - attempting to execute DAG step=[&amp;#39;stage-1-train-model&amp;#39;]
-2020-11-24 20:04:15,580 - INFO - workflow.run_workflow - creating job=bodywork-ml-ops-project--stage-1-train-model in namespace=iris-classification
+2020-11-24 20:04:15,580 - INFO - workflow.run_workflow - creating job=bodywork-ml-pipeline-project--stage-1-train-model in namespace=ml-pipeline
 ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;After a stage completes, you will notice that the logs from within the container are streamed into the workflow-controller logs. For&amp;nbsp;example,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;----------------------------------------------------------------------------------------------------
----- pod logs for bodywork-ml-ops-project--stage-1-train-model
+---- pod logs for bodywork-ml-pipeline-project--stage-1-train-model
 ----------------------------------------------------------------------------------------------------
-2020-11-24 20:04:18,917 - INFO - stage.run_stage - attempting to run stage=prepare-data from master branch of repo at https://github.com/bodywork-ml/bodywork-ml-ops-project
+2020-11-24 20:04:18,917 - INFO - stage.run_stage - attempting to run stage=prepare-data from master branch of repo at https://github.com/bodywork-ml/bodywork-ml-pipeline-project
 git version 2.20.1
 Cloning into &amp;#39;bodywork_project&amp;#39;...
 Collecting boto3==1.16.15
@@ -273,13 +274,17 @@ Collecting boto3==1.16.15
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The aim of this log structure, is to provide a reliable way of debugging workflows out-of-the-box, without forcing you to integrate a complete logging solution. This is not a replacement for a complete logging solution - e.g. one based on Elasticsearch - it is intended as a temporary solution to get your &lt;span class="caps"&gt;ML&lt;/span&gt; projects operational&amp;nbsp;quickly.&lt;/p&gt;
-&lt;p&gt;Note that you can also keep track of the current state of all k8s resources created by the workflow-controller in the &lt;code&gt;iris-classification&lt;/code&gt; namespace, by using the kubectl &lt;span class="caps"&gt;CLI&lt;/span&gt; tool -&amp;nbsp;e.g.,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ kubectl -n iris-classification get all
+&lt;p&gt;Note that you can also keep track of the current state of all k8s resources created by the workflow-controller in the &lt;code&gt;ml-pipeline&lt;/code&gt; namespace, by using the kubectl &lt;span class="caps"&gt;CLI&lt;/span&gt; tool -&amp;nbsp;e.g.,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ kubectl -n ml-pipeline get all
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h4 id="testing-the-model-scoring-service"&gt;Testing the Model-Scoring&amp;nbsp;Service&lt;/h4&gt;
-&lt;p&gt;Once the workflow has completed, the &lt;span class="caps"&gt;ML&lt;/span&gt; scoring service deployed within your cluster can be tested from your local machine, by first of all running &lt;code&gt;kubectl proxy&lt;/code&gt; in one shell, and then in a new shell using the &lt;code&gt;curl&lt;/code&gt; tool as&amp;nbsp;follows,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ curl http://localhost:8001/api/v1/namespaces/iris-classification/services/bodywork-ml-ops-project--stage-2-deploy-scoring-service/proxy/iris/v1/score &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;p&gt;Once the workflow has completed, the &lt;span class="caps"&gt;ML&lt;/span&gt; scoring service deployed within your cluster will be ready for testing. Service deployments are accessible via &lt;span class="caps"&gt;HTTP&lt;/span&gt; from within the cluster - they are not exposed to the public internet. To test the service from your local machine you will first of all need to start a proxy server to enable access to your cluster. This can be achieved by issuing the following&amp;nbsp;command,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ kubectl proxy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Then in a new shell, you can use the curl tool to test the service. For&amp;nbsp;example,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ curl http://localhost:8001/api/v1/namespaces/ml-pipeline/services/bodywork-ml-pipeline-project--stage-2-deploy-scoring-service/proxy/iris/v1/score &lt;span class="se"&gt;\&lt;/span&gt;
     --request POST &lt;span class="se"&gt;\&lt;/span&gt;
     --header &lt;span class="s2"&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
     --data &lt;span class="s1"&gt;&amp;#39;{&amp;quot;sepal_length&amp;quot;: 5.1, &amp;quot;sepal_width&amp;quot;: 3.5, &amp;quot;petal_length&amp;quot;: 1.4, &amp;quot;petal_width&amp;quot;: 0.2}&amp;#39;&lt;/span&gt;
@@ -296,34 +301,34 @@ Collecting boto3==1.16.15
 &lt;h3 id="executing-the-workflow-remotely-on-a-schedule"&gt;Executing the Workflow Remotely on a&amp;nbsp;Schedule&lt;/h3&gt;
 &lt;p&gt;If you&amp;#8217;re happy with the test results, then you can schedule the workflow-controller to operate remotely on the cluster as a k8s cronjob. To setup the the workflow to run every hour, for example, use the following&amp;nbsp;command,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork cronjob create &lt;span class="se"&gt;\&lt;/span&gt;
-    --namespace&lt;span class="o"&gt;=&lt;/span&gt;iris-classification &lt;span class="se"&gt;\&lt;/span&gt;
-    --name&lt;span class="o"&gt;=&lt;/span&gt;iris-classification &lt;span class="se"&gt;\&lt;/span&gt;
+    --namespace&lt;span class="o"&gt;=&lt;/span&gt;ml-pipeline &lt;span class="se"&gt;\&lt;/span&gt;
+    --name&lt;span class="o"&gt;=&lt;/span&gt;ml-pipeline &lt;span class="se"&gt;\&lt;/span&gt;
     --schedule&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0 * * * *&amp;quot;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-    --git-repo-url&lt;span class="o"&gt;=&lt;/span&gt;https://github.com/bodywork-ml/bodywork-ml-ops-project
+    --git-repo-url&lt;span class="o"&gt;=&lt;/span&gt;https://github.com/bodywork-ml/bodywork-ml-pipeline-project &lt;span class="se"&gt;\&lt;/span&gt;
     --git-repo-branch&lt;span class="o"&gt;=&lt;/span&gt;master
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Each scheduled workflow will attempt to re-run the workflow, end-to-end, as defined by the state of this repository&amp;#8217;s &lt;code&gt;master&lt;/code&gt; branch at the time of execution - performing rolling-updates to service-deployments and automatic roll-backs in the event of&amp;nbsp;failure.&lt;/p&gt;
-&lt;p&gt;To get the execution history for all &lt;code&gt;iris-classification&lt;/code&gt; jobs&amp;nbsp;use,&lt;/p&gt;
+&lt;p&gt;To get the execution history for all &lt;code&gt;ml-pipeline&lt;/code&gt; jobs&amp;nbsp;use,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork cronjob &lt;span class="nb"&gt;history&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
-    --namespace&lt;span class="o"&gt;=&lt;/span&gt;iris-classification &lt;span class="se"&gt;\&lt;/span&gt;
-    --name&lt;span class="o"&gt;=&lt;/span&gt;iris-classification
+    --namespace&lt;span class="o"&gt;=&lt;/span&gt;ml-pipeline &lt;span class="se"&gt;\&lt;/span&gt;
+    --name&lt;span class="o"&gt;=&lt;/span&gt;ml-pipeline
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Which should return output along the lines&amp;nbsp;of,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;JOB_NAME                                START_TIME                    COMPLETION_TIME               ACTIVE      SUCCEEDED       FAILED
-iris-classification-1605214260          2020-11-12 20:51:04+00:00     2020-11-12 20:52:34+00:00     0           1               0
+ml-pipeline-1605214260          2020-11-12 20:51:04+00:00     2020-11-12 20:52:34+00:00     0           1               0
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Then to stream the logs from any given cronjob run (e.g. to debug and/or monitor for errors),&amp;nbsp;use,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ bodywork cronjob logs &lt;span class="se"&gt;\&lt;/span&gt;
-    --namespace&lt;span class="o"&gt;=&lt;/span&gt;iris-classification &lt;span class="se"&gt;\&lt;/span&gt;
-    --name&lt;span class="o"&gt;=&lt;/span&gt;iris-classification-1605214260
+    --namespace&lt;span class="o"&gt;=&lt;/span&gt;ml-pipeline &lt;span class="se"&gt;\&lt;/span&gt;
+    --name&lt;span class="o"&gt;=&lt;/span&gt;ml-pipeline-1605214260
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3 id="cleaning-up"&gt;Cleaning&amp;nbsp;Up&lt;/h3&gt;
 &lt;p&gt;To clean-up the deployment in its entirety, delete the namespace using kubectl - e.g. by&amp;nbsp;running,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ kubectl delete ns iris-classification
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ kubectl delete ns ml-pipeline
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2 id="where-to-go-from-here"&gt;Where to go from&amp;nbsp;Here&lt;/h2&gt;
