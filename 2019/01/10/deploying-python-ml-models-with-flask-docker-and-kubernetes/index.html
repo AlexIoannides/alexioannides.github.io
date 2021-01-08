@@ -42,13 +42,13 @@
 <!-- End Google Analytics -->
 
 <meta name="author" content="Dr Alex Ioannides" />
-<meta name="description" content="17th August 2019 - updated to reflect changes in the Kubernetes API and Seldon Core. 14th December 2020 - the work in post forms the basis of the Bodywork MLOps framework - read about it here. A common pattern for deploying Machine Learning (ML) models into production environments - e.g. ML models trained …" />
+<meta name="description" content="17th August 2019 - updated to reflect changes in the Kubernetes API and Seldon Core. 14th December 2020 - the work in this post forms the basis of the Bodywork MLOps framework - read about it here. A common pattern for deploying Machine Learning (ML) models into production environments - e.g. ML models …" />
 <meta name="keywords" content="python, machine-learning, machine-learning-operations, kubernetes">
 
 
 <meta property="og:site_name" content="Dr Alex Ioannides"/>
 <meta property="og:title" content="Deploying Python ML Models with Flask, Docker and Kubernetes"/>
-<meta property="og:description" content="17th August 2019 - updated to reflect changes in the Kubernetes API and Seldon Core. 14th December 2020 - the work in post forms the basis of the Bodywork MLOps framework - read about it here. A common pattern for deploying Machine Learning (ML) models into production environments - e.g. ML models trained …"/>
+<meta property="og:description" content="17th August 2019 - updated to reflect changes in the Kubernetes API and Seldon Core. 14th December 2020 - the work in this post forms the basis of the Bodywork MLOps framework - read about it here. A common pattern for deploying Machine Learning (ML) models into production environments - e.g. ML models …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"/>
 <meta property="og:type" content="article"/>
@@ -151,7 +151,7 @@
     <p><img alt="jpeg" src="https://alexioannides.github.io/images/machine-learning-engineering/k8s-ml-ops/docker+k8s.jpg"></p>
 <ul>
 <li><strong>17th August 2019</strong> - <em>updated to reflect changes in the Kubernetes <span class="caps">API</span> and Seldon&nbsp;Core.</em></li>
-<li><strong>14th December 2020</strong> - <em>the work in post forms the basis of the <a href="https://bodywork.readthedocs.io/en/latest/">Bodywork</a> MLOps framework - read about it <a href="https://alexioannides.github.io/2020/12/01/deploying-python-ml-models-with-bodywork/">here</a>.</em></li>
+<li><strong>14th December 2020</strong> - <em>the work in this post forms the basis of the <a href="https://bodywork.readthedocs.io/en/latest/">Bodywork</a> MLOps framework - read about it <a href="https://alexioannides.github.io/2020/12/01/deploying-python-ml-models-with-bodywork/">here</a>.</em></li>
 </ul>
 <p>A common pattern for deploying Machine Learning (<span class="caps">ML</span>) models into production environments - e.g. <span class="caps">ML</span> models trained using the SciKit Learn or Keras packages (for Python), that are ready to provide predictions on new data - is to expose these <span class="caps">ML</span> models as RESTful <span class="caps">API</span> microservices, hosted from within <a href="https://www.docker.com">Docker</a> containers. These can then deployed to a cloud environment for handling everything required for maintaining continuous availability - e.g. fault-tolerance, auto-scaling, load balancing and rolling service&nbsp;updates.</p>
 <p>The configuration details for a continuously available cloud deployment are specific to the targeted cloud provider(s) - e.g. the deployment process and topology for Amazon Web Services is not the same as that for Microsoft Azure, which in-turn is not the same as that for Google Cloud Platform. This constitutes knowledge that needs to be acquired for every cloud provider. Furthermore, it is difficult (some would say near impossible) to test entire deployment strategies locally, which makes issues such as networking hard to&nbsp;debug.</p>
