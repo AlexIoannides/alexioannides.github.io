@@ -10,18 +10,18 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
 
 
     <link id="pygments-light-theme" rel="stylesheet" type="text/css"
-          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+          href="../../../../theme/pygments/monokai.min.css">
 
 
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/solid.css">
 
-    <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
+    <link href="../../../../static/custom.css" rel="stylesheet">
 
     <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
 
@@ -50,11 +50,11 @@
 <meta property="og:title" content="Building a Data Science Platform for R&amp;D, Part 4 - Apache Zeppelin &amp; Scala Notebooks"/>
 <meta property="og:description" content="Parts one, two and three of this series of posts have taken us from creating an account on AWS to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;D is nearly complete - the only outstanding component is …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://alexioannides.github.io/2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/"/>
+<meta property="og:url" content="../../../../2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2016-08-29 00:00:00+01:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://alexioannides.github.io/author/dr-alex-ioannides.html">
+<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
 <meta property="article:section" content="data-science"/>
 <meta property="article:tag" content="AWS"/>
 <meta property="article:tag" content="data-processing"/>
@@ -66,12 +66,12 @@
 <body class="light-theme">
   <aside>
     <div>
-      <a href="https://alexioannides.github.io">
+      <a href="../../../..">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
 
       <h1>
-        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
+        <a href="../../../..">Dr Alex Ioannides</a>
       </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
@@ -82,17 +82,20 @@
 
               <li>
                 <a target="_self"
-                   href="https://alexioannides.github.io/about-me/">
+                   href="../../../../about-me/">
                   About&nbsp;Me
                 </a>
               </li>
               <li>
                 <a target="_self"
-                   href="https://alexioannides.github.io/about-this-blog/">
+                   href="../../../../about-this-blog/">
                   About this&nbsp;Blog
                 </a>
               </li>
 
+            <li>
+              <a target="_self" href="https://alexioannides.com/data-science-and-ml-notebook/" >ML Notes & Demos</a>
+            </li>
         </ul>
       </nav>
 
@@ -124,7 +127,7 @@
   <main>
 
     <nav>
-      <a href="https://alexioannides.github.io">Home</a>
+      <a href="../../../..">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
@@ -139,15 +142,15 @@
       
     <h1 id="building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks">Building a Data Science Platform for R&D, Part 4 - Apache Zeppelin <span class="amp">&amp;</span> Scala&nbsp;Notebooks</h1>
     <p>
-      Posted on Mon 29 August 2016 in <a href="https://alexioannides.github.io/category/data-science.html">data-science</a>
+      Posted on Mon 29 August 2016 in <a href="../../../../category/data-science.html">data-science</a>
 
     </p>
   </header>
 
 
   <div>
-    <p><img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"></p>
-<p>Parts <a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1">one</a>, <a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2">two</a> and <a href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3">three</a> of this series of posts have taken us from creating an account on <span class="caps">AWS</span> to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;D is nearly complete - the only outstanding component is the ability to interact (<span class="caps">REPL</span>-style) with Spark using code written in Scala and to run this on some sort of scheduled basis. So, for this last part I am going to focus on getting <a href="http://zeppelin.apache.org" title="Apache Zeppelin">Apache Zeppelin</a>&nbsp;up-and-running.</p>
+    <p><img alt="zeppelin" src="../../../../images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"></p>
+<p>Parts <a href="../../../../2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1">one</a>, <a href="../../../../2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2">two</a> and <a href="../../../../2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3">three</a> of this series of posts have taken us from creating an account on <span class="caps">AWS</span> to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;D is nearly complete - the only outstanding component is the ability to interact (<span class="caps">REPL</span>-style) with Spark using code written in Scala and to run this on some sort of scheduled basis. So, for this last part I am going to focus on getting <a href="http://zeppelin.apache.org" title="Apache Zeppelin">Apache Zeppelin</a>&nbsp;up-and-running.</p>
 <p><a href="http://zeppelin.apache.org" title="Apache Zeppelin">Zeppelin</a> is a notebook server in a similar vein as the Jupyter or Beaker notebooks (and very similar to those available on Databricks). Code is submitted and executed in &#8216;chunks&#8217; with interim output (e.g. charts and tables) displayed after it has been computed. Where Zeppelin differs from the other, is its first-class support for Spark and it&#8217;s ability to run notebooks (and thereby <span class="caps">ETL</span> process) on a schedule (in essence it uses <code>chron</code> for scheduling and&nbsp;execution).</p>
 <h1 id="installing-apache-zeppelin">Installing Apache&nbsp;Zeppelin</h1>
 <p>Following the steps laid-out in previous posts, <span class="caps">SSH</span> into our Spark cluster&#8217;s master node (or use <code>$ ./flintrock login my-cluster</code> for extra convenience). Just like we did for R Studio Server we&#8217;re going to install Zeppelin here as well. Find the <span class="caps">URL</span> for the latest version of Zeppelin <a href="http://www.apache.org/dyn/closer.cgi/zeppelin/zeppelin-0.6.1/zeppelin-0.6.1-bin-all.tgz" title="Download Zeppelin">here</a> and then from the master node&#8217;s shell&nbsp;execute,</p>
@@ -164,18 +167,18 @@
 <p>Then using a text editor such as <a href="https://en.wikipedia.org/wiki/Vi" title="vi Wiki">vi</a> - e.g. <code>$ vi zeppelin-env.sh</code> - to edit each file making the changes described&nbsp;below.</p>
 <h2 id="zeppelin-envsh">zeppelin-env.sh</h2>
 <p>Find the following variable exports, uncomment them, and then make the following&nbsp;assignments:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">MASTER</span><span class="o">=</span>spark://ip-172-31-6-33:7077 <span class="c1"># use the appropriate local IP address here</span>
-<span class="nb">export</span> <span class="nv">SPARK_HOME</span><span class="o">=</span>/usr/local/lib/spark
-<span class="nb">export</span> <span class="nv">SPARK_SUBMIT_OPTIONS</span><span class="o">=</span><span class="s2">&quot;--packages com.databricks:spark-csv_2.11:1.3.0,com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">MASTER</span><span class="o">=</span>spark://ip-172-31-6-33:7077<span class="w"> </span><span class="c1"># use the appropriate local IP address here</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SPARK_HOME</span><span class="o">=</span>/usr/local/lib/spark
+<span class="nb">export</span><span class="w"> </span><span class="nv">SPARK_SUBMIT_OPTIONS</span><span class="o">=</span><span class="s2">&quot;--packages com.databricks:spark-csv_2.11:1.3.0,com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&quot;</span>
 </code></pre></div>
 
 <p>Most of these options should be familiar to you by now so I won&#8217;t go-over again&nbsp;here.</p>
 <h2 id="zeppelin-sitexml">zeppelin-site.xml</h2>
 <p>Find the following property name and change it to the value&nbsp;below:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>zeppelin.server.port<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>8081<span class="nt">&lt;/value&gt;</span>
-  <span class="nt">&lt;description&gt;</span>Server port.<span class="nt">&lt;/description&gt;</span>
+<span class="w">  </span><span class="nt">&lt;name&gt;</span>zeppelin.server.port<span class="nt">&lt;/name&gt;</span>
+<span class="w">  </span><span class="nt">&lt;value&gt;</span>8081<span class="nt">&lt;/value&gt;</span>
+<span class="w">  </span><span class="nt">&lt;description&gt;</span>Server<span class="w"> </span>port.<span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
 </code></pre></div>
 
@@ -183,7 +186,7 @@
 <p><code>$ cd /home/ec2-user/zeppelin-0.6.1-bin-all/bin</code></p>
 <p><code>$ ./zeppelin-daemon start</code></p>
 <p>Open a browser and navigate to <code>http://your_master_node_public_ip:8081</code>. If Zeppelin has been installed and configured properly you should be presented with Zeppelin&#8217;s home&nbsp;screen:</p>
-<p><img alt="zeppelin-home" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-home.png" title="Zeppelin Home"></p>
+<p><img alt="zeppelin-home" src="../../../../images/data_science/data_science_platform_pt4/zeppelin-home.png" title="Zeppelin Home"></p>
 <p>To shut Zeppelin down return to the master node&#8217;s shell and&nbsp;execute,</p>
 <p><code>$ ./zeppelin-daemon stop</code>.</p>
 <h1 id="running-zeppelin-with-a-service-manager">Running Zeppelin with a Service&nbsp;Manager</h1>
@@ -192,10 +195,10 @@
 <p><code>$ cd /etc/init</code></p>
 <p><code>$ sudo touch zeppelin.conf</code></p>
 <p>We then need to edit this file - e.g. <code>$ sudo vi zeppelin.conf</code> - and copy the following script, which is adapted from <code>rstudio-server.conf</code> and this <strong>fantastic</strong> blog post from <a href="http://doatt.com/2015/03/03/amazon-linux-and-upstart-init/index.html" title="doatt blog">DevOps All the Things</a>:</p>
-<div class="highlight"><pre><span></span><code>description <span class="s2">&quot;zeppelin&quot;</span>
+<div class="highlight"><pre><span></span><code>description<span class="w"> </span><span class="s2">&quot;zeppelin&quot;</span>
 
-start on <span class="o">(</span>runlevel <span class="o">[</span><span class="m">345</span><span class="o">]</span> and started network<span class="o">)</span>
-stop on <span class="o">(</span>runlevel <span class="o">[</span>!345<span class="o">]</span> or stopping network<span class="o">)</span>
+start<span class="w"> </span>on<span class="w"> </span><span class="o">(</span>runlevel<span class="w"> </span><span class="o">[</span><span class="m">345</span><span class="o">]</span><span class="w"> </span>and<span class="w"> </span>started<span class="w"> </span>network<span class="o">)</span>
+stop<span class="w"> </span>on<span class="w"> </span><span class="o">(</span>runlevel<span class="w"> </span><span class="o">[</span>!345<span class="o">]</span><span class="w"> </span>or<span class="w"> </span>stopping<span class="w"> </span>network<span class="o">)</span>
 
 <span class="c1"># start on (local-filesystems and net-device-up IFACE!=lo)</span>
 <span class="c1"># stop on shutdown</span>
@@ -205,11 +208,11 @@ respawn
 
 <span class="c1"># respawn the job up to 7 times within a 5 second period.</span>
 <span class="c1"># If the job exceeds these values, it will be stopped and marked as failed.</span>
-respawn limit <span class="m">7</span> <span class="m">5</span>
+respawn<span class="w"> </span>limit<span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">5</span>
 
 <span class="c1"># zeppelin was installed in /home/ec2-user/zeppelin-0.6.1-bin-all in this example</span>
-chdir /home/ec2-user/zeppelin-0.6.1-bin-all
-<span class="nb">exec</span> bin/zeppelin-daemon.sh upstart
+chdir<span class="w"> </span>/home/ec2-user/zeppelin-0.6.1-bin-all
+<span class="nb">exec</span><span class="w"> </span>bin/zeppelin-daemon.sh<span class="w"> </span>upstart
 </code></pre></div>
 
 <p>To test our script return to the shell and&nbsp;execute,</p>
@@ -217,38 +220,38 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 <p>And return to the browser to check that Zeppelin is up-and-running. You can check that this works by stopping the cluster and then starting it&nbsp;again.</p>
 <h1 id="scala-notebooks">Scala&nbsp;Notebooks</h1>
 <p>From the Zeppelin home page select the &#8216;Zeppelin Tutorial&#8217;, accept the interpreter options and you should be presented with the following&nbsp;notebook:</p>
-<p><img alt="zeppeling-nb" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-nb.png" title="Zeppelin Scala Notebook"></p>
+<p><img alt="zeppeling-nb" src="../../../../images/data_science/data_science_platform_pt4/zeppelin-nb.png" title="Zeppelin Scala Notebook"></p>
 <p>Click into the first code chunk and hit <code>shift + enter</code> to run it. If everything has been configured correctly then the code will run and the Zeppelin application will be listed in the Spark master node&#8217;s web <span class="caps">UI</span>. We then test our connectivity to S3 by attempting to access our data there in the usual&nbsp;way:</p>
-<p><img alt="zeppelin-s3" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin-s3-nb.png" title="Connecting to S3"></p>
+<p><img alt="zeppelin-s3" src="../../../../images/data_science/data_science_platform_pt4/zeppelin-s3-nb.png" title="Connecting to S3"></p>
 <p>Note that this notebook, as well as any other, can be set to execute on a schedule defined using the &#8216;Run Scheduler&#8217; from the notebook&#8217;s menu bar. This will happen irrespective of whether or not you have it loaded in the browser - so long as the Zeppelin daemon is running the notebooks will run on their defined&nbsp;schedule.</p>
 <h1 id="storing-zeppelin-notebooks-on-s3">Storing Zeppelin Notebooks on&nbsp;S3</h1>
 <p>By default Zeppelin will store all notebooks locally. This is likely to be fine under most circumstances (as it is also very easy to export them), but it makes sense to exploit the ability to have them stored in an S3 bucket instead. For example, if you have amassed a lot of notebooks working on one cluster and you&#8217;d like to run them on another (maybe much larger) cluster, then it makes sense not to have to manually export them all from one cluster to&nbsp;another.</p>
 <p>Enabling access to S3 is relatively easy as we already have S3-enabled <span class="caps">IAM</span> roles assigned to our nodes (via Flintrock configuration). Start by creating a new bucket to store them in - e.g. <code>my.zeppelin.notebooks</code>. Then create a folder within this bucket - e.g. <code>userone</code> - and another one within that called <code>notebook</code>.</p>
 <p>Next, <span class="caps">SSH</span> into the master node and open the <code>zeppelin-site.xml</code> file for editing as we did above. This time, un-comment and set the following&nbsp;properties,</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>zeppelin.notebook.s3.bucket<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>my.zeppelin.notebooks<span class="nt">&lt;/value&gt;</span>
-  <span class="nt">&lt;description&gt;</span>bucket name for notebook storage<span class="nt">&lt;/description&gt;</span>
+<span class="w">  </span><span class="nt">&lt;name&gt;</span>zeppelin.notebook.s3.bucket<span class="nt">&lt;/name&gt;</span>
+<span class="w">  </span><span class="nt">&lt;value&gt;</span>my.zeppelin.notebooks<span class="nt">&lt;/value&gt;</span>
+<span class="w">  </span><span class="nt">&lt;description&gt;</span>bucket<span class="w"> </span>name<span class="w"> </span>for<span class="w"> </span>notebook<span class="w"> </span>storage<span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
 
 <span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>zeppelin.notebook.s3.user<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>userone<span class="nt">&lt;/value&gt;</span>
-  <span class="nt">&lt;description&gt;</span>user name for s3 folder structure<span class="nt">&lt;/description&gt;</span>
+<span class="w">  </span><span class="nt">&lt;name&gt;</span>zeppelin.notebook.s3.user<span class="nt">&lt;/name&gt;</span>
+<span class="w">  </span><span class="nt">&lt;value&gt;</span>userone<span class="nt">&lt;/value&gt;</span>
+<span class="w">  </span><span class="nt">&lt;description&gt;</span>user<span class="w"> </span>name<span class="w"> </span>for<span class="w"> </span>s3<span class="w"> </span>folder<span class="w"> </span>structure<span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
 
 <span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>zeppelin.notebook.storage<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>org.apache.zeppelin.notebook.repo.S3NotebookRepo<span class="nt">&lt;/value&gt;</span>
-  <span class="nt">&lt;description&gt;</span>notebook persistence layer implementation<span class="nt">&lt;/description&gt;</span>
+<span class="w">  </span><span class="nt">&lt;name&gt;</span>zeppelin.notebook.storage<span class="nt">&lt;/name&gt;</span>
+<span class="w">  </span><span class="nt">&lt;value&gt;</span>org.apache.zeppelin.notebook.repo.S3NotebookRepo<span class="nt">&lt;/value&gt;</span>
+<span class="w">  </span><span class="nt">&lt;description&gt;</span>notebook<span class="w"> </span>persistence<span class="w"> </span>layer<span class="w"> </span>implementation<span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
 </code></pre></div>
 
 <p>And comment-out the property for local&nbsp;storage,</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>zeppelin.notebook.storage<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>org.apache.zeppelin.notebook.repo.VFSNotebookRepo<span class="nt">&lt;/value&gt;</span>
-  <span class="nt">&lt;description&gt;</span>notebook persistence layer implementation<span class="nt">&lt;/description&gt;</span>
+<span class="w">  </span><span class="nt">&lt;name&gt;</span>zeppelin.notebook.storage<span class="nt">&lt;/name&gt;</span>
+<span class="w">  </span><span class="nt">&lt;value&gt;</span>org.apache.zeppelin.notebook.repo.VFSNotebookRepo<span class="nt">&lt;/value&gt;</span>
+<span class="w">  </span><span class="nt">&lt;description&gt;</span>notebook<span class="w"> </span>persistence<span class="w"> </span>layer<span class="w"> </span>implementation<span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
 </code></pre></div>
 
@@ -259,9 +262,9 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 <p>Being able to limit access to Zeppelin as well control the read/write permissions on individual notebooks will be useful if multiple people are likely to be working on the platform and using it to trial and schedule jobs on the cluster. It&#8217;s also handy if you just want to grant someone access to read results and don&#8217;t want to risk them changing the code by&nbsp;accident.</p>
 <p>Enabling basic authentication is relatively straight-forwards. First, open the <code>zeppelin-site.xml</code> file for editing and ensure that the <code>zeppelin.anonymous.allowed</code> property is set to <code>false</code>,</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;property&gt;</span>
-  <span class="nt">&lt;name&gt;</span>zeppelin.anonymous.allowed<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;value&gt;</span>false<span class="nt">&lt;/value&gt;</span>
-  <span class="nt">&lt;description&gt;</span>Anonymous user allowed by default<span class="nt">&lt;/description&gt;</span>
+<span class="w">  </span><span class="nt">&lt;name&gt;</span>zeppelin.anonymous.allowed<span class="nt">&lt;/name&gt;</span>
+<span class="w">  </span><span class="nt">&lt;value&gt;</span>false<span class="nt">&lt;/value&gt;</span>
+<span class="w">  </span><span class="nt">&lt;description&gt;</span>Anonymous<span class="w"> </span>user<span class="w"> </span>allowed<span class="w"> </span>by<span class="w"> </span>default<span class="nt">&lt;/description&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
 </code></pre></div>
 
@@ -285,8 +288,8 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="https://alexioannides.github.io/tag/aws.html">AWS</a>
-      <a href="https://alexioannides.github.io/tag/data-processing.html">data-processing</a>
+      <a href="../../../../tag/aws.html">AWS</a>
+      <a href="../../../../tag/data-processing.html">data-processing</a>
     </p>
   </div>
 
@@ -325,7 +328,7 @@ Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a 
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Dr Alex Ioannides ",
-  "url" : "https://alexioannides.github.io",
+  "url" : "../../../..",
   "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
   "description": ""
 }

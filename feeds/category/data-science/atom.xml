@@ -63,25 +63,23 @@
 
 &lt;h2 id="synthetic-data-generation-using-geometric-brownian-motion"&gt;Synthetic Data Generation using Geometric Brownian&amp;nbsp;Motion&lt;/h2&gt;
 &lt;p&gt;We start by defining a function for simulating a single path from a &lt;span class="caps"&gt;GBM&lt;/span&gt; - perhaps the most commonly used stochastic process for modelling the time-series of asset prices. We make use of the &lt;a href="https://en.wikipedia.org/wiki/Geometric_Brownian_motion"&gt;following equation&lt;/a&gt;:&lt;/p&gt;
-&lt;div class="math"&gt;$$
-\tilde{S_t} = S_0 \exp \left\{ \left(\mu - \frac{\sigma^2}{2} \right) t + \sigma \tilde{W_t}\right\}
-$$&lt;/div&gt;
+&lt;p&gt;$$
+\tilde{S_t} = S_0 \exp \left{ \left(\mu - \frac{\sigma^2}{2} \right) t + \sigma \tilde{W_t}\right}&amp;nbsp;$$&lt;/p&gt;
 &lt;p&gt;where:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(t\)&lt;/span&gt; is the time in&amp;nbsp;years;&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(S_0\)&lt;/span&gt; is value of time-series at the&amp;nbsp;start;&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\tilde{S_t}\)&lt;/span&gt; is value of time-series at time &lt;span class="math"&gt;\(t\)&lt;/span&gt;;&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is the annualised drift (or expected&amp;nbsp;return);&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is the annualised standard deviation of the returns;&amp;nbsp;and,&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\tilde{W_t}\)&lt;/span&gt; is a Brownian&amp;nbsp;motion.&lt;/li&gt;
+&lt;li&gt;$t$ is the time in&amp;nbsp;years;&lt;/li&gt;
+&lt;li&gt;$S_0$ is value of time-series at the&amp;nbsp;start;&lt;/li&gt;
+&lt;li&gt;$\tilde{S_t}$ is value of time-series at time&amp;nbsp;$t$;&lt;/li&gt;
+&lt;li&gt;$\mu$ is the annualised drift (or expected&amp;nbsp;return);&lt;/li&gt;
+&lt;li&gt;$\sigma$ is the annualised standard deviation of the returns;&amp;nbsp;and,&lt;/li&gt;
+&lt;li&gt;$\tilde{W_t}$ is a Brownian&amp;nbsp;motion.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;This is the solution to the following stochastic differential&amp;nbsp;equation,&lt;/p&gt;
-&lt;div class="math"&gt;$$
-d\tilde{S_t} = \mu \tilde{S_t} dt + \sigma \tilde{S_t} d\tilde{W_t}
-$$&lt;/div&gt;
+&lt;p&gt;$$
+d\tilde{S_t} = \mu \tilde{S_t} dt + \sigma \tilde{S_t} d\tilde{W_t}&amp;nbsp;$$&lt;/p&gt;
 &lt;p&gt;For a more in-depth discussion refer to &lt;a href="https://arxiv.org/abs/0812.4210"&gt;&amp;#8216;A Stochastic Processes Toolkit for Risk Management&amp;#8217;, by Damiano Brigo &lt;em&gt;et al.&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;gbm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mu&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;days&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ndarray&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Generate a time-series using a Geometric Brownian Motion (GBM).&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Generate a time-series using a Geometric Brownian Motion (GBM).&lt;/span&gt;
 
 &lt;span class="sd"&gt;    Yields daily values for the specified number of days.&lt;/span&gt;
 
@@ -124,19 +122,16 @@ $$&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_10_0.png"&gt;&lt;/p&gt;
 &lt;h2 id="the-traditional-approach-to-parameter-estimation"&gt;The Traditional Approach to Parameter&amp;nbsp;Estimation&lt;/h2&gt;
-&lt;p&gt;Traditionally, the parameters are estimated using the empirical mean and standard deviation of the daily logarithmic (or geometric) returns. The reasoning behind this can be seen by re-arranging the above equation for &lt;span class="math"&gt;\(\tilde{S_t}\)&lt;/span&gt; as&amp;nbsp;follows,&lt;/p&gt;
-&lt;div class="math"&gt;$$
-\log \left( \frac{S_t}{S_{t-1}} \right) = \left(\mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma \tilde{\Delta W_t}
-$$&lt;/div&gt;
+&lt;p&gt;Traditionally, the parameters are estimated using the empirical mean and standard deviation of the daily logarithmic (or geometric) returns. The reasoning behind this can be seen by re-arranging the above equation for $\tilde{S_t}$ as&amp;nbsp;follows,&lt;/p&gt;
+&lt;p&gt;$$
+\log \left( \frac{S_t}{S_{t-1}} \right) = \left(\mu - \frac{\sigma^2}{2} \right) \Delta t + \sigma \tilde{\Delta W_t}&amp;nbsp;$$&lt;/p&gt;
 &lt;p&gt;Which implies&amp;nbsp;that,&lt;/p&gt;
-&lt;div class="math"&gt;$$
-\log \left( \frac{S_t}{S_{t-1}} \right) \sim \text{Normal} \left[ \left(\mu - \frac{\sigma^2}{2} \right) \Delta t, \sigma^2  \Delta t \right]
-$$&lt;/div&gt;
+&lt;p&gt;$$
+\log \left( \frac{S_t}{S_{t-1}} \right) \sim \text{Normal} \left[ \left(\mu - \frac{\sigma^2}{2} \right) \Delta t, \sigma^2  \Delta t \right]&amp;nbsp;$$&lt;/p&gt;
 &lt;p&gt;Where,&lt;/p&gt;
-&lt;div class="math"&gt;$$
-\Delta t = \frac{1}{365}
-$$&lt;/div&gt;
-&lt;p&gt;From which it is possible to solve the implied simultaneous equations for &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt;, as functions of the mean and standard deviation of the geometric (i.e. logarithmic) returns. Once again, for a more in-depth discussion we refer the reader to &lt;a href="https://arxiv.org/abs/0812.4210"&gt;&amp;#8216;A Stochastic Processes Toolkit for Risk Management&amp;#8217;, by Damiano Brigo &lt;em&gt;et al.&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;$$
+\Delta t = \frac{1}{365}&amp;nbsp;$$&lt;/p&gt;
+&lt;p&gt;From which it is possible to solve the implied simultaneous equations for $\mu$ and $\sigma$, as functions of the mean and standard deviation of the geometric (i.e. logarithmic) returns. Once again, for a more in-depth discussion we refer the reader to &lt;a href="https://arxiv.org/abs/0812.4210"&gt;&amp;#8216;A Stochastic Processes Toolkit for Risk Management&amp;#8217;, by Damiano Brigo &lt;em&gt;et al.&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="parameter-estimation-when-data-is-plentiful"&gt;Parameter Estimation when Data is&amp;nbsp;Plentiful&lt;/h3&gt;
 &lt;p&gt;An example computation, using the whole time-series generated above (364 observations of daily returns), is shown below. We start by taking a look at the distribution of daily&amp;nbsp;returns.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;returns_geo_full&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
@@ -148,7 +143,7 @@ $$&lt;/div&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_13_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;The empirical distribution is relatively Normal in appearance, as expected. We now compute &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; using the mean and standard deviation (or volatility) of this&amp;nbsp;distribution.&lt;/p&gt;
+&lt;p&gt;The empirical distribution is relatively Normal in appearance, as expected. We now compute $\mu$ and $\sigma$ using the mean and standard deviation (or volatility) of this&amp;nbsp;distribution.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;dist_mean_full&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;returns_geo_full&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="n"&gt;dist_vol_full&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;returns_geo_full&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
@@ -159,11 +154,11 @@ $$&lt;/div&gt;
 &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;empirical estimate of sigma = &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;sigma_ml_full&lt;/span&gt;&lt;span class="si"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;.4f&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;empirical estimate of mu = 0.0220&lt;/span&gt;
-&lt;span class="err"&gt;empirical estimate of sigma = 0.1423&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;empirical estimate of mu = 0.0220
+empirical estimate of sigma = 0.1423
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;We can see that the empirical estimate of &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is close to the &lt;em&gt;ex ante&lt;/em&gt; paramter value we chose, but that the estimate of &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is poor - estimating the drift of a stochastic process is notoriously&amp;nbsp;hard.&lt;/p&gt;
+&lt;p&gt;We can see that the empirical estimate of $\sigma$ is close to the &lt;em&gt;ex ante&lt;/em&gt; paramter value we chose, but that the estimate of $\mu$ is poor - estimating the drift of a stochastic process is notoriously&amp;nbsp;hard.&lt;/p&gt;
 &lt;h3 id="parameter-estimation-when-data-is-scarce"&gt;Parameter Estimation when Data is&amp;nbsp;Scarce&lt;/h3&gt;
 &lt;p&gt;Very often data is scare - we may not have 364 observations of geometric returns. To demonstrate the impact this can have on parameter estimation, we sub-sample the distribution of geometric returns by picking 12 returns by random - e.g. to simulate the impact of having only 12 monthly returns to base the estimation&amp;nbsp;on.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;n_observations&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt;
@@ -187,22 +182,21 @@ $$&lt;/div&gt;
 &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;empirical estimate of sigma = &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;sigma_ml&lt;/span&gt;&lt;span class="si"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;.4f&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;empirical estimate of mu = -1.3935&lt;/span&gt;
-&lt;span class="err"&gt;empirical estimate of sigma = 0.1080&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;empirical estimate of mu = -1.3935
+empirical estimate of sigma = 0.1080
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;We can clearly see that now estimates of &lt;strong&gt;both&lt;/strong&gt; &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; are&amp;nbsp;poor.&lt;/p&gt;
+&lt;p&gt;We can clearly see that now estimates of &lt;strong&gt;both&lt;/strong&gt; $\mu$ and $\sigma$ are&amp;nbsp;poor.&lt;/p&gt;
 &lt;h2 id="parameter-estimation-using-bayesian-inference-and-probabilistic-programming"&gt;Parameter Estimation using Bayesian Inference and Probabilistic&amp;nbsp;Programming&lt;/h2&gt;
 &lt;p&gt;Like statistical data analysis more broadly, the main aim of Bayesian Data Analysis (&lt;span class="caps"&gt;BDA&lt;/span&gt;) is to infer unknown parameters for models of observed data, in order to test hypotheses about the physical processes that lead to the observations. Bayesian data analysis deviates from traditional statistics - on a practical level - when it comes to the explicit assimilation of prior knowledge regarding the uncertainty of the model parameters, into the statistical inference process and overall analysis workflow. To this end, &lt;span class="caps"&gt;BDA&lt;/span&gt; focuses on the posterior&amp;nbsp;distribution,&lt;/p&gt;
-&lt;div class="math"&gt;$$
-p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}
-$$&lt;/div&gt;
+&lt;p&gt;$$
+p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&amp;nbsp;$$&lt;/p&gt;
 &lt;p&gt;Where,&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\Theta\)&lt;/span&gt; is the vector of unknown model parameters, that we wish to&amp;nbsp;estimate; &lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(X\)&lt;/span&gt; is the vector of observed&amp;nbsp;data;&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(p(X | \Theta)\)&lt;/span&gt; is the likelihood function that models the probability of observing the data for a fixed choice of parameters;&amp;nbsp;and,&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(p(\Theta)\)&lt;/span&gt; is the prior distribution of the model&amp;nbsp;parameters.&lt;/li&gt;
+&lt;li&gt;$\Theta$ is the vector of unknown model parameters, that we wish to&amp;nbsp;estimate; &lt;/li&gt;
+&lt;li&gt;$X$ is the vector of observed&amp;nbsp;data;&lt;/li&gt;
+&lt;li&gt;$p(X | \Theta)$ is the likelihood function that models the probability of observing the data for a fixed choice of parameters;&amp;nbsp;and,&lt;/li&gt;
+&lt;li&gt;$p(\Theta)$ is the prior distribution of the model&amp;nbsp;parameters.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;For an &lt;strong&gt;excellent&lt;/strong&gt; (inspirational) introduction to practical &lt;span class="caps"&gt;BDA&lt;/span&gt;, take a look at &lt;a href="https://xcelab.net/rm/statistical-rethinking/"&gt;Statistical Rethinking by Richard McElreath&lt;/a&gt;, or for a more theoretical treatment try &lt;a href="http://www.stat.columbia.edu/~gelman/book/"&gt;Bayesian Data Analysis by Gelman &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; co.&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;We will use &lt;span class="caps"&gt;BDA&lt;/span&gt; to estimate the &lt;span class="caps"&gt;GBM&lt;/span&gt; parameters from our time series with &lt;strong&gt;scare data&lt;/strong&gt;, to demonstrate the benefits of incorporating prior knowledge into the inference process and then compare these results with those derived using &lt;span class="caps"&gt;ML&lt;/span&gt; estimation (discussed&amp;nbsp;above).&lt;/p&gt;
@@ -261,21 +255,20 @@ $$&lt;/div&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;model_gbm&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="math"&gt;$$
+&lt;p&gt;$$
             \begin{array}{rcl}
-            \text{mean} &amp;amp;\sim &amp;amp; \text{Normal}(\mathit{mu}=0,~\mathit{sd}=0.0001)\\\text{volatility} &amp;amp;\sim &amp;amp; \text{HalfNormal}(\mathit{sd}=0.0188)\\\text{daily_returns} &amp;amp;\sim &amp;amp; \text{Normal}(\mathit{mu}=\text{mean},~\mathit{sd}=f(\text{volatility}))
-            \end{array}
-            $$&lt;/div&gt;
+            \text{mean} &amp;amp;\sim &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; \text{Normal}(\mathit{mu}=0,~\mathit{sd}=0.0001)&amp;#92;text{volatility} &amp;amp;\sim &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; \text{HalfNormal}(\mathit{sd}=0.0188)&amp;#92;text{daily_returns} &amp;amp;\sim &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; \text{Normal}(\mathit{mu}=\text{mean},~\mathit{sd}=f(\text{volatility}))
+            \end{array}&amp;nbsp;$$&lt;/p&gt;
 &lt;p&gt;We now proceed to perform the inference step. For out purposes, we sample two chains in parallel (as we have two &lt;span class="caps"&gt;CPU&lt;/span&gt; cores available for doing so and this effectively doubles the number of samples), allow 5,000 steps for each chain to converge to its steady-state and then sample for a further 10,000 steps - i.e. generate 20,000 samples from the posterior distribution, assuming that each chain has converged after 5,000&amp;nbsp;samples.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;model_gbm&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;trace&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;draws&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;tune&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;5000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;njobs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;random_seed&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;42&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;Auto-assigning NUTS sampler...&lt;/span&gt;
-&lt;span class="err"&gt;Initializing NUTS using jitter+adapt_diag...&lt;/span&gt;
-&lt;span class="err"&gt;Multiprocess sampling (2 chains in 2 jobs)&lt;/span&gt;
-&lt;span class="c"&gt;NUTS: [volatility, mean]&lt;/span&gt;
-&lt;span class="err"&gt;Sampling 2 chains: 100%|██████████| 30000/30000 [00:27&amp;lt;00:00, 1097.48draws/s]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;Auto&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;assigning&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NUTS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sampler&lt;/span&gt;&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;Initializing&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NUTS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;using&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;jitter&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;adapt_diag&lt;/span&gt;&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;Multiprocess&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sampling&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;chains&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;in&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mh"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;jobs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nl"&gt;NUTS:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;volatility&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;Sampling&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mh"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;chains:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mh"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%|&lt;/span&gt;&lt;span class="err"&gt;██████████&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mh"&gt;30000&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mh"&gt;30000&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mh"&gt;00&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mh"&gt;27&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mh"&gt;00&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mh"&gt;00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1097.48&lt;/span&gt;&lt;span class="n"&gt;draws&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We then take a look at the marginal parameter distributions inferred by each chain, together with the corresponding trace plots - i.e the sequential sample-by-sample draws of each chain - to look for&amp;nbsp;&amp;#8216;anomalies&amp;#8217;.&lt;/p&gt;
@@ -349,7 +342,7 @@ $$&lt;/div&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_47_0.png"&gt;&lt;/p&gt;
-&lt;p&gt;Finally, we compute estimates for &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; and &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt;, based on our Bayesian&amp;nbsp;point-estimates.&lt;/p&gt;
+&lt;p&gt;Finally, we compute estimates for $\mu$ and $\sigma$, based on our Bayesian&amp;nbsp;point-estimates.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;dist_mean_bayes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;trace&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mean&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="n"&gt;dist_sd_bayes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;trace&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;volatility&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
@@ -360,11 +353,11 @@ $$&lt;/div&gt;
 &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bayesian estimate of sigma = &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;sigma_bayes&lt;/span&gt;&lt;span class="si"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;.4f&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;bayesian estimate of mu = -0.00309&lt;/span&gt;
-&lt;span class="err"&gt;bayesian estimate of sigma = 0.1407&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;bayesian estimate of mu = -0.00309
+bayesian estimate of sigma = 0.1407
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;The estimate for &lt;span class="math"&gt;\(\mu\)&lt;/span&gt; is far better than both &lt;span class="caps"&gt;ML&lt;/span&gt; estimates (full and partial data) and the estimate for &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is considerably better than the &lt;span class="caps"&gt;ML&lt;/span&gt; estimate with partial data and approaching that with full&amp;nbsp;data.&lt;/p&gt;
+&lt;p&gt;The estimate for $\mu$ is far better than both &lt;span class="caps"&gt;ML&lt;/span&gt; estimates (full and partial data) and the estimate for $\sigma$ is considerably better than the &lt;span class="caps"&gt;ML&lt;/span&gt; estimate with partial data and approaching that with full&amp;nbsp;data.&lt;/p&gt;
 &lt;h2 id="making-predictions"&gt;Making&amp;nbsp;Predictions&lt;/h2&gt;
 &lt;p&gt;Perhaps most importantly, how do the differences in parameter inference methodology translate into predictions for future distributions of geometric returns? We compare a (Normal) distribution of daily geometric returns simulated using the constant empirical parameter estimates with partial data (black line in the plot below), to that simulated by using random draws of Bayesian parameter estimates from the marginal posterior distributions (red line in the plot&amp;nbsp;below).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;n_samples&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;
@@ -380,7 +373,7 @@ $$&lt;/div&gt;
 &lt;span class="n"&gt;_&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;distplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;returns_geo_bayes&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;hist&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;color&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;red&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;100%|██████████| 10000/10000 [00:06&amp;lt;00:00, 1555.86it/s]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="mf"&gt;100&lt;/span&gt;&lt;span class="err"&gt;%|██████████|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;10000&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mf"&gt;10000&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;00&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;06&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mf"&gt;00&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1555.86&lt;/span&gt;&lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_52_1.png"&gt;&lt;/p&gt;
@@ -418,62 +411,7 @@ bayesian = 0.019038871195300778
 &lt;li&gt;Bayesian inference can exploit relevant prior knowledge to yield more precise parameter estimate for stochastic processes, especially when data is&amp;nbsp;scarce;&lt;/li&gt;
 &lt;li&gt;because it doesn&amp;#8217;t rely on point-estimates of parameters and is intrinsically stochastic in nature, it is a natural unified framework for parameter inference and simulation, under uncertainty;&amp;nbsp;and,&lt;/li&gt;
 &lt;li&gt;taken together, the above two points make the case for using Bayesian inference to calibrate risk models with greater confidence that they represent the real-world economic events the risk modeller needs them too, without having to rely as heavily on heuristic manipulation of these estimates. Indeed, the discussion now shifts to the choice of prior distribution for the paramters, which is more in-keeping with theoretical&amp;nbsp;rigour.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "center",
-        indent = "0em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="data-science"></category><category term="probabilistic-programming"></category><category term="python"></category><category term="pymc3"></category><category term="quant-finance"></category><category term="stochastic-processes"></category></entry><entry><title>Bayesian Regression in PYMC3 using MCMC &amp; Variational Inference</title><link href="https://alexioannides.github.io/2018/11/07/bayesian-regression-in-pymc3-using-mcmc-variational-inference/" rel="alternate"></link><published>2018-11-07T00:00:00+00:00</published><updated>2018-11-07T00:00:00+00:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2018-11-07:/2018/11/07/bayesian-regression-in-pymc3-using-mcmc-variational-inference/</id><summary type="html">&lt;p&gt;&lt;img alt="jpeg" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/pymc3_logo.jpg"&gt;&lt;/p&gt;
+&lt;/ul&gt;</content><category term="data-science"></category><category term="probabilistic-programming"></category><category term="python"></category><category term="pymc3"></category><category term="quant-finance"></category><category term="stochastic-processes"></category></entry><entry><title>Bayesian Regression in PYMC3 using MCMC &amp; Variational Inference</title><link href="https://alexioannides.github.io/2018/11/07/bayesian-regression-in-pymc3-using-mcmc-variational-inference/" rel="alternate"></link><published>2018-11-07T00:00:00+00:00</published><updated>2018-11-07T00:00:00+00:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2018-11-07:/2018/11/07/bayesian-regression-in-pymc3-using-mcmc-variational-inference/</id><summary type="html">&lt;p&gt;&lt;img alt="jpeg" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/pymc3_logo.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;Conducting a Bayesian data analysis - e.g. estimating a Bayesian linear regression model - will usually require some form of Probabilistic Programming Language (&lt;span class="caps"&gt;PPL&lt;/span&gt;), unless analytical approaches (e.g. based on conjugate prior models), are appropriate for the task at hand. More often than not, PPLs implement Markov Chain Monte Carlo …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="jpeg" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/pymc3_logo.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;Conducting a Bayesian data analysis - e.g. estimating a Bayesian linear regression model - will usually require some form of Probabilistic Programming Language (&lt;span class="caps"&gt;PPL&lt;/span&gt;), unless analytical approaches (e.g. based on conjugate prior models), are appropriate for the task at hand. More often than not, PPLs implement Markov Chain Monte Carlo (&lt;span class="caps"&gt;MCMC&lt;/span&gt;) algorithms that allow one to draw samples and make inferences from the posterior distribution implied by the choice of model - the likelihood and prior distributions for its parameters - conditional on the observed&amp;nbsp;data.&lt;/p&gt;
 &lt;p&gt;&lt;span class="caps"&gt;MCMC&lt;/span&gt; algorithms are, generally speaking, computationally expensive and do not scale very easily. For example, it is not as easy to distribute the execution of these algorithms over a cluster of machines, when compared to the optimisation algorithms used for training deep neural networks (e.g. stochastic gradient&amp;nbsp;descent).&lt;/p&gt;
@@ -495,18 +433,17 @@ bayesian = 0.019038871195300778
 &lt;/div&gt;
 &lt;h2 id="a-very-quick-introduction-to-bayesian-data-analysis"&gt;A (very) Quick Introduction to Bayesian Data&amp;nbsp;Analysis&lt;/h2&gt;
 &lt;p&gt;Like statistical data analysis more broadly, the main aim of Bayesian Data Analysis (&lt;span class="caps"&gt;BDA&lt;/span&gt;) is to infer unknown parameters for models of observed data, in order to test hypotheses about the physical processes that lead to the observations. Bayesian data analysis deviates from traditional statistics - on a practical level - when it comes to the explicit assimilation of prior knowledge regarding the uncertainty of the model parameters, into the statistical inference process and overall analysis workflow. To this end, &lt;span class="caps"&gt;BDA&lt;/span&gt; focuses on the posterior&amp;nbsp;distribution,&lt;/p&gt;
-&lt;div class="math"&gt;$$
-p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}
-$$&lt;/div&gt;
+&lt;p&gt;$$
+p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&amp;nbsp;$$&lt;/p&gt;
 &lt;p&gt;Where,&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\Theta\)&lt;/span&gt; is the vector of unknown model parameters, that we wish to&amp;nbsp;estimate; &lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(X\)&lt;/span&gt; is the vector of observed&amp;nbsp;data;&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(p(X | \Theta)\)&lt;/span&gt; is the likelihood function that models the probability of observing the data for a fixed choice of parameters;&amp;nbsp;and,&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(p(\Theta)\)&lt;/span&gt; is the prior distribution of the model&amp;nbsp;parameters.&lt;/li&gt;
+&lt;li&gt;$\Theta$ is the vector of unknown model parameters, that we wish to&amp;nbsp;estimate; &lt;/li&gt;
+&lt;li&gt;$X$ is the vector of observed&amp;nbsp;data;&lt;/li&gt;
+&lt;li&gt;$p(X | \Theta)$ is the likelihood function that models the probability of observing the data for a fixed choice of parameters;&amp;nbsp;and,&lt;/li&gt;
+&lt;li&gt;$p(\Theta)$ is the prior distribution of the model&amp;nbsp;parameters.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;For an &lt;strong&gt;excellent&lt;/strong&gt; (inspirational) introduction to practical &lt;span class="caps"&gt;BDA&lt;/span&gt;, take a look at &lt;a href="https://xcelab.net/rm/statistical-rethinking/"&gt;Statistical Rethinking by Richard McElreath&lt;/a&gt;, or for a more theoretical treatment try &lt;a href="http://www.stat.columbia.edu/~gelman/book/"&gt;Bayesian Data Analysis by Gelman &lt;span class="amp"&gt;&amp;amp;&lt;/span&gt; co.&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;This notebook is concerned with demonstrating and comparing two separate approaches for inferring the posterior distribution, &lt;span class="math"&gt;\(p(\Theta | X)\)&lt;/span&gt;, for a linear regression&amp;nbsp;model.&lt;/p&gt;
+&lt;p&gt;This notebook is concerned with demonstrating and comparing two separate approaches for inferring the posterior distribution, $p(\Theta | X)$, for a linear regression&amp;nbsp;model.&lt;/p&gt;
 &lt;h2 id="imports-and-global-settings"&gt;Imports and Global&amp;nbsp;Settings&lt;/h2&gt;
 &lt;p&gt;Before we get going in earnest, we follow the convention of declaring all imports at the top of the&amp;nbsp;notebook.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
@@ -527,11 +464,10 @@ $$&lt;/div&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2 id="create-synthetic-data"&gt;Create Synthetic&amp;nbsp;Data&lt;/h2&gt;
-&lt;p&gt;We will assume that there is a dependent variable (or labelled data) &lt;span class="math"&gt;\(\tilde{y}\)&lt;/span&gt;, that is a linear function of independent variables (or feature data), &lt;span class="math"&gt;\(x\)&lt;/span&gt; and &lt;span class="math"&gt;\(c\)&lt;/span&gt;. In this instance, &lt;span class="math"&gt;\(x\)&lt;/span&gt; is a positive real number and &lt;span class="math"&gt;\(c\)&lt;/span&gt; denotes membership to one of two categories that occur with equal likelihood. We express this model mathematically, as&amp;nbsp;follows,&lt;/p&gt;
-&lt;div class="math"&gt;$$
-\tilde{y} = \alpha_{c} + \beta_{c} \cdot x + \sigma \cdot \tilde{\epsilon}
-$$&lt;/div&gt;
-&lt;p&gt;where &lt;span class="math"&gt;\(\tilde{\epsilon} \sim N(0, 1)\)&lt;/span&gt;, &lt;span class="math"&gt;\(\sigma\)&lt;/span&gt; is the standard deviation of the noise in the data and &lt;span class="math"&gt;\(c \in \{0, 1\}\)&lt;/span&gt; denotes the category. We start by defining our &lt;em&gt;a priori&lt;/em&gt; choices for the model&amp;nbsp;parameters.&lt;/p&gt;
+&lt;p&gt;We will assume that there is a dependent variable (or labelled data) $\tilde{y}$, that is a linear function of independent variables (or feature data), $x$ and $c$. In this instance, $x$ is a positive real number and $c$ denotes membership to one of two categories that occur with equal likelihood. We express this model mathematically, as&amp;nbsp;follows,&lt;/p&gt;
+&lt;p&gt;$$
+\tilde{y} = \alpha_{c} + \beta_{c} \cdot x + \sigma \cdot \tilde{\epsilon}&amp;nbsp;$$&lt;/p&gt;
+&lt;p&gt;where $\tilde{\epsilon} \sim N(0, 1)$, $\sigma$ is the standard deviation of the noise in the data and $c \in {0, 1}$ denotes the category. We start by defining our &lt;em&gt;a priori&lt;/em&gt; choices for the model&amp;nbsp;parameters.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;alpha_0&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
 &lt;span class="n"&gt;alpha_1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;1.25&lt;/span&gt;
 
@@ -895,68 +831,13 @@ $$&lt;/div&gt;
                &lt;span class="n"&gt;line_kws&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;color&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;red&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;alpha&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;RMSE for ADVI predictions = 0.746&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;RMSE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ADVI&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;predictions&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;.&lt;span class="mi"&gt;746&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_40_1.png"&gt;&lt;/p&gt;
 &lt;p&gt;Which is what one might expect, given the data generating&amp;nbsp;model.&lt;/p&gt;
 &lt;h2 id="conclusions"&gt;Conclusions&lt;/h2&gt;
-&lt;p&gt;&lt;span class="caps"&gt;MCMC&lt;/span&gt; and &lt;span class="caps"&gt;VI&lt;/span&gt; present two very different approaches for drawing inferences from Bayesian models. Despite these differences, their high-level output for a simplistic (but not entirely trivial) regression problem, based on synthetic data, is comparable regardless of the approximations used within &lt;span class="caps"&gt;ADVI&lt;/span&gt;. This is important to note, because general purpose &lt;span class="caps"&gt;VI&lt;/span&gt; algorithms such as &lt;span class="caps"&gt;ADVI&lt;/span&gt; have the potential to work at scale - on large volumes of data in a distributed computing environment (see the references embedded above, for case&amp;nbsp;studies).&lt;/p&gt;
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "center",
-        indent = "0em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="data-science"></category><category term="machine-learning"></category><category term="probabilistic-programming"></category><category term="python"></category><category term="pymc3"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 4 - Apache Zeppelin &amp; Scala Notebooks</title><link href="https://alexioannides.github.io/2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/" rel="alternate"></link><published>2016-08-29T00:00:00+01:00</published><updated>2016-08-29T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-29:/2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/</id><summary type="html">&lt;p&gt;&lt;img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="caps"&gt;MCMC&lt;/span&gt; and &lt;span class="caps"&gt;VI&lt;/span&gt; present two very different approaches for drawing inferences from Bayesian models. Despite these differences, their high-level output for a simplistic (but not entirely trivial) regression problem, based on synthetic data, is comparable regardless of the approximations used within &lt;span class="caps"&gt;ADVI&lt;/span&gt;. This is important to note, because general purpose &lt;span class="caps"&gt;VI&lt;/span&gt; algorithms such as &lt;span class="caps"&gt;ADVI&lt;/span&gt; have the potential to work at scale - on large volumes of data in a distributed computing environment (see the references embedded above, for case&amp;nbsp;studies).&lt;/p&gt;</content><category term="data-science"></category><category term="machine-learning"></category><category term="probabilistic-programming"></category><category term="python"></category><category term="pymc3"></category></entry><entry><title>Building a Data Science Platform for R&amp;D, Part 4 - Apache Zeppelin &amp; Scala Notebooks</title><link href="https://alexioannides.github.io/2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/" rel="alternate"></link><published>2016-08-29T00:00:00+01:00</published><updated>2016-08-29T00:00:00+01:00</updated><author><name>Dr Alex Ioannides</name></author><id>tag:alexioannides.github.io,2016-08-29:/2016/08/29/building-a-data-science-platform-for-rd-part-4-apache-zeppelin-scala-notebooks/</id><summary type="html">&lt;p&gt;&lt;img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"&gt;&lt;/p&gt;
 &lt;p&gt;Parts &lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;one&lt;/a&gt;, &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;two&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3"&gt;three&lt;/a&gt; of this series of posts have taken us from creating an account on &lt;span class="caps"&gt;AWS&lt;/span&gt; to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;amp;D is nearly complete - the only outstanding component is …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="zeppelin" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt4/zeppelin.png" title="Apache Zeppelin"&gt;&lt;/p&gt;
 &lt;p&gt;Parts &lt;a href="https://alexioannides.github.io/2016/08/16/building-a-data-science-platform-for-rd-part-1-setting-up-aws/" title="Part 1"&gt;one&lt;/a&gt;, &lt;a href="https://alexioannides.github.io/2016/08/18/building-a-data-science-platform-for-rd-part-2-deploying-spark-on-aws-using-flintrock/" title="Part 2"&gt;two&lt;/a&gt; and &lt;a href="https://alexioannides.github.io/2016/08/22/building-a-data-science-platform-for-rd-part-3-r-r-studio-server-sparkr-sparklyr/" title="Part 3"&gt;three&lt;/a&gt; of this series of posts have taken us from creating an account on &lt;span class="caps"&gt;AWS&lt;/span&gt; to loading and interacting with data in Spark via R and R Studio. My vision of a Data Science platform for R&amp;amp;D is nearly complete - the only outstanding component is the ability to interact (&lt;span class="caps"&gt;REPL&lt;/span&gt;-style) with Spark using code written in Scala and to run this on some sort of scheduled basis. So, for this last part I am going to focus on getting &lt;a href="http://zeppelin.apache.org" title="Apache Zeppelin"&gt;Apache Zeppelin&lt;/a&gt;&amp;nbsp;up-and-running.&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://zeppelin.apache.org" title="Apache Zeppelin"&gt;Zeppelin&lt;/a&gt; is a notebook server in a similar vein as the Jupyter or Beaker notebooks (and very similar to those available on Databricks). Code is submitted and executed in &amp;#8216;chunks&amp;#8217; with interim output (e.g. charts and tables) displayed after it has been computed. Where Zeppelin differs from the other, is its first-class support for Spark and it&amp;#8217;s ability to run notebooks (and thereby &lt;span class="caps"&gt;ETL&lt;/span&gt; process) on a schedule (in essence it uses &lt;code&gt;chron&lt;/code&gt; for scheduling and&amp;nbsp;execution).&lt;/p&gt;
@@ -975,18 +856,18 @@ $$&lt;/div&gt;
 &lt;p&gt;Then using a text editor such as &lt;a href="https://en.wikipedia.org/wiki/Vi" title="vi Wiki"&gt;vi&lt;/a&gt; - e.g. &lt;code&gt;$ vi zeppelin-env.sh&lt;/code&gt; - to edit each file making the changes described&amp;nbsp;below.&lt;/p&gt;
 &lt;h2 id="zeppelin-envsh"&gt;zeppelin-env.sh&lt;/h2&gt;
 &lt;p&gt;Find the following variable exports, uncomment them, and then make the following&amp;nbsp;assignments:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;MASTER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;spark://ip-172-31-6-33:7077 &lt;span class="c1"&gt;# use the appropriate local IP address here&lt;/span&gt;
-&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/usr/local/lib/spark
-&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;SPARK_SUBMIT_OPTIONS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;--packages com.databricks:spark-csv_2.11:1.3.0,com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;MASTER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;spark://ip-172-31-6-33:7077&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;# use the appropriate local IP address here&lt;/span&gt;
+&lt;span class="nb"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/usr/local/lib/spark
+&lt;span class="nb"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SPARK_SUBMIT_OPTIONS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;--packages com.databricks:spark-csv_2.11:1.3.0,com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Most of these options should be familiar to you by now so I won&amp;#8217;t go-over again&amp;nbsp;here.&lt;/p&gt;
 &lt;h2 id="zeppelin-sitexml"&gt;zeppelin-site.xml&lt;/h2&gt;
 &lt;p&gt;Find the following property name and change it to the value&amp;nbsp;below:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.server.port&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;8081&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Server port.&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.server.port&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;8081&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Server&lt;span class="w"&gt; &lt;/span&gt;port.&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -1003,10 +884,10 @@ $$&lt;/div&gt;
 &lt;p&gt;&lt;code&gt;$ cd /etc/init&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ sudo touch zeppelin.conf&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;We then need to edit this file - e.g. &lt;code&gt;$ sudo vi zeppelin.conf&lt;/code&gt; - and copy the following script, which is adapted from &lt;code&gt;rstudio-server.conf&lt;/code&gt; and this &lt;strong&gt;fantastic&lt;/strong&gt; blog post from &lt;a href="http://doatt.com/2015/03/03/amazon-linux-and-upstart-init/index.html" title="doatt blog"&gt;DevOps All the Things&lt;/a&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;description &lt;span class="s2"&gt;&amp;quot;zeppelin&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;description&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;zeppelin&amp;quot;&lt;/span&gt;
 
-start on &lt;span class="o"&gt;(&lt;/span&gt;runlevel &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;345&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; and started network&lt;span class="o"&gt;)&lt;/span&gt;
-stop on &lt;span class="o"&gt;(&lt;/span&gt;runlevel &lt;span class="o"&gt;[&lt;/span&gt;!345&lt;span class="o"&gt;]&lt;/span&gt; or stopping network&lt;span class="o"&gt;)&lt;/span&gt;
+start&lt;span class="w"&gt; &lt;/span&gt;on&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;runlevel&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;345&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;and&lt;span class="w"&gt; &lt;/span&gt;started&lt;span class="w"&gt; &lt;/span&gt;network&lt;span class="o"&gt;)&lt;/span&gt;
+stop&lt;span class="w"&gt; &lt;/span&gt;on&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;runlevel&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;!345&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;or&lt;span class="w"&gt; &lt;/span&gt;stopping&lt;span class="w"&gt; &lt;/span&gt;network&lt;span class="o"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# start on (local-filesystems and net-device-up IFACE!=lo)&lt;/span&gt;
 &lt;span class="c1"&gt;# stop on shutdown&lt;/span&gt;
@@ -1016,11 +897,11 @@ respawn
 
 &lt;span class="c1"&gt;# respawn the job up to 7 times within a 5 second period.&lt;/span&gt;
 &lt;span class="c1"&gt;# If the job exceeds these values, it will be stopped and marked as failed.&lt;/span&gt;
-respawn limit &lt;span class="m"&gt;7&lt;/span&gt; &lt;span class="m"&gt;5&lt;/span&gt;
+respawn&lt;span class="w"&gt; &lt;/span&gt;limit&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;7&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;
 
 &lt;span class="c1"&gt;# zeppelin was installed in /home/ec2-user/zeppelin-0.6.1-bin-all in this example&lt;/span&gt;
-chdir /home/ec2-user/zeppelin-0.6.1-bin-all
-&lt;span class="nb"&gt;exec&lt;/span&gt; bin/zeppelin-daemon.sh upstart
+chdir&lt;span class="w"&gt; &lt;/span&gt;/home/ec2-user/zeppelin-0.6.1-bin-all
+&lt;span class="nb"&gt;exec&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;bin/zeppelin-daemon.sh&lt;span class="w"&gt; &lt;/span&gt;upstart
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;To test our script return to the shell and&amp;nbsp;execute,&lt;/p&gt;
@@ -1037,29 +918,29 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 &lt;p&gt;Enabling access to S3 is relatively easy as we already have S3-enabled &lt;span class="caps"&gt;IAM&lt;/span&gt; roles assigned to our nodes (via Flintrock configuration). Start by creating a new bucket to store them in - e.g. &lt;code&gt;my.zeppelin.notebooks&lt;/code&gt;. Then create a folder within this bucket - e.g. &lt;code&gt;userone&lt;/code&gt; - and another one within that called &lt;code&gt;notebook&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Next, &lt;span class="caps"&gt;SSH&lt;/span&gt; into the master node and open the &lt;code&gt;zeppelin-site.xml&lt;/code&gt; file for editing as we did above. This time, un-comment and set the following&amp;nbsp;properties,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.bucket&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;my.zeppelin.notebooks&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;bucket name for notebook storage&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.bucket&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;my.zeppelin.notebooks&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;bucket&lt;span class="w"&gt; &lt;/span&gt;name&lt;span class="w"&gt; &lt;/span&gt;for&lt;span class="w"&gt; &lt;/span&gt;notebook&lt;span class="w"&gt; &lt;/span&gt;storage&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 
 &lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.user&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;userone&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;user name for s3 folder structure&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.user&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;userone&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;user&lt;span class="w"&gt; &lt;/span&gt;name&lt;span class="w"&gt; &lt;/span&gt;for&lt;span class="w"&gt; &lt;/span&gt;s3&lt;span class="w"&gt; &lt;/span&gt;folder&lt;span class="w"&gt; &lt;/span&gt;structure&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 
 &lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.S3NotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook persistence layer implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.S3NotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook&lt;span class="w"&gt; &lt;/span&gt;persistence&lt;span class="w"&gt; &lt;/span&gt;layer&lt;span class="w"&gt; &lt;/span&gt;implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;And comment-out the property for local&amp;nbsp;storage,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.VFSNotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook persistence layer implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.VFSNotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook&lt;span class="w"&gt; &lt;/span&gt;persistence&lt;span class="w"&gt; &lt;/span&gt;layer&lt;span class="w"&gt; &lt;/span&gt;implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -1070,9 +951,9 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 &lt;p&gt;Being able to limit access to Zeppelin as well control the read/write permissions on individual notebooks will be useful if multiple people are likely to be working on the platform and using it to trial and schedule jobs on the cluster. It&amp;#8217;s also handy if you just want to grant someone access to read results and don&amp;#8217;t want to risk them changing the code by&amp;nbsp;accident.&lt;/p&gt;
 &lt;p&gt;Enabling basic authentication is relatively straight-forwards. First, open the &lt;code&gt;zeppelin-site.xml&lt;/code&gt; file for editing and ensure that the &lt;code&gt;zeppelin.anonymous.allowed&lt;/code&gt; property is set to &lt;code&gt;false&lt;/code&gt;,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.anonymous.allowed&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;false&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Anonymous user allowed by default&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.anonymous.allowed&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;false&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Anonymous&lt;span class="w"&gt; &lt;/span&gt;user&lt;span class="w"&gt; &lt;/span&gt;allowed&lt;span class="w"&gt; &lt;/span&gt;by&lt;span class="w"&gt; &lt;/span&gt;default&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -1140,18 +1021,18 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;span class="nf"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dplyr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# add packages to Spark config ----&lt;/span&gt;
-&lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;spark_config&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;sparklyr.defaultPackages&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;spark_config&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;sparklyr.defaultPackages&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
 &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;sparklyr.defaultPackages&lt;/span&gt;
 &lt;span class="c1"&gt;# [1] &amp;quot;com.databricks:spark-csv_2.11:1.3.0&amp;quot;    &amp;quot;com.amazonaws:aws-java-sdk-pom:1.10.34&amp;quot; &amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
 
 &lt;span class="c1"&gt;# connect to Spark cluster ----&lt;/span&gt;
-&lt;span class="n"&gt;sc&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;spark_connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                   &lt;span class="n"&gt;spark_home&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/usr/local/lib/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                   &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;spark_connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;master&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;                   &lt;/span&gt;&lt;span class="n"&gt;spark_home&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/usr/local/lib/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;                   &lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# copy the local iris dataset to Spark ----&lt;/span&gt;
-&lt;span class="n"&gt;iris_tbl&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;copy_to&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;iris&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;iris_tbl&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;copy_to&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;iris&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="nf"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iris_tbl&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="c1"&gt;# Sepal_Length Sepal_Width Petal_Length Petal_Width  Species&lt;/span&gt;
 &lt;span class="c1"&gt;#        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;    &amp;lt;chr&amp;gt;&lt;/span&gt;
@@ -1163,7 +1044,7 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;span class="c1"&gt;#          5.4         3.9          1.7         0.4 &amp;quot;setosa&amp;quot;&lt;/span&gt;
 
 &lt;span class="c1"&gt;# load S3 file into Spark&amp;#39;s using the &amp;quot;s3a:&amp;quot; protocol ----&lt;/span&gt;
-&lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;spark_read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;spark_read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;test&lt;/span&gt;
 &lt;span class="c1"&gt;# Source:   query [?? x 1]&lt;/span&gt;
 &lt;span class="c1"&gt;# Database: spark connection master=spark://ip-172-31-11-216:7077 app=sparklyr local=FALSE&lt;/span&gt;
@@ -1194,22 +1075,22 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# set system variables ----&lt;/span&gt;
 &lt;span class="c1"&gt;# - location of Spark on master node;&lt;/span&gt;
 &lt;span class="c1"&gt;# - add sparkR package directory to the list of path to look for R packages&lt;/span&gt;
-&lt;span class="nf"&gt;Sys.setenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/home/ec2-user/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nf"&gt;.libPaths&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;file.path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;Sys.getenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;SPARK_HOME&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;R&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;lib&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="nf"&gt;.libPaths&lt;/span&gt;&lt;span class="p"&gt;()))&lt;/span&gt;
+&lt;span class="n"&gt;Sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/home/ec2-user/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;libPaths&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;SPARK_HOME&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;R&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;lib&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;libPaths&lt;/span&gt;&lt;span class="p"&gt;()))&lt;/span&gt;
 
 &lt;span class="c1"&gt;# load packages ----&lt;/span&gt;
-&lt;span class="nf"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SparkR&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SparkR&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# connect to Spark cluster ----&lt;/span&gt;
 &lt;span class="c1"&gt;# check your_public_ip_address:8080 to get the local network address of your master node&lt;/span&gt;
-&lt;span class="n"&gt;sc&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;sparkR.session&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                     &lt;span class="n"&gt;sparkPackages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nf"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;com.databricks:spark-csv_2.11:1.3.0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                                       &lt;span class="s"&gt;&amp;quot;com.amazonaws:aws-java-sdk-pom:1.10.34&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                                       &lt;span class="s"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sparkR&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;master&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;                     &lt;/span&gt;&lt;span class="n"&gt;sparkPackages&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;com.databricks:spark-csv_2.11:1.3.0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;                                       &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;com.amazonaws:aws-java-sdk-pom:1.10.34&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;                                       &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 
 &lt;span class="c1"&gt;# copy the local iris dataset to Spark ----&lt;/span&gt;
-&lt;span class="n"&gt;iris_tbl&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;createDataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iris&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nf"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iris_tbl&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;iris_tbl&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;createDataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iris&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iris_tbl&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="c1"&gt;# Sepal_Length Sepal_Width Petal_Length Petal_Width Species&lt;/span&gt;
 &lt;span class="c1"&gt;#          5.1         3.5          1.4         0.2  setosa&lt;/span&gt;
 &lt;span class="c1"&gt;#          4.9         3.0          1.4         0.2  setosa&lt;/span&gt;
@@ -1219,8 +1100,8 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;span class="c1"&gt;#          5.4         3.9          1.7         0.4  setosa&lt;/span&gt;
 
 &lt;span class="c1"&gt;# load S3 file into Spark&amp;#39;s using the &amp;quot;s3a:&amp;quot; protocol ----&lt;/span&gt;
-&lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;read.text&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nf"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;collect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;read&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;collect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;span class="c1"&gt;#                                                                            value&lt;/span&gt;
 &lt;span class="c1"&gt;# 1                                                                 # Apache Spark&lt;/span&gt;
 &lt;span class="c1"&gt;# 2&lt;/span&gt;
@@ -1230,7 +1111,7 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;span class="c1"&gt;# 6     rich set of higher-level tools including Spark SQL for SQL and DataFrames,&lt;/span&gt;
 
 &lt;span class="c1"&gt;# close connection&lt;/span&gt;
-&lt;span class="nf"&gt;sparkR.session.stop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;sparkR&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Again, execute line-by-line and check the key outputs with those commented-out in the above script. Use the &lt;a href="https://spark.apache.org/docs/latest/sparkr.html" title="sparkR guide"&gt;sparkR programming guide&lt;/a&gt; and the &lt;a href="https://spark.apache.org/docs/latest/api/R/index.html" title="sparkR API"&gt;sparkR &lt;span class="caps"&gt;API&lt;/span&gt; documentation&lt;/a&gt; for more information on the available&amp;nbsp;functions.&lt;/p&gt;
@@ -1247,11 +1128,11 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/welcome_to_spark.png" title="spark-shell"&gt;&lt;/p&gt;
 &lt;h2 id="install-flintrock"&gt;Install&amp;nbsp;Flintrock&lt;/h2&gt;
 &lt;p&gt;Exit the Spark shell (ctrl-d on a Mac, just in case you didn&amp;#8217;t know&amp;#8230;) and return to Spark&amp;#8217;s home directory. For convenience, I&amp;#8217;m going to download Flintrock to here as well - where the old ec2 scripts used to be. The steps for downloading the Flintrock binaries - taken verbatim from the Flinkrock repo&amp;#8217;s &lt;span class="caps"&gt;README&lt;/span&gt; - are as&amp;nbsp;follows:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ &lt;span class="nv"&gt;flintrock_version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0.5.0&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;flintrock_version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0.5.0&amp;quot;&lt;/span&gt;
 
-$ curl --location --remote-name &lt;span class="s2"&gt;&amp;quot;https://github.com/nchammas/flintrock/releases/download/v&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;/Flintrock-&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
-$ unzip -q -d flintrock &lt;span class="s2"&gt;&amp;quot;Flintrock-&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
-$ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
+&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;curl&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="k"&gt;remote&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;https://github.com/nchammas/flintrock/releases/download/v$flintrock_version/Flintrock-$flintrock_version-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
+&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;unzip&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;flintrock&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Flintrock-$flintrock_version-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
+&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;cd&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;flintrock&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;And test that it works by&amp;nbsp;running,&lt;/p&gt;
@@ -1313,9 +1194,9 @@ $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
 &lt;p&gt;Return to the terminal and follow this advice. If successful, you should see something along the lines&amp;nbsp;of:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ssh_master.png" title="SSH-connect"&gt;&lt;/p&gt;
 &lt;p&gt;Next, fire-up the Spark shell for Scala by executing &lt;code&gt;spark-shell&lt;/code&gt;. To run a trivial job across all nodes and test the cluster, run the following program on a line-by-line&amp;nbsp;basis:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;val localArray = Array(1,2,3,4,5)&lt;/span&gt;
-&lt;span class="err"&gt;val rddArray = sc.parallelize(localArray)&lt;/span&gt;
-&lt;span class="err"&gt;val rddArraySum = rddArray.reduce((x, y) =&amp;gt; x + y)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;val localArray = Array(1,2,3,4,5)
+val rddArray = sc.parallelize(localArray)
+val rddArraySum = rddArray.reduce((x, y) =&amp;gt; x + y)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If no errors were thrown and the shell&amp;#8217;s final output&amp;nbsp;is,&lt;/p&gt;
@@ -1330,8 +1211,8 @@ $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
 &lt;p&gt;In order to access our S3 data from Spark (via Hadoop), we need to make a couple of packages (&lt;span class="caps"&gt;JAR&lt;/span&gt; files and their dependencies) available to all nodes in our cluster. The easiest way to do this, is to start the spark-shell with the following&amp;nbsp;options:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ spark-shell --packages com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Once the cluster has downloaded everything it needs and the shell has started, run the following program that &amp;#8216;opens&amp;#8217; the &lt;span class="caps"&gt;README&lt;/span&gt; file we uploaded to S3 in Part 1 of this series of blogs, and &amp;#8216;collects&amp;#8217; it back to the master node from its distributed (&lt;span class="caps"&gt;RDD&lt;/span&gt;)&amp;nbsp;representation:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;val data = sc.textFile(&amp;quot;s3a://alex.data/README.md&amp;quot;)&lt;/span&gt;
-&lt;span class="err"&gt;data.collect&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;val data = sc.textFile(&amp;quot;s3a://alex.data/README.md&amp;quot;)
+data.collect
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If everything is successful then you should see the contents of the file printed to&amp;nbsp;screen.&lt;/p&gt;

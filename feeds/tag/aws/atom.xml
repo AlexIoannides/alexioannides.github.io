@@ -18,13 +18,13 @@
 
 &lt;h1 id="an-r-function-for-generating-authenticated-urls"&gt;An R Function for Generating Authenticated&amp;nbsp;URLs&lt;/h1&gt;
 &lt;p&gt;We can now use our new user&amp;#8217;s Access Key &lt;span class="caps"&gt;ID&lt;/span&gt; and Secret Access Key to create a &lt;span class="caps"&gt;URL&lt;/span&gt; with a limited lifetime that enables access to &lt;code&gt;index.html&lt;/code&gt;. Technically, we are making a &lt;span class="caps"&gt;HTTP&lt;/span&gt; &lt;span class="caps"&gt;GET&lt;/span&gt; request to the S3 &lt;span class="caps"&gt;REST&lt;/span&gt; &lt;span class="caps"&gt;API&lt;/span&gt;, with the authentication details sent as part of a query string. Creating this &lt;span class="caps"&gt;URL&lt;/span&gt; is a bit tricky - I have adapted the Python example (number 3) that is provided &lt;a href="https://s3.amazonaws.com/doc/s3-developer-guide/RESTAuthentication.html" title="Python Auth Example"&gt;here&lt;/a&gt;, as an R function (that can be found in the Gist below) - &lt;code&gt;aws_query_string_auth_url(...)&lt;/code&gt;. Here&amp;#8217;s an example showing this R function in&amp;nbsp;action:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;path_to_file&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;bucket&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;my.s3.bucket&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;region&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;eu-west-1&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;aws_access_key_id&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;DWAAAAJL4KIEWJCV3R36&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;aws_secret_access_key&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;jH1pEfnQtKj6VZJOFDy+t253OZJWZLEo9gaEoFAY&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;lifetime_minutes&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
-&lt;span class="nf"&gt;aws_query_string_auth_url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path_to_file&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bucket&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;region&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aws_access_key_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;aws_secret_access_key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lifetime_minutes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;path_to_file&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;bucket&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;my.s3.bucket&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;region&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;eu-west-1&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;aws_access_key_id&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;DWAAAAJL4KIEWJCV3R36&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;aws_secret_access_key&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;jH1pEfnQtKj6VZJOFDy+t253OZJWZLEo9gaEoFAY&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;lifetime_minutes&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="nf"&gt;aws_query_string_auth_url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path_to_file&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bucket&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;region&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;aws_access_key_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;aws_secret_access_key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;lifetime_minutes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="c1"&gt;# &amp;quot;https://s3-eu-west-1.amazonaws.com/my.s3.bucket/index.html?AWSAccessKeyId=DWAAAKIAJL4EWJCV3R36&amp;amp;Expires=1471994487&amp;amp;Signature=inZlnNHHswKmcPfTBiKhziRSwT4%3D&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -50,18 +50,18 @@
 &lt;p&gt;Then using a text editor such as &lt;a href="https://en.wikipedia.org/wiki/Vi" title="vi Wiki"&gt;vi&lt;/a&gt; - e.g. &lt;code&gt;$ vi zeppelin-env.sh&lt;/code&gt; - to edit each file making the changes described&amp;nbsp;below.&lt;/p&gt;
 &lt;h2 id="zeppelin-envsh"&gt;zeppelin-env.sh&lt;/h2&gt;
 &lt;p&gt;Find the following variable exports, uncomment them, and then make the following&amp;nbsp;assignments:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;MASTER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;spark://ip-172-31-6-33:7077 &lt;span class="c1"&gt;# use the appropriate local IP address here&lt;/span&gt;
-&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/usr/local/lib/spark
-&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;SPARK_SUBMIT_OPTIONS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;--packages com.databricks:spark-csv_2.11:1.3.0,com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;MASTER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;spark://ip-172-31-6-33:7077&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;# use the appropriate local IP address here&lt;/span&gt;
+&lt;span class="nb"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/usr/local/lib/spark
+&lt;span class="nb"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SPARK_SUBMIT_OPTIONS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;--packages com.databricks:spark-csv_2.11:1.3.0,com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Most of these options should be familiar to you by now so I won&amp;#8217;t go-over again&amp;nbsp;here.&lt;/p&gt;
 &lt;h2 id="zeppelin-sitexml"&gt;zeppelin-site.xml&lt;/h2&gt;
 &lt;p&gt;Find the following property name and change it to the value&amp;nbsp;below:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.server.port&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;8081&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Server port.&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.server.port&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;8081&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Server&lt;span class="w"&gt; &lt;/span&gt;port.&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -78,10 +78,10 @@
 &lt;p&gt;&lt;code&gt;$ cd /etc/init&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ sudo touch zeppelin.conf&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;We then need to edit this file - e.g. &lt;code&gt;$ sudo vi zeppelin.conf&lt;/code&gt; - and copy the following script, which is adapted from &lt;code&gt;rstudio-server.conf&lt;/code&gt; and this &lt;strong&gt;fantastic&lt;/strong&gt; blog post from &lt;a href="http://doatt.com/2015/03/03/amazon-linux-and-upstart-init/index.html" title="doatt blog"&gt;DevOps All the Things&lt;/a&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;description &lt;span class="s2"&gt;&amp;quot;zeppelin&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;description&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;zeppelin&amp;quot;&lt;/span&gt;
 
-start on &lt;span class="o"&gt;(&lt;/span&gt;runlevel &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;345&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; and started network&lt;span class="o"&gt;)&lt;/span&gt;
-stop on &lt;span class="o"&gt;(&lt;/span&gt;runlevel &lt;span class="o"&gt;[&lt;/span&gt;!345&lt;span class="o"&gt;]&lt;/span&gt; or stopping network&lt;span class="o"&gt;)&lt;/span&gt;
+start&lt;span class="w"&gt; &lt;/span&gt;on&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;runlevel&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;345&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;and&lt;span class="w"&gt; &lt;/span&gt;started&lt;span class="w"&gt; &lt;/span&gt;network&lt;span class="o"&gt;)&lt;/span&gt;
+stop&lt;span class="w"&gt; &lt;/span&gt;on&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;runlevel&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;!345&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;or&lt;span class="w"&gt; &lt;/span&gt;stopping&lt;span class="w"&gt; &lt;/span&gt;network&lt;span class="o"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# start on (local-filesystems and net-device-up IFACE!=lo)&lt;/span&gt;
 &lt;span class="c1"&gt;# stop on shutdown&lt;/span&gt;
@@ -91,11 +91,11 @@ respawn
 
 &lt;span class="c1"&gt;# respawn the job up to 7 times within a 5 second period.&lt;/span&gt;
 &lt;span class="c1"&gt;# If the job exceeds these values, it will be stopped and marked as failed.&lt;/span&gt;
-respawn limit &lt;span class="m"&gt;7&lt;/span&gt; &lt;span class="m"&gt;5&lt;/span&gt;
+respawn&lt;span class="w"&gt; &lt;/span&gt;limit&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;7&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5&lt;/span&gt;
 
 &lt;span class="c1"&gt;# zeppelin was installed in /home/ec2-user/zeppelin-0.6.1-bin-all in this example&lt;/span&gt;
-chdir /home/ec2-user/zeppelin-0.6.1-bin-all
-&lt;span class="nb"&gt;exec&lt;/span&gt; bin/zeppelin-daemon.sh upstart
+chdir&lt;span class="w"&gt; &lt;/span&gt;/home/ec2-user/zeppelin-0.6.1-bin-all
+&lt;span class="nb"&gt;exec&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;bin/zeppelin-daemon.sh&lt;span class="w"&gt; &lt;/span&gt;upstart
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;To test our script return to the shell and&amp;nbsp;execute,&lt;/p&gt;
@@ -112,29 +112,29 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 &lt;p&gt;Enabling access to S3 is relatively easy as we already have S3-enabled &lt;span class="caps"&gt;IAM&lt;/span&gt; roles assigned to our nodes (via Flintrock configuration). Start by creating a new bucket to store them in - e.g. &lt;code&gt;my.zeppelin.notebooks&lt;/code&gt;. Then create a folder within this bucket - e.g. &lt;code&gt;userone&lt;/code&gt; - and another one within that called &lt;code&gt;notebook&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Next, &lt;span class="caps"&gt;SSH&lt;/span&gt; into the master node and open the &lt;code&gt;zeppelin-site.xml&lt;/code&gt; file for editing as we did above. This time, un-comment and set the following&amp;nbsp;properties,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.bucket&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;my.zeppelin.notebooks&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;bucket name for notebook storage&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.bucket&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;my.zeppelin.notebooks&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;bucket&lt;span class="w"&gt; &lt;/span&gt;name&lt;span class="w"&gt; &lt;/span&gt;for&lt;span class="w"&gt; &lt;/span&gt;notebook&lt;span class="w"&gt; &lt;/span&gt;storage&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 
 &lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.user&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;userone&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;user name for s3 folder structure&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.s3.user&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;userone&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;user&lt;span class="w"&gt; &lt;/span&gt;name&lt;span class="w"&gt; &lt;/span&gt;for&lt;span class="w"&gt; &lt;/span&gt;s3&lt;span class="w"&gt; &lt;/span&gt;folder&lt;span class="w"&gt; &lt;/span&gt;structure&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 
 &lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.S3NotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook persistence layer implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.S3NotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook&lt;span class="w"&gt; &lt;/span&gt;persistence&lt;span class="w"&gt; &lt;/span&gt;layer&lt;span class="w"&gt; &lt;/span&gt;implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;And comment-out the property for local&amp;nbsp;storage,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.VFSNotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook persistence layer implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.notebook.storage&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;org.apache.zeppelin.notebook.repo.VFSNotebookRepo&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;notebook&lt;span class="w"&gt; &lt;/span&gt;persistence&lt;span class="w"&gt; &lt;/span&gt;layer&lt;span class="w"&gt; &lt;/span&gt;implementation&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -145,9 +145,9 @@ chdir /home/ec2-user/zeppelin-0.6.1-bin-all
 &lt;p&gt;Being able to limit access to Zeppelin as well control the read/write permissions on individual notebooks will be useful if multiple people are likely to be working on the platform and using it to trial and schedule jobs on the cluster. It&amp;#8217;s also handy if you just want to grant someone access to read results and don&amp;#8217;t want to risk them changing the code by&amp;nbsp;accident.&lt;/p&gt;
 &lt;p&gt;Enabling basic authentication is relatively straight-forwards. First, open the &lt;code&gt;zeppelin-site.xml&lt;/code&gt; file for editing and ensure that the &lt;code&gt;zeppelin.anonymous.allowed&lt;/code&gt; property is set to &lt;code&gt;false&lt;/code&gt;,&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.anonymous.allowed&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;false&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
-  &lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Anonymous user allowed by default&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;name&amp;gt;&lt;/span&gt;zeppelin.anonymous.allowed&lt;span class="nt"&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;value&amp;gt;&lt;/span&gt;false&lt;span class="nt"&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Anonymous&lt;span class="w"&gt; &lt;/span&gt;user&lt;span class="w"&gt; &lt;/span&gt;allowed&lt;span class="w"&gt; &lt;/span&gt;by&lt;span class="w"&gt; &lt;/span&gt;default&lt;span class="nt"&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -215,18 +215,18 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;span class="nf"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dplyr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# add packages to Spark config ----&lt;/span&gt;
-&lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;spark_config&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;sparklyr.defaultPackages&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;spark_config&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;sparklyr.defaultPackages&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
 &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;sparklyr.defaultPackages&lt;/span&gt;
 &lt;span class="c1"&gt;# [1] &amp;quot;com.databricks:spark-csv_2.11:1.3.0&amp;quot;    &amp;quot;com.amazonaws:aws-java-sdk-pom:1.10.34&amp;quot; &amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;
 
 &lt;span class="c1"&gt;# connect to Spark cluster ----&lt;/span&gt;
-&lt;span class="n"&gt;sc&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;spark_connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                   &lt;span class="n"&gt;spark_home&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/usr/local/lib/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                   &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;spark_connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;master&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;                   &lt;/span&gt;&lt;span class="n"&gt;spark_home&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/usr/local/lib/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;                   &lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# copy the local iris dataset to Spark ----&lt;/span&gt;
-&lt;span class="n"&gt;iris_tbl&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;copy_to&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;iris&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;iris_tbl&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;copy_to&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;iris&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="nf"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iris_tbl&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="c1"&gt;# Sepal_Length Sepal_Width Petal_Length Petal_Width  Species&lt;/span&gt;
 &lt;span class="c1"&gt;#        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;    &amp;lt;chr&amp;gt;&lt;/span&gt;
@@ -238,7 +238,7 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;span class="c1"&gt;#          5.4         3.9          1.7         0.4 &amp;quot;setosa&amp;quot;&lt;/span&gt;
 
 &lt;span class="c1"&gt;# load S3 file into Spark&amp;#39;s using the &amp;quot;s3a:&amp;quot; protocol ----&lt;/span&gt;
-&lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;spark_read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;spark_read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;test&lt;/span&gt;
 &lt;span class="c1"&gt;# Source:   query [?? x 1]&lt;/span&gt;
 &lt;span class="c1"&gt;# Database: spark connection master=spark://ip-172-31-11-216:7077 app=sparklyr local=FALSE&lt;/span&gt;
@@ -269,22 +269,22 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# set system variables ----&lt;/span&gt;
 &lt;span class="c1"&gt;# - location of Spark on master node;&lt;/span&gt;
 &lt;span class="c1"&gt;# - add sparkR package directory to the list of path to look for R packages&lt;/span&gt;
-&lt;span class="nf"&gt;Sys.setenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/home/ec2-user/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nf"&gt;.libPaths&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;file.path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;Sys.getenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;SPARK_HOME&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;R&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;lib&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="nf"&gt;.libPaths&lt;/span&gt;&lt;span class="p"&gt;()))&lt;/span&gt;
+&lt;span class="n"&gt;Sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SPARK_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/home/ec2-user/spark&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;libPaths&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;SPARK_HOME&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;R&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;lib&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;libPaths&lt;/span&gt;&lt;span class="p"&gt;()))&lt;/span&gt;
 
 &lt;span class="c1"&gt;# load packages ----&lt;/span&gt;
-&lt;span class="nf"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SparkR&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;library&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SparkR&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# connect to Spark cluster ----&lt;/span&gt;
 &lt;span class="c1"&gt;# check your_public_ip_address:8080 to get the local network address of your master node&lt;/span&gt;
-&lt;span class="n"&gt;sc&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;sparkR.session&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                     &lt;span class="n"&gt;sparkPackages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nf"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;com.databricks:spark-csv_2.11:1.3.0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                                       &lt;span class="s"&gt;&amp;quot;com.amazonaws:aws-java-sdk-pom:1.10.34&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                                       &lt;span class="s"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sparkR&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;master&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;spark://ip-172-31-11-216:7077&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;                     &lt;/span&gt;&lt;span class="n"&gt;sparkPackages&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;com.databricks:spark-csv_2.11:1.3.0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;                                       &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;com.amazonaws:aws-java-sdk-pom:1.10.34&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;                                       &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;org.apache.hadoop:hadoop-aws:2.7.2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 
 &lt;span class="c1"&gt;# copy the local iris dataset to Spark ----&lt;/span&gt;
-&lt;span class="n"&gt;iris_tbl&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;createDataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iris&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nf"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iris_tbl&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;iris_tbl&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;createDataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iris&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iris_tbl&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="c1"&gt;# Sepal_Length Sepal_Width Petal_Length Petal_Width Species&lt;/span&gt;
 &lt;span class="c1"&gt;#          5.1         3.5          1.4         0.2  setosa&lt;/span&gt;
 &lt;span class="c1"&gt;#          4.9         3.0          1.4         0.2  setosa&lt;/span&gt;
@@ -294,8 +294,8 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;span class="c1"&gt;#          5.4         3.9          1.7         0.4  setosa&lt;/span&gt;
 
 &lt;span class="c1"&gt;# load S3 file into Spark&amp;#39;s using the &amp;quot;s3a:&amp;quot; protocol ----&lt;/span&gt;
-&lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="nf"&gt;read.text&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nf"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;collect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;read&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;s3a://adhoc.analytics.data/README.md&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;collect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;span class="c1"&gt;#                                                                            value&lt;/span&gt;
 &lt;span class="c1"&gt;# 1                                                                 # Apache Spark&lt;/span&gt;
 &lt;span class="c1"&gt;# 2&lt;/span&gt;
@@ -305,7 +305,7 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;span class="c1"&gt;# 6     rich set of higher-level tools including Spark SQL for SQL and DataFrames,&lt;/span&gt;
 
 &lt;span class="c1"&gt;# close connection&lt;/span&gt;
-&lt;span class="nf"&gt;sparkR.session.stop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;sparkR&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Again, execute line-by-line and check the key outputs with those commented-out in the above script. Use the &lt;a href="https://spark.apache.org/docs/latest/sparkr.html" title="sparkR guide"&gt;sparkR programming guide&lt;/a&gt; and the &lt;a href="https://spark.apache.org/docs/latest/api/R/index.html" title="sparkR API"&gt;sparkR &lt;span class="caps"&gt;API&lt;/span&gt; documentation&lt;/a&gt; for more information on the available&amp;nbsp;functions.&lt;/p&gt;
@@ -322,11 +322,11 @@ We will then install and configure both the &lt;a href="http://spark.rstudio.com
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/welcome_to_spark.png" title="spark-shell"&gt;&lt;/p&gt;
 &lt;h2 id="install-flintrock"&gt;Install&amp;nbsp;Flintrock&lt;/h2&gt;
 &lt;p&gt;Exit the Spark shell (ctrl-d on a Mac, just in case you didn&amp;#8217;t know&amp;#8230;) and return to Spark&amp;#8217;s home directory. For convenience, I&amp;#8217;m going to download Flintrock to here as well - where the old ec2 scripts used to be. The steps for downloading the Flintrock binaries - taken verbatim from the Flinkrock repo&amp;#8217;s &lt;span class="caps"&gt;README&lt;/span&gt; - are as&amp;nbsp;follows:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ &lt;span class="nv"&gt;flintrock_version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0.5.0&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;flintrock_version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0.5.0&amp;quot;&lt;/span&gt;
 
-$ curl --location --remote-name &lt;span class="s2"&gt;&amp;quot;https://github.com/nchammas/flintrock/releases/download/v&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;/Flintrock-&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
-$ unzip -q -d flintrock &lt;span class="s2"&gt;&amp;quot;Flintrock-&lt;/span&gt;&lt;span class="nv"&gt;$flintrock_version&lt;/span&gt;&lt;span class="s2"&gt;-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
-$ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
+&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;curl&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="k"&gt;remote&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;https://github.com/nchammas/flintrock/releases/download/v$flintrock_version/Flintrock-$flintrock_version-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
+&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;unzip&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;flintrock&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Flintrock-$flintrock_version-standalone-OSX-x86_64.zip&amp;quot;&lt;/span&gt;
+&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;cd&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;flintrock&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;And test that it works by&amp;nbsp;running,&lt;/p&gt;
@@ -388,9 +388,9 @@ $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
 &lt;p&gt;Return to the terminal and follow this advice. If successful, you should see something along the lines&amp;nbsp;of:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt" src="https://alexioannides.github.io/images/data_science/data_science_platform_pt2/ssh_master.png" title="SSH-connect"&gt;&lt;/p&gt;
 &lt;p&gt;Next, fire-up the Spark shell for Scala by executing &lt;code&gt;spark-shell&lt;/code&gt;. To run a trivial job across all nodes and test the cluster, run the following program on a line-by-line&amp;nbsp;basis:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;val localArray = Array(1,2,3,4,5)&lt;/span&gt;
-&lt;span class="err"&gt;val rddArray = sc.parallelize(localArray)&lt;/span&gt;
-&lt;span class="err"&gt;val rddArraySum = rddArray.reduce((x, y) =&amp;gt; x + y)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;val localArray = Array(1,2,3,4,5)
+val rddArray = sc.parallelize(localArray)
+val rddArraySum = rddArray.reduce((x, y) =&amp;gt; x + y)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If no errors were thrown and the shell&amp;#8217;s final output&amp;nbsp;is,&lt;/p&gt;
@@ -405,8 +405,8 @@ $ &lt;span class="nb"&gt;cd&lt;/span&gt; flintrock/
 &lt;p&gt;In order to access our S3 data from Spark (via Hadoop), we need to make a couple of packages (&lt;span class="caps"&gt;JAR&lt;/span&gt; files and their dependencies) available to all nodes in our cluster. The easiest way to do this, is to start the spark-shell with the following&amp;nbsp;options:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ spark-shell --packages com.amazonaws:aws-java-sdk-pom:1.10.34,org.apache.hadoop:hadoop-aws:2.7.2&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Once the cluster has downloaded everything it needs and the shell has started, run the following program that &amp;#8216;opens&amp;#8217; the &lt;span class="caps"&gt;README&lt;/span&gt; file we uploaded to S3 in Part 1 of this series of blogs, and &amp;#8216;collects&amp;#8217; it back to the master node from its distributed (&lt;span class="caps"&gt;RDD&lt;/span&gt;)&amp;nbsp;representation:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;val data = sc.textFile(&amp;quot;s3a://alex.data/README.md&amp;quot;)&lt;/span&gt;
-&lt;span class="err"&gt;data.collect&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;val data = sc.textFile(&amp;quot;s3a://alex.data/README.md&amp;quot;)
+data.collect
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If everything is successful then you should see the contents of the file printed to&amp;nbsp;screen.&lt;/p&gt;

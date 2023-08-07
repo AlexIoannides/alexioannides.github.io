@@ -10,18 +10,18 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
 
 
     <link id="pygments-light-theme" rel="stylesheet" type="text/css"
-          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+          href="../../../../theme/pygments/monokai.min.css">
 
 
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/solid.css">
 
-    <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
+    <link href="../../../../static/custom.css" rel="stylesheet">
 
     <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
 
@@ -50,11 +50,11 @@
 <meta property="og:title" content="Deploying Python ML Models with Bodywork"/>
 <meta property="og:description" content="Solutions to Machine Learning (ML) tasks are often developed within Jupyter notebooks. Once a solution is developed you are then faced with an altogether different problem - how to engineer the solution into your product and how to maintain the performance of the solution through time, as new data is generated …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://alexioannides.github.io/2020/12/01/deploying-python-ml-models-with-bodywork/"/>
+<meta property="og:url" content="../../../../2020/12/01/deploying-python-ml-models-with-bodywork/"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2020-12-01 00:00:00+00:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://alexioannides.github.io/author/dr-alex-ioannides.html">
+<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
 <meta property="article:section" content="machine-learning-engineering"/>
 <meta property="article:tag" content="python"/>
 <meta property="article:tag" content="machine-learning"/>
@@ -69,12 +69,12 @@
 <body class="light-theme">
   <aside>
     <div>
-      <a href="https://alexioannides.github.io">
+      <a href="../../../..">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
 
       <h1>
-        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
+        <a href="../../../..">Dr Alex Ioannides</a>
       </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
@@ -85,17 +85,20 @@
 
               <li>
                 <a target="_self"
-                   href="https://alexioannides.github.io/about-me/">
+                   href="../../../../about-me/">
                   About&nbsp;Me
                 </a>
               </li>
               <li>
                 <a target="_self"
-                   href="https://alexioannides.github.io/about-this-blog/">
+                   href="../../../../about-this-blog/">
                   About this&nbsp;Blog
                 </a>
               </li>
 
+            <li>
+              <a target="_self" href="https://alexioannides.com/data-science-and-ml-notebook/" >ML Notes & Demos</a>
+            </li>
         </ul>
       </nav>
 
@@ -127,7 +130,7 @@
   <main>
 
     <nav>
-      <a href="https://alexioannides.github.io">Home</a>
+      <a href="../../../..">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
@@ -142,14 +145,14 @@
       
     <h1 id="deploying-python-ml-models-with-bodywork">Deploying Python <span class="caps">ML</span> Models with&nbsp;Bodywork</h1>
     <p>
-      Posted on Tue 01 December 2020 in <a href="https://alexioannides.github.io/category/machine-learning-engineering.html">machine-learning-engineering</a>
+      Posted on Tue 01 December 2020 in <a href="../../../../category/machine-learning-engineering.html">machine-learning-engineering</a>
 
     </p>
   </header>
 
 
   <div>
-    <p><img alt="bodywork_logo" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/bodywork-logo.png"></p>
+    <p><img alt="bodywork_logo" src="../../../../images/machine-learning-engineering/bodywork/bodywork-logo.png"></p>
 <p>Solutions to Machine Learning (<span class="caps">ML</span>) tasks are often developed within Jupyter notebooks. Once a solution is developed you are then faced with an altogether different problem - how to engineer the solution into your product and how to maintain the performance of the solution through time, as new data is&nbsp;generated.</p>
 <h2 id="what-is-this-tutorial-going-to-teach-me">What is this Tutorial Going to Teach&nbsp;Me?</h2>
 <ul>
@@ -181,20 +184,20 @@
 </ul>
 </div>
 <h2 id="introduction">Introduction</h2>
-<p>I’ve written at length on the subject of getting machine learning into production - an area that now falls under Machine Learning Operations (MLOps). MLOps is currently a pressing topic within the field of machine learning engineering. As an example of this, take my <a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/">blog post</a> on <em>Deploying Python <span class="caps">ML</span> Models with Flask, Docker and Kubernetes</em>, which is accessed by hundreds of machine learning practitioners every month; or the fact that Thoughtwork’s <a href="https://www.thoughtworks.com/insights/articles/intelligent-enterprise-series-cd4ml">essay</a> on <em>Continuous Delivery for <span class="caps">ML</span></em> has become an essential reference for all machine learning engineers, together with Google’s <a href="https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html">paper</a> on the <em>Hidden Technical Debt in Machine Learning Systems</em>; and MLOps even has its own entry on <a href="https://en.wikipedia.org/wiki/MLOps">Wikipedia</a>.</p>
+<p>I’ve written at length on the subject of getting machine learning into production - an area that now falls under Machine Learning Operations (MLOps). MLOps is currently a pressing topic within the field of machine learning engineering. As an example of this, take my <a href="../../../../2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/">blog post</a> on <em>Deploying Python <span class="caps">ML</span> Models with Flask, Docker and Kubernetes</em>, which is accessed by hundreds of machine learning practitioners every month; or the fact that Thoughtwork’s <a href="https://www.thoughtworks.com/insights/articles/intelligent-enterprise-series-cd4ml">essay</a> on <em>Continuous Delivery for <span class="caps">ML</span></em> has become an essential reference for all machine learning engineers, together with Google’s <a href="https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html">paper</a> on the <em>Hidden Technical Debt in Machine Learning Systems</em>; and MLOps even has its own entry on <a href="https://en.wikipedia.org/wiki/MLOps">Wikipedia</a>.</p>
 <h3 id="why-is-mlops-getting-so-much-attention">Why is MLOps Getting so Much&nbsp;Attention?</h3>
 <p>In my opinion, this is because we are at a point where a significant number of organisations have now overcome their data ingestion and engineering problems. They are able to provide their data scientists with the data required to solve business problems using machine learning, only to find that, as Thoughtworks put&nbsp;it,</p>
 <blockquote>
 <p>“<em>Getting machine learning applications into production is hard</em>”</p>
 </blockquote>
-<p>To tackle some of the core complexities of MLOps, many machine learning engineering teams have settled on approaches that are based-upon deploying containerised models, usually as RESTful model-scoring services, to some type of cloud platform. Kubernetes is especially useful for this as I have <a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/">written about before</a>.</p>
+<p>To tackle some of the core complexities of MLOps, many machine learning engineering teams have settled on approaches that are based-upon deploying containerised models, usually as RESTful model-scoring services, to some type of cloud platform. Kubernetes is especially useful for this as I have <a href="../../../../2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/">written about before</a>.</p>
 <h3 id="ml-deployment-with-bodywork"><span class="caps">ML</span> Deployment with&nbsp;Bodywork</h3>
 <p>Running machine learning code in containers has become a common pattern to guarantee reproducibility between what has been developed and what is deployed in production&nbsp;environments.</p>
 <p>Most machine learning engineers do not, however, have the time to develop the skills and expertise required to deliver and deploy containerised machine learning systems into production environments. This requires an understanding of how to build container images, how to push build artefacts to image repositories and how to configure a container orchestration platform to use these, to execute batch jobs and deploy&nbsp;services.</p>
 <p>Developing and maintaining these deployment pipelines is time-consuming. If there are multiple projects - each requiring re-training and re-deployment - then the management of these pipelines will quickly become a large&nbsp;burden.</p>
 <p>This is where Bodywork steps-in - it will deliver your project&#8217;s Python modules directly from your Git repository into Docker containers and manage their deployment to a Kubernetes cluster. In other words, Bodywork automates the repetitive tasks that most machine learning engineers think of as <a href="https://en.wikipedia.org/wiki/DevOps">DevOps</a>, allowing them to focus their time on what they do best - machine&nbsp;learning.</p>
 <p>This post serves as a short tutorial on how to use Bodywork to productionise a common <span class="caps">ML</span> pipeline - train-and-deploy. This tutorial refers to files within a Bodywork project hosted on GitHub - see <a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project">bodywork-ml-pipeline-project</a>.</p>
-<p><img alt="bodywork_logo" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/ml-pipeline.png"></p>
+<p><img alt="bodywork_logo" src="../../../../images/machine-learning-engineering/bodywork/ml-pipeline.png"></p>
 <h3 id="prerequisites">Prerequisites</h3>
 <p>If you want to execute the example code, then you will&nbsp;need:</p>
 <ul>
@@ -202,12 +205,12 @@
 <li>access to a Kubernetes cluster - either a single-node on your local machine using <a href="https://minikube.sigs.k8s.io/docs/">Minikube</a>, or as a managed service from a cloud provider, such as <a href="https://aws.amazon.com/eks"><span class="caps">EKS</span></a> from <span class="caps">AWS</span> or <a href="https://azure.microsoft.com/en-us/services/kubernetes-service/"><span class="caps">AKS</span></a> from&nbsp;Azure.</li>
 <li><a href="https://git-scm.com">Git</a> and a basic understanding of how to use&nbsp;it.</li>
 </ul>
-<p>Familiarity with basic <a href="https://kubernetes.io/docs/concepts/">Kubernetes concepts</a> and some exposure to the <a href="https://kubernetes.io/docs/reference/kubectl/overview/">kubectl</a> command-line tool will make life easier, but is not essential. If you&#8217;re interested, then the introductory article I wrote on <a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"><em>Deploying Python <span class="caps">ML</span> Models with Flask, Docker and Kubernetes</em></a>, is a good place to&nbsp;start.</p>
+<p>Familiarity with basic <a href="https://kubernetes.io/docs/concepts/">Kubernetes concepts</a> and some exposure to the <a href="https://kubernetes.io/docs/reference/kubectl/overview/">kubectl</a> command-line tool will make life easier, but is not essential. If you&#8217;re interested, then the introductory article I wrote on <a href="../../../../2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/"><em>Deploying Python <span class="caps">ML</span> Models with Flask, Docker and Kubernetes</em></a>, is a good place to&nbsp;start.</p>
 <h2 id="the-ml-task">The <span class="caps">ML</span>&nbsp;Task</h2>
 <p>The <span class="caps">ML</span> problem we have chosen to use for this example, is the classification of iris plants into one of their three sub-species, given their physical dimensions. It uses the <a href="https://scikit-learn.org/stable/datasets/index.html#iris-dataset">iris plants dataset</a> and is an example of a multi-class classification&nbsp;task.</p>
 <p>The Jupyter notebook titled <a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project/blob/master/ml_prototype_work.ipynb">ml_prototype_work.ipynb</a> and found in the root of the <a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project">project&#8217;s GitHub repository</a>, documents the trivial <span class="caps">ML</span> workflow used to arrive at a proposed solution to this task. It trains a Decision Tree classifier and persists the trained model to cloud storage. Take five minutes to read through&nbsp;it.</p>
 <h2 id="the-mlops-task">The MLOps&nbsp;Task</h2>
-<p><img alt="train_and_deploy" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/concepts_train_and_deploy.png"></p>
+<p><img alt="train_and_deploy" src="../../../../images/machine-learning-engineering/bodywork/concepts_train_and_deploy.png"></p>
 <p>Now that we have developed a solution to our chosen <span class="caps">ML</span> task, how do we get it into production - i.e. how can we split the Jupyter notebook into a &#8216;train-model&#8217; stage that persists a trained model to cloud storage, and a separate &#8216;deploy-scoring-service&#8217; stage that will load the persisted model and start a web service to expose a model-scoring <span class="caps">API</span>?</p>
 <p>The Bodywork project for this multi-stage workflow is packaged as a <a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project">GitHub repository</a>, and is structured as&nbsp;follows,</p>
 <div class="highlight"><pre><span></span><code>root/
@@ -219,40 +222,40 @@
 </code></pre></div>
 
 <p>All of the configuration for this deployment is held within the <code>bodywork.yaml</code> file, whose contents are reproduced&nbsp;below.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span> <span class="s">&quot;1.0&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0&quot;</span>
 <span class="nt">project</span><span class="p">:</span>
-  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bodywork-ml-pipeline-project</span>
-  <span class="nt">docker_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bodyworkml/bodywork-core:latest</span>
-  <span class="nt">DAG</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage_1_train_model &gt;&gt; stage_2_scoring_service</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bodywork-ml-pipeline-project</span>
+<span class="w">  </span><span class="nt">docker_image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bodyworkml/bodywork-core:latest</span>
+<span class="w">  </span><span class="nt">DAG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stage_1_train_model &gt;&gt; stage_2_scoring_service</span>
 <span class="nt">stages</span><span class="p">:</span>
-  <span class="nt">stage_1_train_model</span><span class="p">:</span>
-    <span class="nt">executable_module_path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage_1_train_model/train_model.py</span>
-    <span class="nt">requirements</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">boto3==1.16.15</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">joblib==0.17.0</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pandas==1.1.4</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">scikit-learn==0.23.2</span>
-    <span class="nt">cpu_request</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span>
-    <span class="nt">memory_request_mb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
-    <span class="nt">batch</span><span class="p">:</span>
-      <span class="nt">max_completion_time_seconds</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
-      <span class="nt">retries</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-  <span class="nt">stage_2_scoring_service</span><span class="p">:</span>
-    <span class="nt">executable_module_path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage_2_scoring_service/serve_model.py</span>
-    <span class="nt">requirements</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Flask==1.1.2</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">joblib==0.17.0</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">numpy==1.19.4</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">scikit-learn==0.23.2</span>
-    <span class="nt">cpu_request</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.25</span>
-    <span class="nt">memory_request_mb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
-    <span class="nt">service</span><span class="p">:</span>
-      <span class="nt">max_startup_time_seconds</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
-      <span class="nt">replicas</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-      <span class="nt">port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5000</span>
-      <span class="nt">ingress</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">stage_1_train_model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">executable_module_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stage_1_train_model/train_model.py</span>
+<span class="w">    </span><span class="nt">requirements</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boto3==1.16.15</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joblib==0.17.0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pandas==1.1.4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scikit-learn==0.23.2</span>
+<span class="w">    </span><span class="nt">cpu_request</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">    </span><span class="nt">memory_request_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">    </span><span class="nt">batch</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">max_completion_time_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">stage_2_scoring_service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">executable_module_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stage_2_scoring_service/serve_model.py</span>
+<span class="w">    </span><span class="nt">requirements</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Flask==1.1.2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joblib==0.17.0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">numpy==1.19.4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scikit-learn==0.23.2</span>
+<span class="w">    </span><span class="nt">cpu_request</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.25</span>
+<span class="w">    </span><span class="nt">memory_request_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">    </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">max_startup_time_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+<span class="w">      </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">logging</span><span class="p">:</span>
-  <span class="nt">log_level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">INFO</span>
+<span class="w">  </span><span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
 </code></pre></div>
 
 <p>The remainder of this tutorial is concerned with explaining how the configuration within <code>bodywork.yaml</code> is used to deploy the pipeline, as defined within the <code>train_model.py</code> and <code>serve_model.py</code> Python&nbsp;modules.</p>
@@ -279,7 +282,7 @@
 
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Main script to be executed.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main script to be executed.&quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">download_dataset</span><span class="p">(</span><span class="n">DATA_URL</span><span class="p">)</span>
     <span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">pre_process_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="n">trained_model</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
@@ -295,7 +298,7 @@
 </code></pre></div>
 
 <p>We recommend that you spend five minutes familiarising yourself with the full contents of <a href="https://github.com/bodywork-ml/bodywork-ml-pipeline-project/blob/master/stage_1_train_model/train_model.py">train_model.py</a>. When Bodywork runs the stage, it will do so in exactly the same way as if you were to&nbsp;run,</p>
-<div class="highlight"><pre><span></span><code>$ python train_model.py
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>python<span class="w"> </span>train_model.py
 </code></pre></div>
 
 <p>And so everything defined in <code>main()</code> will be&nbsp;executed.</p>
@@ -314,17 +317,17 @@ scikit-learn==0.23.2
 </ul>
 <p>Finally, the remaining parameters in <code>stages.stage_1_train_model</code> section of the <code>bodywork.yaml</code> file allow us to configure the remaining key parameters for the&nbsp;stage,</p>
 <div class="highlight"><pre><span></span><code><span class="nt">stage_1_train_model</span><span class="p">:</span>
-  <span class="nt">executable_module_path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage_1_train_model/train_model.py</span>
-  <span class="nt">requirements</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">boto3==1.16.15</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">joblib==0.17.0</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pandas==1.1.4</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">scikit-learn==0.23.2</span>
-  <span class="nt">cpu_request</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span>
-  <span class="nt">memory_request_mb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
-  <span class="nt">batch</span><span class="p">:</span>
-    <span class="nt">max_completion_time_seconds</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
-    <span class="nt">retries</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">executable_module_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stage_1_train_model/train_model.py</span>
+<span class="w">  </span><span class="nt">requirements</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boto3==1.16.15</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joblib==0.17.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pandas==1.1.4</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scikit-learn==0.23.2</span>
+<span class="w">  </span><span class="nt">cpu_request</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">  </span><span class="nt">memory_request_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">  </span><span class="nt">batch</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">max_completion_time_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">    </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 </code></pre></div>
 
 <p>From which it is clear to see that we have specified that this stage is a batch stage (as opposed to a service-deployment), together with an estimate of the <span class="caps">CPU</span> and memory resources to request from the Kubernetes cluster, how long to wait and how many times to retry,&nbsp;etc.</p>
@@ -353,7 +356,7 @@ scikit-learn==0.23.2
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/iris/v1/score&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">score</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Iris species classification API endpoint&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iris species classification API endpoint&quot;&quot;&quot;</span>
     <span class="n">request_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">make_features_from_request_data</span><span class="p">(</span><span class="n">request_data</span><span class="p">)</span>
     <span class="n">model_output</span> <span class="o">=</span> <span class="n">model_predictions</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -387,34 +390,34 @@ scikit-learn==0.23.2
 </ul>
 <p>Finally, the remaining parameters in <code>stages.stage_2_scoring_service</code> section of the <code>bodywork.yaml</code> file allow us to configure the remaining key parameters for the&nbsp;stage,</p>
 <div class="highlight"><pre><span></span><code><span class="nt">stage_2_scoring_service</span><span class="p">:</span>
-  <span class="nt">executable_module_path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage_2_scoring_service/serve_model.py</span>
-  <span class="nt">requirements</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Flask==1.1.2</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">joblib==0.17.0</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">numpy==1.19.4</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">scikit-learn==0.23.2</span>
-  <span class="nt">cpu_request</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.25</span>
-  <span class="nt">memory_request_mb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
-  <span class="nt">service</span><span class="p">:</span>
-    <span class="nt">max_startup_time_seconds</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
-    <span class="nt">replicas</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-    <span class="nt">port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5000</span>
-    <span class="nt">ingress</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">executable_module_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stage_2_scoring_service/serve_model.py</span>
+<span class="w">  </span><span class="nt">requirements</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Flask==1.1.2</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joblib==0.17.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">numpy==1.19.4</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scikit-learn==0.23.2</span>
+<span class="w">  </span><span class="nt">cpu_request</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.25</span>
+<span class="w">  </span><span class="nt">memory_request_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">  </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">max_startup_time_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">    </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+<span class="w">    </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 
 <p>From which it is clear to see that we have specified that this stage is a service (deployment) stage (as opposed to a batch stage), together with an estimate of the <span class="caps">CPU</span> and memory resources to request from the Kubernetes cluster, how long to wait for the service to start-up and be &#8216;ready&#8217;, which port to expose, to create a path to the service from an externally-facing ingress controller (if present in the cluster), and how many instances (or replicas) of the server should be created to stand-behind the&nbsp;cluster-service.</p>
 <h2 id="configuring-the-workflow">Configuring the&nbsp;Workflow</h2>
 <p>The <code>project</code> section of the <code>bodywork.yaml</code> file contains the configuration for the whole workflow - a workflow being a collection of stages, run in a specific order, that can be represented by a Directed Acyclic Graph (or <span class="caps">DAG</span>).</p>
 <div class="highlight"><pre><span></span><code><span class="nt">project</span><span class="p">:</span>
-  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bodywork-ml-pipeline-project</span>
-  <span class="nt">docker_image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bodyworkml/bodywork-core:latest</span>
-  <span class="nt">DAG</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage_1_train_model &gt;&gt; stage_2_scoring_service</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bodywork-ml-pipeline-project</span>
+<span class="w">  </span><span class="nt">docker_image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bodyworkml/bodywork-core:latest</span>
+<span class="w">  </span><span class="nt">DAG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stage_1_train_model &gt;&gt; stage_2_scoring_service</span>
 </code></pre></div>
 
 <p>The most important element is the specification of the workflow <span class="caps">DAG</span>, which in this instance is simple and will instruct the Bodywork workflow-controller to train the model and then (if successful) deploy the scoring&nbsp;service.</p>
 <h2 id="testing-the-workflow">Testing the&nbsp;Workflow</h2>
 <p>Firstly, make sure that the <a href="https://pypi.org/project/bodywork/">bodywork</a> package has been Pip-installed into a local Python environment that is active. Then, make sure that there is a namespace setup for use by bodywork projects - e.g. <code>ml-pipeline</code> - by running the following at the command&nbsp;line,</p>
-<div class="highlight"><pre><span></span><code>$ bodywork setup-namespace ml-pipeline
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bodywork<span class="w"> </span>setup-namespace<span class="w"> </span>ml-pipeline
 </code></pre></div>
 
 <p>Which should result in the following&nbsp;output,</p>
@@ -425,59 +428,59 @@ creating service-account=bodywork-jobs-and-deployments in namespace=ml-pipeline
 </code></pre></div>
 
 <p>Then, the workflow can be tested by running the workflow-controller locally (to orchestrate remote containers on k8s),&nbsp;using,</p>
-<div class="highlight"><pre><span></span><code>$ bodywork workflow <span class="se">\</span>
-    --namespace<span class="o">=</span>ml-pipeline <span class="se">\</span>
-    https://github.com/bodywork-ml/bodywork-ml-pipeline-project <span class="se">\</span>
-    master
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bodywork<span class="w"> </span>workflow<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="o">=</span>ml-pipeline<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>https://github.com/bodywork-ml/bodywork-ml-pipeline-project<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>master
 </code></pre></div>
 
 <p>Which will run the workflow defined in the <code>master</code> branch of the project&#8217;s remote GitHub repository, all within the <code>ml-pipeline</code> namespace. The logs from the workflow-controller and the containers nested within each constituent stage, will be streamed to the command-line to inform you on the precise state of the workflow, but you can also keep track of the current state of all Kubernetes resources created by the workflow-controller in the <code>ml-pipeline</code> namespace, by using the kubectl <span class="caps">CLI</span> tool -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span><code>$ kubectl -n ml-pipeline get all
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>kubectl<span class="w"> </span>-n<span class="w"> </span>ml-pipeline<span class="w"> </span>get<span class="w"> </span>all
 </code></pre></div>
 
 <p>Once the workflow has completed, the scoring service deployed within your cluster will be ready for testing. Service deployments are accessible via <span class="caps">HTTP</span> from within the cluster - they are not exposed to the public internet, unless you have <a href="kubernetes.md#configuring-ingress">installed an ingress controller</a> in your cluster. The simplest way to test a service from your local machine, is by using a local proxy server to enable access to your cluster. This can be achieved by issuing the following&nbsp;command,</p>
-<div class="highlight"><pre><span></span><code>$ kubectl proxy
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>kubectl<span class="w"> </span>proxy
 </code></pre></div>
 
 <p>Then in a new shell, you can use the curl tool to test the service. For&nbsp;example,</p>
-<div class="highlight"><pre><span></span><code>$ curl http://localhost:8001/api/v1/namespaces/ml-pipeline/services/bodywork-ml-pipeline-project--stage-2-scoring-service/proxy/iris/v1/score <span class="se">\</span>
-    --request POST <span class="se">\</span>
-    --header <span class="s2">&quot;Content-Type: application/json&quot;</span> <span class="se">\</span>
-    --data <span class="s1">&#39;{&quot;sepal_length&quot;: 5.1, &quot;sepal_width&quot;: 3.5, &quot;petal_length&quot;: 1.4, &quot;petal_width&quot;: 0.2}&#39;</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>http://localhost:8001/api/v1/namespaces/ml-pipeline/services/bodywork-ml-pipeline-project--stage-2-scoring-service/proxy/iris/v1/score<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--request<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--header<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data<span class="w"> </span><span class="s1">&#39;{&quot;sepal_length&quot;: 5.1, &quot;sepal_width&quot;: 3.5, &quot;petal_length&quot;: 1.4, &quot;petal_width&quot;: 0.2}&#39;</span>
 </code></pre></div>
 
 <p>If successful, you should get the following&nbsp;response,</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="nt">&quot;species_prediction&quot;</span><span class="p">:</span><span class="s2">&quot;setosa&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;probabilities&quot;</span><span class="p">:</span><span class="s2">&quot;setosa=1.0|versicolor=0.0|virginica=0.0&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;model_info&quot;</span><span class="p">:</span> <span class="s2">&quot;DecisionTreeClassifier(class_weight=&#39;balanced&#39;, random_state=42)&quot;</span>
+<span class="w">    </span><span class="nt">&quot;species_prediction&quot;</span><span class="p">:</span><span class="s2">&quot;setosa&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;probabilities&quot;</span><span class="p">:</span><span class="s2">&quot;setosa=1.0|versicolor=0.0|virginica=0.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;model_info&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DecisionTreeClassifier(class_weight=&#39;balanced&#39;, random_state=42)&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
 <p>If an ingress controller is operational in your cluster, then the service can be tested via the public internet&nbsp;using,</p>
-<div class="highlight"><pre><span></span><code>$ curl http://YOUR_CLUSTERS_EXTERNAL_IP/ml-pipeline/bodywork-ml-pipeline-project--stage-2-scoring-service/iris/v1/score <span class="se">\</span>
-    --request POST <span class="se">\</span>
-    --header <span class="s2">&quot;Content-Type: application/json&quot;</span> <span class="se">\</span>
-    --data <span class="s1">&#39;{&quot;sepal_length&quot;: 5.1, &quot;sepal_width&quot;: 3.5, &quot;petal_length&quot;: 1.4, &quot;petal_width&quot;: 0.2}&#39;</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>http://YOUR_CLUSTERS_EXTERNAL_IP/ml-pipeline/bodywork-ml-pipeline-project--stage-2-scoring-service/iris/v1/score<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--request<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--header<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data<span class="w"> </span><span class="s1">&#39;{&quot;sepal_length&quot;: 5.1, &quot;sepal_width&quot;: 3.5, &quot;petal_length&quot;: 1.4, &quot;petal_width&quot;: 0.2}&#39;</span>
 </code></pre></div>
 
 <p>See <a href="kubernetes.md#connecting-to-the-cluster">here</a> for instruction on how to retrieve <code>YOUR_CLUSTERS_EXTERNAL_IP</code>.</p>
 <h2 id="scheduling-the-workflow">Scheduling the&nbsp;Workflow</h2>
 <p>If you&#8217;re happy with the test results, then you can schedule the workflow-controller to operate remotely on the cluster as a Kubernetes cronjob. To setup the the workflow to run every hour, for example, use the following&nbsp;command,</p>
-<div class="highlight"><pre><span></span><code>$ bodywork cronjob create <span class="se">\</span>
-    --namespace<span class="o">=</span>ml-pipeline <span class="se">\</span>
-    --name<span class="o">=</span>ml-pipeline <span class="se">\</span>
-    --schedule<span class="o">=</span><span class="s2">&quot;* 0 * * *&quot;</span> <span class="se">\</span>
-    --git-repo-url<span class="o">=</span>https://github.com/bodywork-ml/bodywork-ml-pipeline-project <span class="se">\</span>
-    --git-repo-branch<span class="o">=</span>master <span class="se">\</span>
-    --retries<span class="o">=</span><span class="m">2</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bodywork<span class="w"> </span>cronjob<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="o">=</span>ml-pipeline<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="o">=</span>ml-pipeline<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--schedule<span class="o">=</span><span class="s2">&quot;* 0 * * *&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--git-repo-url<span class="o">=</span>https://github.com/bodywork-ml/bodywork-ml-pipeline-project<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--git-repo-branch<span class="o">=</span>master<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--retries<span class="o">=</span><span class="m">2</span>
 </code></pre></div>
 
 <p>Each scheduled workflow will attempt to re-run the workflow, end-to-end, as defined by the state of this repository&#8217;s <code>master</code> branch at the time of execution - performing rolling-updates to service-deployments and automatic roll-backs in the event of&nbsp;failure.</p>
 <p>To get the execution history for all <code>ml-pipeline</code> jobs&nbsp;use,</p>
-<div class="highlight"><pre><span></span><code>$ bodywork cronjob <span class="nb">history</span> <span class="se">\</span>
-    --namespace<span class="o">=</span>ml-pipeline <span class="se">\</span>
-    --name<span class="o">=</span>ml-pipeline
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bodywork<span class="w"> </span>cronjob<span class="w"> </span><span class="nb">history</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="o">=</span>ml-pipeline<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="o">=</span>ml-pipeline
 </code></pre></div>
 
 <p>Which should return output along the lines&nbsp;of,</p>
@@ -486,14 +489,14 @@ ml-pipeline-1605214260          2020-11-12 20:51:04+00:00     2020-11-12 20:52:3
 </code></pre></div>
 
 <p>Then to stream the logs from any given cronjob run (e.g. to debug and/or monitor for errors),&nbsp;use,</p>
-<div class="highlight"><pre><span></span><code>$ bodywork cronjob logs <span class="se">\</span>
-    --namespace<span class="o">=</span>ml-pipeline <span class="se">\</span>
-    --name<span class="o">=</span>ml-pipeline-1605214260
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bodywork<span class="w"> </span>cronjob<span class="w"> </span>logs<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="o">=</span>ml-pipeline<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="o">=</span>ml-pipeline-1605214260
 </code></pre></div>
 
 <h2 id="cleaning-up">Cleaning&nbsp;Up</h2>
 <p>To clean-up the deployment in its entirety, delete the namespace using kubectl - e.g. by&nbsp;running,</p>
-<div class="highlight"><pre><span></span><code>$ kubectl delete ns ml-pipeline
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>ml-pipeline
 </code></pre></div>
 
 <h2 id="where-to-go-from-here">Where to go from&nbsp;Here</h2>
@@ -503,11 +506,11 @@ ml-pipeline-1605214260          2020-11-12 20:51:04+00:00     2020-11-12 20:52:3
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="https://alexioannides.github.io/tag/python.html">python</a>
-      <a href="https://alexioannides.github.io/tag/machine-learning.html">machine-learning</a>
-      <a href="https://alexioannides.github.io/tag/mlops.html">mlops</a>
-      <a href="https://alexioannides.github.io/tag/kubernetes.html">kubernetes</a>
-      <a href="https://alexioannides.github.io/tag/bodywork.html">bodywork</a>
+      <a href="../../../../tag/python.html">python</a>
+      <a href="../../../../tag/machine-learning.html">machine-learning</a>
+      <a href="../../../../tag/mlops.html">mlops</a>
+      <a href="../../../../tag/kubernetes.html">kubernetes</a>
+      <a href="../../../../tag/bodywork.html">bodywork</a>
     </p>
   </div>
 
@@ -546,7 +549,7 @@ Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a 
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Dr Alex Ioannides ",
-  "url" : "https://alexioannides.github.io",
+  "url" : "../../../..",
   "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
   "description": ""
 }

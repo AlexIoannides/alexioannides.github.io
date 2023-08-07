@@ -10,18 +10,18 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
 
 
     <link id="pygments-light-theme" rel="stylesheet" type="text/css"
-          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
+          href="../../../../theme/pygments/monokai.min.css">
 
 
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
-  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/solid.css">
 
-    <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
+    <link href="../../../../static/custom.css" rel="stylesheet">
 
     <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
 
@@ -50,11 +50,11 @@
 <meta property="og:title" content="elasticsearchr - a Lightweight Elasticsearch Client for R"/>
 <meta property="og:description" content="Elasticsearch is a distributed NoSQL document store search-engine and column-oriented database, whose fast (near real-time) reads and powerful aggregation engine make it an excellent choice as an ‘analytics database’ for R&amp;D, production-use or both. Installation is simple, it ships with default settings that allow it to work effectively out-of-the-box …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://alexioannides.github.io/2016/11/28/elasticsearchr-a-lightweight-elasticsearch-client-for-r/"/>
+<meta property="og:url" content="../../../../2016/11/28/elasticsearchr-a-lightweight-elasticsearch-client-for-r/"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2016-11-28 00:00:00+00:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="https://alexioannides.github.io/author/dr-alex-ioannides.html">
+<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
 <meta property="article:section" content="r"/>
 <meta property="article:tag" content="data-processing"/>
 <meta property="article:tag" content="data-stores"/>
@@ -66,12 +66,12 @@
 <body class="light-theme">
   <aside>
     <div>
-      <a href="https://alexioannides.github.io">
+      <a href="../../../..">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
 
       <h1>
-        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
+        <a href="../../../..">Dr Alex Ioannides</a>
       </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
@@ -82,17 +82,20 @@
 
               <li>
                 <a target="_self"
-                   href="https://alexioannides.github.io/about-me/">
+                   href="../../../../about-me/">
                   About&nbsp;Me
                 </a>
               </li>
               <li>
                 <a target="_self"
-                   href="https://alexioannides.github.io/about-this-blog/">
+                   href="../../../../about-this-blog/">
                   About this&nbsp;Blog
                 </a>
               </li>
 
+            <li>
+              <a target="_self" href="https://alexioannides.com/data-science-and-ml-notebook/" >ML Notes & Demos</a>
+            </li>
         </ul>
       </nav>
 
@@ -124,7 +127,7 @@
   <main>
 
     <nav>
-      <a href="https://alexioannides.github.io">Home</a>
+      <a href="../../../..">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
@@ -139,14 +142,14 @@
       
     <h1 id="elasticsearchr-a-lightweight-elasticsearch-client-for-r">elasticsearchr - a Lightweight Elasticsearch Client for&nbsp;R</h1>
     <p>
-      Posted on Mon 28 November 2016 in <a href="https://alexioannides.github.io/category/r.html">r</a>
+      Posted on Mon 28 November 2016 in <a href="../../../../category/r.html">r</a>
 
     </p>
   </header>
 
 
   <div>
-    <p><img alt="elasticsearchr" src="https://alexioannides.github.io/images/r/elasticsearchr/elasticsearchr2.png" title="Elasticsearchr"></p>
+    <p><img alt="elasticsearchr" src="../../../../images/r/elasticsearchr/elasticsearchr2.png" title="Elasticsearchr"></p>
 <p><a href="https://www.elastic.co/products/elasticsearch" title="Elasticsearch">Elasticsearch</a> is a distributed <a href="https://en.wikipedia.org/wiki/NoSQL" title="What is NoSQL?">NoSQL</a> document store search-engine and <a href="https://www.elastic.co/blog/elasticsearch-as-a-column-store" title="Elasticsearch as a Column Store">column-oriented database</a>, whose <strong>fast</strong> (near real-time) reads and powerful aggregation engine make it an excellent choice as an &#8216;analytics database&#8217; for R&amp;D, production-use or both. Installation is simple, it ships with default settings that allow it to work effectively out-of-the-box, and all interaction is made via a set of intuitive and extremely <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation">well documented</a> <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" title="RESTful?">RESTful</a> APIs. I&#8217;ve been using it for two years now and I am&nbsp;evangelical.</p>
 <p>The <code>elasticsearchr</code> package implements a simple Domain-Specific Language (<span class="caps">DSL</span>) for indexing, deleting, querying, sorting and aggregating data in Elasticsearch, from within R. The main purpose of this package is to remove the labour involved with assembling <span class="caps">HTTP</span> requests to Elasticsearch&#8217;s <span class="caps">REST</span> APIs and parsing the responses. Instead, users of this package need only send and receive data frames to Elasticsearch resources. Users needing richer functionality are encouraged to investigate the excellent <code>elastic</code> package from the good people at <a href="https://github.com/ropensci/elastic" title="rOpenSci">rOpenSci</a>.</p>
 <!--more-->
@@ -156,21 +159,21 @@
 
 <h2 id="installing-elasticsearch">Installing&nbsp;Elasticsearch</h2>
 <p>Elasticsearch can be downloaded <a href="https://www.elastic.co/downloads/elasticsearch" title="Download">here</a>, where the instructions for installing and starting it can also be found. <span class="caps">OS</span> X users (such as myself) can also make use of <a href="http://brew.sh/" title="Homebrew for OS X">Homebrew</a> to install it with the&nbsp;command,</p>
-<div class="highlight"><pre><span></span><code>$ brew install elasticsearch
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>elasticsearch
 </code></pre></div>
 
 <p>And then start it by executing <code>$ elasticsearch</code> from within any Terminal window. Successful installation can be checked by navigating any web browser to <code>http://localhost:9200</code>, where the following message should greet you (give or take the cluster name that changes with every&nbsp;restart),</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-  <span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="s2">&quot;Kraven the Hunter&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;cluster_name&quot;</span> <span class="o">:</span> <span class="s2">&quot;elasticsearch&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;version&quot;</span> <span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;number&quot;</span> <span class="o">:</span> <span class="s2">&quot;2.3.5&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;build_hash&quot;</span> <span class="o">:</span> <span class="s2">&quot;90f439ff60a3c0f497f91663701e64ccd01edbb4&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;build_timestamp&quot;</span> <span class="o">:</span> <span class="s2">&quot;2016-07-27T10:36:52Z&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;build_snapshot&quot;</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="s2">&quot;lucene_version&quot;</span> <span class="o">:</span> <span class="s2">&quot;5.5.0&quot;</span>
-  <span class="p">},</span>
-  <span class="s2">&quot;tagline&quot;</span> <span class="o">:</span> <span class="s2">&quot;You Know, for Search&quot;</span>
+<span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Kraven the Hunter&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;cluster_name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;elasticsearch&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;number&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2.3.5&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;build_hash&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;90f439ff60a3c0f497f91663701e64ccd01edbb4&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;build_timestamp&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2016-07-27T10:36:52Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;build_snapshot&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;lucene_version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;5.5.0&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="s2">&quot;tagline&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;You Know, for Search&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -183,11 +186,11 @@
 
 <p>would be represented as follows using <span class="caps">JSON</span>,</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-  <span class="s2">&quot;sepal_length&quot;</span><span class="o">:</span> <span class="mf">5.1</span><span class="p">,</span>
-  <span class="s2">&quot;sepal_width&quot;</span><span class="o">:</span> <span class="mf">3.5</span><span class="p">,</span>
-  <span class="s2">&quot;petal_length&quot;</span><span class="o">:</span> <span class="mf">1.4</span><span class="p">,</span>
-  <span class="s2">&quot;petal_width&quot;</span><span class="o">:</span> <span class="mf">0.2</span><span class="p">,</span>
-  <span class="s2">&quot;species&quot;</span><span class="o">:</span> <span class="s2">&quot;setosa&quot;</span>
+<span class="w">  </span><span class="s2">&quot;sepal_length&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">5.1</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;sepal_width&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">3.5</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;petal_length&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1.4</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;petal_width&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.2</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;species&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;setosa&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -201,7 +204,7 @@
 <p><code>elasticsearchr</code> is a <strong>lightweight</strong> client - by this I mean that it only aims to do &#8216;just enough&#8217; work to make using Elasticsearch with R easy and intuitive. You will still need to read the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation">Elasticsearch documentation</a> to understand how to compose queries and aggregations. What follows is a quick summary of what is&nbsp;possible.</p>
 <h3 id="resources">Resources</h3>
 <p>Elasticsearch resources, as defined by the URLs described above, are defined as <code>elastic</code> objects in <code>elasticsearchr</code>. For&nbsp;example,</p>
-<div class="highlight"><pre><span></span><code><span class="n">es</span> <span class="o">&lt;-</span> <span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">es</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;iris&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">)</span>
 </code></pre></div>
 
 <p>Refers to documents of types &#8216;data&#8217; in the &#8216;iris&#8217; index located on an Elasticsearch node on my laptop. Note that:
@@ -209,32 +212,32 @@
 - <code>elastic</code> objects can be defined even if the underling resources have yet to be brought into&nbsp;existence.</p>
 <h3 id="indexing-new-data">Indexing New&nbsp;Data</h3>
 <p>To index (insert) data from a data frame, use the <code>%index%</code> operator as&nbsp;follows:</p>
-<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%index%</span> <span class="n">iris</span>
+<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;iris&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%index%</span><span class="w"> </span><span class="n">iris</span>
 </code></pre></div>
 
 <p>In this example, the <code>iris</code> dataset is indexed into the &#8216;iris&#8217; index and given a document type called &#8216;data&#8217;. Note that I have not provided any document ids here. <strong>To explicitly specify document ids there must be a column in the data frame that is labelled <code>id</code></strong>, from which the document ids will be&nbsp;taken.</p>
 <h3 id="deleting-data">Deleting&nbsp;Data</h3>
 <p>Documents can be deleted in three different ways using the <code>%delete%</code> operator. Firstly, an entire index (including the mapping information) can be erased by referencing just the index in the resource -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">)</span> <span class="o">%delete%</span> <span class="kc">TRUE</span>
+<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;iris&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%delete%</span><span class="w"> </span><span class="kc">TRUE</span>
 </code></pre></div>
 
 <p>Alternatively, documents can be deleted on a type-by-type basis leaving the index and it&#8217;s mappings untouched, by referencing both the index and the document type as the resource -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%delete%</span> <span class="kc">TRUE</span>
+<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;iris&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%delete%</span><span class="w"> </span><span class="kc">TRUE</span>
 </code></pre></div>
 
 <p>Finally, specific documents can be deleted by referencing their ids directly -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%delete%</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">,</span> <span class="s">&quot;2&quot;</span><span class="p">,</span> <span class="s">&quot;3&quot;</span><span class="p">,</span> <span class="s">&quot;4&quot;</span><span class="p">,</span> <span class="s">&quot;5&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;iris&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%delete%</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;5&quot;</span><span class="p">)</span>
 </code></pre></div>
 
 <h3 id="queries">Queries</h3>
 <p>Any type of query that Elasticsearch makes available can be defined in a <code>query</code> object using the native Elasticsearch <span class="caps">JSON</span> syntax - e.g. to match every document we could use the <code>match_all</code> query,</p>
-<div class="highlight"><pre><span></span><code><span class="n">for_everything</span> <span class="o">&lt;-</span> <span class="nf">query</span><span class="p">(</span><span class="s">&#39;{</span>
+<div class="highlight"><pre><span></span><code><span class="n">for_everything</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="s">&#39;{</span>
 <span class="s">  &quot;match_all&quot;: {}</span>
 <span class="s">}&#39;</span><span class="p">)</span>
 </code></pre></div>
 
 <p>To execute this query we use the <code>%search%</code> operator on the appropriate resource -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> <span class="n">for_everything</span>
+<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;iris&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%search%</span><span class="w"> </span><span class="n">for_everything</span>
 
 <span class="c1">#     sepal_length sepal_width petal_length petal_width    species</span>
 <span class="c1"># 1            4.9         3.0          1.4         0.2     setosa</span>
@@ -248,11 +251,11 @@
 
 <h3 id="sorting-query-results">Sorting Query&nbsp;Results</h3>
 <p>Query results can be sorted on multiple fields by defining a <code>sort</code> object using the same Elasticsearch <span class="caps">JSON</span> syntax - e.g. to sort by <code>sepal_width</code> in ascending order the required <code>sort</code> object would be defined&nbsp;as,</p>
-<div class="highlight"><pre><span></span><code><span class="n">by_sepal_width</span> <span class="o">&lt;-</span> <span class="nf">sort</span><span class="p">(</span><span class="s">&#39;{&quot;sepal_width&quot;: {&quot;order&quot;: &quot;asc&quot;}}&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">by_sepal_width</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sort</span><span class="p">(</span><span class="s">&#39;{&quot;sepal_width&quot;: {&quot;order&quot;: &quot;asc&quot;}}&#39;</span><span class="p">)</span>
 </code></pre></div>
 
 <p>This is then added to a <code>query</code> object whose results we want sorted and executed using the <code>%search%</code> operator as before -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> <span class="p">(</span><span class="n">for_everything</span> <span class="o">+</span> <span class="n">by_sepal_width</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;iris&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%search%</span><span class="w"> </span><span class="p">(</span><span class="n">for_everything</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">by_sepal_width</span><span class="p">)</span>
 
 <span class="c1">#   sepal_length sepal_width petal_length petal_width    species</span>
 <span class="c1"># 1          5.0         2.0          3.5         1.0 versicolor</span>
@@ -266,7 +269,7 @@
 
 <h3 id="aggregations">Aggregations</h3>
 <p>Similarly, any type of aggregation that Elasticsearch makes available can be defined in an <code>aggs</code> object - e.g. to compute the average <code>sepal_width</code> per-species of flower we would specify the following&nbsp;aggregation,</p>
-<div class="highlight"><pre><span></span><code><span class="n">avg_sepal_width</span> <span class="o">&lt;-</span> <span class="nf">aggs</span><span class="p">(</span><span class="s">&#39;{</span>
+<div class="highlight"><pre><span></span><code><span class="n">avg_sepal_width</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">aggs</span><span class="p">(</span><span class="s">&#39;{</span>
 <span class="s">  &quot;avg_sepal_width_per_species&quot;: {</span>
 <span class="s">    &quot;terms&quot;: {</span>
 <span class="s">      &quot;field&quot;: &quot;species&quot;,</span>
@@ -285,7 +288,7 @@
 
 <p><em>(Elasticsearch 5.x users please note that when using the out-of-the-box mappings the above aggregation requires that <code>"field": "species"</code> be changed to <code>"field": "species.keyword"</code> - see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.0/breaking_50_mapping_changes.html" title="Text fields in Elasticsearch 5.x">here</a> for more information as to&nbsp;why)</em></p>
 <p>This aggregation is also executed via the <code>%search%</code> operator on the appropriate resource -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> <span class="n">avg_sepal_width</span>
+<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;iris&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%search%</span><span class="w"> </span><span class="n">avg_sepal_width</span>
 
 <span class="c1">#          key doc_count avg_sepal_width.value</span>
 <span class="c1"># 1     setosa        50                 3.428</span>
@@ -294,7 +297,7 @@
 </code></pre></div>
 
 <p>Queries and aggregations can be combined such that the aggregations are computed on the results of the query. For example, to execute the combination of the above query and aggregation, we would&nbsp;execute,</p>
-<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">,</span> <span class="s">&quot;data&quot;</span><span class="p">)</span> <span class="o">%search%</span> <span class="p">(</span><span class="n">for_everything</span> <span class="o">+</span> <span class="n">avg_sepal_width</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;iris&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%search%</span><span class="w"> </span><span class="p">(</span><span class="n">for_everything</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">avg_sepal_width</span><span class="p">)</span>
 
 <span class="c1">#          key doc_count avg_sepal_width.value</span>
 <span class="c1"># 1     setosa        50                 3.428</span>
@@ -303,7 +306,7 @@
 </code></pre></div>
 
 <p>where the combination&nbsp;yields,</p>
-<div class="highlight"><pre><span></span><code><span class="nf">print</span><span class="p">(</span><span class="n">for_everything</span> <span class="o">+</span> <span class="n">avg_sepal_width</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">print</span><span class="p">(</span><span class="n">for_everything</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">avg_sepal_width</span><span class="p">)</span>
 
 <span class="c1"># {</span>
 <span class="c1">#     &quot;size&quot;: 0,</span>
@@ -333,7 +336,7 @@
 <p>For comprehensive coverage of all query and aggregations types please refer to the rather excellent <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" title="Elasticsearch documentation">official documentation</a> (newcomers to Elasticsearch are advised to start with the &#8216;Query String&#8217;&nbsp;query).</p>
 <h3 id="mappings">Mappings</h3>
 <p>Finally, I have included the ability to create an empty index with a custom mapping, using the <code>%create%</code> operator -&nbsp;e.g.,</p>
-<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">)</span> <span class="o">%create%</span> <span class="nf">mapping_default_simple</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="nf">elastic</span><span class="p">(</span><span class="s">&quot;http://localhost:9200&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;iris&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%create%</span><span class="w"> </span><span class="nf">mapping_default_simple</span><span class="p">()</span>
 </code></pre></div>
 
 <p>Where in this instance <code>mapping_default_simple()</code> is a default mapping that I have shipped with <code>elasticsearchr</code>. It switches-off the text analyser for all fields of type &#8216;string&#8217; (i.e. switches off free text search), allows all text search to work with case-insensitive lower-case terms, and maps any field with the name &#8216;timestamp&#8217; to type &#8216;date&#8217;, so long as it has the appropriate string or long&nbsp;format.</p>
@@ -344,8 +347,8 @@
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="https://alexioannides.github.io/tag/data-processing.html">data-processing</a>
-      <a href="https://alexioannides.github.io/tag/data-stores.html">data-stores</a>
+      <a href="../../../../tag/data-processing.html">data-processing</a>
+      <a href="../../../../tag/data-stores.html">data-stores</a>
     </p>
   </div>
 
@@ -384,7 +387,7 @@ Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a 
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Dr Alex Ioannides ",
-  "url" : "https://alexioannides.github.io",
+  "url" : "../../../..",
   "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
   "description": ""
 }
