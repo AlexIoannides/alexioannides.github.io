@@ -42,13 +42,13 @@
 <!-- End Google Analytics -->
 
 <meta name="author" content="Dr Alex Ioannides" />
-<meta name="description" content="Tags: python, machine-learning, mlops, kubernetes, bodywork Solutions to ML problems are usually developed in Jupyter notebooks. We are then faced with an altogether different problem - how to engineer the notebook solution into your product and maintain its performance through time, after new data is generated. What is this Tutorial Going …" />
+<meta name="description" content="Tags: python, machine-learning, mlops, kubernetes, bodywork Solutions to ML problems are usually first developed in Jupyter notebooks. We are then faced with an altogether different problem - how to engineer these notebook solutions into your products and systems and continue to maintain their performance through time, after new data is generated …" />
 <meta name="keywords" content="">
 
 
 <meta property="og:site_name" content="Dr Alex Ioannides"/>
 <meta property="og:title" content="Deploying ML Models with Bodywork"/>
-<meta property="og:description" content="Tags: python, machine-learning, mlops, kubernetes, bodywork Solutions to ML problems are usually developed in Jupyter notebooks. We are then faced with an altogether different problem - how to engineer the notebook solution into your product and maintain its performance through time, after new data is generated. What is this Tutorial Going …"/>
+<meta property="og:description" content="Tags: python, machine-learning, mlops, kubernetes, bodywork Solutions to ML problems are usually first developed in Jupyter notebooks. We are then faced with an altogether different problem - how to engineer these notebook solutions into your products and systems and continue to maintain their performance through time, after new data is generated …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="https://alexioannides.github.io/2020/12/01/deploying-ml-models-with-bodywork/"/>
 <meta property="og:type" content="article"/>
@@ -149,13 +149,7 @@
   <div>
     <p>Tags: python, machine-learning, mlops, kubernetes,&nbsp;bodywork</p>
 <p><img alt="bodywork_logo" src="https://alexioannides.github.io/images/machine-learning-engineering/bodywork/bodywork-cli.png"></p>
-<p>Solutions to <span class="caps">ML</span> problems are usually developed in Jupyter notebooks. We are then faced with an altogether different problem - how to engineer the notebook solution into your product and maintain its performance through time, after new data is&nbsp;generated.</p>
-<h2 id="what-is-this-tutorial-going-to-teach-me">What is this Tutorial Going to Teach&nbsp;Me?</h2>
-<ul>
-<li>How to develop a two-stage pipeline that trains a model and then creates a prediction service to exposes it via a <span class="caps">REST</span> <span class="caps">API</span>.</li>
-<li>How to deploy the pipeline to <a href="https://kubernetes.io/">Kubernetes</a> using <a href="https://github.com/">GitHub</a> and <a href="https://bodywork.readthedocs.io/en/latest/">Bodywork</a>.</li>
-<li>How to configure the pipeline to run on a schedule, so the model is periodically re-trained and re-deployed without the intervention of an <span class="caps">ML</span>&nbsp;engineer.</li>
-</ul>
+<p>Solutions to <span class="caps">ML</span> problems are usually first developed in Jupyter notebooks. We are then faced with an altogether different problem - how to engineer these notebook solutions into your products and systems and continue to maintain their performance through time, after new data is&nbsp;generated.</p>
 <p><strong>Table of&nbsp;Contents</strong></p>
 <div class="toc">
 <ul>
@@ -177,6 +171,13 @@
 <li><a href="#cleaning-up">Cleaning&nbsp;Up</a></li>
 </ul>
 </div>
+<h2 id="what-is-this-tutorial-going-to-teach-me">What is this Tutorial Going to Teach&nbsp;Me?</h2>
+<ul>
+<li>How to re-engineer a <span class="caps">ML</span> solution from a Jupyter notebook into a production-ready Python&nbsp;modules.</li>
+<li>How to develop a two-stage <span class="caps">ML</span> pipeline that trains a model and then creates a prediction service to exposes it via a <span class="caps">REST</span> <span class="caps">API</span>.</li>
+<li>How to deploy the pipeline to <a href="https://kubernetes.io/">Kubernetes</a> using <a href="https://github.com/">GitHub</a> and <a href="https://bodywork.readthedocs.io/en/latest/">Bodywork</a>.</li>
+<li>How to configure the pipeline to run on a schedule, so the model is periodically re-trained and re-deployed without the intervention of an <span class="caps">ML</span>&nbsp;engineer.</li>
+</ul>
 <h2 id="introduction">Introduction</h2>
 <p>I’ve written at length on the subject of getting machine learning into production - an area that now falls under Machine Learning Operations (MLOps). MLOps has become a hot topic - take my <a href="https://alexioannides.github.io/2019/01/10/deploying-python-ml-models-with-flask-docker-and-kubernetes/">blog post</a> on <em>Deploying Python <span class="caps">ML</span> Models with Flask, Docker and Kubernetes</em>, which is accessed by hundreds of <span class="caps">ML</span> practitioners every month; or the fact that Thoughtwork’s <a href="https://www.thoughtworks.com/insights/articles/intelligent-enterprise-series-cd4ml">essay</a> on <em>Continuous Delivery for <span class="caps">ML</span></em> has become an essential reference for all <span class="caps">ML</span> engineers, together with Google’s <a href="https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html">paper</a> on the <em>Hidden Technical Debt in <span class="caps">ML</span> Systems</em>; and MLOps even has its own entry on <a href="https://en.wikipedia.org/wiki/MLOps">Wikipedia</a>.</p>
 <h3 id="why-is-mlops-getting-so-much-attention">Why is MLOps Getting so Much&nbsp;Attention?</h3>
