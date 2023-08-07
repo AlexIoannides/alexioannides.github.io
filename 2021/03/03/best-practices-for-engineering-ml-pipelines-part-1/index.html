@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
+
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="../../../../theme/pygments/monokai.min.css">
+
+
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/solid.css">
+
+    <link href="../../../../static/custom.css" rel="stylesheet">
+
+    <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
+
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-125604661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+<meta name="author" content="Dr Alex Ioannides" />
+<meta name="description" content="The is the first in a series of articles demonstrating how to engineer a machine learning pipeline and deploy it to a production environment. We’re going to assume that a solution to a ML problem already exists within a Jupyter notebook, and that our task is to engineer this …" />
+<meta name="keywords" content="python, machine-learning, mlops, kubernetes, bodywork">
+
+
+<meta property="og:site_name" content="Dr Alex Ioannides"/>
+<meta property="og:title" content="Best Practices for Engineering ML Pipelines - Part 1"/>
+<meta property="og:description" content="The is the first in a series of articles demonstrating how to engineer a machine learning pipeline and deploy it to a production environment. We’re going to assume that a solution to a ML problem already exists within a Jupyter notebook, and that our task is to engineer this …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="../../../../2021/03/03/best-practices-for-engineering-ml-pipelines-part-1/"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2021-03-03 00:00:00+00:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
+<meta property="article:section" content="machine-learning-engineering"/>
+<meta property="article:tag" content="python"/>
+<meta property="article:tag" content="machine-learning"/>
+<meta property="article:tag" content="mlops"/>
+<meta property="article:tag" content="kubernetes"/>
+<meta property="article:tag" content="bodywork"/>
+<meta property="og:image" content="//avatars1.githubusercontent.com/u/5968486?s=460&v=4">
+
+  <title>Dr Alex Ioannides &ndash; Best Practices for Engineering ML Pipelines - Part 1</title>
+
+</head>
+<body class="light-theme">
+  <aside>
+    <div>
+      <a href="../../../..">
+        <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
+      </a>
+
+      <h1>
+        <a href="../../../..">Dr Alex Ioannides</a>
+      </h1>
+
+<p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
+
+      <nav>
+        <ul class="list">
+
+
+              <li>
+                <a target="_self"
+                   href="../../../../about-me/">
+                  About&nbsp;Me
+                </a>
+              </li>
+              <li>
+                <a target="_self"
+                   href="../../../../about-this-blog/">
+                  About this&nbsp;Blog
+                </a>
+              </li>
+
+            <li>
+              <a target="_self" href="https://alexioannides.com/data-science-and-ml-notebook/" >ML Study Notes & Demos</a>
+            </li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+          <li>
+            <a  class="sc-github" href="https://github.com/alexioannides" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank">
+              <i class="fab fa-soundcloud"></i>
+            </a>
+          </li>
+      </ul>
+    </div>
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href="../../../..">Home</a>
+
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+      <a href="/archives.html">Archives</a>
+
+      <a href="https://alexioannides.github.io/feeds/all.atom.xml">Atom</a>
+
+    </nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="best-practices-for-engineering-ml-pipelines-part-1">Best Practices for Engineering <span class="caps">ML</span> Pipelines - Part&nbsp;1</h1>
+    <p>
+      Posted on Wed 03 March 2021 in <a href="../../../../category/machine-learning-engineering.html">machine-learning-engineering</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><img alt="ml-pipeline-engineering" src="../../../../images/machine-learning-engineering/ml-pipeline-engineering/pipelines-logo.png"></p>
+<p>The is the first in a series of articles demonstrating how to engineer a machine learning pipeline and deploy it to a production environment. We’re going to assume that a solution to a <span class="caps">ML</span> problem already exists within a Jupyter notebook, and that our task is to engineer this solution into an operational <span class="caps">ML</span> system, that can train a model, serve it via a web <span class="caps">API</span> and automatically repeat this process on a schedule when new data is made&nbsp;available.</p>
+<p>The focus will be on software engineering and DevOps, as applied to <span class="caps">ML</span>, with an emphasis on ‘best practices’. All of the code developed in each part of this project, is available on <a href="https://github.com/bodywork-ml/ml-pipeline-engineering">GitHub</a>, with a dedicated branch for each part, so you can explore the code in its various stages of&nbsp;development.</p>
+<p>This first part is focused on how to setup a <span class="caps">ML</span> pipeline engineering project and&nbsp;covers:</p>
+<ul>
+<li>Basic solution&nbsp;architecture.</li>
+<li>How to structure the codebase (and&nbsp;repo).</li>
+<li>Setting-up automated testing and static code analysis&nbsp;tools.</li>
+<li>Making an initial “”Hello, Production”&nbsp;deployment.</li>
+<li>Configuring a <span class="caps">CI</span>/<span class="caps">CD</span>&nbsp;pipeline.</li>
+</ul>
+<p><strong>Table of&nbsp;Contents</strong></p>
+<div class="toc">
+<ul>
+<li><a href="#reviewing-the-business-problem">Reviewing the Business&nbsp;Problem</a></li>
+<li><a href="#reviewing-the-technical-problem">Reviewing the Technical Problem</a><ul>
+<li><a href="#example-prediction-request-json">Example Prediction Request <span class="caps">JSON</span></a></li>
+<li><a href="#example-prediction-response-json">Example Prediction Response <span class="caps">JSON</span></a></li>
+</ul>
+</li>
+<li><a href="#solution-architecture">Solution&nbsp;Architecture</a></li>
+<li><a href="#structuring-the-pipeline-project">Structuring the Pipeline&nbsp;Project</a></li>
+<li><a href="#setting-up-the-local-dev-environment">Setting-Up the Local Dev&nbsp;Environment</a></li>
+<li><a href="#setting-up-the-testing-framework">Setting-Up the Testing Framework</a><ul>
+<li><a href="#using-tox-for-test-automation">Using Tox for Test&nbsp;Automation</a></li>
+<li><a href="#testing-manually">Testing&nbsp;Manually</a></li>
+</ul>
+</li>
+<li><a href="#creating-a-deployment-environment">Creating a Deployment&nbsp;Environment</a></li>
+<li><a href="#configuring-cicd">Configuring <span class="caps">CI</span>/<span class="caps">CD</span></a></li>
+<li><a href="#wrapping-up">Wrapping-Up</a></li>
+</ul>
+</div>
+<h2 id="reviewing-the-business-problem">Reviewing the Business&nbsp;Problem</h2>
+<p>A manufacturer of industrial spare-parts wants the ability to give its customers an estimate for the time it could take to dispatch an order. This depends on how many existing orders have yet to be processed, such that customers ordering late on a busy day can encounter unexpected delays, which sometimes leads to complaints; this is an exercise in keeping customers happy by managing their&nbsp;expectations.</p>
+<p>Orders are placed on a <span class="caps">B2B</span> eCommerce platform, that is developed and maintained by the manufacturer’s in-house software engineering team. The product manager for the platform wants the estimated dispatch time to be presented to the customer (through the <span class="caps">UI</span>), before they place an&nbsp;order.</p>
+<h2 id="reviewing-the-technical-problem">Reviewing the Technical&nbsp;Problem</h2>
+<p>A data scientist has worked on this (regression) task and has handed us the <a href="https://github.com/bodywork-ml/ml-pipeline-engineering/blob/master/notebooks/time_to_dispatch_model.ipynb">Jupyter notebook</a> containing their solution. They have concluded that optimal performance can be achieved by training on the preceding week’s orders data, so the model will have to be re-trained and redeployed on a weekly&nbsp;basis.</p>
+<p>At the end of each week, the data engineering team deliver a new tranche of training data, as a <span class="caps">CSV</span> file on cloud object storage (<span class="caps">AWS</span> S3). The platform engineering team want access to order-dispatch estimates via a web service with a simple <span class="caps">REST</span> <span class="caps">API</span>, and have supplied us with an example request and response (reproduced below). The platform and data engineering teams both deploy their systems and services to <span class="caps">AWS</span>, and we too are required to deploy our solution (the pipeline) to <span class="caps">AWS</span>.</p>
+<h3 id="example-prediction-request-json">Example Prediction Request <span class="caps">JSON</span></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;product_code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SKU001&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;orders_placed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">112</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="example-prediction-response-json">Example Prediction Response <span class="caps">JSON</span></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;est_hours_to_dispatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5.321</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;model_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="solution-architecture">Solution&nbsp;Architecture</h2>
+<p><img alt="architecture" src="https://bodywork-media.s3.eu-west-2.amazonaws.com/eng-ml-pipes/pt1/scope_and_context.png"></p>
+<p>The architecture for the target solution is outlined above - the workflow is as&nbsp;follows:</p>
+<ul>
+<li>Every Friday night at 2300 a new batch of training data is added to an S3 bucket in <span class="caps">CSV</span>&nbsp;format.</li>
+<li>After the new data arrives, a pipeline needs to be triggered that will train a new model and then deploy it, tearing-down the previous prediction service in the process (with zero downtime&nbsp;in-between).</li>
+</ul>
+<p>The pipeline will be split into two stages, each of which will be implemented as an executable Python&nbsp;module:</p>
+<ul>
+<li><strong>train model</strong> - downloads the latest tranche of data from object storage, trains a model and then persists the model to object&nbsp;storage.</li>
+<li><strong>serve model</strong> - downloads the latest trained model and then starts a web server that exposes a <span class="caps">REST</span> <span class="caps">API</span> endpoint that serves requests for dispatch duration&nbsp;predictions.</li>
+</ul>
+<p>The pipeline will be deployed in containers to <span class="caps">AWS</span> <span class="caps">EKS</span> (managed Kubernetes cluster), using <a href="https://bodywork.readthedocs.io/en/latest/">Bodywork</a>.</p>
+<h2 id="structuring-the-pipeline-project">Structuring the Pipeline&nbsp;Project</h2>
+<p>The files in the <a href="https://github.com/bodywork-ml/ml-pipeline-engineering">project’s git repository</a> are organised as&nbsp;follows:</p>
+<div class="highlight"><pre><span></span><code>root/
+ |-- .circleci/
+     |-- config.yml
+ |-- notebooks/    
+     |-- time_to_dispatch_model.ipynb
+     |-- requirements_nb.txt
+ |-- pipeline/
+     |-- __init__.py
+     |-- serve_model.py
+     |-- train_model.py
+     |-- utils.py
+ |-- tests/
+     |-- __init__.py
+     |-- test_train_model.py
+     |-- test_serve_model.py
+ |-- requirements_cicd.txt
+ |-- requirements_pipe.txt
+ |-- flake8.ini
+ |-- mypy.ini
+ |-- tox.ini
+ |-- bodywork.yaml
+</code></pre></div>
+
+<ul>
+<li><code>.circleci/config.yml</code> contains the configuration for the project’s <span class="caps">CI</span>/<span class="caps">CD</span> pipeline (using <a href="https://circleci.com">CircleCI</a>). We&#8217;ll discuss in more depth later&nbsp;on.</li>
+<li><code>notebooks/*</code> - has all of the Jupyter notebooks detailing the <span class="caps">ML</span> solution to the business&nbsp;problem.</li>
+<li><code>pipeline/*</code> has all Python modules that define the&nbsp;pipeline.</li>
+<li><code>tests/*</code> contains Python modules defining automated tests for the&nbsp;pipeline.</li>
+<li><code>requirements_cicd.txt</code> lists the Python packages required by the <span class="caps">CI</span>/<span class="caps">CD</span> pipeline - e.g. for running tests and deploying the&nbsp;pipeline.</li>
+<li><code>requirements_pipe.txt</code> lists the Python packages required by the pipeline - e.g. Scikit-Learn, FastAPI,&nbsp;etc.</li>
+<li><code>flake8.ini</code> <span class="amp">&amp;</span> <code>mypy.ini</code> are configuration files for <a href="https://flake8.pycqa.org/en/latest/#">Flake8</a> code style enforcement and <a href="https://mypy.readthedocs.io/en/stable/">MyPy</a> static type&nbsp;checking.</li>
+<li><code>tox.ini</code> provides configuration for the <a href="https://tox.readthedocs.io/en/latest/index.html">Tox</a> test automation&nbsp;framework.</li>
+<li><code>bodywork.yaml</code> is the <a href="https://bodywork.readthedocs.io/en/latest/">Bodywork</a> deployment configuration&nbsp;file.</li>
+</ul>
+<h2 id="setting-up-the-local-dev-environment">Setting-Up the Local Dev&nbsp;Environment</h2>
+<p>We’ve split the various Python package requirements into separate&nbsp;files:</p>
+<ul>
+<li><code>requirements_pipe.txt</code> contains the packages required by the&nbsp;pipeline.</li>
+<li><code>requirements_cicd.txt</code> contains the packages required by the <span class="caps">CICD</span>&nbsp;pipeline.</li>
+<li><code>notebooks/requirements_nb.txt</code> contains the package required to run the&nbsp;notebook.</li>
+</ul>
+<p>We’re planning to deploy the pipeline using Bodywork, which currently targets the Python 3.9 runtime, so we create a Python 3.9 virtual environment in which to install all&nbsp;requirements.</p>
+<div class="highlight"><pre><span></span><code>$ python3.9 -m venv .venv
+$ source .venv/bin/activate
+$ pip install -r requirements_pipe.txt
+$ pip install -r requirements_cicd.txt
+$ pip install -r requirements_nb.txt
+</code></pre></div>
+
+<h2 id="setting-up-the-testing-framework">Setting-Up the Testing&nbsp;Framework</h2>
+<p>We’re going to use <a href="https://docs.pytest.org/en/6.2.x/">pytest</a> to support test development and we’re going to run them via the <a href="https://tox.readthedocs.io/en/latest/index.html">Tox</a> test automation framework. The best way to get this operational, is to write some skeleton code for the pipeline that can be covered by a couple of basic tests. For example, at a trivial level the  <code>train_model.py</code> batch job should provide us with some basic logs, whose existence we can test for in <code>test_train_model.py</code>. Taking a Test-Driven Development (<span class="caps">TDD</span>) approach, we start with the test in <code>test_train_model.py</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">_pytest.logging</span> <span class="kn">import</span> <span class="n">LogCaptureFixture</span>
+
+<span class="kn">from</span> <span class="nn">pipeline.train_model</span> <span class="kn">import</span> <span class="n">main</span>
+
+
+<span class="k">def</span> <span class="nf">test_main_execution</span><span class="p">(</span><span class="n">caplog</span><span class="p">:</span> <span class="n">LogCaptureFixture</span><span class="p">):</span>
+    <span class="n">main</span><span class="p">()</span>
+    <span class="n">logs</span> <span class="o">=</span> <span class="n">caplog</span><span class="o">.</span><span class="n">text</span>
+    <span class="k">assert</span> <span class="s2">&quot;Starting train-model stage.&quot;</span> <span class="ow">in</span> <span class="n">logs</span>
+</code></pre></div>
+
+<p>Where we use pytest’s <code>caplog</code> fixture to capture logs messages. We now provide the implementation in <code>train_model.py</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pipeline.utils</span> <span class="kn">import</span> <span class="n">configure_logger</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">configure_logger</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting train-model stage.&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Where <code>configure_logger</code> configures a Python logger that will be common to both <code>train_model.py</code> and <code>serve_model.py</code>. </p>
+<p>Similarly for the  <code>serve_model.py</code> module, we can write a trivial test for the <span class="caps">REST</span> <span class="caps">API</span> endpoint in <code>test_serve_model.py</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">fastapi.testclient</span> <span class="kn">import</span> <span class="n">TestClient</span>
+
+<span class="kn">from</span> <span class="nn">pipeline.serve_model</span> <span class="kn">import</span> <span class="n">app</span>
+
+<span class="n">test_client</span> <span class="o">=</span> <span class="n">TestClient</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_web_api_returns_valid_response_given_valid_data</span><span class="p">():</span>
+    <span class="n">prediction_request</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;product_code&quot;</span><span class="p">:</span> <span class="s2">&quot;SKU001&quot;</span><span class="p">,</span> <span class="s2">&quot;orders_placed&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+    <span class="n">prediction_response</span> <span class="o">=</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="s2">&quot;/api/v0.1/time_to_dispatch&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prediction_request</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+    <span class="k">assert</span> <span class="s2">&quot;est_hours_to_dispatch&quot;</span> <span class="ow">in</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;model_version&quot;</span> <span class="ow">in</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">test_web_api_returns_error_code_given_invalid_data</span><span class="p">():</span>
+    <span class="n">prediction_request</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;product_code&quot;</span><span class="p">:</span> <span class="s2">&quot;SKU001&quot;</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+    <span class="n">prediction_response</span> <span class="o">=</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="s2">&quot;/api/v0.1/time_to_dispatch&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prediction_request</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span>
+    <span class="k">assert</span> <span class="s2">&quot;value_error.missing&quot;</span> <span class="ow">in</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">text</span>
+</code></pre></div>
+
+<p>This loads the FastAPI test client and uses it to verify that sending a request with valid data results in a response with a <span class="caps">HTTP</span> status code of <code>200</code>, but sending invalid data results in a <span class="caps">HTTP</span> <code>422</code> error (see <a href="https://httpstatuses.com">this</a> for more information on <span class="caps">HTTP</span> status codes). In <code>serve_model.py</code> we implement the code to satisfy these&nbsp;tests,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">uvicorn</span>
+<span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">status</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Data</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">product_code</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">orders_placed</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="k">class</span> <span class="nc">Prediction</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">est_hours_to_dispatch</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">model_version</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+    <span class="s2">&quot;/api/v0.1/time_to_dispatch&quot;</span><span class="p">,</span>
+    <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span>
+    <span class="n">response_model</span><span class="o">=</span><span class="n">Prediction</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">time_to_dispatch</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;est_hours_to_dispatch&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;model_version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1&quot;</span><span class="p">}</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<p>If you’re unfamiliar with how FastAPI uses Python type hints and <a href="https://pydantic-docs.helpmanual.io">Pydantic</a> to define <span class="caps">JSON</span> schema, then take a look at the <a href="https://fastapi.tiangolo.com/python-types/">FastAPI docs</a>.</p>
+<p>You can run all tests in the <code>tests</code> folder&nbsp;using,</p>
+<div class="highlight"><pre><span></span><code>$ pytest
+</code></pre></div>
+
+<p>Or isolate a specific test using the <code>-k</code> flag, for&nbsp;example,</p>
+<div class="highlight"><pre><span></span><code>$ pytest -k test_web_api_returns_valid_response_given_valid_data
+</code></pre></div>
+
+<h3 id="using-tox-for-test-automation">Using Tox for Test&nbsp;Automation</h3>
+<p><a href="https://tox.readthedocs.io/en/latest/index.html">Tox</a> is a test automation framework that helps to manage groups of tests, together with isolated environments in which to run them. Configuration for Tox is defined in <code>tox.ini</code> , which is reproduced&nbsp;below.</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tox]</span>
+<span class="na">envlist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{py39}_{unit_and_functional_tests,static_code_analysis}</span>
+
+<span class="k">[testenv]</span>
+<span class="na">skip_install</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<span class="na">deps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">    </span><span class="na">-rrequirements_cicd.txt</span>
+<span class="w">    </span><span class="na">-rrequirements_pipe.txt</span>
+<span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">    </span><span class="na">unit_and_functional_tests</span><span class="o">:</span><span class="w"> </span><span class="s">pytest tests/ --disable-warnings {posargs}</span>
+<span class="w">    </span><span class="na">static_code_analysis</span><span class="o">:</span><span class="w"> </span><span class="s">mypy --config-file mypy.ini</span>
+<span class="w">    </span><span class="na">static_code_analysis</span><span class="o">:</span><span class="w"> </span><span class="s">flake8 --config flake8.ini pipeline</span>
+</code></pre></div>
+
+<p>Calling Tox from command&nbsp;line,</p>
+<div class="highlight"><pre><span></span><code>$ tox
+</code></pre></div>
+
+<p>Will run every set of tests - those defined in the commands tagged with <code>unit_and_functional</code> and <code>static_code_analysis</code> - for every chosen environment, which in this case is just Python 3.9 (<code>py39</code>). This environment will have none of the environment variables or commands that are present in the local shell, unless they’ve been specified (we haven’t), and can only use the packages specified in <code>requirements_cicd.txt</code> and <code>requirements_pipe.txt</code>. Individual test-environment pairs can be executed using the <code>-e</code> flag - for&nbsp;example,</p>
+<div class="highlight"><pre><span></span><code>$ tox -e py39_static_code_analysis
+</code></pre></div>
+
+<p>Will only run Flake8 and MyPy (static code analysis tools) and leave out the unit and functional tests. For more information on working with Tox, see the <a href="https://tox.readthedocs.io">documentation</a>.</p>
+<h3 id="testing-manually">Testing&nbsp;Manually</h3>
+<p>Sometimes you just need to test on a <em>ad hoc</em> basis, by running the modules, setting breakpoints, etc. You can run the batch job in <code>train_model.py</code> using,</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pipeline.train_model
+</code></pre></div>
+
+<p>Which should print the following to&nbsp;stdout,</p>
+<div class="highlight"><pre><span></span><code>2021-07-05 18:52:24,264 - INFO - train_model.main - Starting train-model stage.
+</code></pre></div>
+
+<p>Similarly, the web <span class="caps">API</span> defined in <code>serve_model</code> can be started&nbsp;with,</p>
+<div class="highlight"><pre><span></span><code>$ python -m pipeline.serve_model
+</code></pre></div>
+
+<p>Which should print the following to&nbsp;stdout,</p>
+<div class="highlight"><pre><span></span><code>INFO:     Started server process [21974]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+</code></pre></div>
+
+<p>And make the <span class="caps">API</span> available for testing locally - e.g., issuing the following request from the command&nbsp;line,</p>
+<div class="highlight"><pre><span></span><code><span class="err">$ curl http://localhost:8000/api/v0.1/time_to_dispatch \</span>
+<span class="err">    --request POST \</span>
+<span class="err">    --header &quot;Content-Type: application/json&quot; \</span>
+<span class="err">    --data &#39;{&quot;product_code&quot;: &quot;001&quot;, &quot;orders_placed&quot;: 10}&#39;</span>
+</code></pre></div>
+
+<p>Should&nbsp;return,</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;est_hours_to_dispatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>As defined in the tests. FastAPI will also automatically expose the following endpoints on your&nbsp;service:</p>
+<ul>
+<li>http://localhost:8000/docs - <a href="https://en.wikipedia.org/wiki/OpenAPI_Specification">OpenAPI</a> documentation for the <span class="caps">API</span>, with a <span class="caps">UI</span> for&nbsp;testing.</li>
+<li>http://localhost:8000/openapi.json - the <a href="https://json-schema.org"><span class="caps">JSON</span> schema</a> for the <span class="caps">API</span>.</li>
+</ul>
+<h2 id="creating-a-deployment-environment">Creating a Deployment&nbsp;Environment</h2>
+<p>Here at Bodywork <span class="caps">HQ</span>, we’re advocates for the <a href="https://blog.thepete.net/blog/2019/10/04/hello-production/">“Hello, Production”</a> school-of-thought, that encourages teams to make the deployment of a skeleton application (such as the trivial pipeline sketched-out in this article), one of the first tasks for any new project. As we have written about <a href="https://www.bodyworkml.com/posts/scikit-learn-meet-production">before</a>, there are many benefits to taking deployment pains early on in a software development project, and then using the initial deployment skeleton as the basis for rapidly delivering useful functionality into&nbsp;production.</p>
+<p>We’re planning to deploy to Kubernetes using <a href="https://bodywork.readthedocs.io/en/latest/">Bodywork</a>, but we appreciate that not everyone has easy access to a Kubernetes cluster for development. If this is your reality, then the next best thing your team could do, is to start by deploying to a local test cluster, to make sure that the pipeline is at least deploy-able. You can get started with a single node cluster on your laptop, using Minikube - see <a href="https://bodywork.readthedocs.io/en/latest/kubernetes/#quickstart">our guide</a> to get this up-and-running in <strong>under 10 minutes</strong>.</p>
+<p>The full description of the deployment is contained in <code>bodywork.yaml</code>, which we’ve reproduced&nbsp;below.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.1&quot;</span>
+<span class="nt">pipeline</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time-to-dispatch</span>
+<span class="w">  </span><span class="nt">docker_image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bodyworkml/bodywork-core:3.1</span>
+<span class="w">  </span><span class="nt">DAG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">train_model &gt;&gt; serve_model</span>
+<span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">train_model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">executable_module_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline/train_model.py</span>
+<span class="w">    </span><span class="nt">cpu_request</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.25</span>
+<span class="w">    </span><span class="nt">memory_request_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">    </span><span class="nt">batch</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">max_completion_time_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">serve_model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">executable_module_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline/serve_model.py</span>
+<span class="w">    </span><span class="nt">requirements</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fastapi==0.65.2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uvicorn==0.14.0</span>
+<span class="w">    </span><span class="nt">cpu_request</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.25</span>
+<span class="w">    </span><span class="nt">memory_request_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">    </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">max_startup_time_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span>
+<span class="w">      </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">logging</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
+</code></pre></div>
+
+<p>This describes a deployment with two stages - <code>train-model</code> and <code>serve-model</code> - that are executed one after the other, as described in <code>pipeline.DAG</code>. For more information on how to configure a Bodywork deployment, checkout the <a href="https://bodywork.readthedocs.io/en/latest/user_guide/">User Guide</a>.</p>
+<p>Once you have access to a test cluster, configure it for Bodywork&nbsp;deployments,</p>
+<div class="highlight"><pre><span></span><code>$ bw configure-cluster
+</code></pre></div>
+
+<p>And then deploy the workflow directly from the GitHub repository (so make sure all commits have been pushed to your remote&nbsp;branch),</p>
+<div class="highlight"><pre><span></span><code>$ bw create deployment https://github.com/bodywork-ml/ml-pipeline-engineering --branch part-one
+</code></pre></div>
+
+<p>We like to watch our deployments rolling-out using the Kubernetes dashboard, as you can see in the video clip&nbsp;below.</p>
+<div align="center">
+<img src="https://bodywork-media.s3.eu-west-2.amazonaws.com/eng-ml-pipes/pt1/ml-pipeline-engineering.gif"/>
+</div>
+
+<p>Once the deployment has completed successfully, retrieve the details of the prediction&nbsp;service,</p>
+<div class="highlight"><pre><span></span><code>$ bw get deployment time-to-dispatch serve-model
+</code></pre></div>
+
+<p>You can manually test the deployed prediction endpoint&nbsp;using,</p>
+<div class="highlight"><pre><span></span><code>$ curl http://CLUSTER_IP/time-to-dispatch/serve-model/api/v0.1/time_to_dispatch \
+    --request POST \
+    --header &quot;Content-Type: application/json&quot; \
+    --data &#39;{&quot;product_code&quot;: &quot;001&quot;, &quot;orders_placed&quot;: 10}&#39;
+</code></pre></div>
+
+<p>Which should return the same response as&nbsp;before,</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;est_hours_to_dispatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>See our guide to <a href="https://bodywork.readthedocs.io/en/latest/kubernetes/#accessing-services">accessing services</a> for information on how to determine <code>CLUSTER_IP</code>.</p>
+<h2 id="configuring-cicd">Configuring <span class="caps">CI</span>/<span class="caps">CD</span></h2>
+<div align="center">
+<img src="https://bodywork-media.s3.eu-west-2.amazonaws.com/eng-ml-pipes/pt1/ci_workflow.png"/>
+</div>
+
+<p>Now that the overall structure of the project has been created, all that remains is to put in-place the processes required to get new code merged and deployed as quickly and efficiently as possible. The process of getting new code merged on an <em>ad hoc</em>  basis, is referred to as Continuous Integration (<span class="caps">CI</span>), while getting new code deployed as soon as it is merged, is known as Continuous Deployment (<span class="caps">CD</span>). The workflow we intend to impose is outlined in the diagram above.&nbsp;Briefly:</p>
+<ol>
+<li>Pushing changes (commits) to the <code>master</code> branch of the repository is forbidden. All changes should first be raised as merge (or pull) requests, that have to pass all automated testing and some kind of peer review process (e.g. a code review), before they can be merged to the <code>master</code> branch.</li>
+<li>Once changes are merged to the master branch, they can be&nbsp;deployed.</li>
+</ol>
+<p>Here at Bodywork <span class="caps">HQ</span> we use <a href="https://github.com/bodywork-ml/ml-pipeline-engineering">GitHub</a> and <a href="https://app.circleci.com/pipelines/github/bodywork-ml">CircleCI</a> to run this workflow. <a href="https://docs.github.com/en/github/administering-a-repository/defining-the-mergeability-of-pull-requests/about-protected-branches">Branch protection rules</a> on GitHub are used to prevent changes being pushed to master, unless automated tests and peer review have been passed. CircleCI is a paid-for <span class="caps">CI</span>/<span class="caps">CD</span> service (with an outrageously generous free-tier) that automatically integrates with GitHub to enable jobs (such as automated tests) to be triggered automatically following merge requests, or changes to the <code>master</code>branch, etc. Our CircleCI pipeline is defined in <code>.circleci/config.yml</code> and reproduced&nbsp;below.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.1</span>
+
+<span class="nt">orbs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">aws-eks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">circleci/aws-eks@1.0.3</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">run-static-code-analysis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">docker</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">circleci/python:3.9</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Installing Python dependencies</span>
+<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -r requirements_cicd.txt</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Running tests</span>
+<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tox -e py39_static_code_analysis</span>
+<span class="w">  </span><span class="nt">run-tests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">docker</span><span class="p">:</span><span class="w"> </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">circleci/python:3.9</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Installing Python dependencies</span>
+<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -r requirements_cicd.txt</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Running tests</span>
+<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tox -e py39_unit_and_functional_tests</span>
+<span class="w">  </span><span class="nt">trigger-bodywork-deployment</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">executor</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-eks/python</span>
+<span class="w">      </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.9&quot;</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">aws-eks/update-kubeconfig-with-authenticator</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cluster-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bodywork-dev</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Installing Python dependencies</span>
+<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -r requirements_cicd.txt</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Trigger Deployment</span>
+<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bodywork create deployment https://github.com/bodywork-ml/ml-pipeline-engineering --branch master</span>
+
+<span class="nt">workflows</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">test-build-deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">jobs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run-static-code-analysis</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">filters</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">ignore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run-tests</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">requires</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">run-static-code-analysis</span>
+<span class="w">          </span><span class="nt">filters</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">ignore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">trigger-bodywork-deployment</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">filters</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span>
+</code></pre></div>
+
+<p>Although this configuration file is specific to CircleCI, it will be easily recognisable to anyone who’s ever worked with similar services such as <a href="https://github.com/features/actions">GitHub Actions</a>, <a href="https://about.gitlab.com">GitLab <span class="caps">CI</span>/<span class="caps">CD</span></a>, <a href="https://travis-ci.org">Travis <span class="caps">CI</span></a>, etc. In essence, it defines the&nbsp;following:</p>
+<ul>
+<li>Three separate jobs: <code>run-static-code-analysis</code>, <code>run-tests</code> and <code>trigger-bodywork-deployment</code>. Each of these run in their own Docker container, with the project’s GitHub repo checked-out and any Python dependencies installed. The <code>trigger-bodywork-deployment</code> job is set to run on a custom <span class="caps">AWS</span>-managed image (or ‘Orb’), that comes with additional tools for working with <span class="caps">AWS</span>’s <span class="caps">EKS</span> (managed Kubernetes) service, which is our ultimate deployment&nbsp;target.</li>
+<li>A workflow that is triggered upon every merge request: <code>run-static-code-analysis</code> is first executed, which runs <code>tox -e py39_static_code_analysis</code>. If this passes, then the <code>run-tests</code> job is executed, which runs <code>tox -e py39_unit_and_functional_tests</code>. If this also passes, then CircleCI will mark this workflow as ‘passed’ and report this back to GitHub (see&nbsp;below).</li>
+<li>A workflow that is triggered upon every merge to <code>master</code>: <code>trigger-bodywork-deployment</code>is the only job in this pipeline, which uses Bodywork to deploy the latest pipeline (using rolling updates to maintain service&nbsp;availability).</li>
+</ul>
+<div align="center">
+<img src="https://bodywork-media.s3.eu-west-2.amazonaws.com/eng-ml-pipes/pt1/github_pr.png"/>
+</div>
+
+<h2 id="wrapping-up">Wrapping-Up</h2>
+<p>In the first part of this project we have expended a lot of effort to lay the foundations for the work that is to come - developing the model training job, the prediction service and deploying these to a production environment where they will need to be monitored. Thanks to automated tests and <span class="caps">CI</span>/<span class="caps">CD</span>, our team will be able to quickly iterate towards a well-engineered solution, with results that can be demonstrated to stakeholders early&nbsp;on.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="../../../../tag/python.html">python</a>
+      <a href="../../../../tag/machine-learning.html">machine-learning</a>
+      <a href="../../../../tag/mlops.html">mlops</a>
+      <a href="../../../../tag/kubernetes.html">kubernetes</a>
+      <a href="../../../../tag/bodywork.html">bodywork</a>
+    </p>
+  </div>
+
+
+
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'alexioannides';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+    Please enable JavaScript to view comments.
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy;  </p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Dr Alex Ioannides ",
+  "url" : "../../../..",
+  "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
+  "description": ""
+}
+</script>
+
+
+</body>
+</html>

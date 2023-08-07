@@ -1,0 +1,1479 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
+
+
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+          href="../../../../theme/pygments/monokai.min.css">
+
+
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/solid.css">
+
+    <link href="../../../../static/custom.css" rel="stylesheet">
+
+    <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
+
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-125604661-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+<meta name="author" content="Dr Alex Ioannides" />
+<meta name="description" content="This is the second part in a series of articles demonstrating best practices for engineering ML pipelines and deploying them to production. In the first part we focused on project setup - everything from codebase structure to configuring a CI/CD pipeline and making an initial deployment of a skeleton pipeline …" />
+<meta name="keywords" content="python, machine-learning, mlops, kubernetes, bodywork">
+
+
+<meta property="og:site_name" content="Dr Alex Ioannides"/>
+<meta property="og:title" content="Best Practices for Engineering ML Pipelines - Part 2"/>
+<meta property="og:description" content="This is the second part in a series of articles demonstrating best practices for engineering ML pipelines and deploying them to production. In the first part we focused on project setup - everything from codebase structure to configuring a CI/CD pipeline and making an initial deployment of a skeleton pipeline …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="../../../../2022/11/07/best-practices-for-engineering-ml-pipelines-part-2/"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2022-11-07 00:00:00+00:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
+<meta property="article:section" content="machine-learning-engineering"/>
+<meta property="article:tag" content="python"/>
+<meta property="article:tag" content="machine-learning"/>
+<meta property="article:tag" content="mlops"/>
+<meta property="article:tag" content="kubernetes"/>
+<meta property="article:tag" content="bodywork"/>
+<meta property="og:image" content="//avatars1.githubusercontent.com/u/5968486?s=460&v=4">
+
+  <title>Dr Alex Ioannides &ndash; Best Practices for Engineering ML Pipelines - Part 2</title>
+
+</head>
+<body class="light-theme">
+  <aside>
+    <div>
+      <a href="../../../..">
+        <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
+      </a>
+
+      <h1>
+        <a href="../../../..">Dr Alex Ioannides</a>
+      </h1>
+
+<p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
+
+      <nav>
+        <ul class="list">
+
+
+              <li>
+                <a target="_self"
+                   href="../../../../about-me/">
+                  About&nbsp;Me
+                </a>
+              </li>
+              <li>
+                <a target="_self"
+                   href="../../../../about-this-blog/">
+                  About this&nbsp;Blog
+                </a>
+              </li>
+
+            <li>
+              <a target="_self" href="https://alexioannides.com/data-science-and-ml-notebook/" >ML Study Notes & Demos</a>
+            </li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+          <li>
+            <a  class="sc-github" href="https://github.com/alexioannides" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-linkedin" href="https://www.linkedin.com/in/alexioannides/" target="_blank">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-twitter" href="https://twitter.com/ioannides_alex" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a  class="sc-soundcloud" href="https://soundcloud.com/user-616657739" target="_blank">
+              <i class="fab fa-soundcloud"></i>
+            </a>
+          </li>
+      </ul>
+    </div>
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href="../../../..">Home</a>
+
+      <a href="/categories.html">Categories</a>
+      <a href="/tags.html">Tags</a>
+      <a href="/archives.html">Archives</a>
+
+      <a href="https://alexioannides.github.io/feeds/all.atom.xml">Atom</a>
+
+    </nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="best-practices-for-engineering-ml-pipelines-part-2">Best Practices for Engineering <span class="caps">ML</span> Pipelines - Part&nbsp;2</h1>
+    <p>
+      Posted on Mon 07 November 2022 in <a href="../../../../category/machine-learning-engineering.html">machine-learning-engineering</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><img alt="ml-pipeline-engineering" src="../../../../images/machine-learning-engineering/ml-pipeline-engineering/pipelines-logo.png"></p>
+<p>This is the second part in a series of articles demonstrating best practices for engineering <span class="caps">ML</span> pipelines and deploying them to production. In the <a href="../../../../2021/03/03/best-practices-for-engineering-ml-pipelines-part-1/">first part</a> we focused on project setup - everything from codebase structure to configuring a <span class="caps">CI</span>/<span class="caps">CD</span> pipeline and making an initial deployment of a skeleton&nbsp;pipeline.</p>
+<p>In this part we are going to focus on developing a fully-operational pipeline and will&nbsp;cover:</p>
+<ul>
+<li>A simple approach to data and model versioning, using cloud object&nbsp;storage.</li>
+<li>How to factor-out common code and make it reusable between&nbsp;projects.</li>
+<li>Defending against errors and handling&nbsp;failure.</li>
+<li>How to enable configurable pipelines that can run in multiple environments without code&nbsp;changes.</li>
+<li>Developing the automated model-training stage and how to write tests for&nbsp;it.</li>
+<li>Developing and testing the serve-model stage that exposes the trained model via a web <span class="caps">API</span>.</li>
+<li>Updating the deployment configuration and releasing the changes to&nbsp;production.</li>
+<li>Scheduling the pipeline to run on a&nbsp;schedule.</li>
+</ul>
+<p>All of the code referred to in this series of posts is available on  <a href="https://github.com/bodywork-ml/ml-pipeline-engineering">GitHub</a>, with a dedicated branch for each part, so you can explore the code in its various stages of development. Have a quick look before reading&nbsp;on.</p>
+<p><strong>Table of&nbsp;Contents</strong></p>
+<div class="toc">
+<ul>
+<li><a href="#a-simple-strategy-for-dataset-and-model-versioning">A Simple Strategy for Dataset and Model&nbsp;Versioning</a></li>
+<li><a href="#reusing-common-code">Reusing Common Code</a><ul>
+<li><a href="#distributing-python-packages-within-your-company">Distributing Python Packages within your&nbsp;Company</a></li>
+</ul>
+</li>
+<li><a href="#defending-against-errors-and-handling-failures">Defending Against Errors and Handling&nbsp;Failures</a></li>
+<li><a href="#configurable-pipelines">Configurable&nbsp;Pipelines</a></li>
+<li><a href="#engineering-the-model-training-job">Engineering the Model Training Job</a><ul>
+<li><a href="#prepare-data">Prepare&nbsp;Data</a></li>
+<li><a href="#train-model">Train&nbsp;Model</a></li>
+<li><a href="#validating-trained-models">Validating Trained&nbsp;Models</a></li>
+<li><a href="#end-to-end-functional-tests">End-to-End Functional&nbsp;Tests</a></li>
+<li><a href="#input-validation-for-the-stage">Input Validation for the&nbsp;Stage</a></li>
+</ul>
+</li>
+<li><a href="#developing-the-model-serving-stage">Developing the Model Serving Stage</a><ul>
+<li><a href="#updating-the-tests">Updating the&nbsp;Tests</a></li>
+</ul>
+</li>
+<li><a href="#updating-the-deployment-and-releasing-to-production">Updating the Deployment and Releasing to&nbsp;Production</a></li>
+<li><a href="#scheduling-the-pipeline-to-run-on-a-schedule">Scheduling the Pipeline to run on a&nbsp;Schedule</a></li>
+<li><a href="#wrap-up">Wrap-Up</a></li>
+<li><a href="#appendix">Appendix</a><ul>
+<li><a href="#the-dataset-class">The Dataset&nbsp;Class</a></li>
+<li><a href="#the-model-class">The Model&nbsp;Class</a></li>
+<li><a href="#train_modelpy">train_model.py</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="a-simple-strategy-for-dataset-and-model-versioning">A Simple Strategy for Dataset and Model&nbsp;Versioning</h2>
+<p>To recap, the data engineering team will deliver the latest tranche of training data to an <span class="caps">AWS</span> S3 bucket, in <span class="caps">CSV</span> format. They will take responsibility for verifying that these files have the correct schema and contain no unexpected errors. Each filename will contain the timestamp of its creation, in <span class="caps">ISO</span> format, so that the datasets in the bucket will look as&nbsp;follows:</p>
+<div class="highlight"><pre><span></span><code>s3://time-to-dispatch/
+|-- datasets/
+    |-- time_to_dispatch_2021-07-03T23:05:32.csv
+    |-- time_to_dispatch_2021-07-02T23:05:13.csv
+    |-- time_to_dispatch_2021-07-01T23:04:52.csv
+    |-- ...
+</code></pre></div>
+
+<p>The train-model stage of the pipeline will only need to download the latest file for training a new model. We could stop here and rely solely on the filenames as a lightweight versioning strategy, but it is safer to enable <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html">versioning</a> for the S3 bucket and to track of the hash of the dataset used for training, which is computed automatically for every object stored on S3 (the <span class="caps">MD5</span> hash of an object is stored as its <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/API_Object.html">Entity Tag or ETag</a>). This allows us to defend against accidental deletes and/or overwrites and enables us to locate the precise dataset associated with a trained&nbsp;model.</p>
+<p>Because this concept of a dataset is bigger than just an arbitrarily named file on S3, we will need to develop a custom <code>Dataset</code> class for representing files on S3 and retrieving their hashes, together with functions/methods for getting and putting <code>Datasets</code> to S3.  All of this can be developed on top of  the <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html">boto3</a> <span class="caps">AWS</span> client library for&nbsp;Python.</p>
+<p>Trained models will be serialised to file using Python’s <a href="https://docs.python.org/3.8/library/pickle.html">pickle</a> module (this works well for SciKit-Learn models), and uploaded to the same <span class="caps">AWS</span> bucket, using the same timestamped file-naming&nbsp;convention:</p>
+<div class="highlight"><pre><span></span><code>s3://time-to-dispatch/
+|-- models/
+    |-- time_to_dispatch_2021-07-03T23:45:23.csv
+    |-- time_to_dispatch_2021-07-02T23:45:31.csv
+    |-- time_to_dispatch_2021-07-01T23:44:25.csv
+    |-- ...
+</code></pre></div>
+
+<p>When triggered, the serve-model stage of the pipeline will only need to download the most recently persisted model, to ensure that it will generate predictions using the model from the output of the train-model stage. As with the datasets, we could stop here and rely solely on the filenames as a lightweight versioning strategy, but auditing and debugging predictions will be made much easier if we can access model metadata, such as the details of the exact dataset used for&nbsp;training.</p>
+<p>The concept of a model becomes bigger than just the trained model in isolation, so we will also need to develop a custom <code>Model</code> class. This needs to ‘wrap’ the trained model object, so that it can be associated with all of the metadata that we need to operate our basic model versioning system. As with the custom <code>Dataset</code> class, we will need to develop functions/methods for getting and putting the <code>Model</code> object to&nbsp;S3.</p>
+<p>There is a significant development effort required for implementing the functionality described above and it is likely that this will be repeated in many projects. We are going to cover how to handle reusable code in the section below, but you can see our implementations for the <code>Dataset</code> and <code>Model</code> classes using the links below, which we have also reproduced at the end of this&nbsp;article.</p>
+<ul>
+<li><a href="https://github.com/bodywork-ml/bodywork-pipeline-utils/blob/main/src/bodywork_pipeline_utils/aws/datasets.py">Dataset&nbsp;class</a></li>
+<li><a href="https://github.com/bodywork-ml/bodywork-pipeline-utils/blob/main/src/bodywork_pipeline_utils/aws/models.py">Model&nbsp;class</a></li>
+</ul>
+<h2 id="reusing-common-code">Reusing Common&nbsp;Code</h2>
+<p>The canonical way for distributing reusable Python modules, is by implementing them within a Python package that can be installed into any project that benefits from the functionality. This is what we have done for the dataset and model versioning functionality described in the previous section, and for configuring the logger used in both stages (so we can can enforce a common log format across projects). You can explore the codebase for this package, named <code>bodywork-pipeline-utils</code>,  on <a href="https://github.com/bodywork-ml/bodywork-pipeline-utils">GitHub</a>. The functions and classes within it are shown&nbsp;below,</p>
+<div class="highlight"><pre><span></span><code>|-- aws
+    |-- Dataset
+    |-- get_latest_csv_dataset_from_s3
+    |-- get_latest_parquet_dataset_from_s3
+    |-- put_csv_dataset_to_s3
+    |-- put_parquet_dataset_to_s3
+    |-- Model
+    |-- get_latest_pkl_model_from_s3
+|-- logging
+    |-- configure_logger
+</code></pre></div>
+
+<p>A discussion of best practices for developing a Python package is beyond the scope of these articles, but you can use <code>bodywork-pipeline-utils</code> as a template and/or refer to the <a href="https://www.pypa.io/en/latest/">Python Packaging Authority</a>. The Scikit-Learn team has also published their insights into <a href="https://arxiv.org/abs/1309.0238"><span class="caps">API</span> design for machine learning software</a>, which we recommend&nbsp;reading.</p>
+<h3 id="distributing-python-packages-within-your-company">Distributing Python Packages within your&nbsp;Company</h3>
+<p>The easiest way to distribute Python packages within an organisation is directly from your Version Control System (<span class="caps">VCS</span>) - e.g. a remote Git repository hosted on GitHub. You do not <strong>need</strong> to host an internal PyPI server, unless you have a specific reason to do so. To install a Python package from a remote Git repo you can&nbsp;use,</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/bodywork-ml/bodywork-pipeline-utils@v0.1.5
+</code></pre></div>
+
+<p>Where <code>v0.1.5</code> is the release tag, but could also be a Git commit hash. This will need to be specified in <code>requrements_pipe.txt</code> as,</p>
+<div class="highlight"><pre><span></span><code>git+https://github.com/bodywork-ml/bodywork-pipeline-utils@v0.1.5
+</code></pre></div>
+
+<p>Pip supports many VCSs and protocols - e.g. private Git repositories can be accessed via <span class="caps">SSH</span> by using <code>git+ssh</code> and ensuring that the machine making the request has the appropriate <span class="caps">SSH</span> keys available. Refer to the <a href="https://pip.pypa.io/en/stable/cli/pip_install/#vcs-support">documentation for pip</a> for more&nbsp;information.</p>
+<h2 id="defending-against-errors-and-handling-failures">Defending Against Errors and Handling&nbsp;Failures</h2>
+<p>Pipelines can experience many types of error - here are some&nbsp;examples:</p>
+<ul>
+<li>Invalid configuration, such as specifying the wrong storage location for datasets and&nbsp;models.</li>
+<li>Access to datasets and models becomes temporarily&nbsp;unavailable.</li>
+<li>Errors in an unverified dataset causes model-training to&nbsp;fail.</li>
+<li>An unexpected jump in <a href="https://en.wikipedia.org/wiki/Concept_drift">concept drift</a> causes model metrics to breach performance&nbsp;thresholds.</li>
+</ul>
+<p>When developing pipeline stages, it is critical that error events such as these are identified and logged to aid with debugging, and that the pipeline is not allowed to proceed. Our chosen pattern for handling errors is demonstrated in this snippet from <code>train_model.py</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+<span class="c1"># ...</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">main</span><span class="p">(</span>
+            <span class="n">s3_bucket</span><span class="p">,</span>
+            <span class="n">r2_metric_error_threshold</span><span class="p">,</span>
+            <span class="n">r2_metric_warning_threshold</span><span class="p">,</span>
+            <span class="n">HYPERPARAM_GRID</span>
+        <span class="p">)</span>
+          <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error encountered when training model - </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The pipeline is defined in the <code>main</code> function, which is executed within a <code>try... except</code> block. If it executes without error, then we signal this to Kubernetes with an exit-code of <code>0</code> . If any error is encountered, then the exception is caught, we log the details and signal this to Kubernetes with an exit-code of <code>1</code> (so it can attempt a retry, if this has been&nbsp;configured).</p>
+<p>Exceptions within <code>main</code> are likely to be raised from within 3rd party packages that we’ve installed - e.g. if <code>bodywork-pipeline-utils</code> can’t access <span class="caps">AWS</span> or if Scikit-Learn fails to train a model. We recommend reading the documentation (or source code) for external functions and classes to understand what exceptions they raise and if the pipeline would benefit from custom handling and&nbsp;logging.</p>
+<p>Sometimes, however, we need to look for the error ourselves and raise the exception manually, as shown below when the key test metric falls below a pre-configured threshold&nbsp;level,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">main</span><span class="p">(</span>
+    <span class="n">s3_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">metric_error_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">metric_warning_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">hyperparam_grid</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main training job.&quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting train-model stage.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># ...</span>
+
+    <span class="k">if</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r_squared</span> <span class="o">&gt;=</span> <span class="n">metric_error_threshold</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r_squared</span> <span class="o">&gt;=</span> <span class="n">metric_warning_threshold</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Metrics breached warning threshold - check for drift.&quot;</span><span class="p">)</span>
+        <span class="n">s3_location</span> <span class="o">=</span> <span class="n">persist_model</span><span class="p">(</span><span class="n">s3_bucket</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model serialised and persisted to s3://</span><span class="si">{</span><span class="n">s3_location</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;r-squared metric (</span><span class="se">{{</span><span class="s2">metrics.r_squared:.3f</span><span class="se">}}</span><span class="s2">) is below deployment &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;threshold </span><span class="si">{</span><span class="n">metric_error_threshold</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This works as&nbsp;follows:</p>
+<ul>
+<li>If the r-squared metric is above the error threshold and the warning threshold, then persist the trained&nbsp;model.</li>
+<li>If the r-squared metric is above the error threshold, but below the warning threshold, then log a warning message and then persist the trained&nbsp;model.</li>
+<li>If the r-squared metric is below the error threshold, then raise an exception, which will cause the stage to log an error and exit with a non-zero exit code (halting the pipeline), using the logic in the <code>try... except</code> block discussed earlier in this&nbsp;section.</li>
+</ul>
+<p>Using logs to communicate pipeline state will take on additional importance later on in Part Three of this series, when we add monitoring, observability and alerting to our&nbsp;pipeline.</p>
+<h2 id="configurable-pipelines">Configurable&nbsp;Pipelines</h2>
+<p>Pipelines can benefit from parametrisation to make them re-usable across deployment environments (and potentially tenants, if this makes sense for your project). For example, passing the S3 bucket as an external argument to each stage, enables the pipeline to operate both in a staging environment, as well as in production. Similarly, external arguments can be used to set thresholds for defining when warnings and alerts are triggered, based on model training metrics, which can make testing the pipeline much&nbsp;easier.</p>
+<p>Each stage of our pipeline is defined by an executable Python module.  The easiest way to pass arguments to a module is via the command line. For&nbsp;example,</p>
+<div class="highlight"><pre><span></span><code>$ python -m pipeline.train_model time-to-dispatch 0.9 0.8
+</code></pre></div>
+
+<p>Passes an array of strings, <code>["time-to-dispatch", "0.9", "0.8"]</code> to <code>train_model.py</code>, that can be retrieved from <code>sys.argv</code> as demonstrated in the excerpt from <code>train_model.py</code> below.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+        <span class="n">s3_bucket</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">r2_metric_error_threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">r2_metric_error_threshold</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">r2_metric_error_threshold</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+        <span class="n">r2_metric_warning_threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">r2_metric_warning_threshold</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">r2_metric_warning_threshold</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;Invalid arguments passed to train_model.py. &quot;</span>
+            <span class="s2">&quot;Expected S3_BUCKET R_SQUARED_ERROR_THRESHOLD R_SQUARED_WARNING_THRESHOLD, &quot;</span>
+            <span class="s2">&quot;where all thresholds must be in the range [0, 1].&quot;</span>
+        <span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">main</span><span class="p">(</span>
+            <span class="n">s3_bucket</span><span class="p">,</span>
+            <span class="n">r2_metric_error_threshold</span><span class="p">,</span>
+            <span class="n">r2_metric_warning_threshold</span><span class="p">,</span>
+            <span class="n">HYPERPARAM_GRID</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error encountered when training model - </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Note how we cast the numeric arguments to <code>float</code> types before performing basic input validation to ensure that users can’t accidentally specify invalided arguments that could lead to unintended&nbsp;consequences.</p>
+<p>When deployed by Bodywork,  <code>train_model.py</code> will be executed in a dedicated container on Kubernetes. The required arguments can be passed via the <code>args</code> parameter in the <code>bodywork.yaml</code> file that describes the deployment, as shown&nbsp;below.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># bodywork.yaml</span>
+<span class="nn">...</span>
+<span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">train_model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">executable_module_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline/train_model.py</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">args</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;time-to-dispatch&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;0.9&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;0.8&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</code></pre></div>
+
+<h2 id="engineering-the-model-training-job">Engineering the Model Training&nbsp;Job</h2>
+<p>The core task here is to engineer the <span class="caps">ML</span> solution in the <a href="https://github.com/bodywork-ml/ml-pipeline-engineering/blob/master/notebooks/time_to_dispatch_model.ipynb">time_to_dispatch_model.ipynb notebook</a>,  provided to us by the data scientist who worked on this task, into the pipeline stage defined in <a href="https://github.com/bodywork-ml/ml-pipeline-engineering/blob/part-two/pipeline/train_model.py">pipeline/train_model.py</a> (reproduced in the Appendix below). The central workflow is defined in the <code>main</code> function,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">bodywork_pipeline_utils</span> <span class="kn">import</span> <span class="n">aws</span><span class="p">,</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">bodywork_pipeline_utils.aws</span> <span class="kn">import</span> <span class="n">Dataset</span>
+
+<span class="c1"># ...</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">configure_logger</span><span class="p">()</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span>
+    <span class="n">s3_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">metric_error_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">metric_warning_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">hyperparam_grid</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main training job.&quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting train-model stage.&quot;</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">get_latest_csv_dataset_from_s3</span><span class="p">(</span><span class="n">s3_bucket</span><span class="p">,</span> <span class="s2">&quot;datasets&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrieved dataset from s3://</span><span class="si">{</span><span class="n">s3_bucket</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">feature_and_labels</span> <span class="o">=</span> <span class="n">prepare_data</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">feature_and_labels</span><span class="p">,</span> <span class="n">hyperparam_grid</span><span class="p">)</span>
+    <span class="n">validate_trained_model_logic</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">feature_and_labels</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Trained model: r-squared=</span><span class="si">{</span><span class="n">metrics</span><span class="o">.</span><span class="n">r_squared</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;MAE=</span><span class="si">{</span><span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_error</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r_squared</span> <span class="o">&gt;=</span> <span class="n">metric_error_threshold</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r_squared</span> <span class="o">&gt;=</span> <span class="n">metric_warning_threshold</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Metrics breached warning threshold - check for drift.&quot;</span><span class="p">)</span>
+        <span class="n">s3_location</span> <span class="o">=</span> <span class="n">persist_model</span><span class="p">(</span><span class="n">s3_bucket</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model serialised and persisted to s3://</span><span class="si">{</span><span class="n">s3_location</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;r-squared metric (</span><span class="se">{{</span><span class="s2">metrics.r_squared:.3f</span><span class="se">}}</span><span class="s2">) is below deployment &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;threshold </span><span class="si">{</span><span class="n">metric_error_threshold</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This splits the job into smaller sub-tasks, such as preparing the data, that can be delegated to specialised functions that are easier to write (unit) tests for. All interaction with cloud object storage (<span class="caps">AWS</span> S3), for retrieving datasets and persisting trained models, is handled by functions imported from the <a href="https://github.com/bodywork-ml/bodywork-pipeline-utils">bodywork-pipeline-utils</a> package, leaving three key functions that we will discuss in&nbsp;turn:</p>
+<ul>
+<li><code>prepare_data</code></li>
+<li><code>train_model</code></li>
+<li><code>validate_trained_model_logic</code></li>
+</ul>
+<p>The <code>persist_model</code> function creates the <code>Model</code> object and calls its <code>put_model_to_S3</code> method. It will be tested implicitly in the functional tests for <code>main</code>, which we will look at later&nbsp;on.</p>
+<h3 id="prepare-data">Prepare&nbsp;Data</h3>
+<p>This purpose of this function is to start with the dataset as a <code>DataFrame</code>, split the features from the labels and then partition each of these into ‘test’ and ‘train ‘subsets. We return the results as a <code>NamedTuple</code>  called <code>FeaturesAndLabels</code>, which facilitates easier access within functions that consume these data&nbsp;structures.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">train_test_split</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">class</span> <span class="nc">FeatureAndLabels</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for features and labels split by test and train sets.&quot;&quot;&quot;</span>
+
+    <span class="n">X_train</span><span class="p">:</span> <span class="n">DataFrame</span>
+    <span class="n">X_test</span><span class="p">:</span> <span class="n">DataFrame</span>
+    <span class="n">y_train</span><span class="p">:</span> <span class="n">DataFrame</span>
+    <span class="n">y_test</span><span class="p">:</span> <span class="n">DataFrame</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">def</span> <span class="nf">prepare_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureAndLabels</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split the data into features and labels for training and testing.&quot;&quot;&quot;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;hours_to_dispatch&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;hours_to_dispatch&quot;</span><span class="p">]</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;product_code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">FeatureAndLabels</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This is tested in <a href="https://github.com/bodywork-ml/ml-pipeline-engineering/blob/part-two/tests/test_train_model.py">tests/test_train_model.py</a> as&nbsp;follows,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">read_csv</span><span class="p">,</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">pytest</span> <span class="kn">import</span> <span class="n">fixture</span><span class="p">,</span> <span class="n">raises</span>
+
+<span class="kn">from</span> <span class="nn">bodywork_pipeline_utils.aws</span> <span class="kn">import</span> <span class="n">Dataset</span>
+
+<span class="c1"># ...</span>
+
+<span class="nd">@fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">dataset</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;tests/resources/dataset.csv&quot;</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="s2">&quot;tests&quot;</span><span class="p">,</span> <span class="s2">&quot;resources&quot;</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dataset</span>
+
+
+<span class="k">def</span> <span class="nf">test_prepare_data_splits_labels_and_features_into_test_and_train</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">):</span>
+    <span class="n">label_column</span> <span class="o">=</span> <span class="s2">&quot;hours_to_dispatch&quot;</span>
+    <span class="n">n_rows_in_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_cols_in_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">prepared_data</span> <span class="o">=</span> <span class="n">prepare_data</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">n_cols_in_dataset</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">label_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">X_train</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="k">assert</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">n_cols_in_dataset</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">label_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">X_test</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="k">assert</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">y_train</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">y_train</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">label_column</span>
+
+    <span class="k">assert</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">y_test</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">y_test</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">label_column</span>
+
+    <span class="k">assert</span> <span class="p">(</span><span class="n">prepared_data</span><span class="o">.</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="o">==</span> <span class="n">n_rows_in_dataset</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="p">(</span><span class="n">prepared_data</span><span class="o">.</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="o">==</span> <span class="n">n_rows_in_dataset</span><span class="p">)</span>
+</code></pre></div>
+
+<p>To help with testing, we have saved a snapshot of <span class="caps">CSV</span> data to <code>tests/resources/dataset.csv</code> within the project repository, and made it available as a <code>DataFrame</code> to all tests in this model, via a <a href="https://docs.pytest.org/en/6.2.x/fixture.html">Pytest fixture</a> called <code>dataset</code>. There is only one unit test for this function and it tests that <code>prepare_data</code> splits labels from features, for both  ‘test’ and ‘train’ sets, and that it doesn’t lose any rows of data in the process. If we refactor <code>prepare_data</code> in the future, then this test will help prevent us from accidentally leaking the label into the&nbsp;features.</p>
+<h3 id="train-model">Train&nbsp;Model</h3>
+<p>Given a <code>FeaturesAndLabels</code> object together with a grid of hyper-parameters, this function will yield a trained model, together with the model’s performance metrics for the ‘test’ set . The hyper-parameter grid is an input  to this function, so that when testing we can use a single point, but can specify many more points for the actual job, when training time is less of a constraint. The metrics are contained within a <code>NamedTuple</code> called <code>TaskMetrics</code>, to make passing them between functions easier and less prone to&nbsp;error.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">train_test_split</span>
+
+<span class="c1"># ...</span>
+
+<span class="n">PRODUCT_CODE_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;SKU001&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;SKU002&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;SKU003&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;SKU004&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;SKU005&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">class</span> <span class="nc">TaskMetrics</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for the task&#39;s performance metrics.&quot;&quot;&quot;</span>
+
+    <span class="n">r_squared</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">mean_absolute_error</span><span class="p">:</span> <span class="nb">float</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">def</span> <span class="nf">train_model</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">FeatureAndLabels</span><span class="p">,</span> <span class="n">hyperparam_grid</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TaskMetrics</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Train a model and compute performance metrics.&quot;&quot;&quot;</span>
+    <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+        <span class="n">estimator</span><span class="o">=</span><span class="n">DecisionTreeRegressor</span><span class="p">(),</span>
+        <span class="n">param_grid</span><span class="o">=</span><span class="n">hyperparam_grid</span><span class="p">,</span>
+        <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;r2&quot;</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">preprocess</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_train</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">y_train</span><span class="p">)</span>
+    <span class="n">best_model</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">best_estimator_</span>
+    <span class="n">y_test_pred</span> <span class="o">=</span> <span class="n">best_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">preprocess</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_test</span><span class="p">))</span>
+    <span class="n">performance_metrics</span> <span class="o">=</span> <span class="n">TaskMetrics</span><span class="p">(</span>
+        <span class="n">r2_score</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_test_pred</span><span class="p">),</span>
+        <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_test_pred</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">best_model</span><span class="p">,</span> <span class="n">performance_metrics</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create features for training model.&quot;&quot;&quot;</span>
+    <span class="n">processed</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">processed</span><span class="p">[</span><span class="s2">&quot;product_code&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;product_code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">PRODUCT_CODE_MAP</span><span class="p">[</span><span class="n">e</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">processed</span><span class="o">.</span><span class="n">values</span>
+</code></pre></div>
+
+<p>We have further delegated the task of pre-processing the features for the model (in this case just mapping categories to integers), to a dedicated function called <code>preprocess</code>. The <code>train_model</code> function is tested in <a href="https://github.com/bodywork-ml/ml-pipeline-engineering/blob/part-two/tests/test_train_model.py">tests/test_train_model.py</a> as&nbsp;follows,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_is_fitted</span>
+
+<span class="c1"># ...</span>
+
+<span class="nd">@fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">prepared_data</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureAndLabels</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">FeatureAndLabels</span><span class="p">(</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">[[</span><span class="s2">&quot;orders_placed&quot;</span><span class="p">,</span> <span class="s2">&quot;product_code&quot;</span><span class="p">]][:</span><span class="mi">800</span><span class="p">],</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">[[</span><span class="s2">&quot;orders_placed&quot;</span><span class="p">,</span> <span class="s2">&quot;product_code&quot;</span><span class="p">]][</span><span class="mi">800</span><span class="p">:</span><span class="mi">999</span><span class="p">],</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;hours_to_dispatch&quot;</span><span class="p">][:</span><span class="mi">800</span><span class="p">],</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;hours_to_dispatch&quot;</span><span class="p">][</span><span class="mi">800</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
+    <span class="p">)</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">def</span> <span class="nf">test_train_model_yields_model_and_metrics</span><span class="p">(</span><span class="n">prepared_data</span><span class="p">:</span> <span class="n">FeaturesAndLabels</span><span class="p">):</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">prepared_data</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">42</span><span class="p">]})</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="kc">False</span>
+
+    <span class="k">assert</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r_squared</span> <span class="o">&gt;=</span> <span class="mf">0.9</span>
+    <span class="k">assert</span> <span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_error</span> <span class="o">&lt;=</span> <span class="mf">1.25</span>
+</code></pre></div>
+
+<p>Which tests that <code>train_model</code> returns a fitted model and acceptable performance metrics, given a reasonably sized tranche of&nbsp;data.</p>
+<p>Note, that we haven’t relied on <code>prepare_data</code> to create the <code>FeatureAndLabels object</code>- we have created this manually in another fixture that relies on the <code>dataset</code> fixture discussed earlier. This is a deliberate choice made with the aim of decoupling the outcome of this test from the behaviour of <code>prepare_data</code>. Tests that are dependent on multiple functions can be ‘brittle’ and lead to cascades of failing tests when only a single function or method is raising an error. We cannot stress enough how important it is to structure your code in such a way that it can be easily&nbsp;tested.</p>
+<p>For completeness, we also provide a simple test for <code>preprocess</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">read_csv</span><span class="p">,</span> <span class="n">DataFrame</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">def</span> <span class="nf">test_preprocess_processes_features</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;orders_placed&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">],</span> <span class="s2">&quot;product_code&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SKU004&quot;</span><span class="p">]})</span>
+    <span class="n">processed_data</span> <span class="o">=</span> <span class="n">preprocess</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">processed_data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">30</span>
+    <span class="k">assert</span> <span class="n">processed_data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span>
+</code></pre></div>
+
+<h3 id="validating-trained-models">Validating Trained&nbsp;Models</h3>
+<p>The goal of the pipeline is to automate the process of training a new model and deploying it - i.e. to take the data scientist out-of-the-loop. Consequently, we need to exercise caution before deploying the latest model. Although the final go/no-go decision on deploying the model will be based on performance metrics, we should also sense-check the model based on basic behaviours we expect it to have. The <code>validate_trained_model_logic</code> function performs three logical tests of the model and will raise an exception if it finds an issue (thereby terminating the pipeline before deployment). The three checks&nbsp;are:</p>
+<ol>
+<li>Does the <code>hours_to_dispatch</code> variable increase with <code>order_placed</code>, for each&nbsp;product?</li>
+<li>Are all predictions for the ‘test’ set&nbsp;positive?</li>
+<li>Are all predictions for the ‘test’ within 25% of the highest <code>hours_to_dispatch</code> observation?</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">validate_trained_model_logic</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FeatureAndLabels</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify that a trained model passes basic logical expectations.&quot;&quot;&quot;</span>
+    <span class="n">issues_detected</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">orders_placed_sensitivity_checks</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">array</span><span class="p">([[</span><span class="mi">100</span><span class="p">,</span> <span class="n">product</span><span class="p">],</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="n">product</span><span class="p">]]))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">PRODUCT_CODE_MAP</span><span class="p">))</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">orders_placed_sensitivity_checks</span><span class="p">):</span>
+        <span class="n">issues_detected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s2">&quot;hours_to_dispatch predictions do not increase with orders_placed&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">test_set_predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">preprocess</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_test</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_set_predictions</span><span class="p">[</span><span class="n">test_set_predictions</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">issues_detected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s2">&quot;negative hours_to_dispatch predictions found for test set&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_set_predictions</span><span class="p">[</span><span class="n">test_set_predictions</span> <span class="o">&gt;</span> <span class="n">data</span><span class="o">.</span><span class="n">y_test</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.25</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">issues_detected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s2">&quot;outlier hours_to_dispatch predictions found for test set&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">issues_detected</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Trained model failed verification: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">issues_detected</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Note, that we perform all three checks before raising the exception, so that the error message and the logs that will be generated from it, can be maximally informative when it comes to&nbsp;debugging.</p>
+<p>The associated test can also be found in <a href="https://github.com/bodywork-ml/ml-pipeline-engineering/blob/part-two/tests/test_train_model.py">tests/test_train_model.py</a>.  This is the most complex test thus far, because we have to use Scikit-Learn’s <code>DummyRegressor</code> to create models that will fail each one of the tests individually, as can be seen&nbsp;below.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytest</span> <span class="kn">import</span> <span class="n">fixture</span><span class="p">,</span> <span class="n">raises</span>
+<span class="kn">from</span> <span class="nn">sklearn.dummy</span> <span class="kn">import</span> <span class="n">DummyRegressor</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">def</span> <span class="nf">test_validate_trained_model_logic_raises_exception_for_failing_models</span><span class="p">(</span>
+    <span class="n">prepared_data</span><span class="p">:</span> <span class="n">FeaturesAndLabels</span>
+<span class="p">):</span>
+    <span class="n">dummy_model</span> <span class="o">=</span> <span class="n">DummyRegressor</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">constant</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">dummy_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">prepared_data</span><span class="o">.</span><span class="n">X_train</span><span class="p">,</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">y_train</span><span class="p">)</span>
+    <span class="n">expected_exception_str</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Trained model failed verification: &quot;</span>
+        <span class="s2">&quot;hours_to_dispatch predictions do not increase with orders_placed.&quot;</span>
+    <span class="p">)</span>
+    <span class="k">with</span> <span class="n">raises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="n">expected_exception_str</span><span class="p">):</span>
+        <span class="n">validate_trained_model_logic</span><span class="p">(</span><span class="n">dummy_model</span><span class="p">,</span> <span class="n">prepared_data</span><span class="p">)</span>
+
+    <span class="n">dummy_model</span> <span class="o">=</span> <span class="n">DummyRegressor</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">constant</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">dummy_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">prepared_data</span><span class="o">.</span><span class="n">X_train</span><span class="p">,</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">y_train</span><span class="p">)</span>
+    <span class="n">expected_exception_str</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Trained model failed verification: &quot;</span>
+        <span class="s2">&quot;hours_to_dispatch predictions do not increase with orders_placed, &quot;</span>
+        <span class="s2">&quot;negative hours_to_dispatch predictions found for test set.&quot;</span>
+    <span class="p">)</span>
+    <span class="k">with</span> <span class="n">raises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="n">expected_exception_str</span><span class="p">):</span>
+        <span class="n">validate_trained_model_logic</span><span class="p">(</span><span class="n">dummy_model</span><span class="p">,</span> <span class="n">prepared_data</span><span class="p">)</span>
+
+    <span class="n">dummy_model</span> <span class="o">=</span> <span class="n">DummyRegressor</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">)</span>
+    <span class="n">dummy_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">prepared_data</span><span class="o">.</span><span class="n">X_train</span><span class="p">,</span> <span class="n">prepared_data</span><span class="o">.</span><span class="n">y_train</span><span class="p">)</span>
+    <span class="n">expected_exception_str</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Trained model failed verification: &quot;</span>
+        <span class="s2">&quot;hours_to_dispatch predictions do not increase with orders_placed, &quot;</span>
+        <span class="s2">&quot;outlier hours_to_dispatch predictions found for test set.&quot;</span>
+    <span class="p">)</span>
+    <span class="k">with</span> <span class="n">raises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="n">expected_exception_str</span><span class="p">):</span>
+        <span class="n">validate_trained_model_logic</span><span class="p">(</span><span class="n">dummy_model</span><span class="p">,</span> <span class="n">prepared_data</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="end-to-end-functional-tests">End-to-End Functional&nbsp;Tests</h3>
+<p>We’ve tested the individual sub-tasks within <code>main</code> , but how do we know that we’ve assembled them correctly, so that <code>persist_model</code> will upload the expected <code>Model</code> object to cloud storage? We now need to turn our attention to testing <code>main</code> from end-to-end - i.e. functional tests for the train-model&nbsp;stage.</p>
+<p>The <code>main</code> function will try to access <span class="caps">AWS</span> S3 to get a dataset and then save a pickled <code>Model</code> to S3. We could setup a S3 bucket for testing this integration, but this constitutes an integration test and is not our current aim. We will disable the calls to <span class="caps">AWS</span> by mocking the <code>bodywork_pipeline_utils.aws</code> module using the <code>patch</code> function from the Python standard library’s <a href="https://docs.python.org/3/library/unittest.mock.html">unittest.mock</a>&nbsp;module.</p>
+<p>Decorating our test with <code>@patch("pipeline.train_model.aws")</code>, causes <code>bodywork_pipeline_utils.aws</code> (which we import into <code>train_model.py</code>) to be replaced by a <code>MagicMock</code> object called <code>mock_aws</code>. This allows us to perform a number of useful&nbsp;tasks:</p>
+<ul>
+<li>Hard-code the return value from <code>aws.get_latest_csv_dataset_from_s3</code>, so that it returns our local test dataset instead of a remote dataset on&nbsp;S3.</li>
+<li>Check if the <code>put_model_to_s3</code>method of the <code>aws.Model</code> object created in <code>persist_model</code>, was&nbsp;called.</li>
+</ul>
+<p>You can see this in action&nbsp;below.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">MagicMock</span><span class="p">,</span> <span class="n">patch</span>
+
+<span class="kn">from</span> <span class="nn">pytest</span> <span class="kn">import</span> <span class="n">fixture</span><span class="p">,</span> <span class="n">raises</span>
+<span class="kn">from</span> <span class="nn">_pytest.logging</span> <span class="kn">import</span> <span class="n">LogCaptureFixture</span>
+
+<span class="c1"># ...</span>
+
+<span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;pipeline.train_model.aws&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_train_job_happy_path</span><span class="p">(</span>
+    <span class="n">mock_aws</span><span class="p">:</span> <span class="n">MagicMock</span><span class="p">,</span>
+    <span class="n">dataset</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">,</span>
+    <span class="n">caplog</span><span class="p">:</span> <span class="n">LogCaptureFixture</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">mock_aws</span><span class="o">.</span><span class="n">get_latest_csv_dataset_from_s3</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">dataset</span>
+    <span class="n">main</span><span class="p">(</span><span class="s2">&quot;project-bucket&quot;</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">42</span><span class="p">]})</span>
+    <span class="n">mock_aws</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span><span class="o">.</span><span class="n">put_model_to_s3</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+    <span class="n">logs</span> <span class="o">=</span> <span class="n">caplog</span><span class="o">.</span><span class="n">text</span>
+    <span class="k">assert</span> <span class="s2">&quot;Starting train-model stage&quot;</span> <span class="ow">in</span> <span class="n">logs</span>
+    <span class="k">assert</span> <span class="s2">&quot;Retrieved dataset from s3&quot;</span> <span class="ow">in</span> <span class="n">logs</span>
+    <span class="k">assert</span> <span class="s2">&quot;Trained model&quot;</span> <span class="ow">in</span> <span class="n">logs</span>
+    <span class="k">assert</span> <span class="s2">&quot;Model serialised and persisted to s3&quot;</span> <span class="ow">in</span> <span class="n">logs</span>
+</code></pre></div>
+
+<p>This test also makes use of Pytest’s <a href="https://docs.pytest.org/en/6.2.x/reference.html?highlight=caplog#pytest.logging.caplog">caplog</a> fixture, enabling us to test that <code>main</code> yields the expected log records when everything goes according to plan (i.e. the ‘happy path’). This gives us confidence that model artefacts will be persisted as expected, when run in&nbsp;production.</p>
+<p>What about the ‘unhappy paths’ - when performance metrics fall below warning and error thresholds? We need to test that <code>main</code> will behave as we expect it too, and so we will have to write tests for these scenarios, as&nbsp;well.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;pipeline.train_model.aws&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_train_job_raises_exception_when_metrics_below_error_threshold</span><span class="p">(</span>
+    <span class="n">mock_aws</span><span class="p">:</span> <span class="n">MagicMock</span><span class="p">,</span>
+    <span class="n">dataset</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">mock_aws</span><span class="o">.</span><span class="n">get_latest_csv_dataset_from_s3</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">dataset</span>
+    <span class="k">with</span> <span class="n">raises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;below deployment threshold&quot;</span><span class="p">):</span>
+        <span class="n">main</span><span class="p">(</span><span class="s2">&quot;project-bucket&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">42</span><span class="p">]})</span>
+
+
+<span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;pipeline.train_model.aws&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_train_job_logs_warning_when_metrics_below_warning_threshold</span><span class="p">(</span>
+    <span class="n">mock_aws</span><span class="p">:</span> <span class="n">MagicMock</span><span class="p">,</span>
+    <span class="n">dataset</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">,</span>
+    <span class="n">caplog</span><span class="p">:</span> <span class="n">LogCaptureFixture</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">mock_aws</span><span class="o">.</span><span class="n">get_latest_csv_dataset_from_s3</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">dataset</span>
+    <span class="n">main</span><span class="p">(</span><span class="s2">&quot;project-bucket&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">42</span><span class="p">]})</span>
+    <span class="k">assert</span> <span class="s2">&quot;WARNING&quot;</span> <span class="ow">in</span> <span class="n">caplog</span><span class="o">.</span><span class="n">text</span>
+    <span class="k">assert</span> <span class="s2">&quot;breached warning threshold&quot;</span> <span class="ow">in</span> <span class="n">caplog</span><span class="o">.</span><span class="n">text</span>
+</code></pre></div>
+
+<p>These tests work by setting the thresholds artificially high (or low) and checking that exceptions are raised or that warning messages are logged. Note, that this testing strategy only works because <code>main</code> accepts the thresholds as arguments, which was one of the key motivations for designing it in this&nbsp;way.</p>
+<h3 id="input-validation-for-the-stage">Input Validation for the&nbsp;Stage</h3>
+<p>The train-model stage works by executing <code>train_model.py</code>, which requires three arguments to be passed to it (as discussed earlier on). These inputs are validated and this validation needs to be tested for completeness. This is a long and boring test, so we will not reproduce the whole thing, but instead discuss the testing strategy (which is a bit more&nbsp;interesting).</p>
+<p>The approach to testing input validation, is to run <code>test_model.py</code> as Bodywork would run it within a container on Kubernetes, by calling <code>python pipeline/train_model.py</code> from the command line. We can replicate this using <code>subprocess.run</code> from the Python standard library and capturing the output. We can then pass invalid arguments and check the output for the expected error messages. You can see this pattern in-action below, for the case when no arguments are&nbsp;passed.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">run</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">def</span> <span class="nf">test_run_job_handles_error_for_invalid_args</span><span class="p">():</span>
+    <span class="n">process_one</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;pipeline/train_model.py&quot;</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">process_one</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="s2">&quot;ERROR&quot;</span> <span class="ow">in</span> <span class="n">process_one</span><span class="o">.</span><span class="n">stdout</span>
+    <span class="k">assert</span> <span class="s2">&quot;Invalid arguments passed to train_model.py&quot;</span> <span class="ow">in</span> <span class="n">process_one</span><span class="o">.</span><span class="n">stdout</span>
+
+      <span class="c1"># ...</span>
+</code></pre></div>
+
+<h2 id="developing-the-model-serving-stage">Developing the Model Serving&nbsp;Stage</h2>
+<p>In Part One of this series we developed a skeleton web service that returned a hard-coded value whenever the <span class="caps">API</span> was called. Our task in this part is to extend this to downloading the latest model persisted to cloud object storage (<span class="caps">AWS</span> S3), and then use the model for generating predictions. Unlike the train-model stage, the effort required for this task is relatively small and so we will reproduce <code>serve_model.py</code> in full and then discuss it in more detail&nbsp;afterwards.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">uvicorn</span>
+<span class="kn">from</span> <span class="nn">bodywork_pipeline_utils</span> <span class="kn">import</span> <span class="n">aws</span><span class="p">,</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">status</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="kn">from</span> <span class="nn">pipeline.train_model</span> <span class="kn">import</span> <span class="n">PRODUCT_CODE_MAP</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">configure_logger</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">ProductCode</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">SKU001</span> <span class="o">=</span> <span class="s2">&quot;SKU001&quot;</span>
+    <span class="n">SKU002</span> <span class="o">=</span> <span class="s2">&quot;SKU002&quot;</span>
+    <span class="n">SKU003</span> <span class="o">=</span> <span class="s2">&quot;SKU003&quot;</span>
+    <span class="n">SKU004</span> <span class="o">=</span> <span class="s2">&quot;SKU004&quot;</span>
+    <span class="n">SKU005</span> <span class="o">=</span> <span class="s2">&quot;SKU005&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">Data</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">product_code</span><span class="p">:</span> <span class="n">ProductCode</span>
+    <span class="n">orders_placed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Prediction</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">est_hours_to_dispatch</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">model_version</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+    <span class="s2">&quot;/api/v0.1/time_to_dispatch&quot;</span><span class="p">,</span>
+    <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span>
+    <span class="n">response_model</span><span class="o">=</span><span class="n">Prediction</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">time_to_dispatch</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="n">data</span><span class="o">.</span><span class="n">orders_placed</span><span class="p">,</span> <span class="n">PRODUCT_CODE_MAP</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">product_code</span><span class="o">.</span><span class="n">value</span><span class="p">]]])</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="n">wrapped_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;est_hours_to_dispatch&quot;</span><span class="p">:</span> <span class="n">prediction</span><span class="p">,</span> <span class="s2">&quot;model_version&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">wrapped_model</span><span class="p">)}</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+        <span class="n">s3_bucket</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">wrapped_model</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">get_latest_pkl_model_from_s3</span><span class="p">(</span><span class="n">s3_bucket</span><span class="p">,</span> <span class="s2">&quot;models&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully loaded model: </span><span class="si">{</span><span class="n">wrapped_model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Invalid arguments passed to serve_model.py - expected S3_BUCKET&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not get latest model and start web server - </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The key changes from the version in Part One are as&nbsp;follows:</p>
+<ul>
+<li>We now pass the name of the <span class="caps">AWS</span> S3 bucket as an argument to <code>serve_model.py</code>.</li>
+<li>In the <code>if __name__ == "__main__"</code> block we now attempt to to retrieve latest <code>Model</code> object that was persisted to <span class="caps">AWS</span> S3, before starting the FastAPI&nbsp;server.</li>
+<li>We placed a new constraint on the <code>Data.orders_placed</code> field to ensure that all values sent to the <span class="caps">API</span> must be greater-than-or-equal-to zero, and another new constraint on <code>Data.product_code</code> that forces this field to be one of the values specified in the <code>ProductCode</code> <a href="https://docs.python.org/3/library/enum.html">enumeration</a>.</li>
+<li>We now use the model to generate predictions, using the <code>PRODUCT_CODE_MAP</code> dictionary from <code>train_model.py</code> to map product codes to integers, before calling the&nbsp;model.</li>
+<li>We use the string representation of the <code>Model</code> object in the response’s <code>model_version</code> field, which contains the full information on which S3 object is being used, as well as other metadata such as the dataset used to train the model, the type of model, etc. This verbose information is designed to facilitate easy debugging of problematic&nbsp;responses.</li>
+</ul>
+<p>If we start the server&nbsp;locally,</p>
+<div class="highlight"><pre><span></span><code>$ python -m pipeline.serve_model time-to-dispatch
+
+2021-07-24 09:56:42,718 - INFO - serve_model.&lt;module&gt; - Successfully loaded model: name:time-to-dispatch|model_type:&lt;class &#39;sklearn.tree._classes.DecisionTreeRegressor&#39;&gt;|model_timestamp:2021-07-20 14:44:13.558375|model_hash:b4860f56fa24193934fe1ea51b66818d|train_dataset_key:datasets/time_to_dispatch_2021-07-01T16|45|38.csv|train_dataset_hash:&quot;759eccda4ceb7a07cda66ad4ef7cdfbc&quot;|pipeline_git_commit_hash:NA
+2021-07-24 09:56:42,718 - INFO - serve_model.&lt;module&gt; - Successfully loaded model: name:time-to-dispatch|model_type:&lt;class &#39;sklearn.tree._classes.DecisionTreeRegressor&#39;&gt;|model_timestamp:2021-07-20 14:44:13.558375|model_hash:b4860f56fa24193934fe1ea51b66818d|train_dataset_key:datasets/time_to_dispatch_2021-07-01T16|45|38.csv|train_dataset_hash:&quot;759eccda4ceb7a07cda66ad4ef7cdfbc&quot;|pipeline_git_commit_hash:NA
+INFO:     Started server process [88289]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+</code></pre></div>
+
+<p>Then we can send a test&nbsp;request,</p>
+<div class="highlight"><pre><span></span><code>$ curl http://localhost:8000/api/v0.1/time_to_dispatch \
+    --request POST \
+    --header &quot;Content-Type: application/json&quot; \
+    --data &#39;{&quot;product_code&quot;: &quot;SKU001&quot;, &quot;orders_placed&quot;: 10}&#39;
+</code></pre></div>
+
+<p>Which should return a response along the lines&nbsp;of,</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;est_hours_to_dispatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6527543057985115</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;name:time-to-dispatch|model_type:&lt;class &#39;sklearn.tree._classes.DecisionTreeRegressor&#39;&gt;|model_timestamp:2021-07-20 14:44:13.558375|model_hash:b4860f56fa24193934fe1ea51b66818d|train_dataset_key:datasets/time_to_dispatch_2021-07-01T16|45|38.csv|train_dataset_hash:\&quot;759eccda4ceb7a07cda66ad4ef7cdfbc\&quot;|pipeline_git_commit_hash:ed3113197adcbdbe338bf406841b930e895c42d6&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="updating-the-tests">Updating the&nbsp;Tests</h3>
+<p>We only need to add one more (small) test to <a href="https://github.com/bodywork-ml/ml-pipeline-engineering/blob/part-two/tests/test_serve_model.py">tests/test_serve_model.py</a>, but we will have to modify the existing tests to take into account that we are now using a trained model to generate predictions, as opposed to returning fixed values. This introduces a complication, because we need to inject a working model into the&nbsp;module.</p>
+<p>To facilitate testing, we have persisted a valid <code>Model</code> object to <code>tests/resources/model.pkl</code>, which will be loaded in a function called <code>wrapped_model</code> and injected into the module at test-time as a new object, using <code>unittest.mock.patch</code>. We are unable to use <code>patch</code> as we did in <code>train_model.py</code>, because the model is only loaded when <code>serve_model.py</code> is executed, whereas our tests rely only the FastAPI test&nbsp;client.</p>
+<p>The modified test for a valid request is&nbsp;shown</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">run</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span>
+
+<span class="kn">from</span> <span class="nn">bodywork_pipeline_utils.aws</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">fastapi.testclient</span> <span class="kn">import</span> <span class="n">TestClient</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+
+<span class="n">test_client</span> <span class="o">=</span> <span class="n">TestClient</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">wrapped_model</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;tests/resources/model.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;r+b&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">wrapped_model</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrapped_model</span>
+
+
+<span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;pipeline.serve_model.wrapped_model&quot;</span><span class="p">,</span> <span class="n">new</span><span class="o">=</span><span class="n">wrapped_model</span><span class="p">(),</span> <span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_web_api_returns_valid_response_given_valid_data</span><span class="p">():</span>
+    <span class="n">prediction_request</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;product_code&quot;</span><span class="p">:</span> <span class="s2">&quot;SKU001&quot;</span><span class="p">,</span> <span class="s2">&quot;orders_placed&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+    <span class="n">prediction_response</span> <span class="o">=</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="s2">&quot;/api/v0.1/time_to_dispatch&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prediction_request</span>
+    <span class="p">)</span>
+    <span class="n">model_obj</span> <span class="o">=</span> <span class="n">wrapped_model</span><span class="p">()</span>
+    <span class="n">expected_prediction</span> <span class="o">=</span> <span class="n">model_obj</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">array</span><span class="p">([[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+    <span class="k">assert</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;est_hours_to_dispatch&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">expected_prediction</span>
+    <span class="k">assert</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;model_version&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">model_obj</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This works by checking the output from the <span class="caps">API</span> against the output from the model loaded from the test resources, to make sure that they are identical. Next, we modify the test that covers the <span class="caps">API</span> data validation, to reflect the extra constraints we have placed on&nbsp;requests.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;pipeline.serve_model.wrapped_model&quot;</span><span class="p">,</span> <span class="n">new</span><span class="o">=</span><span class="n">wrapped_model</span><span class="p">(),</span> <span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_web_api_returns_error_code_given_invalid_data</span><span class="p">():</span>
+    <span class="n">prediction_request</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;product_code&quot;</span><span class="p">:</span> <span class="s2">&quot;SKU001&quot;</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+    <span class="n">prediction_response</span> <span class="o">=</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="s2">&quot;/api/v0.1/time_to_dispatch&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prediction_request</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span>
+    <span class="k">assert</span> <span class="s2">&quot;value_error.missing&quot;</span> <span class="ow">in</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">text</span>
+
+    <span class="n">prediction_request</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;product_code&quot;</span><span class="p">:</span> <span class="s2">&quot;SKU000&quot;</span><span class="p">,</span> <span class="s2">&quot;orders_placed&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+    <span class="n">prediction_response</span> <span class="o">=</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="s2">&quot;/api/v0.1/time_to_dispatch&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prediction_request</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span>
+    <span class="k">assert</span> <span class="s2">&quot;not a valid enumeration member&quot;</span> <span class="ow">in</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">text</span>
+
+    <span class="n">prediction_request</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;product_code&quot;</span><span class="p">:</span> <span class="s2">&quot;SKU001&quot;</span><span class="p">,</span> <span class="s2">&quot;orders_placed&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">100</span><span class="p">}</span>
+    <span class="n">prediction_response</span> <span class="o">=</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="s2">&quot;/api/v0.1/time_to_dispatch&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prediction_request</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span>
+    <span class="k">assert</span> <span class="s2">&quot;ensure this value is greater than or equal to 0&quot;</span> <span class="ow">in</span> <span class="n">prediction_response</span><span class="o">.</span><span class="n">text</span>
+</code></pre></div>
+
+<p>Finally, we add one more test to cover the input validation for the <code>serve_model.py</code> module, using the same strategy as we did for the equivalent test for <code>train_model.py</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">run</span>
+
+<span class="c1"># ...</span>
+
+<span class="k">def</span> <span class="nf">test_web_server_raises_exception_if_passed_invalid_args</span><span class="p">():</span>
+    <span class="n">process</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;pipeline.serve_model&quot;</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="s2">&quot;ERROR&quot;</span> <span class="ow">in</span> <span class="n">process</span><span class="o">.</span><span class="n">stdout</span>
+    <span class="k">assert</span> <span class="s2">&quot;Invalid arguments passed to serve_model.py&quot;</span> <span class="ow">in</span> <span class="n">process</span><span class="o">.</span><span class="n">stdout</span>
+</code></pre></div>
+
+<h2 id="updating-the-deployment-and-releasing-to-production">Updating the Deployment and Releasing to&nbsp;Production</h2>
+<p>The last task we need to complete before we can commit all changes, push to GitHub and trigger the <span class="caps">CI</span>/<span class="caps">CD</span> pipeline, is to update the deployment configuration in <code>bodywork.yaml</code>. This requires three&nbsp;changes:</p>
+<ul>
+<li>Arguments now need to be passed to each&nbsp;stage.</li>
+<li>The Python package requirements for each stage need to be&nbsp;updated.</li>
+<li><span class="caps">AWS</span> credentials need to be injected into each stage, as required by <code>bodywork_pipeline_utils.aws</code>.</li>
+<li><span class="caps">CPU</span> and memory resources need to be updated, together with max completion/startup&nbsp;timeouts.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.1&quot;</span>
+<span class="nt">pipeline</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time-to-dispatch</span>
+<span class="w">  </span><span class="nt">docker_image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bodyworkml/bodywork-core:3.0</span>
+<span class="w">  </span><span class="nt">DAG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">train_model &gt;&gt; serve_model</span>
+<span class="w">  </span><span class="nt">secrets_group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span>
+<span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">train_model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">executable_module_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline/train_model.py</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;time-to-dispatch&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;0.9&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;0.8&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">requirements</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">numpy&gt;=1.21.0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pandas&gt;=1.2.5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scikit-learn&gt;=1.0.0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git+https://github.com/bodywork-ml/bodywork-pipeline-utils@v0.1.5</span>
+<span class="w">    </span><span class="nt">cpu_request</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">    </span><span class="nt">memory_request_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">    </span><span class="nt">batch</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">max_completion_time_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">AWS_ACCESS_KEY_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-credentials</span>
+<span class="w">      </span><span class="nt">AWS_SECRET_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-credentials</span>
+<span class="w">      </span><span class="nt">AWS_DEFAULT_REGION</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-credentials</span>
+<span class="w">  </span><span class="nt">serve_model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">executable_module_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pipeline/serve_model.py</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;time-to-dispatch&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">requirements</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">numpy&gt;=1.21.0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scikit-learn&gt;=1.0.0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fastapi&gt;=0.65.2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uvicorn&gt;=0.14.0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git+https://github.com/bodywork-ml/bodywork-pipeline-utils@v0.1.5</span>
+<span class="w">    </span><span class="nt">cpu_request</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">    </span><span class="nt">memory_request_mb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span>
+<span class="w">    </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">max_startup_time_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">180</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span>
+<span class="w">      </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">AWS_ACCESS_KEY_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-credentials</span>
+<span class="w">      </span><span class="nt">AWS_SECRET_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-credentials</span>
+<span class="w">      </span><span class="nt">AWS_DEFAULT_REGION</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-credentials</span>
+<span class="nt">logging</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INFO</span>
+</code></pre></div>
+
+<p>This will instruct Bodywork to look for <code>AWS_ACCESS_KEY_ID</code>,  <code>AWS_SECRET_ACCESS_KEY</code> and <code>AWS_DEFAULT_REGION</code> in a secret record called <code>aws-credentials</code>, so that it can inject these secrets into the containers running the stages of our pipeline (as environment variables that will be detected silently). So, these will have to be created, which can be done as&nbsp;follows,</p>
+<div class="highlight"><pre><span></span><code>$ bw create secret aws-credentials \
+    --group=dev \
+    --data AWS_ACCESS_KEY_ID=put-your-key-in-here \
+    --data AWS_SECRET_ACCESS_KEY=put-your-other-key-in-here \
+    --data AWS_DEFAULT_REGION=wherever-your-cluster-is
+</code></pre></div>
+
+<p>Now you’re ready to push this branch to your remote Git repo! If your tests pass and your colleagues approve the merge, the <span class="caps">CD</span> part of the <span class="caps">CI</span>/<span class="caps">CD</span> pipeline we setup in Part One will ensure the new pipeline is deployed to Kubernetes by Bodywork and executed immediately. Bodywork will perform a rolling-deployment that will ensure zero down-time and automatically roll-back failed deployments to the previous version. When Bodywork has finished, test the new web <span class="caps">API</span>,</p>
+<div class="highlight"><pre><span></span><code>$ curl http://CLUSTER_IP/pipelines/time-to-dispatch--serve-model/api/v0.1/time_to_dispatch \
+    --request POST \
+    --header &quot;Content-Type: application/json&quot; \
+    --data &#39;{&quot;product_code&quot;: &quot;SKU001&quot;, &quot;orders_placed&quot;: 10}&#39;
+</code></pre></div>
+
+<p>Where you should observe the same response you received when testing&nbsp;locally,</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;est_hours_to_dispatch&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6527543057985115</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;name:time-to-dispatch|model_type:&lt;class &#39;sklearn.tree._classes.DecisionTreeRegressor&#39;&gt;|model_timestamp:2021-07-20 14:44:13.558375|model_hash:b4860f56fa24193934fe1ea51b66818d|train_dataset_key:datasets/time_to_dispatch_2021-07-01T16|45|38.csv|train_dataset_hash:\&quot;759eccda4ceb7a07cda66ad4ef7cdfbc\&quot;|pipeline_git_commit_hash:ed3113197adcbdbe338bf406841b930e895c42d6&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>See our guide to <a href="https://bodywork.readthedocs.io/en/latest/kubernetes/#accessing-services">accessing services</a> for information on how to determine <code>CLUSTER_IP</code>.</p>
+<h2 id="scheduling-the-pipeline-to-run-on-a-schedule">Scheduling the Pipeline to run on a&nbsp;Schedule</h2>
+<p>At this point, the pipeline will have deployed a model using the most recent dataset made available for this task. We know, however, that new data will arrive every Friday evening and so we’d like to schedule the pipeline to run just after the data is expected. We can achieve this using Bodywork cronjobs, as&nbsp;follows,</p>
+<div class="highlight"><pre><span></span><code>$ bw create cronjob https://github.com/bodywork-ml/ml-pipeline-engineering \
+    --name=weekly-update \
+    --branch master \
+    --schedule=&quot;45 11 * * 5&quot; \
+    --retries=2
+</code></pre></div>
+
+<h2 id="wrap-up">Wrap-Up</h2>
+<p>In this second part we have gone from a skeleton “Hello, Production!” deployment to a fully-functional train-and-deploy pipeline, that automates re-training and re-deployment in a production environment, on a periodic basis. We have factored-out common code so that it can be re-used across projects and discussed various strategies for developing automated tests for both stages of the pipeline, ensuring that subsequent modifications can be reliably integrated and deployed, with relative&nbsp;ease.</p>
+<h2 id="appendix">Appendix</h2>
+<p>For&nbsp;reference.</p>
+<h3 id="the-dataset-class">The <code>Dataset</code> Class</h3>
+<p>Reproduced from the <a href="https://github.com/bodywork-ml/bodywork-pipeline-utils">bodywork-pipeline-utils</a> package, which is available to download from <a href="https://pypi.org/project/bodywork-pipeline-utils/">PyPI</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NamedTuple</span>
+
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">read_csv</span><span class="p">,</span> <span class="n">read_parquet</span>
+
+<span class="kn">from</span> <span class="nn">bodywork_pipeline_utils.aws.artefacts</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">find_latest_artefact_on_s3</span><span class="p">,</span>
+    <span class="n">make_timestamped_filename</span><span class="p">,</span>
+    <span class="n">put_file_to_s3</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Dataset</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for downloaded datasets and associated metadata.&quot;&quot;&quot;</span>
+
+    <span class="n">data</span><span class="p">:</span> <span class="n">DataFrame</span>
+    <span class="n">datetime</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">hash</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="k">def</span> <span class="nf">get_latest_csv_dataset_from_s3</span><span class="p">(</span><span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the latest CSV dataset from S3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        bucket: S3 bucket to look in.</span>
+<span class="sd">        folder: Folder within bucket to limit search, defaults to &quot;&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dataset object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">artefact</span> <span class="o">=</span> <span class="n">find_latest_artefact_on_s3</span><span class="p">(</span><span class="s2">&quot;csv&quot;</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">artefact</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">artefact</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">artefact</span><span class="o">.</span><span class="n">obj_key</span><span class="p">,</span> <span class="n">artefact</span><span class="o">.</span><span class="n">etag</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_latest_parquet_dataset_from_s3</span><span class="p">(</span><span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the latest Parquet dataset from S3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        bucket: S3 bucket to look in.</span>
+<span class="sd">        folder: Folder within bucket to limit search, defaults to &quot;&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dataset object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">artefact</span> <span class="o">=</span> <span class="n">find_latest_artefact_on_s3</span><span class="p">(</span><span class="s2">&quot;parquet&quot;</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">read_parquet</span><span class="p">(</span><span class="n">artefact</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">artefact</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">artefact</span><span class="o">.</span><span class="n">obj_key</span><span class="p">,</span> <span class="n">artefact</span><span class="o">.</span><span class="n">etag</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">put_csv_dataset_to_s3</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">filename_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">ref_datetime</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Upload DataFrame to S3 as a CSV file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: The DataFrame to upload.</span>
+<span class="sd">        filename_prefix: Prefix before datetime filename element.</span>
+<span class="sd">        ref_datetime: The reference date associated with data.</span>
+<span class="sd">        bucket: Location on S3 to persist the data.</span>
+<span class="sd">        folder: Folder within the bucket, defaults to &quot;&quot;.</span>
+<span class="sd">        kwargs: Keywork arguments to pass to pandas.to_csv.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">make_timestamped_filename</span><span class="p">(</span><span class="n">filename_prefix</span><span class="p">,</span> <span class="n">ref_datetime</span><span class="p">,</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">put_file_to_s3</span><span class="p">(</span><span class="n">temp_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">put_parquet_dataset_to_s3</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">filename_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">ref_datetime</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Upload DataFrame to S3 as a Parquet file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: The DataFrame to upload.</span>
+<span class="sd">        filename_prefix: Prefix before datetime filename element.</span>
+<span class="sd">        ref_datetime: The reference date associated with data.</span>
+<span class="sd">        bucket: Location on S3 to persist the data.</span>
+<span class="sd">        folder: Folder within the bucket, defaults to &quot;&quot;.</span>
+<span class="sd">        kwargs: Keywork arguments to pass to pandas.to_csv.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">make_timestamped_filename</span><span class="p">(</span><span class="n">filename_prefix</span><span class="p">,</span> <span class="n">ref_datetime</span><span class="p">,</span> <span class="s2">&quot;parquet&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">put_file_to_s3</span><span class="p">(</span><span class="n">temp_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="the-model-class">The <code>Model</code> Class</h3>
+<p>Reproduced from the <a href="https://github.com/bodywork-ml/bodywork-pipeline-utils">bodywork-pipeline-utils</a> package, which is available to download from <a href="https://pypi.org/project/bodywork-pipeline-utils/">PyPI</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">md5</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">environ</span>
+<span class="kn">from</span> <span class="nn">pickle</span> <span class="kn">import</span> <span class="n">dump</span><span class="p">,</span> <span class="n">dumps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">PicklingError</span><span class="p">,</span> <span class="n">UnpicklingError</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">bodywork_pipeline_utils.aws.datasets</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span> <span class="nn">bodywork_pipeline_utils.aws.artefacts</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">find_latest_artefact_on_s3</span><span class="p">,</span>
+    <span class="n">make_timestamped_filename</span><span class="p">,</span>
+    <span class="n">put_file_to_s3</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for representing ML models and metadata.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">train_dataset</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Model name.</span>
+<span class="sd">            model: Trained model object.</span>
+<span class="sd">            train_dataset: Dataset object used to train the model.</span>
+<span class="sd">            metadata: Arbitrary model metadata.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_train_dataset_key</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="o">.</span><span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_train_dataset_hash</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="o">.</span><span class="n">hash</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_model_hash</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_creation_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline_git_commit_hash</span> <span class="o">=</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GIT_COMMIT_HASH&quot;</span><span class="p">,</span> <span class="s2">&quot;NA&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Model quality operator.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Model</span><span class="p">):</span>
+            <span class="n">conditions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_train_dataset_hash</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_train_dataset_hash</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_train_dataset_key</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_train_dataset_key</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_creation_time</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_creation_time</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline_git_commit_hash</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_pipeline_git_commit_hash</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">conditions</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stdout representation.&quot;&quot;&quot;</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;model_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_type</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;model_timestamp: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_creation_time</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;model_hash: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_hash</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;train_dataset_key: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_train_dataset_key</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;train_dataset_hash: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_train_dataset_hash</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;pipeline_git_commit_hash: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline_git_commit_hash</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;String representation.&quot;&quot;&quot;</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;name:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">|&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;model_type:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_type</span><span class="si">}</span><span class="s2">|&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;model_timestamp:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_creation_time</span><span class="si">}</span><span class="s2">|&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;model_hash:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_hash</span><span class="si">}</span><span class="s2">|&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;train_dataset_key:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_train_dataset_key</span><span class="si">}</span><span class="s2">|&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;train_dataset_hash:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_train_dataset_hash</span><span class="si">}</span><span class="s2">|&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;pipeline_git_commit_hash:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline_git_commit_hash</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_compute_model_hash</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute a hash for a model object.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">model_bytestream</span> <span class="o">=</span> <span class="n">dumps</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+            <span class="nb">hash</span> <span class="o">=</span> <span class="n">md5</span><span class="p">(</span><span class="n">model_bytestream</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">hash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">PicklingError</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Could not pickle model into bytes before hashing.&quot;</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Could not hash model.&quot;</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+    <span class="k">def</span> <span class="nf">put_model_to_s3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload model to S3 as a pickle file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bucket: Location on S3 to persist the data.</span>
+<span class="sd">            folder: Folder within the bucket, defaults to &quot;&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">make_timestamped_filename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_creation_time</span><span class="p">,</span> <span class="s2">&quot;pkl&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+            <span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp_file</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">put_file_to_s3</span><span class="p">(</span><span class="n">temp_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bucket</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">get_latest_pkl_model_from_s3</span><span class="p">(</span><span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the latest model from S3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        bucket: S3 bucket to look in.</span>
+<span class="sd">        folder: Folder within bucket to limit search, defaults to &quot;&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dataset object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">artefact</span> <span class="o">=</span> <span class="n">find_latest_artefact_on_s3</span><span class="p">(</span><span class="s2">&quot;pkl&quot;</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">artefact_bytes</span> <span class="o">=</span> <span class="n">artefact</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">loads</span><span class="p">(</span><span class="n">artefact_bytes</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">model</span>
+    <span class="k">except</span> <span class="n">UnpicklingError</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;artefact at </span><span class="si">{bucket}</span><span class="s2">/</span><span class="si">{model.obj_key}</span><span class="s2"> could not be unpickled.&quot;</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;artefact at </span><span class="si">{bucket}</span><span class="s2">/</span><span class="si">{model.obj_key}</span><span class="s2"> is not type Model.&quot;</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="train_modelpy"><code>train_model.py</code></h3>
+<p>Reproduced from the ml-<a href="https://github.com/bodywork-ml/ml-pipeline-engineering/tree/part-two">pipeline-engineering</a>&nbsp;repository.</p>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- Download training dataset from AWS S3.</span>
+<span class="sd">- Prepare data and train model.</span>
+<span class="sd">- Persist model to AWS S3.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">bodywork_pipeline_utils</span> <span class="kn">import</span> <span class="n">aws</span><span class="p">,</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">bodywork_pipeline_utils.aws</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">r2_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
+
+<span class="n">PRODUCT_CODE_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;SKU001&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;SKU002&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;SKU003&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;SKU004&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;SKU005&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+<span class="n">HYPERPARAM_GRID</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">42</span><span class="p">],</span>
+    <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;squared_error&quot;</span><span class="p">,</span> <span class="s2">&quot;absolute_error&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+    <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">configure_logger</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">FeatureAndLabels</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for features and labels split by test and train sets.&quot;&quot;&quot;</span>
+
+    <span class="n">X_train</span><span class="p">:</span> <span class="n">DataFrame</span>
+    <span class="n">X_test</span><span class="p">:</span> <span class="n">DataFrame</span>
+    <span class="n">y_train</span><span class="p">:</span> <span class="n">DataFrame</span>
+    <span class="n">y_test</span><span class="p">:</span> <span class="n">DataFrame</span>
+
+
+<span class="k">class</span> <span class="nc">TaskMetrics</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for the task&#39;s performance metrics.&quot;&quot;&quot;</span>
+
+    <span class="n">r_squared</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">mean_absolute_error</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span>
+    <span class="n">s3_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">metric_error_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">metric_warning_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">hyperparam_grid</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main training job.&quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting train-model stage.&quot;</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">get_latest_csv_dataset_from_s3</span><span class="p">(</span><span class="n">s3_bucket</span><span class="p">,</span> <span class="s2">&quot;datasets&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrieved dataset from s3://</span><span class="si">{</span><span class="n">s3_bucket</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">feature_and_labels</span> <span class="o">=</span> <span class="n">prepare_data</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">feature_and_labels</span><span class="p">,</span> <span class="n">hyperparam_grid</span><span class="p">)</span>
+    <span class="n">validate_trained_model_logic</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">feature_and_labels</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Trained model: r-squared=</span><span class="si">{</span><span class="n">metrics</span><span class="o">.</span><span class="n">r_squared</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;MAE=</span><span class="si">{</span><span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_error</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r_squared</span> <span class="o">&gt;=</span> <span class="n">metric_error_threshold</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r_squared</span> <span class="o">&gt;=</span> <span class="n">metric_warning_threshold</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Metrics breached warning threshold - check for drift.&quot;</span><span class="p">)</span>
+        <span class="n">s3_location</span> <span class="o">=</span> <span class="n">persist_model</span><span class="p">(</span><span class="n">s3_bucket</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model serialised and persisted to s3://</span><span class="si">{</span><span class="n">s3_location</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;r-squared metric (</span><span class="se">{{</span><span class="s2">metrics.r_squared:.3f</span><span class="se">}}</span><span class="s2">) is below deployment &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;threshold </span><span class="si">{</span><span class="n">metric_error_threshold</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">prepare_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeatureAndLabels</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split the data into features and labels for training and testing.&quot;&quot;&quot;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;hours_to_dispatch&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;hours_to_dispatch&quot;</span><span class="p">]</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;product_code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">FeatureAndLabels</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">train_model</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">FeatureAndLabels</span><span class="p">,</span> <span class="n">hyperparam_grid</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TaskMetrics</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Train a model and compute performance metrics.&quot;&quot;&quot;</span>
+    <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+        <span class="n">estimator</span><span class="o">=</span><span class="n">DecisionTreeRegressor</span><span class="p">(),</span>
+        <span class="n">param_grid</span><span class="o">=</span><span class="n">hyperparam_grid</span><span class="p">,</span>
+        <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;r2&quot;</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">preprocess</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_train</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">y_train</span><span class="p">)</span>
+    <span class="n">best_model</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">best_estimator_</span>
+    <span class="n">y_test_pred</span> <span class="o">=</span> <span class="n">best_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">preprocess</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_test</span><span class="p">))</span>
+    <span class="n">performance_metrics</span> <span class="o">=</span> <span class="n">TaskMetrics</span><span class="p">(</span>
+        <span class="n">r2_score</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_test_pred</span><span class="p">),</span>
+        <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_test_pred</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">best_model</span><span class="p">,</span> <span class="n">performance_metrics</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">validate_trained_model_logic</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FeatureAndLabels</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify that a trained model passes basic logical expectations.&quot;&quot;&quot;</span>
+    <span class="n">issues_detected</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">orders_placed_sensitivity_checks</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">array</span><span class="p">([[</span><span class="mi">100</span><span class="p">,</span> <span class="n">product</span><span class="p">],</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="n">product</span><span class="p">]]))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">PRODUCT_CODE_MAP</span><span class="p">))</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">orders_placed_sensitivity_checks</span><span class="p">):</span>
+        <span class="n">issues_detected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s2">&quot;hours_to_dispatch predictions do not increase with orders_placed&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">test_set_predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">preprocess</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_test</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_set_predictions</span><span class="p">[</span><span class="n">test_set_predictions</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">issues_detected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s2">&quot;negative hours_to_dispatch predictions found for test set&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_set_predictions</span><span class="p">[</span><span class="n">test_set_predictions</span> <span class="o">&gt;</span> <span class="n">data</span><span class="o">.</span><span class="n">y_test</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.25</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">issues_detected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s2">&quot;outlier hours_to_dispatch predictions found for test set&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">issues_detected</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Trained model failed verification: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">issues_detected</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create features for training model.&quot;&quot;&quot;</span>
+    <span class="n">processed</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">processed</span><span class="p">[</span><span class="s2">&quot;product_code&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;product_code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">PRODUCT_CODE_MAP</span><span class="p">[</span><span class="n">e</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">processed</span><span class="o">.</span><span class="n">values</span>
+
+
+<span class="k">def</span> <span class="nf">persist_model</span><span class="p">(</span>
+    <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">TaskMetrics</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Persist the model and metadata to S3.&quot;&quot;&quot;</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;r_squared&quot;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r_squared</span><span class="p">,</span>
+        <span class="s2">&quot;mean_absolute_error&quot;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_error</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">wrapped_model</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;time-to-dispatch&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+    <span class="n">s3_location</span> <span class="o">=</span> <span class="n">wrapped_model</span><span class="o">.</span><span class="n">put_model_to_s3</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="s2">&quot;models&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s3_location</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+        <span class="n">s3_bucket</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">r2_metric_error_threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">r2_metric_error_threshold</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">r2_metric_error_threshold</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+        <span class="n">r2_metric_warning_threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">r2_metric_warning_threshold</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">r2_metric_warning_threshold</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;Invalid arguments passed to train_model.py. &quot;</span>
+            <span class="s2">&quot;Expected S3_BUCKET R_SQUARED_ERROR_THRESHOLD R_SQUARED_WARNING_THRESHOLD, &quot;</span>
+            <span class="s2">&quot;where all thresholds must be in the range [0, 1].&quot;</span>
+        <span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">main</span><span class="p">(</span>
+            <span class="n">s3_bucket</span><span class="p">,</span>
+            <span class="n">r2_metric_error_threshold</span><span class="p">,</span>
+            <span class="n">r2_metric_warning_threshold</span><span class="p">,</span>
+            <span class="n">HYPERPARAM_GRID</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error encountered when training model - </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="../../../../tag/python.html">python</a>
+      <a href="../../../../tag/machine-learning.html">machine-learning</a>
+      <a href="../../../../tag/mlops.html">mlops</a>
+      <a href="../../../../tag/kubernetes.html">kubernetes</a>
+      <a href="../../../../tag/bodywork.html">bodywork</a>
+    </p>
+  </div>
+
+
+
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'alexioannides';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+    Please enable JavaScript to view comments.
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy;  </p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Dr Alex Ioannides ",
+  "url" : "../../../..",
+  "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
+  "description": ""
+}
+</script>
+
+
+</body>
+</html>
