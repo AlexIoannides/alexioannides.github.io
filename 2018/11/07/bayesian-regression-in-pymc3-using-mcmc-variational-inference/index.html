@@ -10,18 +10,18 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
 
     <link id="pygments-light-theme" rel="stylesheet" type="text/css"
-          href="../../../../theme/pygments/monokai.min.css">
+          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
 
 
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/fontawesome.css">
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/brands.css">
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/solid.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
 
-    <link href="../../../../static/custom.css" rel="stylesheet">
+    <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
     <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
 
@@ -50,11 +50,11 @@
 <meta property="og:title" content="Bayesian Regression in PYMC3 using MCMC &amp; Variational Inference"/>
 <meta property="og:description" content="Conducting a Bayesian data analysis - e.g. estimating a Bayesian linear regression model - will usually require some form of Probabilistic Programming Language (PPL), unless analytical approaches (e.g. based on conjugate prior models), are appropriate for the task at hand. More often than not, PPLs implement Markov Chain Monte Carlo …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="../../../../2018/11/07/bayesian-regression-in-pymc3-using-mcmc-variational-inference/"/>
+<meta property="og:url" content="https://alexioannides.github.io/2018/11/07/bayesian-regression-in-pymc3-using-mcmc-variational-inference/"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2018-11-07 00:00:00+00:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
+<meta property="article:author" content="https://alexioannides.github.io/author/dr-alex-ioannides.html">
 <meta property="article:section" content="data-science"/>
 <meta property="article:tag" content="machine-learning"/>
 <meta property="article:tag" content="probabilistic-programming"/>
@@ -68,12 +68,12 @@
 <body class="light-theme">
   <aside>
     <div>
-      <a href="../../../..">
+      <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
 
       <h1>
-        <a href="../../../..">Dr Alex Ioannides</a>
+        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
       </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
@@ -84,13 +84,13 @@
 
               <li>
                 <a target="_self"
-                   href="../../../../about-me/">
+                   href="https://alexioannides.github.io/about-me/">
                   About&nbsp;Me
                 </a>
               </li>
               <li>
                 <a target="_self"
-                   href="../../../../about-this-blog/">
+                   href="https://alexioannides.github.io/about-this-blog/">
                   About this&nbsp;Blog
                 </a>
               </li>
@@ -129,7 +129,7 @@
   <main>
 
     <nav>
-      <a href="../../../..">Home</a>
+      <a href="https://alexioannides.github.io">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
@@ -144,14 +144,14 @@
       
     <h1 id="bayesian-regression-in-pymc3-using-mcmc-variational-inference">Bayesian Regression in <span class="caps">PYMC3</span> using <span class="caps">MCMC</span> <span class="amp">&amp;</span> Variational&nbsp;Inference</h1>
     <p>
-      Posted on Wed 07 November 2018 in <a href="../../../../category/data-science.html">data-science</a>
+      Posted on Wed 07 November 2018 in <a href="https://alexioannides.github.io/category/data-science.html">data-science</a>
 
     </p>
   </header>
 
 
   <div>
-    <p><img alt="jpeg" src="../../../../images/data_science/mcmc_vi_pymc3/pymc3_logo.jpg"></p>
+    <p><img alt="jpeg" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/pymc3_logo.jpg"></p>
 <p>Conducting a Bayesian data analysis - e.g. estimating a Bayesian linear regression model - will usually require some form of Probabilistic Programming Language (<span class="caps">PPL</span>), unless analytical approaches (e.g. based on conjugate prior models), are appropriate for the task at hand. More often than not, PPLs implement Markov Chain Monte Carlo (<span class="caps">MCMC</span>) algorithms that allow one to draw samples and make inferences from the posterior distribution implied by the choice of model - the likelihood and prior distributions for its parameters - conditional on the observed&nbsp;data.</p>
 <p><span class="caps">MCMC</span> algorithms are, generally speaking, computationally expensive and do not scale very easily. For example, it is not as easy to distribute the execution of these algorithms over a cluster of machines, when compared to the optimisation algorithms used for training deep neural networks (e.g. stochastic gradient&nbsp;descent).</p>
 <p>Over the past few years, however, a new class of algorithms for inferring Bayesian models has been developed, that do <strong>not</strong> rely heavily on computationally expensive random sampling. These algorithms are referred to as Variational Inference (<span class="caps">VI</span>) algorithms and have been shown to be successful with the potential to scale to &#8216;large&#8217;&nbsp;datasets.</p>
@@ -290,7 +290,7 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 </table>
 </div>
 
-<p><img alt="png" src="../../../../images/data_science/mcmc_vi_pymc3/output_9_1.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_9_1.png"></p>
 <h2 id="split-data-into-training-and-test-sets">Split Data into Training and Test&nbsp;Sets</h2>
 <p>One of the advantages of generating synthetic data is that we can ensure we have enough data to be able to partition it into two sets - one for training models and one for testing models. We use a helper function from the Scikit-Learn package for this task and make use of stratified sampling to ensure that we have a balanced representation of each category in both training and test&nbsp;datasets.</p>
 <div class="highlight"><pre><span></span><code><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
@@ -408,7 +408,7 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 </table>
 </div>
 
-<p><img alt="png" src="../../../../images/data_science/mcmc_vi_pymc3/output_19_1.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_19_1.png"></p>
 <p>Firstly, note that <code>Rhat</code> values (the Gelman Rubin statistic) converging to 1 implies chain convergence for the marginal parameter distributions, while <code>n_eff</code> describes the effective number of samples after autocorrelations in the chains have been accounted for. We can see from the <code>mean</code> (point) estimate of each parameter that <span class="caps">HMC</span> has done a reasonable job of estimating our original&nbsp;parameters.</p>
 <h2 id="model-inference-using-variational-inference-mini-batch-advi">Model Inference using Variational Inference (mini-batch <span class="caps">ADVI</span>)</h2>
 <p>Variational Inference (<span class="caps">VI</span>) takes a completely different approach to inference. Briefly, <span class="caps">VI</span> is a name for a class of algorithms that seek to fit a chosen class of functions to approximate the posterior distribution, effectively turning inference into an optimisation problem. In this instance <span class="caps">VI</span> minimises the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback–Leibler (<span class="caps">KL</span>) divergence</a> (a measure of the &#8216;similarity&#8217; between two densities), between the approximated posterior density and the actual posterior density. An excellent review of <span class="caps">VI</span> can be found in the <a href="https://arxiv.org/abs/1601.00670">paper by Blei <span class="amp">&amp;</span> co.</a>.</p>
@@ -436,7 +436,7 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;log-ELBO&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">advi_elbo</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/mcmc_vi_pymc3/output_27_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_27_0.png"></p>
 <p>In order to be able to look at what we can infer from posterior distribution we have fit with <span class="caps">ADVI</span>, we first have to draw some samples from it, before summarising like we did with <span class="caps">HMC</span>&nbsp;inference.</p>
 <div class="highlight"><pre><span></span><code><span class="n">advi_trace</span> <span class="o">=</span> <span class="n">advi_fit</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">pm</span><span class="o">.</span><span class="n">traceplot</span><span class="p">(</span><span class="n">advi_trace</span><span class="p">)</span>
@@ -513,7 +513,7 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 </table>
 </div>
 
-<p><img alt="png" src="../../../../images/data_science/mcmc_vi_pymc3/output_29_1.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_29_1.png"></p>
 <p>Not bad! The mean estimates are comparable, but we note that the standard deviations appear to be larger than those estimated with <span class="caps">HMC</span>.</p>
 <h2 id="comparing-predictions">Comparing&nbsp;Predictions</h2>
 <p>Let&#8217;s move on to comparing the inference algorithms on the practical task of making predictions on our test dataset. We start by swapping the test data into our Theano&nbsp;variables.</p>
@@ -540,7 +540,7 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
                <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/mcmc_vi_pymc3/output_34_1.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_34_1.png"></p>
 <p>As we might expect, given the parameter estimates, the two models generate similar&nbsp;predictions. </p>
 <p>To begin to get an insight into the differences between <span class="caps">HMC</span> and <span class="caps">ADVI</span>, we look at the inferred dependency structure between the samples of <code>alpha_0</code> and <code>beta_0</code>, for both <span class="caps">HMC</span> and <span class="caps">VI</span>, starting with <span class="caps">HMC</span>.</p>
 <div class="highlight"><pre><span></span><code><span class="n">param_samples_HMC</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
@@ -550,7 +550,7 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;alpha_0&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;beta_0&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">param_samples_HMC</span><span class="p">)</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;HMC&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/mcmc_vi_pymc3/output_36_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_36_0.png"></p>
 <p>And again for <span class="caps">ADVI</span>.</p>
 <div class="highlight"><pre><span></span><code><span class="n">param_samples_ADVI</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span><span class="s1">&#39;alpha_0&#39;</span><span class="p">:</span> <span class="n">advi_trace</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">],</span> 
@@ -559,7 +559,7 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;alpha_0&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;beta_0&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">param_samples_ADVI</span><span class="p">)</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ADVI&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/mcmc_vi_pymc3/output_38_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_38_0.png"></p>
 <p>We can see clearly the impact of <span class="caps">ADVI</span>&#8217;s assumption of n-dimensional spherical Gaussians, manifest in the&nbsp;inference!</p>
 <p>Finally, let&#8217;s compare predictions with the actual&nbsp;data.</p>
 <div class="highlight"><pre><span></span><code><span class="n">RMSE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">prediction_data</span><span class="o">.</span><span class="n">error_ADVI</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
@@ -573,17 +573,17 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 <div class="highlight"><pre><span></span><code><span class="nv">RMSE</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">ADVI</span><span class="w"> </span><span class="nv">predictions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>.<span class="mi">746</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/mcmc_vi_pymc3/output_40_1.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/mcmc_vi_pymc3/output_40_1.png"></p>
 <p>Which is what one might expect, given the data generating&nbsp;model.</p>
 <h2 id="conclusions">Conclusions</h2>
 <p><span class="caps">MCMC</span> and <span class="caps">VI</span> present two very different approaches for drawing inferences from Bayesian models. Despite these differences, their high-level output for a simplistic (but not entirely trivial) regression problem, based on synthetic data, is comparable regardless of the approximations used within <span class="caps">ADVI</span>. This is important to note, because general purpose <span class="caps">VI</span> algorithms such as <span class="caps">ADVI</span> have the potential to work at scale - on large volumes of data in a distributed computing environment (see the references embedded above, for case&nbsp;studies).</p>
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="../../../../tag/machine-learning.html">machine-learning</a>
-      <a href="../../../../tag/probabilistic-programming.html">probabilistic-programming</a>
-      <a href="../../../../tag/python.html">python</a>
-      <a href="../../../../tag/pymc3.html">pymc3</a>
+      <a href="https://alexioannides.github.io/tag/machine-learning.html">machine-learning</a>
+      <a href="https://alexioannides.github.io/tag/probabilistic-programming.html">probabilistic-programming</a>
+      <a href="https://alexioannides.github.io/tag/python.html">python</a>
+      <a href="https://alexioannides.github.io/tag/pymc3.html">pymc3</a>
     </p>
   </div>
 
@@ -622,7 +622,7 @@ Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a 
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Dr Alex Ioannides ",
-  "url" : "../../../..",
+  "url" : "https://alexioannides.github.io",
   "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
   "description": ""
 }

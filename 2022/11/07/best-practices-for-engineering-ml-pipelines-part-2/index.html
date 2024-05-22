@@ -10,18 +10,18 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
 
     <link id="pygments-light-theme" rel="stylesheet" type="text/css"
-          href="../../../../theme/pygments/monokai.min.css">
+          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
 
 
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/fontawesome.css">
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/brands.css">
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/solid.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
 
-    <link href="../../../../static/custom.css" rel="stylesheet">
+    <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
     <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
 
@@ -50,11 +50,11 @@
 <meta property="og:title" content="Best Practices for Engineering ML Pipelines - Part 2"/>
 <meta property="og:description" content="This is the second part in a series of articles demonstrating best practices for engineering ML pipelines and deploying them to production. In the first part we focused on project setup - everything from codebase structure to configuring a CI/CD pipeline and making an initial deployment of a skeleton pipeline …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="../../../../2022/11/07/best-practices-for-engineering-ml-pipelines-part-2/"/>
+<meta property="og:url" content="https://alexioannides.github.io/2022/11/07/best-practices-for-engineering-ml-pipelines-part-2/"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2022-11-07 00:00:00+00:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
+<meta property="article:author" content="https://alexioannides.github.io/author/dr-alex-ioannides.html">
 <meta property="article:section" content="machine-learning-engineering"/>
 <meta property="article:tag" content="python"/>
 <meta property="article:tag" content="machine-learning"/>
@@ -69,12 +69,12 @@
 <body class="light-theme">
   <aside>
     <div>
-      <a href="../../../..">
+      <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
 
       <h1>
-        <a href="../../../..">Dr Alex Ioannides</a>
+        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
       </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
@@ -85,13 +85,13 @@
 
               <li>
                 <a target="_self"
-                   href="../../../../about-me/">
+                   href="https://alexioannides.github.io/about-me/">
                   About&nbsp;Me
                 </a>
               </li>
               <li>
                 <a target="_self"
-                   href="../../../../about-this-blog/">
+                   href="https://alexioannides.github.io/about-this-blog/">
                   About this&nbsp;Blog
                 </a>
               </li>
@@ -130,7 +130,7 @@
   <main>
 
     <nav>
-      <a href="../../../..">Home</a>
+      <a href="https://alexioannides.github.io">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
@@ -145,15 +145,15 @@
       
     <h1 id="best-practices-for-engineering-ml-pipelines-part-2">Best Practices for Engineering <span class="caps">ML</span> Pipelines - Part&nbsp;2</h1>
     <p>
-      Posted on Mon 07 November 2022 in <a href="../../../../category/machine-learning-engineering.html">machine-learning-engineering</a>
+      Posted on Mon 07 November 2022 in <a href="https://alexioannides.github.io/category/machine-learning-engineering.html">machine-learning-engineering</a>
 
     </p>
   </header>
 
 
   <div>
-    <p><img alt="ml-pipeline-engineering" src="../../../../images/machine-learning-engineering/ml-pipeline-engineering/pipelines-logo.png"></p>
-<p>This is the second part in a series of articles demonstrating best practices for engineering <span class="caps">ML</span> pipelines and deploying them to production. In the <a href="../../../../2021/03/03/best-practices-for-engineering-ml-pipelines-part-1/">first part</a> we focused on project setup - everything from codebase structure to configuring a <span class="caps">CI</span>/<span class="caps">CD</span> pipeline and making an initial deployment of a skeleton&nbsp;pipeline.</p>
+    <p><img alt="ml-pipeline-engineering" src="https://alexioannides.github.io/images/machine-learning-engineering/ml-pipeline-engineering/pipelines-logo.png"></p>
+<p>This is the second part in a series of articles demonstrating best practices for engineering <span class="caps">ML</span> pipelines and deploying them to production. In the <a href="https://alexioannides.github.io/2021/03/03/best-practices-for-engineering-ml-pipelines-part-1/">first part</a> we focused on project setup - everything from codebase structure to configuring a <span class="caps">CI</span>/<span class="caps">CD</span> pipeline and making an initial deployment of a skeleton&nbsp;pipeline.</p>
 <p>In this part we are going to focus on developing a fully-operational pipeline and will&nbsp;cover:</p>
 <ul>
 <li>A simple approach to data and model versioning, using cloud object&nbsp;storage.</li>
@@ -1425,11 +1425,11 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="../../../../tag/python.html">python</a>
-      <a href="../../../../tag/machine-learning.html">machine-learning</a>
-      <a href="../../../../tag/mlops.html">mlops</a>
-      <a href="../../../../tag/kubernetes.html">kubernetes</a>
-      <a href="../../../../tag/bodywork.html">bodywork</a>
+      <a href="https://alexioannides.github.io/tag/python.html">python</a>
+      <a href="https://alexioannides.github.io/tag/machine-learning.html">machine-learning</a>
+      <a href="https://alexioannides.github.io/tag/mlops.html">mlops</a>
+      <a href="https://alexioannides.github.io/tag/kubernetes.html">kubernetes</a>
+      <a href="https://alexioannides.github.io/tag/bodywork.html">bodywork</a>
     </p>
   </div>
 
@@ -1468,7 +1468,7 @@ Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a 
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Dr Alex Ioannides ",
-  "url" : "../../../..",
+  "url" : "https://alexioannides.github.io",
   "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
   "description": ""
 }

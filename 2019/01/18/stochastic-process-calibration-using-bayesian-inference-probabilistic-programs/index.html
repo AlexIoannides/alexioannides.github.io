@@ -10,18 +10,18 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="../../../../theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/stylesheet/style.min.css">
 
 
     <link id="pygments-light-theme" rel="stylesheet" type="text/css"
-          href="../../../../theme/pygments/monokai.min.css">
+          href="https://alexioannides.github.io/theme/pygments/monokai.min.css">
 
 
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/fontawesome.css">
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/brands.css">
-  <link rel="stylesheet" type="text/css" href="../../../../theme/font-awesome/css/solid.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://alexioannides.github.io/theme/font-awesome/css/solid.css">
 
-    <link href="../../../../static/custom.css" rel="stylesheet">
+    <link href="https://alexioannides.github.io/static/custom.css" rel="stylesheet">
 
     <link href="https://alexioannides.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Dr Alex Ioannides Atom">
 
@@ -50,11 +50,11 @@
 <meta property="og:title" content="Stochastic Process Calibration using Bayesian Inference &amp; Probabilistic Programs"/>
 <meta property="og:description" content="Stochastic processes are used extensively throughout quantitative finance - for example, to simulate asset prices in risk models that aim to estimate key risk metrics such as Value-at-Risk (VaR), Expected Shortfall (ES) and Potential Future Exposure (PFE). Estimating the parameters of a stochastic processes - referred to as ‘calibration’ in the parlance …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="../../../../2019/01/18/stochastic-process-calibration-using-bayesian-inference-probabilistic-programs/"/>
+<meta property="og:url" content="https://alexioannides.github.io/2019/01/18/stochastic-process-calibration-using-bayesian-inference-probabilistic-programs/"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2019-01-18 00:00:00+00:00"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="../../../../author/dr-alex-ioannides.html">
+<meta property="article:author" content="https://alexioannides.github.io/author/dr-alex-ioannides.html">
 <meta property="article:section" content="data-science"/>
 <meta property="article:tag" content="probabilistic-programming"/>
 <meta property="article:tag" content="python"/>
@@ -69,12 +69,12 @@
 <body class="light-theme">
   <aside>
     <div>
-      <a href="../../../..">
+      <a href="https://alexioannides.github.io">
         <img src="//avatars1.githubusercontent.com/u/5968486?s=460&v=4" alt="Dr Alex Ioannides" title="Dr Alex Ioannides">
       </a>
 
       <h1>
-        <a href="../../../..">Dr Alex Ioannides</a>
+        <a href="https://alexioannides.github.io">Dr Alex Ioannides</a>
       </h1>
 
 <p>machine_learning_engineer - (data)scientist - reformed_quant - habitual_coder</p>
@@ -85,13 +85,13 @@
 
               <li>
                 <a target="_self"
-                   href="../../../../about-me/">
+                   href="https://alexioannides.github.io/about-me/">
                   About&nbsp;Me
                 </a>
               </li>
               <li>
                 <a target="_self"
-                   href="../../../../about-this-blog/">
+                   href="https://alexioannides.github.io/about-this-blog/">
                   About this&nbsp;Blog
                 </a>
               </li>
@@ -130,7 +130,7 @@
   <main>
 
     <nav>
-      <a href="../../../..">Home</a>
+      <a href="https://alexioannides.github.io">Home</a>
 
       <a href="/categories.html">Categories</a>
       <a href="/tags.html">Tags</a>
@@ -145,14 +145,14 @@
       
     <h1 id="stochastic-process-calibration-using-bayesian-inference-probabilistic-programs">Stochastic Process Calibration using Bayesian Inference <span class="amp">&amp;</span> Probabilistic&nbsp;Programs</h1>
     <p>
-      Posted on Fri 18 January 2019 in <a href="../../../../category/data-science.html">data-science</a>
+      Posted on Fri 18 January 2019 in <a href="https://alexioannides.github.io/category/data-science.html">data-science</a>
 
     </p>
   </header>
 
 
   <div>
-    <p><img alt="jpeg" src="../../../../images/data_science/bayes_stoch_proc/trading_screen.jpg"></p>
+    <p><img alt="jpeg" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/trading_screen.jpg"></p>
 <p>Stochastic processes are used extensively throughout quantitative finance - for example, to simulate asset prices in risk models that aim to estimate key risk metrics such as Value-at-Risk (VaR), Expected Shortfall (<span class="caps">ES</span>) and Potential Future Exposure (<span class="caps">PFE</span>). Estimating the parameters of a stochastic processes - referred to as &#8216;calibration&#8217; in the parlance of quantitative finance -usually&nbsp;involves:</p>
 <ul>
 <li>computing the distribution of price returns for a financial&nbsp;asset;</li>
@@ -272,7 +272,7 @@ d\tilde{S_t} = \mu \tilde{S_t} dt + \sigma \tilde{S_t} d\tilde{W_t}&nbsp;$$</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">example_data</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/bayes_stoch_proc/output_10_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_10_0.png"></p>
 <h2 id="the-traditional-approach-to-parameter-estimation">The Traditional Approach to Parameter&nbsp;Estimation</h2>
 <p>Traditionally, the parameters are estimated using the empirical mean and standard deviation of the daily logarithmic (or geometric) returns. The reasoning behind this can be seen by re-arranging the above equation for $\tilde{S_t}$ as&nbsp;follows,</p>
 <p>$$
@@ -294,7 +294,7 @@ d\tilde{S_t} = \mu \tilde{S_t} dt + \sigma \tilde{S_t} d\tilde{W_t}&nbsp;$$</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">returns_geo_full</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/bayes_stoch_proc/output_13_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_13_0.png"></p>
 <p>The empirical distribution is relatively Normal in appearance, as expected. We now compute $\mu$ and $\sigma$ using the mean and standard deviation (or volatility) of this&nbsp;distribution.</p>
 <div class="highlight"><pre><span></span><code><span class="n">dist_mean_full</span> <span class="o">=</span> <span class="n">returns_geo_full</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <span class="n">dist_vol_full</span> <span class="o">=</span> <span class="n">returns_geo_full</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
@@ -322,7 +322,7 @@ empirical estimate of sigma = 0.1423
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">returns_geo</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/bayes_stoch_proc/output_20_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_20_0.png"></p>
 <p>And the corresponding empirical parameter&nbsp;estimates.</p>
 <div class="highlight"><pre><span></span><code><span class="n">dist_mean_ml</span> <span class="o">=</span> <span class="n">returns_geo</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <span class="n">dist_vol_ml</span> <span class="o">=</span> <span class="n">returns_geo</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
@@ -371,7 +371,7 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">prior_mean_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">prior_mean_density</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/bayes_stoch_proc/output_29_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_29_0.png"></p>
 <h4 id="choosing-a-prior-distribution-for-the-volatility-of-daily-returns">Choosing a Prior Distribution for the Volatility of Daily&nbsp;Returns</h4>
 <p>We choose a positive <a href="https://en.wikipedia.org/wiki/Half-normal_distribution">Half-Normal distribution</a> for this prior distribution. Most of the mass is near 0 (i.e. regularising), but with a standard deviation of 0.0188 that corresponds to an expected daily volatility of ~0.015 (or&nbsp;1.5%).</p>
 <div class="highlight"><pre><span></span><code><span class="n">prior_vol_sigma</span> <span class="o">=</span> <span class="mf">0.0188</span>
@@ -387,7 +387,7 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">prior_vol_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">prior_vol_density</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/bayes_stoch_proc/output_33_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_33_0.png"></p>
 <h3 id="inference-using-a-probabilistic-program-markov-chain-monte-carlo-mcmc">Inference using a Probabilistic Program <span class="amp">&amp;</span> Markov Chain Monte Carlo (<span class="caps">MCMC</span>)</h3>
 <p>Performing Bayesian inference usually requires some form of Probabilistic Programming Language (<span class="caps">PPL</span>), unless analytical approaches (e.g. based on conjugate prior models), are appropriate for the task at hand. More often than not, PPLs such as <a href="https://docs.pymc.io"><span class="caps">PYMC3</span></a> implement Markov Chain Monte Carlo (<span class="caps">MCMC</span>) algorithms that allow one to draw samples and make inferences from the posterior distribution implied by the choice of model - the likelihood and prior distributions for its parameters - conditional on the observed&nbsp;data.</p>
 <p>We will make use of the default <span class="caps">MCMC</span> method in <span class="caps">PYMC3</span>&#8217;s <code>sample</code> function, which is Hamiltonian Monte Carlo (<span class="caps">HMC</span>). Those interested in the precise details of the <span class="caps">HMC</span> algorithm are directed to the <a href="https://arxiv.org/abs/1701.02434">excellent paper Michael Betancourt</a>. Briefly, <span class="caps">MCMC</span> algorithms work by defining multi-dimensional Markovian stochastic processes, that when simulated (using Monte Carlo methods), will eventually converge to a state where successive simulations will be equivalent to drawing random samples from the posterior distribution of the model we wish to&nbsp;estimate.</p>
@@ -427,7 +427,7 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 <div class="highlight"><pre><span></span><code><span class="n">_</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">plot_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/bayes_stoch_proc/output_41_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_41_0.png"></p>
 <p>No obvious anomalies can be seen by visual inspection. We now compute the summary statistics for the inference (aggregating the draws from each&nbsp;train).</p>
 <div class="highlight"><pre><span></span><code><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">round_to</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
 </code></pre></div>
@@ -488,12 +488,12 @@ p(\Theta | X) = \frac{p(X | \Theta) \cdot p(\Theta)}{p(X)}&nbsp;$$</p>
 <div class="highlight"><pre><span></span><code><span class="n">_</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">plot_posterior</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">round_to</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/bayes_stoch_proc/output_45_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_45_0.png"></p>
 <p>And their dependency&nbsp;structure.</p>
 <div class="highlight"><pre><span></span><code><span class="n">_</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">plot_pair</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/bayes_stoch_proc/output_47_0.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_47_0.png"></p>
 <p>Finally, we compute estimates for $\mu$ and $\sigma$, based on our Bayesian&nbsp;point-estimates.</p>
 <div class="highlight"><pre><span></span><code><span class="n">dist_mean_bayes</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <span class="n">dist_sd_bayes</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s1">&#39;volatility&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -528,7 +528,7 @@ bayesian estimate of sigma = 0.1407
 <div class="highlight"><pre><span></span><code><span class="mf">100</span><span class="err">%|██████████|</span><span class="w"> </span><span class="mf">10000</span><span class="o">/</span><span class="mf">10000</span><span class="w"> </span><span class="err">[</span><span class="mf">00</span><span class="p">:</span><span class="mf">06</span><span class="o">&lt;</span><span class="mf">00</span><span class="p">:</span><span class="mf">00</span><span class="p">,</span><span class="w"> </span><span class="mf">1555.86</span><span class="n">it</span><span class="o">/</span><span class="n">s</span><span class="err">]</span>
 </code></pre></div>
 
-<p><img alt="png" src="../../../../images/data_science/bayes_stoch_proc/output_52_1.png"></p>
+<p><img alt="png" src="https://alexioannides.github.io/images/data_science/bayes_stoch_proc/output_52_1.png"></p>
 <p>We can clearly see that taking a Bayesian Inference approach to calibrating stochastic processes leads to more probability mass in the &#8216;tails&#8217; of the distribution of geomtric&nbsp;returns.</p>
 <h3 id="impact-on-risk-metrics-value-at-risk-var">Impact on Risk Metrics - Value-at-Risk&nbsp;(VaR)</h3>
 <p>We now quantify the impact that the difference in these distributions has on the VaR for a single unit of the stock, at the 1% and 99% percentile levels - i.e. on 1/100 chance&nbsp;events.</p>
@@ -567,11 +567,11 @@ bayesian = 0.019038871195300778
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="../../../../tag/probabilistic-programming.html">probabilistic-programming</a>
-      <a href="../../../../tag/python.html">python</a>
-      <a href="../../../../tag/pymc3.html">pymc3</a>
-      <a href="../../../../tag/quant-finance.html">quant-finance</a>
-      <a href="../../../../tag/stochastic-processes.html">stochastic-processes</a>
+      <a href="https://alexioannides.github.io/tag/probabilistic-programming.html">probabilistic-programming</a>
+      <a href="https://alexioannides.github.io/tag/python.html">python</a>
+      <a href="https://alexioannides.github.io/tag/pymc3.html">pymc3</a>
+      <a href="https://alexioannides.github.io/tag/quant-finance.html">quant-finance</a>
+      <a href="https://alexioannides.github.io/tag/stochastic-processes.html">stochastic-processes</a>
     </p>
   </div>
 
@@ -610,7 +610,7 @@ Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a 
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Dr Alex Ioannides ",
-  "url" : "../../../..",
+  "url" : "https://alexioannides.github.io",
   "image": "//avatars1.githubusercontent.com/u/5968486?s=460&v=4",
   "description": ""
 }
